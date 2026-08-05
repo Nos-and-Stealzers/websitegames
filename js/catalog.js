@@ -55,6 +55,10 @@
          base as the game itself; the generated plate takes over if it 404s. */
       art: resolveUrl(entry.icon || entry.pfp || entry.image || "", entry.host),
       host: entry.host || "",
+      /* Free-text warning shown before play — used where something about a
+         title would otherwise surprise you, like Eaglercraft worlds not
+         carrying between versions. */
+      notice: entry.notice || "",
       /* Titles no repo actually carries. Kept in the index so the catalog
          stays honest, but the player says so instead of showing a dead frame. */
       unavailable: !!entry.unavailable,

@@ -102,6 +102,13 @@
        click to report from the place you noticed it. */
     $("a-report").href = "feedback.html?game=" + encodeURIComponent(game.id);
 
+    /* A per-title warning, shown before the stage rather than after you've
+       already lost something to it. */
+    if (game.notice) {
+      $("notice-body").textContent = game.notice;
+      $("game-notice").hidden = false;
+    }
+
     $("m-cat").textContent = game.categoryLabel;
     $("m-risk").textContent = UI.riskLabel(game);
     $("m-launch").textContent = UI.launchLabel(game);

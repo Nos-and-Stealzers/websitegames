@@ -6,9 +6,9 @@
     name: "Arcade Campus Hub",
     short: "Arcade Hub",
     mark: "AC",
-    tagline: "An index of 216 playable things",
+    tagline: "An index of playable things",
     description:
-      "A local-first browser arcade: 216 games, compatibility flags, favourites and playtime, all stored on your device.",
+      "A local-first browser arcade: compatibility flags, favourites and playtime, all stored on your device.",
     domain: "arcadecampushub.online",
     build: "v2",
 
@@ -22,7 +22,8 @@
       "games-huge": "https://lucasgrimm389.github.io/games-huge",
       "swfgalaxy":  "https://nos-and-stealzers.github.io/swfgalaxy",
       "flashgames": "https://lucasgrimm389.github.io/flashgames",
-      "hd_fnaf":    "https://lucasgrimm389.github.io/hd_fnaf"
+      "hd_fnaf":    "https://lucasgrimm389.github.io/hd_fnaf",
+      "eaglercraft": "https://lucasgrimm389.github.io/eaglercraft"
     },
 
     /* Fallback for any entry without a `host`, and for legacy catalogs whose
