@@ -1,0 +1,12 @@
+# Vercel hosts the static site only. The backend is a long-running Node process
+# with a SQLite file on disk — it cannot run on serverless, so it is deployed
+# separately (see server/README.md) and pointed at via SITE.apiBase.
+server/
+tools/
+
+node_modules/
+*.db
+*.db-wal
+*.db-shm
+.env
+.env.*

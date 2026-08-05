@@ -18,6 +18,15 @@
        Root-relative sources in the catalog ("/games/...") get this prefix. */
     gameBase: "https://arcadecampushub.online",
 
+    /* Where the accounts backend lives.
+       - ""  ................. same origin (running `node server/app.js`)
+       - "https://host" ...... backend hosted separately, e.g. the static site
+                               is on Vercel and the API is on Render/Railway.
+       Leave empty and the account features simply won't appear — the arcade
+       still works. When you do set it, add this site's origin to the server's
+       ALLOWED_ORIGINS so its cookies survive the cross-origin trip. */
+    apiBase: "",
+
     defaults: {
       skin: "noir",            // noir | paper | slate | terminal | blueprint
       lite: false,             // drop motion + grid overlay on slow hardware

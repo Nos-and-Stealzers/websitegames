@@ -224,7 +224,22 @@ back to **Other**.
 
 ## Deploying
 
-Upload the folder to the web root and point the host's 404 handler at `404.html`.
+See **[DEPLOY.md](DEPLOY.md)** for the full walkthrough. The short version:
+
+- **The site** is static — Vercel, Netlify, GitHub Pages or plain shared hosting.
+  [`vercel.json`](vercel.json) is already set up; framework preset **Other**, no build
+  command, no output directory.
+- **The backend** needs a real Node process and a disk that survives restarts, so it goes
+  somewhere else — [`render.yaml`](render.yaml) deploys it to Render as a blueprint.
+  **It cannot run on Vercel**: serverless has no persistent filesystem, so the SQLite
+  database would be wiped on every cold start.
+- Then set `apiBase` in [`js/config.js`](js/config.js) to the backend URL, and
+  `ALLOWED_ORIGINS` on the backend to the site URL. The session cookie switches to
+  `SameSite=None; Secure` automatically, so both sides must be HTTPS.
+
+Or skip the split entirely: `node server/app.js` serves the API **and** the site from one
+origin, with no CORS and nothing to configure.
+
 After changing any shell file, bump `SHELL_VERSION` in `sw.js` so visitors get the new build
 instead of the cached one.
 

@@ -1,0 +1,40 @@
+# Deploys the accounts backend to Render.
+#
+# Vercel can't run it: serverless functions have no persistent filesystem, so a
+# SQLite file there is wiped on every cold start. This puts the API on a real
+# Node process with a disk that survives restarts.
+#
+# Use it: Render → New → Blueprint → point at this repo.
+# Then set ALLOWED_ORIGINS to wherever the static site is served from, and set
+# `apiBase` in js/config.js to this service's URL.
+
+services:
+  - type: web
+    name: arcade-campus-hub-api
+    runtime: node
+    plan: free
+    rootDir: server
+    buildCommand: npm ci
+    startCommand: node app.js
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+
+      # The database lives on the persistent disk mounted below, NOT in the
+      # code directory — a deploy replaces the code directory every time.
+      - key: ARCADE_DB
+        value: /var/data/arcade.db
+
+      # Every origin allowed to hold a session here. Comma separated, no
+      # trailing slashes. Set this to your Vercel URL and your own domain.
+      - key: ALLOWED_ORIGINS
+        sync: false
+
+      - key: SIGNUPS_PER_HOUR
+        value: "30"
+
+    disk:
+      name: arcade-data
+      mountPath: /var/data
+      sizeGB: 1

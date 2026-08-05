@@ -523,6 +523,100 @@ function client() {
     ok("brute force gets throttled", hit429);
   }
 
+  /* --------------------------------------------- cross-origin deployment */
+  group("cross-origin frontend");
+  {
+    /* A second app instance configured the way a Vercel + Render split is:
+       static site on one origin, API on another. */
+    const DB2 = path.join(os.tmpdir(), "arcade-cors-" + Date.now() + ".db");
+    const saved = { db: process.env.ARCADE_DB, origins: process.env.ALLOWED_ORIGINS };
+    process.env.ARCADE_DB = DB2;
+    process.env.ALLOWED_ORIGINS = "https://websitegames.vercel.app, https://arcadecampushub.online/";
+
+    for (const key of Object.keys(require.cache)) {
+      if (key.includes(path.join("server"))) delete require.cache[key];
+    }
+    const app2 = require("../app");
+    const srv2 = app2.listen(0);
+    await new Promise((r) => srv2.once("listening", r));
+    const base2 = "http://127.0.0.1:" + srv2.address().port;
+
+    const good = "https://websitegames.vercel.app";
+    const evil = "https://not-my-site.example";
+
+    let res = await fetch(base2 + "/api/health", { headers: { Origin: good } });
+    ok("allowed origin gets CORS headers",
+       res.headers.get("access-control-allow-origin") === good);
+    ok("credentials allowed", res.headers.get("access-control-allow-credentials") === "true");
+    ok("response varies on origin", /Origin/i.test(res.headers.get("vary") || ""));
+
+    res = await fetch(base2 + "/api/health", { headers: { Origin: evil } });
+    ok("unknown origin gets no CORS grant",
+       res.headers.get("access-control-allow-origin") === null);
+
+    res = await fetch(base2 + "/api/auth/signup", {
+      method: "OPTIONS", headers: { Origin: good }
+    });
+    ok("preflight from an allowed origin succeeds", res.status === 204);
+    ok("preflight advertises the verbs",
+       /POST/.test(res.headers.get("access-control-allow-methods") || ""));
+
+    res = await fetch(base2 + "/api/auth/signup", {
+      method: "OPTIONS", headers: { Origin: evil }
+    });
+    ok("preflight from an unknown origin is refused", res.status === 403);
+
+    /* Trailing slashes in the env var must not break matching. */
+    res = await fetch(base2 + "/api/health", {
+      headers: { Origin: "https://arcadecampushub.online" }
+    });
+    ok("trailing slash in ALLOWED_ORIGINS is tolerated",
+       res.headers.get("access-control-allow-origin") === "https://arcadecampushub.online");
+
+    /* The real test: can a cross-origin frontend actually hold a session? */
+    res = await fetch(base2 + "/api/auth/signup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Origin: good },
+      body: JSON.stringify({ username: "corsuser", password: "crossorigin1" })
+    });
+    ok("cross-origin signup accepted", res.status === 201, "status " + res.status);
+
+    const cookie = (res.headers.getSetCookie ? res.headers.getSetCookie() : [])[0] || "";
+    ok("cookie is SameSite=None", /SameSite=None/i.test(cookie), cookie);
+    ok("cookie is Secure", /;\s*Secure/i.test(cookie), cookie);
+    ok("cookie stays HttpOnly", /HttpOnly/i.test(cookie));
+
+    const jarValue = cookie.split(";")[0];
+    res = await fetch(base2 + "/api/auth/me", {
+      headers: { Origin: good, Cookie: jarValue }
+    });
+    const who = await res.json();
+    ok("session works across origins", who.user && who.user.username === "corsuser");
+
+    /* And a forged origin still cannot act with that cookie. */
+    res = await fetch(base2 + "/api/users/me", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json", Origin: evil, Cookie: jarValue },
+      body: JSON.stringify({ bio: "hijacked" })
+    });
+    ok("stolen-cookie write from a foreign origin is blocked", res.status === 403);
+
+    /* Logout must clear a SameSite=None cookie with matching attributes. */
+    res = await fetch(base2 + "/api/auth/logout", {
+      method: "POST", headers: { Origin: good, Cookie: jarValue }
+    });
+    const cleared = (res.headers.getSetCookie ? res.headers.getSetCookie() : [])[0] || "";
+    ok("logout cookie matches the set attributes",
+       /SameSite=None/i.test(cleared) && /Secure/i.test(cleared) && /Max-Age=0/i.test(cleared),
+       cleared);
+
+    srv2.close();
+    try { fs.unlinkSync(DB2); fs.unlinkSync(DB2 + "-wal"); fs.unlinkSync(DB2 + "-shm"); } catch {}
+    process.env.ARCADE_DB = saved.db;
+    if (saved.origins === undefined) delete process.env.ALLOWED_ORIGINS;
+    else process.env.ALLOWED_ORIGINS = saved.origins;
+  }
+
   /* ----------------------------------------------------- static + 404 */
   group("static hosting");
   {

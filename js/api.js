@@ -5,7 +5,10 @@
 (function () {
   "use strict";
 
-  var BASE = "/api";
+  /* Same origin by default; SITE.apiBase points it at a separately hosted
+     backend (static site on Vercel, API on a Node host, say). */
+  var BASE = String((window.SITE && window.SITE.apiBase) || "").replace(/\/+$/, "") + "/api";
+  var CROSS_ORIGIN = BASE.charAt(0) !== "/";
 
   /* Thrown for any non-2xx so callers can `catch (err) { err.message }`. */
   function ApiError(message, status, data) {
@@ -27,7 +30,8 @@
 
     var opts = {
       method: method,
-      credentials: "same-origin",
+      /* Cross-origin needs "include" or the session cookie is never sent. */
+      credentials: CROSS_ORIGIN ? "include" : "same-origin",
       headers: { "Accept": "application/json" }
     };
     if (body !== undefined) {

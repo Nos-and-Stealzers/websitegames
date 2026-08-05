@@ -31,17 +31,42 @@ app.use((req, res, next) => {
   next();
 });
 
-/* Same-origin only: the API is cookie-authenticated, so a stray Origin header
-   on a state-changing request is a CSRF attempt. */
-app.use("/api", (req, res, next) => {
-  if (req.method === "GET" || req.method === "HEAD") return next();
-  const origin = req.headers.origin;
-  if (!origin) return next();                       // same-origin fetch or curl
-  const host = req.headers.host;
+/* The API is cookie-authenticated, so an unrecognised Origin on a
+   state-changing request is a CSRF attempt. Same origin always passes; other
+   origins must be named explicitly in ALLOWED_ORIGINS — that's what lets the
+   static site live on Vercel while the API lives here.
+     ALLOWED_ORIGINS=https://websitegames.vercel.app,https://arcadecampushub.online */
+const ALLOWED = String(process.env.ALLOWED_ORIGINS || "")
+  .split(",")
+  .map((s) => s.trim().replace(/\/+$/, ""))
+  .filter(Boolean);
+
+function originAllowed(origin, host) {
+  if (!origin) return true;                     // same-origin fetch, curl, app
   try {
-    if (new URL(origin).host === host) return next();
-  } catch { /* malformed Origin falls through to the rejection */ }
-  return res.status(403).json({ error: "Cross-origin requests are not allowed." });
+    if (new URL(origin).host === host) return true;
+  } catch { return false; }                     // malformed Origin
+  return ALLOWED.includes(origin.replace(/\/+$/, ""));
+}
+
+app.use("/api", (req, res, next) => {
+  const origin = req.headers.origin;
+  const allowed = originAllowed(origin, req.headers.host);
+
+  if (origin && allowed) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+    res.setHeader("Access-Control-Allow-Credentials", "true");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type, Accept");
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
+    res.setHeader("Access-Control-Max-Age", "86400");
+  }
+  /* Vary regardless, so a cached response for one origin is never reused. */
+  res.setHeader("Vary", "Origin");
+
+  if (req.method === "OPTIONS") return res.status(allowed ? 204 : 403).end();
+  if (req.method === "GET" || req.method === "HEAD") return next();
+  if (!allowed) return res.status(403).json({ error: "Cross-origin requests are not allowed." });
+  next();
 });
 
 app.use(express.json({ limit: "1mb" }));
@@ -92,6 +117,10 @@ if (require.main === module) {
     console.log(n === 0
       ? "No accounts yet — the first signup becomes the admin."
       : `${n} account${n === 1 ? "" : "s"} registered.`);
+    if (ALLOWED.length) {
+      console.log("Cross-origin frontends allowed: " + ALLOWED.join(", "));
+      console.log("Session cookies are SameSite=None; Secure — HTTPS required.");
+    }
   });
 }
 

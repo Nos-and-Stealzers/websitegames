@@ -70,14 +70,30 @@ function sweepSessions() {
 
 /* --------------------------------------------------------------- cookies */
 
+/* When the frontend is served from another origin (static site on Vercel, API
+   here), the session cookie has to be SameSite=None — and browsers only accept
+   that together with Secure, so cross-site deployments must be HTTPS. */
+const CROSS_SITE = !!String(process.env.ALLOWED_ORIGINS || "").trim();
+
+function cookieAttrs() {
+  const attrs = ["Path=/", "HttpOnly"];
+  if (CROSS_SITE) {
+    attrs.push("SameSite=None", "Secure");
+  } else {
+    attrs.push("SameSite=Lax");
+    if (process.env.NODE_ENV === "production") attrs.push("Secure");
+  }
+  return attrs;
+}
+
 function setCookie(res, token) {
-  const secure = process.env.NODE_ENV === "production" ? "; Secure" : "";
   res.setHeader("Set-Cookie",
-    `${COOKIE}=${token}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${SESSION_DAYS * 86400}${secure}`);
+    [`${COOKIE}=${token}`, ...cookieAttrs(), `Max-Age=${SESSION_DAYS * 86400}`].join("; "));
 }
 
 function clearCookie(res) {
-  res.setHeader("Set-Cookie", `${COOKIE}=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0`);
+  /* Attributes must match the ones it was set with or the browser keeps it. */
+  res.setHeader("Set-Cookie", [`${COOKIE}=`, ...cookieAttrs(), "Max-Age=0"].join("; "));
 }
 
 function parseCookies(header) {
