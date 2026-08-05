@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" data-skin="noir" data-lite="off">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pinned — Arcade Campus Hub</title>
+  <meta name="description" content="Your pins, history, ratings and most-played titles — stored in this browser only.">
+  <meta name="theme-color" content="#0c0d10">
+  <meta name="robots" content="noindex,follow">
+  <link rel="icon" type="image/svg+xml" href="assets/icon.svg">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/theme-boot.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div data-shell="chrome"></div>
+
+  <main class="main" id="main">
+
+    <header class="page-head">
+      <span class="label">Personal</span>
+      <h1>Your shelf</h1>
+      <p>All of this lives in this browser. Clearing site data or switching devices resets it —
+         export a copy from settings if you care about it.</p>
+      <div class="readout">
+        <span>pinned <b id="r-pins">0</b></span>
+        <span>played <b id="r-played">0</b></span>
+        <span>rated <b id="r-rated">0</b></span>
+        <span>time <b id="r-time">0s</b></span>
+      </div>
+    </header>
+
+    <p style="margin-bottom:1.6rem">
+      <button class="btn" type="button" id="a-settings">⚙ Export / import</button>
+      <button class="btn btn-flat" type="button" id="a-clear">Clear history</button>
+    </p>
+
+    <section class="block" aria-labelledby="pin-h">
+      <div class="block-head">
+        <h2 id="pin-h">Pinned</h2>
+        <span class="fill"></span>
+        <a class="more" href="browse.html?fav=1">Filter in index →</a>
+      </div>
+      <div class="grid" id="g-pinned"></div>
+    </section>
+
+    <section class="block" aria-labelledby="hist-h">
+      <div class="block-head">
+        <h2 id="hist-h">History</h2>
+        <span class="fill"></span>
+      </div>
+      <div class="rows" id="l-history"></div>
+    </section>
+
+    <section class="block" id="b-rated" hidden aria-labelledby="rate-h">
+      <div class="block-head">
+        <h2 id="rate-h">Your top rated</h2>
+        <span class="fill"></span>
+      </div>
+      <div class="grid grid-sm" id="g-rated"></div>
+    </section>
+
+    <section class="block" id="b-most" hidden aria-labelledby="most-h">
+      <div class="block-head">
+        <h2 id="most-h">Most played</h2>
+        <span class="fill"></span>
+        <a class="more" href="stats.html">Activity →</a>
+      </div>
+      <div class="grid grid-sm" id="g-most"></div>
+    </section>
+
+    <div data-shell="foot"></div>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="data/games.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/catalog.js"></script>
+  <script src="js/art.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/session.js"></script>
+  <script src="js/shell.js"></script>
+  <script src="js/page-library.js"></script>
+</body>
+</html>

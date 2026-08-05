@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" data-skin="noir" data-lite="off">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Messages — Arcade Campus Hub</title>
+  <meta name="description" content="Direct messages with your friends.">
+  <meta name="theme-color" content="#0c0d10">
+  <meta name="robots" content="noindex,follow">
+  <link rel="icon" type="image/svg+xml" href="assets/icon.svg">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/theme-boot.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div data-shell="chrome"></div>
+
+  <main class="main" id="main">
+
+    <header class="page-head" style="padding-bottom:1rem;margin-bottom:1.2rem">
+      <span class="label">Social</span>
+      <h1>Messages</h1>
+    </header>
+
+    <div class="dm" id="dm">
+      <aside class="dm-list" id="thread-list" aria-label="Conversations"></aside>
+
+      <section class="dm-panel" id="panel" aria-live="polite">
+        <div class="dm-empty" id="dm-empty">
+          <strong>Pick a conversation</strong>
+          <p class="dim tiny">Or start one from <a href="friends.html">Friends</a>.</p>
+        </div>
+
+        <div class="dm-open" id="dm-open" hidden>
+          <header class="dm-head" id="dm-head"></header>
+          <div class="dm-log" id="log" tabindex="0"></div>
+          <form class="dm-compose" id="compose">
+            <label for="body" class="sr-only">Message</label>
+            <textarea id="body" rows="1" maxlength="2000" placeholder="Write a message…"></textarea>
+            <button class="btn btn-cta" type="submit" id="send">Send</button>
+          </form>
+          <p class="dm-locked" id="locked" hidden></p>
+        </div>
+      </section>
+    </div>
+
+    <div data-shell="foot"></div>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="data/games.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/catalog.js"></script>
+  <script src="js/art.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/session.js"></script>
+  <script src="js/social-ui.js"></script>
+  <script src="js/shell.js"></script>
+  <script src="js/page-messages.js"></script>
+</body>
+</html>

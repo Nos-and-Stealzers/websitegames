@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" data-skin="noir" data-lite="off">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>All games — Arcade Campus Hub</title>
+  <meta name="description" content="Search and filter the full 216-title index by category, compatibility and how each game launches. Grid or dense list.">
+  <meta name="theme-color" content="#0c0d10">
+  <meta name="robots" content="index,follow">
+  <link rel="icon" type="image/svg+xml" href="assets/icon.svg">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/theme-boot.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div data-shell="chrome"></div>
+
+  <main class="main" id="main">
+
+    <header class="page-head">
+      <span class="label">Index</span>
+      <h1 id="p-title">All games</h1>
+      <p id="p-sub">Search the whole index, then narrow it with the filters below.</p>
+    </header>
+
+    <div class="toolbar">
+      <div class="search">
+        <label for="page-q" class="sr-only">Search games</label>
+        <input type="search" id="page-q" placeholder="Search titles, categories, descriptions…" autocomplete="off">
+      </div>
+      <label for="sort" class="label">Sort</label>
+      <select id="sort" aria-label="Sort order">
+        <option value="relevance">Best match</option>
+        <option value="title">A → Z</option>
+        <option value="title-desc">Z → A</option>
+        <option value="category">Category</option>
+        <option value="played">Most played</option>
+        <option value="recent">Recently played</option>
+        <option value="random">Shuffle</option>
+      </select>
+      <div class="seg" role="group" aria-label="View">
+        <button class="btn" type="button" id="v-grid" aria-pressed="true">▦ Grid</button>
+        <button class="btn" type="button" id="v-list" aria-pressed="false">≣ List</button>
+      </div>
+      <button class="btn btn-flat" type="button" id="reset">Reset</button>
+    </div>
+
+    <div class="pills" id="f-flags">
+      <button class="pill" type="button" data-flag="embed" aria-pressed="false">Plays in page</button>
+      <button class="pill" type="button" data-flag="risk" aria-pressed="false">Stable only</button>
+      <button class="pill" type="button" data-flag="local" aria-pressed="false">Hosted here</button>
+      <button class="pill" type="button" data-flag="fav" aria-pressed="false">Pinned</button>
+    </div>
+
+    <div class="pills" id="f-cats"></div>
+
+    <p class="count-line" id="count">…</p>
+
+    <div class="grid" id="out-grid"></div>
+    <div class="rows" id="out-list" hidden></div>
+
+    <p style="margin:1.6rem 0">
+      <button class="btn btn-cta" type="button" id="more" hidden>Load more</button>
+    </p>
+
+    <div data-shell="foot"></div>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="data/games.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/catalog.js"></script>
+  <script src="js/art.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/session.js"></script>
+  <script src="js/shell.js"></script>
+  <script src="js/page-browse.js"></script>
+</body>
+</html>

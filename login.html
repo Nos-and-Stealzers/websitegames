@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" data-skin="noir" data-lite="off">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sign in — Arcade Campus Hub</title>
+  <meta name="description" content="Sign in to sync your pins, history and playtime across devices.">
+  <meta name="theme-color" content="#0c0d10">
+  <meta name="robots" content="noindex,follow">
+  <link rel="icon" type="image/svg+xml" href="assets/icon.svg">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/theme-boot.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div data-shell="chrome"></div>
+
+  <main class="main" id="main">
+    <div class="gate">
+      <header class="page-head" style="border:0;margin-bottom:1rem">
+        <span class="label">Account</span>
+        <h1>Sign in</h1>
+        <p>Your pins, history, ratings and playtime follow you to any device.
+           Everything you've already played here comes with you.</p>
+      </header>
+
+      <div class="panel" id="offline" hidden>
+        <p class="dim" style="margin:0">
+          Accounts need the hub's server running. The arcade itself works fine without it —
+          <a href="browse.html">go play something</a>.
+        </p>
+      </div>
+
+      <form class="panel form" id="form" hidden>
+        <div class="field">
+          <label for="username">Username</label>
+          <input type="text" id="username" name="username" autocomplete="username"
+                 autocapitalize="none" spellcheck="false" required>
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" autocomplete="current-password" required>
+        </div>
+
+        <p class="form-error" id="error" hidden></p>
+
+        <button class="btn btn-cta" type="submit" id="submit" style="width:100%">Sign in</button>
+
+        <p class="tiny dimmer" style="margin:1rem 0 0">
+          No account yet? <a href="signup.html">Create one</a> — it takes one field and a password.
+        </p>
+      </form>
+    </div>
+
+    <div data-shell="foot"></div>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="data/games.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/catalog.js"></script>
+  <script src="js/art.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/session.js"></script>
+  <script src="js/shell.js"></script>
+  <script src="js/page-login.js"></script>
+</body>
+</html>

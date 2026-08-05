@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Arcade Campus Hub">
+  <rect width="512" height="512" fill="#0c0d10"/>
+  <!-- hairline frame, matching the rail mark -->
+  <rect x="36" y="36" width="440" height="440" fill="none" stroke="#ff5c33" stroke-width="14"/>
+  <!-- generated-plate motif: chevron field -->
+  <g fill="#ff5c33" opacity="0.16">
+    <polygon points="72,440 136,300 200,440"/>
+    <polygon points="200,440 264,300 328,440"/>
+    <polygon points="328,440 392,300 456,440"/>
+  </g>
+  <!-- monogram -->
+  <text x="256" y="300" text-anchor="middle"
+        font-family="ui-monospace, 'Cascadia Mono', Menlo, Consolas, monospace"
+        font-size="190" font-weight="700" letter-spacing="-8" fill="#f2f3f5">AC</text>
+  <rect x="180" y="352" width="152" height="14" fill="#ff5c33"/>
+</svg>

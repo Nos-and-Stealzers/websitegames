@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" data-skin="noir" data-lite="off">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin — Arcade Campus Hub</title>
+  <meta name="description" content="Moderation console: users, roles, reports and the audit trail.">
+  <meta name="theme-color" content="#0c0d10">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="icon" type="image/svg+xml" href="assets/icon.svg">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/theme-boot.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div data-shell="chrome"></div>
+
+  <main class="main" id="main">
+
+    <div id="denied" hidden>
+      <div class="crash">
+        <div class="code">403</div>
+        <h1>Not your console</h1>
+        <p class="dim">This area is for administrators and moderators.</p>
+        <div class="acts"><a class="btn btn-cta" href="index.html">Back to the arcade</a></div>
+      </div>
+    </div>
+
+    <div id="console" hidden>
+      <header class="page-head">
+        <span class="label">Staff</span>
+        <h1>Admin console</h1>
+        <div class="readout">
+          <span>you are <b id="r-role">—</b></span>
+          <span>open reports <b id="r-reports">0</b></span>
+          <span>online now <b id="r-online">0</b></span>
+        </div>
+      </header>
+
+      <div class="tabs" role="tablist" id="tabs">
+        <button class="tab on" type="button" role="tab" data-tab="overview" aria-selected="true">Overview</button>
+        <button class="tab" type="button" role="tab" data-tab="users" aria-selected="false">Users</button>
+        <button class="tab" type="button" role="tab" data-tab="reports" aria-selected="false">Reports</button>
+        <button class="tab" type="button" role="tab" data-tab="audit" aria-selected="false">Audit</button>
+      </div>
+
+      <!-- overview -->
+      <section class="tab-panel" data-panel="overview">
+        <div class="metrics" style="margin-bottom:1.4rem">
+          <div class="metric"><b id="k-users">0</b><span>Accounts</span></div>
+          <div class="metric"><b id="k-online">0</b><span>Online now</span></div>
+          <div class="metric"><b id="k-new">0</b><span>New this week</span></div>
+          <div class="metric"><b id="k-suspended">0</b><span>Suspended</span></div>
+          <div class="metric"><b id="k-friends">0</b><span>Friendships</span></div>
+          <div class="metric"><b id="k-messages">0</b><span>Messages</span></div>
+          <div class="metric"><b id="k-today">0</b><span>Messages today</span></div>
+          <div class="metric"><b id="k-sessions">0</b><span>Live sessions</span></div>
+        </div>
+
+        <div class="block-head"><h2>Most played, everyone</h2><span class="fill"></span></div>
+        <div class="panel"><div class="meters" id="top-games"></div></div>
+      </section>
+
+      <!-- users -->
+      <section class="tab-panel" data-panel="users" hidden>
+        <div class="panel" style="margin-bottom:1rem">
+          <input type="search" id="user-q" placeholder="Filter by username…"
+                 autocomplete="off" aria-label="Filter users">
+        </div>
+        <div class="rows" id="user-rows"></div>
+      </section>
+
+      <!-- reports -->
+      <section class="tab-panel" data-panel="reports" hidden>
+        <div class="pills" style="margin-bottom:1rem">
+          <button class="pill on" type="button" data-state="open">Open</button>
+          <button class="pill" type="button" data-state="closed">Closed</button>
+        </div>
+        <div id="report-list"></div>
+      </section>
+
+      <!-- audit -->
+      <section class="tab-panel" data-panel="audit" hidden>
+        <div class="rows" id="audit-rows"></div>
+      </section>
+    </div>
+
+    <div data-shell="foot"></div>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="data/games.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/catalog.js"></script>
+  <script src="js/art.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/session.js"></script>
+  <script src="js/social-ui.js"></script>
+  <script src="js/shell.js"></script>
+  <script src="js/page-admin.js"></script>
+</body>
+</html>

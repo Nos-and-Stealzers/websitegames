@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en" data-skin="noir" data-lite="off">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Settings — Arcade Campus Hub</title>
+  <meta name="description" content="Skins, display preferences, profile, privacy, password, sessions and account deletion.">
+  <meta name="theme-color" content="#0c0d10">
+  <meta name="robots" content="noindex,follow">
+  <link rel="icon" type="image/svg+xml" href="assets/icon.svg">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/theme-boot.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div data-shell="chrome"></div>
+
+  <main class="main" id="main">
+
+    <header class="page-head">
+      <span class="label">Preferences</span>
+      <h1>Settings</h1>
+      <div class="readout" id="readout">
+        <span>signed in as <b id="r-user">not signed in</b></span>
+        <span>role <b id="r-role">—</b></span>
+        <span>since <b id="r-since">—</b></span>
+      </div>
+    </header>
+
+    <!-- ============ display: works with no account and no backend ============ -->
+    <section class="block">
+      <div class="block-head"><h2>Display</h2><span class="fill"></span>
+        <span class="more dimmer">this device only</span></div>
+
+      <div class="panel">
+        <div class="opt">
+          <div>
+            <div class="k">Skin</div>
+            <div class="d">Five palettes. Applied instantly, remembered here.</div>
+          </div>
+          <div class="skins" id="skins"></div>
+        </div>
+
+        <div class="opt">
+          <div>
+            <div class="k">Lite mode</div>
+            <div class="d">Drops motion and the grid overlay on slow machines.</div>
+          </div>
+          <label class="toggle"><input type="checkbox" id="lite"><i></i></label>
+        </div>
+
+        <div class="opt">
+          <div>
+            <div class="k">Default library view</div>
+            <div class="d">How the index opens: tiles or a dense table.</div>
+          </div>
+          <div class="seg">
+            <button class="btn btn-sm" type="button" id="view-grid" aria-pressed="false">▦ Grid</button>
+            <button class="btn btn-sm" type="button" id="view-list" aria-pressed="false">≣ List</button>
+          </div>
+        </div>
+
+        <div class="opt">
+          <div>
+            <div class="k">Auto fullscreen</div>
+            <div class="d">Expand the stage as soon as a game loads.</div>
+          </div>
+          <label class="toggle"><input type="checkbox" id="autofull"><i></i></label>
+        </div>
+
+        <div class="opt">
+          <div>
+            <div class="k">Confirm new-tab launches</div>
+            <div class="d">Ask before opening a game outside the page.</div>
+          </div>
+          <label class="toggle"><input type="checkbox" id="confirm-ext"><i></i></label>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ local data: always available ============ -->
+    <section class="block">
+      <div class="block-head"><h2>Your data</h2><span class="fill"></span></div>
+      <div class="panel">
+        <p class="tiny dimmer" id="data-note" style="margin:0 0 0.9rem"></p>
+        <div class="btn-row">
+          <button class="btn btn-sm" type="button" id="sync-now" hidden>Sync now</button>
+          <button class="btn btn-sm" type="button" id="export">Export JSON</button>
+          <button class="btn btn-sm" type="button" id="import">Import JSON</button>
+          <button class="btn btn-sm btn-flat" type="button" id="wipe-local">Wipe this device</button>
+        </div>
+        <p class="tiny dimmer" id="sync-state" style="margin:0.8rem 0 0"></p>
+      </div>
+    </section>
+
+    <!-- ============ signed out prompt ============ -->
+    <section class="block" id="signed-out" hidden>
+      <div class="block-head"><h2>Account</h2><span class="fill"></span></div>
+      <div class="panel">
+        <p style="margin:0 0 0.9rem">
+          You're not signed in. Everything above is saved in this browser only.
+          An account syncs your pins, history and playtime across devices, and adds
+          friends and messages.
+        </p>
+        <div class="btn-row">
+          <a class="btn btn-cta" href="login.html?next=settings.html">Sign in</a>
+          <a class="btn" href="signup.html">Create an account</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ offline prompt ============ -->
+    <section class="block" id="no-backend" hidden>
+      <div class="block-head"><h2>Account</h2><span class="fill"></span></div>
+      <div class="panel">
+        <p class="dim" style="margin:0">
+          Accounts need the hub's server running. Everything above works without it.
+        </p>
+      </div>
+    </section>
+
+    <!-- ============ account-only sections ============ -->
+    <div id="account-area" hidden>
+
+      <section class="block">
+        <div class="block-head"><h2>Profile</h2><span class="fill"></span></div>
+        <form class="panel form" id="profile-form">
+          <div class="field">
+            <label for="display">Display name</label>
+            <input type="text" id="display" maxlength="32">
+            <p class="hint">Shown instead of your username. Your @handle never changes.</p>
+          </div>
+          <div class="field">
+            <label for="bio">Bio</label>
+            <textarea id="bio" rows="3" maxlength="300"></textarea>
+            <p class="hint"><span id="bio-count">0</span>/300</p>
+          </div>
+          <button class="btn btn-cta" type="submit">Save profile</button>
+        </form>
+      </section>
+
+      <section class="block">
+        <div class="block-head"><h2>Privacy</h2><span class="fill"></span></div>
+        <div class="panel" id="privacy"></div>
+      </section>
+
+      <section class="block">
+        <div class="block-head"><h2>Password</h2><span class="fill"></span></div>
+        <form class="panel form" id="password-form">
+          <div class="field">
+            <label for="current">Current password</label>
+            <input type="password" id="current" autocomplete="current-password" required>
+          </div>
+          <div class="field">
+            <label for="next">New password</label>
+            <input type="password" id="next" autocomplete="new-password" required minlength="8">
+            <p class="hint">At least 8 characters, with a letter and a number.</p>
+          </div>
+          <div class="field">
+            <label for="next2">Confirm new password</label>
+            <input type="password" id="next2" autocomplete="new-password" required>
+          </div>
+          <p class="hint">Changing this signs you out everywhere else.</p>
+          <p class="form-error" id="pw-error" hidden></p>
+          <button class="btn btn-cta" type="submit">Change password</button>
+        </form>
+      </section>
+
+      <section class="block">
+        <div class="block-head"><h2>Signed-in devices</h2><span class="fill"></span></div>
+        <div class="panel">
+          <div class="rows" id="sessions" style="border:0"></div>
+          <button class="btn btn-sm" type="button" id="signout-all" style="margin-top:0.9rem">
+            Sign out everywhere else
+          </button>
+        </div>
+      </section>
+
+      <section class="block">
+        <div class="block-head"><h2 style="color:var(--bad)">Danger zone</h2><span class="fill"></span></div>
+        <div class="panel danger">
+          <p class="tiny" style="margin:0 0 0.8rem">
+            Deleting your account erases your profile, friendships, messages and synced save.
+            It cannot be undone. Anything saved locally in this browser stays.
+          </p>
+          <form class="form" id="delete-form">
+            <div class="field">
+              <label for="confirm-name">Type your username to confirm</label>
+              <input type="text" id="confirm-name" autocapitalize="none" spellcheck="false">
+            </div>
+            <p class="form-error" id="del-error" hidden></p>
+            <button class="btn btn-danger" type="submit">Delete my account</button>
+          </form>
+        </div>
+      </section>
+    </div>
+
+    <div data-shell="foot"></div>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="data/games.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/catalog.js"></script>
+  <script src="js/art.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/session.js"></script>
+  <script src="js/social-ui.js"></script>
+  <script src="js/shell.js"></script>
+  <script src="js/page-settings.js"></script>
+</body>
+</html>

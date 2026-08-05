@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" data-skin="noir" data-lite="off">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Friends — Arcade Campus Hub</title>
+  <meta name="description" content="Find people, send friend requests and see who's online.">
+  <meta name="theme-color" content="#0c0d10">
+  <meta name="robots" content="noindex,follow">
+  <link rel="icon" type="image/svg+xml" href="assets/icon.svg">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/theme-boot.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div data-shell="chrome"></div>
+
+  <main class="main" id="main">
+
+    <header class="page-head">
+      <span class="label">Social</span>
+      <h1>Friends</h1>
+      <div class="readout">
+        <span>friends <b id="r-friends">0</b></span>
+        <span>online <b id="r-online">0</b></span>
+        <span>incoming <b id="r-in">0</b></span>
+        <span>sent <b id="r-out">0</b></span>
+      </div>
+    </header>
+
+    <section class="block">
+      <div class="block-head"><h2>Find someone</h2><span class="fill"></span></div>
+      <div class="panel">
+        <div class="finder-row">
+          <input type="search" id="find" placeholder="Search by username…"
+                 autocomplete="off" autocapitalize="none" spellcheck="false"
+                 aria-label="Search for a user">
+        </div>
+        <div class="people" id="results"></div>
+        <p class="tiny dimmer" id="find-hint" style="margin:0.7rem 0 0">
+          Type at least two characters.
+        </p>
+      </div>
+    </section>
+
+    <section class="block" id="b-incoming" hidden>
+      <div class="block-head">
+        <h2>Requests for you</h2><span class="fill"></span>
+      </div>
+      <div class="people" id="incoming"></div>
+    </section>
+
+    <section class="block" id="b-outgoing" hidden>
+      <div class="block-head"><h2>Sent</h2><span class="fill"></span></div>
+      <div class="people" id="outgoing"></div>
+    </section>
+
+    <section class="block">
+      <div class="block-head">
+        <h2>Your friends</h2><span class="fill"></span>
+        <a class="more" href="messages.html">Messages →</a>
+      </div>
+      <div class="people" id="friends"></div>
+    </section>
+
+    <section class="block" id="b-blocked" hidden>
+      <div class="block-head"><h2>Blocked</h2><span class="fill"></span></div>
+      <div class="people" id="blocked"></div>
+    </section>
+
+    <div data-shell="foot"></div>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="data/games.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/catalog.js"></script>
+  <script src="js/art.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/session.js"></script>
+  <script src="js/social-ui.js"></script>
+  <script src="js/shell.js"></script>
+  <script src="js/page-friends.js"></script>
+</body>
+</html>

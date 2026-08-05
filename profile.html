@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" data-skin="noir" data-lite="off">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Profile — Arcade Campus Hub</title>
+  <meta name="description" content="A player's profile: bio, status and shared activity.">
+  <meta name="theme-color" content="#0c0d10">
+  <meta name="robots" content="noindex,follow">
+  <link rel="icon" type="image/svg+xml" href="assets/icon.svg">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/theme-boot.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div data-shell="chrome"></div>
+
+  <main class="main" id="main">
+
+    <div id="missing" hidden>
+      <div class="crash">
+        <div class="code">404</div>
+        <h1>No such player</h1>
+        <p class="dim">That account doesn't exist, or it isn't visible to you.</p>
+        <div class="acts">
+          <a class="btn btn-cta" href="friends.html">Find people</a>
+          <a class="btn" href="index.html">Back to the arcade</a>
+        </div>
+      </div>
+    </div>
+
+    <div id="view" hidden>
+      <header class="profile-head">
+        <div class="profile-id" id="who"></div>
+        <div class="profile-acts" id="acts"></div>
+      </header>
+
+      <p class="profile-bio" id="bio" hidden></p>
+
+      <div class="metrics" id="metrics" hidden>
+        <div class="metric"><b id="m-time">—</b><span>Playtime</span></div>
+        <div class="metric"><b id="m-games">—</b><span>Titles played</span></div>
+        <div class="metric"><b id="m-since">—</b><span>Member since</span></div>
+        <div class="metric"><b id="m-seen">—</b><span>Last seen</span></div>
+      </div>
+
+      <p class="panel dim tiny" id="private" hidden style="margin-top:1.4rem">
+        This player's activity is only shared with friends.
+      </p>
+
+      <section class="block" id="b-recent" hidden>
+        <div class="block-head"><h2>Recently played</h2><span class="fill"></span></div>
+        <div class="grid grid-sm" id="g-recent"></div>
+      </section>
+    </div>
+
+    <div data-shell="foot"></div>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="data/games.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/catalog.js"></script>
+  <script src="js/art.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/session.js"></script>
+  <script src="js/social-ui.js"></script>
+  <script src="js/shell.js"></script>
+  <script src="js/page-profile.js"></script>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" data-skin="noir" data-lite="off">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Create account — Arcade Campus Hub</title>
+  <meta name="description" content="Create an account to keep your pins, history and playtime across devices, and to message friends.">
+  <meta name="theme-color" content="#0c0d10">
+  <meta name="robots" content="noindex,follow">
+  <link rel="icon" type="image/svg+xml" href="assets/icon.svg">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/theme-boot.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div data-shell="chrome"></div>
+
+  <main class="main" id="main">
+    <div class="gate">
+      <header class="page-head" style="border:0;margin-bottom:1rem">
+        <span class="label">Account</span>
+        <h1>Create an account</h1>
+        <p>No email, no verification, no ads. Just a name and a password.</p>
+      </header>
+
+      <div class="panel" id="offline" hidden>
+        <p class="dim" style="margin:0">
+          Accounts need the hub's server running. The arcade works fine without it —
+          <a href="browse.html">go play something</a>.
+        </p>
+      </div>
+
+      <div class="panel first-run" id="first-run" hidden>
+        <span class="label">Fresh install</span>
+        <p class="tiny" style="margin:0.4rem 0 0">
+          No accounts exist yet, so <b>this first one becomes the administrator</b>.
+        </p>
+      </div>
+
+      <form class="panel form" id="form" hidden>
+        <div class="field">
+          <label for="username">Username</label>
+          <input type="text" id="username" name="username" autocomplete="username"
+                 autocapitalize="none" spellcheck="false" required
+                 minlength="3" maxlength="20" pattern="[A-Za-z][A-Za-z0-9_]{2,19}">
+          <p class="hint">3–20 characters. Letters, numbers and underscores, starting with a letter.</p>
+        </div>
+
+        <div class="field">
+          <label for="display">Display name <span class="dimmer">(optional)</span></label>
+          <input type="text" id="display" name="display" maxlength="32" autocomplete="nickname">
+        </div>
+
+        <div class="field">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" autocomplete="new-password"
+                 required minlength="8">
+          <p class="hint">At least 8 characters, with a letter and a number.</p>
+          <div class="strength" id="strength" hidden><i></i></div>
+        </div>
+
+        <div class="field">
+          <label for="confirm">Confirm password</label>
+          <input type="password" id="confirm" name="confirm" autocomplete="new-password" required>
+        </div>
+
+        <p class="carry tiny dimmer" id="carry"></p>
+        <p class="form-error" id="error" hidden></p>
+
+        <button class="btn btn-cta" type="submit" id="submit" style="width:100%">Create account</button>
+
+        <p class="tiny dimmer" style="margin:1rem 0 0">
+          Already have one? <a href="login.html">Sign in</a>.
+        </p>
+      </form>
+    </div>
+
+    <div data-shell="foot"></div>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="data/games.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/catalog.js"></script>
+  <script src="js/art.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/session.js"></script>
+  <script src="js/shell.js"></script>
+  <script src="js/page-signup.js"></script>
+</body>
+</html>

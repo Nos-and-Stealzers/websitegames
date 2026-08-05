@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" data-skin="noir" data-lite="off">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Categories — Arcade Campus Hub</title>
+  <meta name="description" content="Every category in the index, with counts and a sample of what's inside each one.">
+  <meta name="theme-color" content="#0c0d10">
+  <meta name="robots" content="index,follow">
+  <link rel="icon" type="image/svg+xml" href="assets/icon.svg">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/theme-boot.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div data-shell="chrome"></div>
+
+  <main class="main" id="main">
+
+    <header class="page-head">
+      <span class="label">Taxonomy</span>
+      <h1>Categories</h1>
+      <p>Counts come straight from the catalog — nothing here is hand-maintained.</p>
+      <div class="readout">
+        <span>categories <b id="r-cats">—</b></span>
+        <span>titles <b id="r-games">—</b></span>
+        <span>largest <b id="r-top">—</b></span>
+      </div>
+    </header>
+
+    <div class="cats" id="cat-index"></div>
+
+    <div id="samples"></div>
+
+    <div data-shell="foot"></div>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="data/games.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/catalog.js"></script>
+  <script src="js/art.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/session.js"></script>
+  <script src="js/shell.js"></script>
+  <script src="js/page-categories.js"></script>
+</body>
+</html>

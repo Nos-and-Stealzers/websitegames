@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" data-skin="noir" data-lite="off">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Notifications — Arcade Campus Hub</title>
+  <meta name="description" content="Friend requests, messages and account activity in one place.">
+  <meta name="theme-color" content="#0c0d10">
+  <meta name="robots" content="noindex,follow">
+  <link rel="icon" type="image/svg+xml" href="assets/icon.svg">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/theme-boot.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div data-shell="chrome"></div>
+
+  <main class="main" id="main">
+
+    <header class="page-head">
+      <span class="label">Social</span>
+      <h1>Notifications</h1>
+      <div class="readout">
+        <span>unread <b id="r-unread">0</b></span>
+        <span>total <b id="r-total">0</b></span>
+      </div>
+    </header>
+
+    <div class="toolbar" style="position:static">
+      <div class="pills" style="margin:0;flex:1">
+        <button class="pill on" type="button" data-filter="all">All</button>
+        <button class="pill" type="button" data-filter="unread">Unread</button>
+      </div>
+      <button class="btn btn-sm" type="button" id="mark-all">Mark all read</button>
+      <button class="btn btn-sm btn-flat" type="button" id="clear-all">Clear</button>
+    </div>
+
+    <div class="feed" id="feed"></div>
+
+    <div data-shell="foot"></div>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="data/games.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/catalog.js"></script>
+  <script src="js/art.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/session.js"></script>
+  <script src="js/social-ui.js"></script>
+  <script src="js/shell.js"></script>
+  <script src="js/page-notifications.js"></script>
+</body>
+</html>

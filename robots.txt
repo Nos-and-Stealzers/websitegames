@@ -1,0 +1,15 @@
+User-agent: *
+Allow: /
+
+# Personal and staff areas — nothing here is useful to a crawler.
+Disallow: /library.html
+Disallow: /stats.html
+Disallow: /friends.html
+Disallow: /messages.html
+Disallow: /notifications.html
+Disallow: /profile.html
+Disallow: /settings.html
+Disallow: /admin.html
+Disallow: /api/
+
+Sitemap: https://arcadecampushub.online/sitemap.xml

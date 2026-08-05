@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en" data-skin="noir" data-lite="off">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Manual — Arcade Campus Hub</title>
+  <meta name="description" content="How the hub works, what the compatibility flags mean, what stays on your device, and how to add a title to the catalog.">
+  <meta name="theme-color" content="#0c0d10">
+  <meta name="robots" content="index,follow">
+  <link rel="icon" type="image/svg+xml" href="assets/icon.svg">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/theme-boot.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div data-shell="chrome"></div>
+
+  <main class="main" id="main">
+
+    <header class="page-head">
+      <span class="label">Manual</span>
+      <h1>How this thing works</h1>
+      <div class="readout">
+        <span>titles <b id="n-games">—</b></span>
+        <span>categories <b id="n-cats">—</b></span>
+        <span>backend <b>none</b></span>
+        <span>trackers <b>none</b></span>
+      </div>
+    </header>
+
+    <div class="prose">
+
+      <h2>The build</h2>
+      <p>
+        Static HTML, CSS and plain JavaScript on the front. No framework, no bundler. The catalog
+        lives in <code>data/games.json</code> — mirrored as <code>data/games.js</code> so it also
+        works straight off a filesystem — and every page reads from that one list.
+      </p>
+      <p>
+        Accounts, friends and messages are served by a small Node + SQLite backend in
+        <code>server/</code>. It is entirely optional: without it the site is still a complete,
+        deployable static arcade.
+      </p>
+      <p>
+        Cover art is real where a game ships its own icon, and generated from the title's id
+        where it doesn't — a deterministic geometric plate, so no two entries look alike and
+        there are no placeholder images to ship.
+      </p>
+      <p>
+        There are no webfonts either. Everything uses the fonts already on your machine, which
+        means nothing breaks when a network blocks font CDNs.
+      </p>
+
+      <h2>Compatibility flags</h2>
+      <ul>
+        <li><span class="flag flag-good">Stable</span> — tested, loads reliably on a typical restricted network.</li>
+        <li><span class="flag flag-warn">Patchy</span> — works, but some filters interfere.</li>
+        <li><span class="flag flag-bad">Blocked often</span> — expect trouble.</li>
+        <li><span class="flag">Untested</span> — no data yet.</li>
+      </ul>
+      <p>
+        Separately, each title says whether it <b>plays in page</b> or <b>opens a new tab</b>.
+        Some games refuse to be framed; those get a one-click launch instead, and the player tells
+        you which you're getting before you click.
+      </p>
+      <p class="dimmer tiny">
+        Flags describe reliability, not permission. Follow whatever rules apply where you are.
+      </p>
+
+      <h2>Accounts (optional)</h2>
+      <p>
+        You never need one. Browsing, playing, pinning and playtime all work signed out, exactly
+        as they always have. An account adds three things: your save follows you to other devices,
+        you get friends, and you get direct messages.
+      </p>
+      <ul>
+        <li>Signing up <b>adopts whatever you already played here</b> — nothing is lost.</li>
+        <li>Two devices merge rather than overwrite: the higher playtime and the union of your
+            pins always win, so signing in somewhere new can't wipe your progress.</li>
+        <li>No email, no verification, no password reset — so <b>don't forget your password</b>.</li>
+        <li>The first account created on a fresh install becomes the administrator.</li>
+        <li>Passwords are stored as salted scrypt hashes, never in plain text.</li>
+        <li>If the hub's server isn't running, account features simply disappear and the
+            arcade carries on.</li>
+      </ul>
+
+      <h2>What's stored</h2>
+      <p>
+        There are no analytics and no ad trackers. Pins, history, ratings, playtime and your skin
+        choice sit in this browser's <code>localStorage</code> under the <code>ach:</code> prefix.
+        Signed in, everything except your skin also syncs to the hub's own server — nowhere else.
+      </p>
+      <ul>
+        <li>Signed out: clearing site data, private browsing, or a different device resets it all.</li>
+        <li>Signed in: one session cookie, <code>HttpOnly</code> and <code>SameSite=Lax</code>.
+            It identifies your session and nothing more.</li>
+        <li><b>Settings → Export</b> writes a JSON backup; <b>Import</b> restores it elsewhere.</li>
+        <li><b>Account settings → Delete</b> erases your profile, friendships, messages and
+            synced save for good.</li>
+        <li>Individual games load their own assets; what they do is up to them.</li>
+      </ul>
+
+      <h2>Friends and messages</h2>
+      <ul>
+        <li>Friend requests go one way until accepted; either side can remove the link later.</li>
+        <li>Blocking hides you from that person's search and profile view, and stops their messages.</li>
+        <li>You can restrict messages to friends only in <b>Account settings → Privacy</b>.</li>
+        <li>Activity on your profile is opt-out and only ever visible to friends.</li>
+        <li>Report anything from a profile or conversation; it lands in the moderation queue.</li>
+        <li>Messages are stored in plain text on the hub's server. Moderators can remove them.
+            Treat it as a school notice board, not a private channel.</li>
+      </ul>
+
+      <h2>Keys</h2>
+      <ul>
+        <li><kbd>/</kbd> jump to the search box</li>
+        <li><kbd>K</kbd> open the finder</li>
+        <li><kbd>R</kbd> random title</li>
+        <li><kbd>P</kbd> play / reload, on a game page</li>
+        <li><kbd>F</kbd> pin the title you're on</li>
+        <li><kbd>?</kbd> settings</li>
+        <li><kbd>Esc</kbd> close anything open</li>
+      </ul>
+
+      <h2>Adding a title</h2>
+      <p>Append an object to <code>data/games.json</code>, then regenerate the derived files:</p>
+      <pre><code>{
+  "id": "my-game",
+  "title": "My Game",
+  "category": "arcade",
+  "description": "One line about it.",
+  "gradient": "linear-gradient(135deg, #ff5c33, #7c2d12)",
+  "source": "/games/my-game/index.html",
+  "direct": "/games/my-game/index.html",
+  "platform": "local",
+  "embed": "allowed",
+  "schoolRisk": "low"
+}</code></pre>
+      <p class="tiny dimmer">
+        <code>embed</code> is <code>"allowed"</code>/<code>true</code> for in-page play or
+        <code>false</code> to force a new tab. <code>preferDirect: true</code> skips the player even
+        when framing works. <code>schoolRisk</code> is <code>low</code> | <code>medium</code> |
+        <code>high</code>. <code>gradient</code> seeds the generated cover. Unknown categories fall
+        back to <b>Other</b>. Where the game files are served from is set once in
+        <code>js/config.js</code> via <code>gameBase</code>.
+      </p>
+
+      <h2>Disclaimer</h2>
+      <p class="dim">
+        Hobby build. Games are third-party works owned by their creators and are provided as-is;
+        how and where you use this is on you.
+      </p>
+
+      <p style="margin-top:2rem">
+        <a class="btn btn-cta" href="browse.html">Open the index</a>
+        <button class="btn" type="button" id="a-settings">⚙ Settings</button>
+      </p>
+    </div>
+
+    <div data-shell="foot"></div>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="data/games.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/catalog.js"></script>
+  <script src="js/art.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/session.js"></script>
+  <script src="js/shell.js"></script>
+  <script src="js/page-about.js"></script>
+</body>
+</html>

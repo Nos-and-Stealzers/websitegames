@@ -1,0 +1,27 @@
+# Dependencies — reinstall with `npm install` in server/
+node_modules/
+
+# The live database. Contains real accounts, password hashes, private messages
+# and session tokens. Never commit this.
+*.db
+*.db-wal
+*.db-shm
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Logs and scratch
+*.log
+npm-debug.log*
+.cache/
+tmp/
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.swp

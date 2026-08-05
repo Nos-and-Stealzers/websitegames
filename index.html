@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" data-skin="noir" data-lite="off">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Arcade Campus Hub — index of 216 playable things</title>
+  <meta name="description" content="A local-first browser arcade: 216 games with compatibility flags, pinning, playtime tracking and five skins. No accounts, no tracking.">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta name="robots" content="index,follow">
+  <meta name="theme-color" content="#0c0d10">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Arcade Campus Hub">
+  <meta property="og:description" content="216 browser games, indexed. Local-first, no accounts.">
+  <meta property="og:image" content="assets/icon.svg">
+  <meta name="twitter:card" content="summary">
+  <link rel="icon" type="image/svg+xml" href="assets/icon.svg">
+  <link rel="manifest" href="manifest.json">
+  <link rel="canonical" href="https://arcadecampushub.online/">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/theme-boot.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div data-shell="chrome"></div>
+
+  <main class="main" id="main">
+
+    <header class="page-head">
+      <span class="label">Overview</span>
+      <h1>Everything playable, in one index.</h1>
+      <p>No launcher, no account, no waiting on someone else's server. What you pin,
+         what you play and how long for stays in this browser.</p>
+      <div class="readout">
+        <span>titles <b id="r-games">—</b></span>
+        <span>categories <b id="r-cats">—</b></span>
+        <span>in-page <b id="r-inpage">—</b></span>
+        <span>your time <b id="r-time">—</b></span>
+        <span id="r-date"></span>
+      </div>
+    </header>
+
+    <section class="block" aria-labelledby="feat-h">
+      <div class="block-head">
+        <h2 id="feat-h">Featured today</h2>
+        <span class="fill"></span>
+        <a class="more" href="browse.html?sort=random">Shuffle →</a>
+      </div>
+      <article class="marquee" id="marquee"></article>
+    </section>
+
+    <section class="block" id="b-resume" hidden aria-labelledby="resume-h">
+      <div class="block-head">
+        <h2 id="resume-h">Resume</h2>
+        <span class="fill"></span>
+        <a class="more" href="library.html">History →</a>
+      </div>
+      <div class="strip" id="s-resume"></div>
+    </section>
+
+    <section class="block" id="b-pinned" hidden aria-labelledby="pin-h">
+      <div class="block-head">
+        <h2 id="pin-h">Pinned</h2>
+        <span class="fill"></span>
+        <a class="more" href="library.html">All pins →</a>
+      </div>
+      <div class="strip" id="s-pinned"></div>
+    </section>
+
+    <section class="block" aria-labelledby="sug-h">
+      <div class="block-head">
+        <h2 id="sug-h">Suggested</h2>
+        <span class="fill"></span>
+        <span class="more dimmer" id="sug-why">based on the whole index</span>
+      </div>
+      <div class="grid" id="g-suggested"></div>
+    </section>
+
+    <section class="block" aria-labelledby="cat-h">
+      <div class="block-head">
+        <h2 id="cat-h">Index by category</h2>
+        <span class="fill"></span>
+        <a class="more" href="categories.html">All →</a>
+      </div>
+      <div class="cats" id="g-cats"></div>
+    </section>
+
+    <section class="block" aria-labelledby="ip-h">
+      <div class="block-head">
+        <h2 id="ip-h">Runs in the page</h2>
+        <span class="fill"></span>
+        <a class="more" href="browse.html?embed=1&amp;risk=low">See all →</a>
+      </div>
+      <div class="grid grid-sm" id="g-inpage"></div>
+    </section>
+
+    <div data-shell="foot"></div>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="data/games.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/catalog.js"></script>
+  <script src="js/art.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/session.js"></script>
+  <script src="js/shell.js"></script>
+  <script src="js/page-home.js"></script>
+</body>
+</html>

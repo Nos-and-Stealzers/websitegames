@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" data-skin="noir" data-lite="off">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Play — Arcade Campus Hub</title>
+  <meta name="description" content="Player with in-page framing, new-tab fallback, fullscreen, aspect control and per-device playtime.">
+  <meta name="theme-color" content="#0c0d10">
+  <meta name="robots" content="index,follow">
+  <link rel="icon" type="image/svg+xml" href="assets/icon.svg">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/theme-boot.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div data-shell="chrome"></div>
+
+  <main class="main" id="main">
+
+    <section id="missing" hidden>
+      <div class="crash">
+        <div class="code">404</div>
+        <h1>No such title in the index</h1>
+        <p class="dim">That link is stale, or the catalog entry was renamed.</p>
+        <div class="acts">
+          <a class="btn btn-cta" href="browse.html">Open the index</a>
+          <button class="btn" type="button" id="miss-random">⇢ Play something random</button>
+        </div>
+      </div>
+    </section>
+
+    <div id="player" hidden>
+
+      <header class="player-top">
+        <div class="who">
+          <span class="label" id="crumb"></span>
+          <h1 id="g-title">—</h1>
+          <div class="line" id="g-flags"></div>
+        </div>
+      </header>
+
+      <div class="deck">
+        <button class="btn btn-cta" type="button" id="a-play">▶ Play</button>
+        <button class="btn" type="button" id="a-full">⛶ Fullscreen</button>
+        <button class="btn" type="button" id="a-tab">↗ New tab</button>
+        <button class="btn" type="button" id="a-aspect">4:3</button>
+        <span class="spacer"></span>
+        <button class="btn" type="button" id="a-pin" aria-pressed="false">☆ Pin</button>
+        <button class="btn" type="button" id="a-share">⧉ Copy link</button>
+      </div>
+
+      <div class="stage" id="stage">
+        <div class="curtain" id="curtain">
+          <div class="inner">
+            <span class="label" id="c-label">Standby</span>
+            <h2 id="c-title">Ready when you are</h2>
+            <p id="c-body">Press play to load the game in this page.</p>
+            <button class="btn btn-cta" type="button" id="c-action">▶ Play now</button>
+            <button class="alt" type="button" id="c-alt" hidden></button>
+          </div>
+        </div>
+      </div>
+
+      <dl class="spec">
+        <div><dt>Category</dt><dd id="m-cat">—</dd></div>
+        <div><dt>Compatibility</dt><dd id="m-risk">—</dd></div>
+        <div><dt>Launches</dt><dd id="m-launch">—</dd></div>
+        <div><dt>Sessions</dt><dd id="m-plays">0</dd></div>
+        <div><dt>Your time</dt><dd id="m-time">0s</dd></div>
+        <div><dt>Last played</dt><dd id="m-last">—</dd></div>
+      </dl>
+
+      <section class="block">
+        <div class="block-head">
+          <h2>Notes</h2>
+          <span class="fill"></span>
+        </div>
+        <div class="panel">
+          <p id="g-desc" class="dim" style="margin-bottom:1rem">—</p>
+          <div class="opt" style="border:0;padding:0">
+            <div>
+              <div class="k">Your rating</div>
+              <div class="d">Kept on this device only.</div>
+            </div>
+            <div class="stars" id="stars" role="group" aria-label="Rate this game"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="block">
+        <div class="block-head">
+          <h2>Adjacent titles</h2>
+          <span class="fill"></span>
+          <a class="more" id="cat-link" href="browse.html">Category →</a>
+        </div>
+        <div class="grid grid-sm" id="g-related"></div>
+      </section>
+    </div>
+
+    <div data-shell="foot"></div>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="data/games.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/catalog.js"></script>
+  <script src="js/art.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/session.js"></script>
+  <script src="js/shell.js"></script>
+  <script src="js/page-play.js"></script>
+</body>
+</html>
