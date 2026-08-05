@@ -198,9 +198,28 @@ html[data-lite="on"] * {
 }
 html[data-lite="on"] { --grid-line: transparent; }
 
+/* Motion off is its own switch: lite mode is about slow hardware, this is
+   about people who find movement unpleasant. theme-boot also flips it when
+   the OS asks for reduced motion. */
+html[data-motion="off"] *,
+html[data-motion="off"] *::before,
+html[data-motion="off"] *::after {
+  animation-duration: 1ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 1ms !important;
+  scroll-behavior: auto !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
   * { animation-duration: 1ms !important; transition-duration: 1ms !important; }
 }
+
+/* Text size. Everything is sized in rem off the body, so one number moves
+   the whole interface rather than a handful of hand-picked elements. */
+html[data-text="large"] body { font-size: 17px; }
+html[data-text="huge"] body { font-size: 19px; }
+html[data-text="huge"] .tile-desc,
+html[data-text="large"] .tile-desc { -webkit-line-clamp: 3; }
 
 /* --------------------------------------------------------------------------
    02 · BASE

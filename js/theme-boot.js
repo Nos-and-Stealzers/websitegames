@@ -15,6 +15,8 @@
 
   var skin = "noir";
   var lite = false;
+  var motion = true;
+  var textSize = "normal";
 
   try {
     var raw = window.localStorage.getItem("ach:settings");
@@ -23,10 +25,22 @@
       var want = s.skin || ALIAS[s.theme] || s.theme;
       if (want && VALID[want]) skin = want;
       lite = !!(s.lite || s.fast);
+      if (typeof s.motion === "boolean") motion = s.motion;
+      if (s.textSize) textSize = s.textSize;
     }
   } catch (err) { /* private mode, blocked storage — defaults are fine */ }
+
+  /* Honour the OS setting when the user hasn't expressed one here. */
+  try {
+    if (motion && window.matchMedia &&
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      motion = false;
+    }
+  } catch (err) { /* no matchMedia */ }
 
   var root = document.documentElement;
   root.setAttribute("data-skin", skin);
   root.setAttribute("data-lite", lite ? "on" : "off");
+  root.setAttribute("data-motion", motion ? "on" : "off");
+  root.setAttribute("data-text", textSize);
 })();

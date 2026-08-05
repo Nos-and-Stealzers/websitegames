@@ -609,6 +609,12 @@
       }
       if (event.metaKey || event.ctrlKey || event.altKey) return;
       if (typing(event.target)) return;
+      if (!window.Store.settings().shortcuts) return;
+
+      /* A running game owns the keyboard. R would navigate away from it and
+         K would drop a dialog over it — both from a stray keypress after the
+         iframe lost focus. Escape above still works, deliberately. */
+      if (document.body.dataset.gameActive) return;
 
       if (event.key === "/") {
         event.preventDefault();

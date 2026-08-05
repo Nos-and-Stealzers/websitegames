@@ -44,6 +44,27 @@
 
         <div class="opt">
           <div>
+            <div class="k">Text size</div>
+            <div class="d">Scales the whole interface, not just body copy.</div>
+          </div>
+          <div class="seg">
+            <button class="btn btn-sm" type="button" data-textsize="normal" aria-pressed="false">Normal</button>
+            <button class="btn btn-sm" type="button" data-textsize="large" aria-pressed="false">Large</button>
+            <button class="btn btn-sm" type="button" data-textsize="huge" aria-pressed="false">Huge</button>
+          </div>
+        </div>
+
+        <div class="opt">
+          <div>
+            <div class="k">Animations</div>
+            <div class="d">Off stops things sliding and fading. Follows your system
+              setting unless you change it here.</div>
+          </div>
+          <label class="toggle"><input type="checkbox" id="motion"><i></i></label>
+        </div>
+
+        <div class="opt">
+          <div>
             <div class="k">Lite mode</div>
             <div class="d">Drops motion and the grid overlay on slow machines.</div>
           </div>
@@ -75,6 +96,67 @@
             <div class="d">Ask before opening a game outside the page.</div>
           </div>
           <label class="toggle"><input type="checkbox" id="confirm-ext"><i></i></label>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ behaviour ============ -->
+    <section class="block">
+      <div class="block-head"><h2>Behaviour</h2><span class="fill"></span>
+        <span class="more dimmer">this device only</span></div>
+      <div class="panel">
+        <div class="opt">
+          <div>
+            <div class="k">Keyboard shortcuts</div>
+            <div class="d">
+              <kbd>/</kbd> search, <kbd>K</kbd> finder, <kbd>R</kbd> random,
+              <kbd>P</kbd> play, <kbd>F</kbd> pin. Always off while a game is
+              running, so a stray key can't reload or leave it.
+            </div>
+          </div>
+          <label class="toggle"><input type="checkbox" id="shortcuts"><i></i></label>
+        </div>
+
+        <div class="opt">
+          <div>
+            <div class="k">Chat dock</div>
+            <div class="d">The floating chat bottom-right. Off hides it everywhere;
+              Messages still works.</div>
+          </div>
+          <label class="toggle"><input type="checkbox" id="dock"><i></i></label>
+        </div>
+
+        <div class="opt">
+          <div>
+            <div class="k">Back up game progress automatically</div>
+            <div class="d">Saves a game's own progress to your account while you
+              play, so it follows you to another device.</div>
+          </div>
+          <label class="toggle"><input type="checkbox" id="autobackup"><i></i></label>
+        </div>
+
+        <div class="opt">
+          <div>
+            <div class="k">Hide unavailable titles</div>
+            <div class="d">11 entries have no host carrying their files. They're
+              listed and flagged by default; this drops them from the index.</div>
+          </div>
+          <label class="toggle"><input type="checkbox" id="hide-gone"><i></i></label>
+        </div>
+
+        <div class="opt">
+          <div>
+            <div class="k">Default sort in the index</div>
+            <div class="d">What Browse opens with when you haven't searched.</div>
+          </div>
+          <select id="default-sort" style="width:auto">
+            <option value="title">A → Z</option>
+            <option value="title-desc">Z → A</option>
+            <option value="category">Category</option>
+            <option value="played">Most played</option>
+            <option value="recent">Recently played</option>
+            <option value="random">Shuffle</option>
+          </select>
         </div>
       </div>
     </section>

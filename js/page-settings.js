@@ -80,8 +80,46 @@
     bindToggle("lite", "lite", function (on) {
       document.documentElement.setAttribute("data-lite", on ? "on" : "off");
     });
+    bindToggle("motion", "motion", function (on) {
+      document.documentElement.setAttribute("data-motion", on ? "on" : "off");
+    });
     bindToggle("autofull", "autoFullscreen");
     bindToggle("confirm-ext", "confirmExternal");
+
+    /* Behaviour switches. The dock and shortcuts ones only take effect on the
+       next page load, so say so rather than leaving people wondering. */
+    bindToggle("shortcuts", "shortcuts");
+    bindToggle("dock", "dock", function () {
+      UI.toast("Applies on the next page you open");
+    });
+    bindToggle("autobackup", "autoBackup");
+    bindToggle("hide-gone", "hideUnavailable");
+
+    var sortPick = document.getElementById("default-sort");
+    if (sortPick) {
+      sortPick.value = s.sort;
+      sortPick.addEventListener("change", function () {
+        Store.setSetting("sort", sortPick.value);
+        UI.toast("Default sort saved");
+      });
+    }
+
+    /* Text size */
+    var textButtons = document.querySelectorAll("[data-textsize]");
+    function paintText() {
+      var now = Store.settings().textSize;
+      textButtons.forEach(function (b) {
+        b.setAttribute("aria-pressed", b.dataset.textsize === now ? "true" : "false");
+      });
+    }
+    textButtons.forEach(function (b) {
+      b.addEventListener("click", function () {
+        Store.setSetting("textSize", b.dataset.textsize);
+        document.documentElement.setAttribute("data-text", b.dataset.textsize);
+        paintText();
+      });
+    });
+    paintText();
 
     var grid = document.getElementById("view-grid");
     var list = document.getElementById("view-list");

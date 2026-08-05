@@ -130,6 +130,10 @@
     });
     stage().insertBefore(frame, curtain());
 
+    /* Tells the shell to stand down its single-key shortcuts — R would
+       navigate away from a game in progress, K would cover it. */
+    document.body.dataset.gameActive = "1";
+
     curtain().hidden = true;
     window.Store.recordPlay(game.id);
     window.Store.pushRecent(game.id);
@@ -252,7 +256,8 @@
   }
 
   function canBackup() {
-    return window.GameSaves && window.Session && window.Session.user &&
+    return window.Store.settings().autoBackup &&
+           window.GameSaves && window.Session && window.Session.user &&
            game && game.host && !game.unavailable;
   }
 
@@ -356,8 +361,15 @@
       }
     });
 
+    /* Single-key shortcuts are off while a game is actually running.
+       An iframe only receives keys while it has focus, and focus is lost by
+       clicking anywhere outside it — at which point P (a pause key in plenty
+       of games) reached this handler and reloaded the game, throwing away
+       whatever the player had got to. The buttons still work. */
     document.addEventListener("keydown", function (event) {
       if (event.metaKey || event.ctrlKey || event.altKey) return;
+      if (!window.Store.settings().shortcuts) return;
+      if (document.body.dataset.gameActive) return;
       var t = event.target;
       if (t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.isContentEditable)) return;
       if (event.key === "f" || event.key === "F") $("a-pin").click();

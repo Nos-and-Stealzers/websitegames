@@ -28,6 +28,7 @@
       q: p.get("q") || "",
       category: p.get("category") || "all",
       sort: p.get("sort") || "relevance",
+      hideGone: Store.settings().hideUnavailable,
       embed: p.get("embed") === "1",
       risk: p.get("risk") === "low",
       local: p.get("local") === "1",
@@ -155,7 +156,7 @@
         lowRiskOnly: state.risk,
         localOnly: state.local,
         favoritesOnly: state.fav,
-        includeUnavailable: true
+        includeUnavailable: !state.hideGone
       });
 
       var mode = state.sort;

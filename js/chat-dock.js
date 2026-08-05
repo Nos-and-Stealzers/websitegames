@@ -367,6 +367,7 @@
 
     window.Session.ready.then(function (state) {
       if (!state.backend || !state.user) return;
+      if (!window.Store.settings().dock) return;
 
       build();
       root.hidden = false;

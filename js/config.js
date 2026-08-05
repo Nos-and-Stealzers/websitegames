@@ -68,11 +68,18 @@
     apiBase: "",
 
     defaults: {
-      skin: "noir",            // noir | paper | slate | terminal | blueprint
+      skin: "noir",            // see `skins` below
       lite: false,             // drop motion + grid overlay on slow hardware
+      motion: true,            // animations; separate from lite mode
+      textSize: "normal",      // normal | large | huge
       autoFullscreen: false,
       confirmExternal: true,
-      view: "grid"             // grid | list
+      view: "grid",            // grid | list
+      sort: "title",           // default ordering in the index
+      shortcuts: true,         // single-key shortcuts (/ K R P F)
+      dock: true,              // floating chat, bottom right
+      autoBackup: true,        // push game progress to the account as you play
+      hideUnavailable: false   // drop unhosted titles from the index entirely
     },
 
     /* Category presentation: label, glyph, accent used by the index tiles. */
