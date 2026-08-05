@@ -33,6 +33,7 @@
         if (tab.dataset.tab === "users") loadUsers();
         if (tab.dataset.tab === "reports") loadReports();
         if (tab.dataset.tab === "feedback") loadFeedback();
+        if (tab.dataset.tab === "gamedata" && window.initGameData) window.initGameData();
         if (tab.dataset.tab === "audit") loadAudit();
       });
 

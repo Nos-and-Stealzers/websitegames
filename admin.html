@@ -43,6 +43,7 @@
         <button class="tab" type="button" role="tab" data-tab="users" aria-selected="false">Users</button>
         <button class="tab" type="button" role="tab" data-tab="reports" aria-selected="false">Reports</button>
         <button class="tab" type="button" role="tab" data-tab="feedback" aria-selected="false">Feedback</button>
+        <button class="tab" type="button" role="tab" data-tab="gamedata" aria-selected="false">Game data</button>
         <button class="tab" type="button" role="tab" data-tab="audit" aria-selected="false">Audit</button>
       </div>
 
@@ -92,6 +93,31 @@
         <div id="fb-list"></div>
       </section>
 
+      <!-- game data -->
+      <section class="tab-panel" data-panel="gamedata" hidden>
+        <div class="panel" style="margin-bottom:1rem">
+          <p class="tiny dimmer" style="margin:0 0 0.9rem">
+            Every value a game has saved in <em>this browser</em>, for whichever host
+            serves it. Editing changes your own copy — it is a save editor, not a
+            server cheat, so nothing here affects anyone else.
+          </p>
+          <div class="toolbar" style="position:static;margin:0;border:0;padding:0;background:none">
+            <label for="gd-host" class="label">Host</label>
+            <select id="gd-host"></select>
+            <div class="search">
+              <label for="gd-filter" class="sr-only">Filter keys</label>
+              <input type="search" id="gd-filter" placeholder="Filter keys or values…">
+            </div>
+            <button class="btn btn-sm btn-cta" type="button" id="gd-load">Load</button>
+            <button class="btn btn-sm btn-flat" type="button" id="gd-new">＋ New key</button>
+          </div>
+          <p class="tiny dimmer" id="gd-state" style="margin:0.8rem 0 0"></p>
+        </div>
+
+        <div id="gd-presets" hidden style="margin-bottom:1rem"></div>
+        <div id="gd-keys"></div>
+      </section>
+
       <!-- audit -->
       <section class="tab-panel" data-panel="audit" hidden>
         <div class="rows" id="audit-rows"></div>
@@ -115,6 +141,7 @@
   <script src="js/chat-dock.js"></script>
   <script src="js/game-saves.js"></script>
   <script src="js/shell.js"></script>
+  <script src="js/page-gamedata.js"></script>
   <script src="js/page-admin.js"></script>
 </body>
 </html>

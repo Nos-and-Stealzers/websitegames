@@ -1376,6 +1376,45 @@ kbd {
   gap: 0.3rem; padding: 0.4rem 0.5rem;
 }
 .skin-name { font-size: 0.8rem; font-weight: 650; }
+
+/* --------------------------------------------------------------------------
+   26 · GAME DATA EDITOR
+   -------------------------------------------------------------------------- */
+
+.gd-card {
+  border: 1px solid var(--line);
+  background: var(--surface);
+  padding: 0.8rem 0.9rem;
+  margin-bottom: 0.7rem;
+}
+.gd-head {
+  display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;
+  margin-bottom: 0.6rem;
+}
+.gd-key {
+  font-family: var(--mono); font-size: 0.82rem; font-weight: 600;
+  color: var(--ink); overflow-wrap: anywhere;
+}
+
+.gd-fields {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 0.5rem;
+}
+.gd-field { display: flex; flex-direction: column; gap: 0.2rem; }
+.gd-field-name {
+  font-family: var(--mono); font-size: 0.66rem;
+  letter-spacing: 0.06em; color: var(--ink-3);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.gd-field input { font-family: var(--mono); font-size: 0.8rem; }
+
+.gd-raw {
+  width: 100%; resize: vertical;
+  font-family: var(--mono); font-size: 0.78rem; line-height: 1.5;
+  padding: 0.5rem 0.6rem;
+  background: var(--paper); color: var(--ink);
+  border: 1px solid var(--line-2); border-radius: var(--r);
+}
 .skin-mode {
   font-family: var(--mono); font-size: 0.6rem;
   letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3);

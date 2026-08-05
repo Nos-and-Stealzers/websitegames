@@ -104,6 +104,12 @@
         var res = restore(msg.data, !!msg.overwrite);
         reply.written = res.written;
         reply.kept = res.kept;
+      } else if (msg.action === "remove") {
+        var gone = 0;
+        (msg.keys || []).forEach(function (key) {
+          try { localStorage.removeItem(key); gone++; } catch (err) {}
+        });
+        reply.removed = gone;
       } else if (msg.action === "clear") {
         try { localStorage.clear(); } catch (err) {}
         reply.cleared = true;

@@ -181,10 +181,48 @@
     }));
   }
 
+  /* ---- direct access, for the admin game-data editor ---- */
+
+  function originFor(hostOrOrigin) {
+    if (/^https?:/i.test(hostOrOrigin)) return hostOrOrigin.replace(/\/+$/, "");
+    var match = hostsFromConfig().filter(function (o) {
+      return keyFor(o) === hostOrOrigin;
+    })[0];
+    return match || null;
+  }
+
+  function readAll(hostOrOrigin) {
+    var origin = originFor(hostOrOrigin);
+    if (!origin) return Promise.reject(new Error("Unknown game host."));
+    return ask(origin, { action: "read" }).then(function (res) {
+      return { host: keyFor(origin), data: res.data || {}, skipped: res.skipped || 0 };
+    });
+  }
+
+  /* overwrite defaults true here: the editor exists precisely to change
+     values that already exist. */
+  function writeKeys(hostOrOrigin, data, overwrite) {
+    var origin = originFor(hostOrOrigin);
+    if (!origin) return Promise.reject(new Error("Unknown game host."));
+    return ask(origin, {
+      action: "write", data: data, overwrite: overwrite !== false
+    });
+  }
+
+  function removeKeys(hostOrOrigin, keys) {
+    var origin = originFor(hostOrOrigin);
+    if (!origin) return Promise.reject(new Error("Unknown game host."));
+    return ask(origin, { action: "remove", keys: keys });
+  }
+
   window.GameSaves = {
     hosts: hostsFromConfig,
+    hostKey: keyFor,
     backup: backup,
     restore: restore,
-    probe: probe
+    probe: probe,
+    readAll: readAll,
+    writeKeys: writeKeys,
+    removeKeys: removeKeys
   };
 })();

@@ -1,0 +1,17 @@
+{
+  "_readme": [
+    "Friendly labels for game save keys, used by the admin Game data editor.",
+    "",
+    "Save formats belong to the games, not to this site — there are 216 of them",
+    "and no common convention, so nothing here is guessed. Add entries as you",
+    "identify keys: open Admin -> Game data, play a game, reload, and see which",
+    "key changed. Then name it here and it shows as a label from then on.",
+    "",
+    "Shape:  hosts[<host>][<localStorage key>] = \"Friendly label\"",
+    "The editor works fine without any of this; labels are only a convenience."
+  ],
+  "hosts": {
+    "lucasgrimm389.github.io": {},
+    "nos-and-stealzers.github.io": {}
+  }
+}
