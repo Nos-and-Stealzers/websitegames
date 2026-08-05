@@ -99,22 +99,45 @@ progress keeps working, and add your new origin to the bridge's `ALLOWED` list.
 
 ---
 
-## Bandwidth is the real limit
+## Measured on this connection
 
-Download speed is not the number that matters. **Upload** is.
+```
+download   223 Mbps
+upload      38 Mbps        <- the number that matters
+latency     64 ms idle
+           147 ms while uploading    (2.3x worse)
+```
 
-| What | Upload per player |
-| --- | --- |
-| Serving game files | ~2–5 Mbps while loading, then near zero |
-| Streaming a PC game | ~15–25 Mbps, continuously, each |
+Download speed is irrelevant to hosting. **Upload** decides everything, and
+saturated upload is what makes the rest of the house feel slow — that 64 →
+147 ms is real and you would notice it on a call or in a game.
 
-Residential upload is commonly 10–40 Mbps *total*. So:
+| What | Upload per player | Concurrent, on 38 Mbps |
+| --- | --- | --- |
+| Serving game files | ~3 Mbps while loading | ~8 |
+| Streaming a PC game | ~20 Mbps, continuously | **1** |
 
-- **Serving files: fine.** Loads are bursty and then stop. Dozens of players is
-  realistic.
-- **Streaming FNaF World Refreshed: one or two people at once, and that is a
-  hard ceiling.** Not a machine problem — you cannot buy your way past your
-  upload rate with a router.
+So streaming FNaF World Refreshed is a one-player-at-a-time thing, and no
+router or PC upgrade changes that.
+
+### Caching is what makes serving files not hurt
+
+Put Cloudflare in front and the picture changes completely. Game files are
+static and immutable, so with the `Cache-Control` headers in the Caddyfile,
+**your line uploads each file once** and Cloudflare serves every player after
+that from its own edge.
+
+- Cold cache: a handful of players will briefly push upload, same as above.
+- Warm cache: near zero. Your latency stays at 64 ms.
+
+This is the difference between "hosting lags my wifi" and "hosting is
+invisible". Do not skip it — without those headers Cloudflare revalidates
+constantly and you pay the upload every single time.
+
+One caveat worth knowing: Cloudflare's free plan is intended for web content,
+and serving a lot of large video through it is against their terms. The games
+are HTML/JS/images/audio, which is fine. The two FNaF cutscene `.mp4`s (23 MB)
+are the only thing in that grey area.
 
 ---
 
@@ -131,11 +154,42 @@ Residential upload is commonly 10–40 Mbps *total*. So:
 
 ---
 
+## What this actually costs to set up
+
+Four things have to happen, and three of them need you:
+
+1. **Move the domain's nameservers to Cloudflare.** Tunnel with your own
+   hostname requires it. This also moves the DNS records that currently point
+   `arcadecampushub.online` at Vercel — they have to be recreated, and the site
+   is briefly in flux while nameservers propagate. This is the disruptive step.
+2. **Download the games.** They live in GitHub, not on this machine: roughly
+   **9 GB** across the four repos, and 9 GB of disk to keep them on.
+3. **Install and log into `cloudflared`** — opens a browser to authorise
+   against your Cloudflare account.
+4. Point `gameHosts` at the new origin and copy `save-bridge.html` into each
+   folder.
+
 ## What I would actually do
 
-Keep the site on Vercel and accounts on Supabase — they cost nothing and never
-page you at midnight. Move **only the game files** here, behind a Cloudflare
-Tunnel. That fixes the one real problem (the 1 GB cap), keeps your IP private,
-and leaves everything else alone.
+**Nothing, for now.**
 
-Treat streaming the PC build as a separate experiment, not part of the arcade.
+GitHub Pages is serving all 204 games today — verified, every one returning
+200. The 1 GB cap is a rule you are over, not an outage you are having;
+GitHub has not enforced it. You would be trading something that works and
+costs nothing for something that needs a 9 GB download, a machine that never
+sleeps, an ISP that tolerates it, and a nameserver migration.
+
+Move when one of these happens:
+
+- GitHub actually enforces the cap and a repo stops serving
+- You want to host the 730 MB FNaF World Refreshed build, which GitHub will
+  never accept
+- You outgrow Pages' bandwidth
+
+At that point the setup here is ready and the caching config means it will not
+slow your network down.
+
+Keep the site on Vercel and accounts on Supabase regardless — they cost
+nothing and never page you at midnight. And treat streaming the PC build as a
+separate experiment, not part of the arcade: one player at a time is a
+demo, not a feature.

@@ -24,16 +24,29 @@ games.arcadecampushub.online {
 		Referrer-Policy no-referrer-when-downgrade
 	}
 
-	# Game assets are immutable in practice: a new build lands under a new
-	# path. Long cache, and the browser stops re-asking.
+	# THE important part if you care about your own network speed.
+	#
+	# Measured on this connection: 38 Mbps up, and latency goes 64 ms -> 147 ms
+	# while uploading. Serving every request from here would make the house feel
+	# slow whenever someone loads a game.
+	#
+	# These headers let Cloudflare cache the files at its edge, so your line
+	# uploads each file ONCE and Cloudflare serves everyone after that. Upload
+	# use drops to near nothing once warm. Without them Cloudflare revalidates
+	# constantly and you pay the upload every time.
+	#
+	# Game builds are immutable in practice — an update lands under a new path —
+	# so a long max-age is safe.
 	@assets {
-		path *.png *.jpg *.jpeg *.gif *.webp *.mp3 *.ogg *.wav *.woff2 *.data *.wasm *.unityweb
+		path *.png *.jpg *.jpeg *.gif *.webp *.svg *.mp3 *.ogg *.wav *.woff2
+		path *.data *.wasm *.unityweb *.js *.css *.json *.mem *.symbols
 	}
 	header @assets Cache-Control "public, max-age=31536000, immutable"
 
-	# HTML changes when you update a game, so let it revalidate.
+	# HTML changes when you update a game. Still cache it at the edge, just
+	# briefly, so a burst of players doesn't each cost an upload.
 	@html path *.html
-	header @html Cache-Control "public, max-age=0, must-revalidate"
+	header @html Cache-Control "public, max-age=300, s-maxage=3600"
 
 	# Unity builds ship pre-compressed payloads that must be labelled, or the
 	# loader rejects them.
