@@ -132,9 +132,26 @@
         if (onProgress) onProgress(keyFor(origin), "reading");
         return ask(origin, { action: "read" })
           .then(function (res) {
-            if (!res.keys) { done.push({ host: keyFor(origin), keys: 0, skipped: true }); return; }
-            return window.API.putGameSave(keyFor(origin), res.data).then(function (out) {
-              done.push({ host: keyFor(origin), keys: res.keys, bytes: out && out.bytes });
+            /* Many games — anything Unity, most newer HTML5 ones — keep their
+               save in IndexedDB rather than localStorage, so a snapshot with
+               no localStorage keys is not necessarily an empty one. */
+            var idbNames = Object.keys(res.idb || {});
+            if (!res.keys && !idbNames.length) {
+              done.push({
+                host: keyFor(origin), keys: 0, skipped: true,
+                note: res.idbUnsupported ? "this browser can't list IndexedDB" : null
+              });
+              return;
+            }
+
+            var payload = { local: res.data || {}, idb: res.idb || {} };
+            return window.API.putGameSave(keyFor(origin), payload).then(function (out) {
+              done.push({
+                host: keyFor(origin),
+                keys: res.keys,
+                databases: idbNames.length,
+                bytes: out && out.bytes
+              });
             });
           })
           .catch(function (err) {
@@ -158,12 +175,28 @@
         if (onProgress) onProgress(host, "restoring");
         return window.API.getGameSave(host)
           .then(function (res) {
-            var keys = Object.keys(res.payload || {});
-            if (!keys.length) { done.push({ host: host, written: 0, empty: true }); return; }
-            return ask(origin, { action: "write", data: res.payload, overwrite: !!overwrite })
-              .then(function (out) {
-                done.push({ host: host, written: out.written, kept: out.kept });
+            var stored = res.payload || {};
+
+            /* Snapshots taken before IndexedDB support were a flat map of
+               localStorage keys. Read both shapes so older backups still
+               restore. */
+            var local = stored.local || (stored.idb ? {} : stored);
+            var idb = stored.idb || {};
+
+            if (!Object.keys(local).length && !Object.keys(idb).length) {
+              done.push({ host: host, written: 0, empty: true });
+              return;
+            }
+
+            return ask(origin, {
+              action: "write", data: local, idb: idb, overwrite: !!overwrite
+            }).then(function (out) {
+              done.push({
+                host: host,
+                written: (out.written || 0) + (out.idbWritten || 0),
+                kept: out.kept
               });
+            });
           })
           .catch(function (err) {
             done.push({ host: host, error: err.message });

@@ -69,9 +69,10 @@ app.use("/api", (req, res, next) => {
   next();
 });
 
-/* Images arrive as base64 data URLs, which inflate ~4/3. The route caps the
-   decoded size at 600 KB, so this only has to leave room for that plus JSON. */
-app.use(express.json({ limit: "2mb" }));
+/* Two things arrive base64'd and so inflate ~4/3: chat images (capped at
+   600 KB decoded) and game saves (capped at 4 MB, because IndexedDB saves
+   carry binary). This has to clear the larger of the two. */
+app.use(express.json({ limit: "6mb" }));
 app.use(A.attachUser);
 
 /* ------------------------------------------------------------------ routes */

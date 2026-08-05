@@ -1076,7 +1076,9 @@ declare n int;
 begin
   if auth.uid() is null then raise exception 'Not signed in.'; end if;
   if host !~ '^[A-Za-z0-9._-]{1,64}$' then raise exception 'Unknown game host.'; end if;
-  if pg_column_size(payload) > 1048576 then raise exception 'That host''s saves are too large.'; end if;
+  -- 4 MB: IndexedDB saves carry binary (Unity keeps a whole virtual
+  -- filesystem there) and it is base64'd to survive JSON.
+  if pg_column_size(payload) > 4194304 then raise exception 'That host''s saves are too large.'; end if;
 
   n := (select count(*) from jsonb_object_keys(coalesce(payload, '{}'::jsonb)));
 

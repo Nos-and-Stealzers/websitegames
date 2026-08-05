@@ -699,13 +699,30 @@ function client() {
     r = await bob.put(`/api/game-saves/${host}`, { payload: null });
     ok("missing payload rejected", r.status === 400);
 
+    /* An IndexedDB snapshot is nested and can carry base64'd binary, so the
+       shape the bridge actually sends must survive the round trip. */
+    r = await bob.put(`/api/game-saves/${host}`, {
+      payload: {
+        local: { "snowrider_best": "42" },
+        idb: { "UnityCache": { FILE_DATA: [{ k: "/idbfs/save", v: { $b: "AAECAwQ=" } }] } }
+      }
+    });
+    ok("indexeddb-shaped snapshot stored", r.status === 200, JSON.stringify(r.data));
+    r = await bob.get(`/api/game-saves/${host}`);
+    ok("nested idb payload comes back intact",
+       r.data.payload.idb.UnityCache.FILE_DATA[0].v.$b === "AAECAwQ=");
+    ok("localStorage half still there", r.data.payload.local.snowrider_best === "42");
+
+    /* Cap is 4 MB now that binary saves go through it, so the oversize probe
+       has to actually exceed that. */
     const huge = {};
-    for (let i = 0; i < 4000; i++) huge["k" + i] = "x".repeat(400);
+    for (let i = 0; i < 12000; i++) huge["k" + i] = "x".repeat(400);
     r = await bob.put(`/api/game-saves/${host}`, { payload: huge });
     ok("oversized snapshot rejected", r.status === 400 || r.status === 413, "status " + r.status);
 
     r = await bob.get(`/api/game-saves/${host}`);
-    ok("rejected write left the old snapshot alone", r.data.payload.snowrider_best === "42");
+    ok("rejected write left the old snapshot alone",
+       r.data.payload.local && r.data.payload.local.snowrider_best === "42");
 
     r = await bob.del(`/api/game-saves/${host}`);
     ok("snapshot deleted", r.status === 200);

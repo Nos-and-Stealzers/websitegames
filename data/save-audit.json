@@ -1,0 +1,1670 @@
+{
+  "generatedAt": "2026-08-05T20:55:04.494Z",
+  "rows": [
+    {
+      "id": "huge-10-minutes-till-dawn",
+      "host": "games-huge",
+      "opaque": true,
+      "storage": [
+        "indexedDB",
+        "unity-fs"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "huge-1v1lol",
+      "host": "games-huge",
+      "opaque": true,
+      "storage": [],
+      "status": "opaque"
+    },
+    {
+      "id": "1v1space",
+      "host": "games-huge",
+      "opaque": false,
+      "storage": [],
+      "status": "stateless"
+    },
+    {
+      "id": "huge-alienhominid",
+      "host": "games-huge",
+      "opaque": true,
+      "storage": [
+        "localStorage"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "huge-awesome-tanks-2",
+      "host": "games-huge",
+      "opaque": false,
+      "storage": [],
+      "status": "stateless"
+    },
+    {
+      "id": "huge-blackknight",
+      "host": "games-huge",
+      "opaque": true,
+      "storage": [
+        "localStorage"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "boxhead2play",
+      "host": "games-huge",
+      "opaque": true,
+      "storage": [
+        "localStorage"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "burning-man-2",
+      "host": "games-huge",
+      "opaque": true,
+      "storage": [
+        "indexedDB",
+        "unity-fs"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "huge-captaincallisto",
+      "host": "games-huge",
+      "opaque": false,
+      "storage": [],
+      "status": "stateless"
+    },
+    {
+      "id": "huge-championarcher",
+      "host": "games-huge",
+      "opaque": true,
+      "storage": [
+        "localStorage"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "chromaincident",
+      "host": "games-huge",
+      "opaque": false,
+      "storage": [],
+      "status": "stateless"
+    },
+    {
+      "id": "huge-brave-explorers",
+      "host": "games-huge",
+      "opaque": false,
+      "storage": [],
+      "status": "stateless"
+    },
+    {
+      "id": "huge-2020-game",
+      "host": "games-huge",
+      "opaque": false,
+      "storage": [],
+      "status": "stateless"
+    },
+    {
+      "id": "swfgalaxy-2048",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [],
+      "status": "opaque"
+    },
+    {
+      "id": "alien-invaders-io",
+      "host": "games-huge",
+      "opaque": true,
+      "storage": [
+        "indexedDB",
+        "unity-fs"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "huge-angry-birds",
+      "host": "games-huge",
+      "opaque": false,
+      "storage": [],
+      "status": "stateless"
+    },
+    {
+      "id": "huge-arcade-wizard",
+      "host": "games-huge",
+      "opaque": true,
+      "storage": [
+        "unity-fs"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "huge-asteroids",
+      "host": "games-huge",
+      "opaque": false,
+      "storage": [],
+      "status": "stateless"
+    },
+    {
+      "id": "huge-avalanche",
+      "host": "games-huge",
+      "opaque": true,
+      "storage": [
+        "localStorage"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "huge-bad-ice-cream",
+      "host": "games-huge",
+      "opaque": true,
+      "storage": [
+        "localStorage",
+        "cookie"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "huge-bad-ice-cream-2",
+      "host": "games-huge",
+      "opaque": true,
+      "storage": [
+        "localStorage",
+        "cookie"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "huge-bad-ice-cream-3",
+      "host": "games-huge",
+      "opaque": true,
+      "storage": [
+        "localStorage",
+        "cookie"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "swfgalaxy-billiards",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [],
+      "status": "opaque"
+    },
+    {
+      "id": "swfgalaxy-bitdungeon",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [],
+      "status": "opaque"
+    },
+    {
+      "id": "swfgalaxy-btd5",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [],
+      "status": "opaque"
+    },
+    {
+      "id": "huge-bounceback",
+      "host": "games-huge",
+      "opaque": false,
+      "storage": [
+        "localStorage"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "huge-breakout",
+      "host": "games-huge",
+      "opaque": false,
+      "storage": [
+        "localStorage"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "swfgalaxy-btd5hacked",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [],
+      "status": "opaque"
+    },
+    {
+      "id": "swfgalaxy-chess",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [],
+      "status": "opaque"
+    },
+    {
+      "id": "swfgalaxy-chibiknight",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [],
+      "status": "opaque"
+    },
+    {
+      "id": "huge-chrome-dino",
+      "host": "games-huge",
+      "opaque": false,
+      "storage": [
+        "localStorage"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "huge-clean-up-io",
+      "host": "games-huge",
+      "opaque": true,
+      "storage": [
+        "indexedDB",
+        "unity-fs"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "swfgalaxy-clickerheroes",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [
+        "cookie"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "swfgalaxy-cooking",
+      "host": "swfgalaxy",
+      "opaque": false,
+      "storage": [
+        "cookie"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "flash-crashbandicoot",
+      "host": "flashgames",
+      "opaque": true,
+      "storage": [],
+      "status": "opaque"
+    },
+    {
+      "id": "huge-crossyroad",
+      "host": "games-huge",
+      "opaque": false,
+      "storage": [
+        "localStorage"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "huge-cubefield",
+      "host": "games-huge",
+      "opaque": false,
+      "storage": [],
+      "status": "stateless"
+    },
+    {
+      "id": "swfgalaxy-strikeforceheroes2",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [
+        "cookie"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "swfgalaxy-games-deadvalley-deadvalley",
+      "host": "swfgalaxy",
+      "opaque": false,
+      "storage": [],
+      "status": "stateless"
+    },
+    {
+      "id": "dino",
+      "host": "games-huge",
+      "opaque": false,
+      "storage": [
+        "localStorage"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "huge-dodge",
+      "host": "games-huge",
+      "opaque": false,
+      "storage": [
+        "indexedDB",
+        "unity-fs"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "swfgalaxy-dreamcarracing",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [],
+      "status": "opaque"
+    },
+    {
+      "id": "flash-ducklife",
+      "host": "flashgames",
+      "opaque": true,
+      "storage": [],
+      "status": "opaque"
+    },
+    {
+      "id": "flash-ducklife2",
+      "host": "flashgames",
+      "opaque": true,
+      "storage": [],
+      "status": "opaque"
+    },
+    {
+      "id": "flash-ducklife3",
+      "host": "flashgames",
+      "opaque": true,
+      "storage": [],
+      "status": "opaque"
+    },
+    {
+      "id": "swfgalaxy-ducklife4",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [
+        "cookie"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "swfgalaxy-fancypantsadventure",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [],
+      "status": "opaque"
+    },
+    {
+      "id": "swfgalaxy-fighting",
+      "host": "swfgalaxy",
+      "opaque": false,
+      "storage": [
+        "cookie"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "swfgalaxy-flappybird",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [
+        "cookie"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "swfgalaxy-fleeingthecomplex",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [],
+      "status": "opaque"
+    },
+    {
+      "id": "swfgalaxy-frogger",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [],
+      "status": "opaque"
+    },
+    {
+      "id": "swfgalaxy-geometrydash",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [
+        "cookie"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "swfgalaxy-games-getaway shootout-getawayshootout",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [
+        "indexedDB",
+        "unity-fs"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "swfgalaxy-getontop",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [
+        "cookie"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "swfgalaxy-giveup2",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [
+        "cookie"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "swfgalaxy-giveuprobot2",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [],
+      "status": "opaque"
+    },
+    {
+      "id": "swfgalaxy-gunmayhem2",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [],
+      "status": "opaque"
+    },
+    {
+      "id": "swfgalaxy-happywheels",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [
+        "cookie"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "swfgalaxy-hextris",
+      "host": "swfgalaxy",
+      "opaque": false,
+      "storage": [],
+      "status": "stateless"
+    },
+    {
+      "id": "swfgalaxy-idlewebtycoon",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [
+        "cookie"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "swfgalaxy-impossiblequiz",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [],
+      "status": "opaque"
+    },
+    {
+      "id": "swfgalaxy-impossiblequiz2",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [],
+      "status": "opaque"
+    },
+    {
+      "id": "swfgalaxy-impossiblequizhacked",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [],
+      "status": "opaque"
+    },
+    {
+      "id": "swfgalaxy-indestructotank",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [
+        "cookie"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "swfgalaxy-games-hextris-index",
+      "host": "swfgalaxy",
+      "opaque": false,
+      "storage": [
+        "cookie"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "swfgalaxy-infilteratingtheairship",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [
+        "cookie"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "swfgalaxy-jacksmith",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [
+        "cookie"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "swfgalaxy-learntofly3",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [
+        "cookie"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "flash-learntofly",
+      "host": "flashgames",
+      "opaque": true,
+      "storage": [],
+      "status": "opaque"
+    },
+    {
+      "id": "flash-learntofly2",
+      "host": "flashgames",
+      "opaque": true,
+      "storage": [],
+      "status": "opaque"
+    },
+    {
+      "id": "swfgalaxy-miraginewar",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [
+        "cookie"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "swfgalaxy-multitask",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [
+        "cookie"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "swfgalaxy-n",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [],
+      "status": "opaque"
+    },
+    {
+      "id": "swfgalaxy-obeythegame",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [],
+      "status": "opaque"
+    },
+    {
+      "id": "flash-pacman",
+      "host": "flashgames",
+      "opaque": true,
+      "storage": [],
+      "status": "opaque"
+    },
+    {
+      "id": "swfgalaxy-papasbakeria",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [],
+      "status": "opaque"
+    },
+    {
+      "id": "swfgalaxy-papasburgeria",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [],
+      "status": "opaque"
+    },
+    {
+      "id": "swfgalaxy-papasdonuteria",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [],
+      "status": "opaque"
+    },
+    {
+      "id": "swfgalaxy-papasfreezeria",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [],
+      "status": "opaque"
+    },
+    {
+      "id": "swfgalaxy-papasdogeria",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [],
+      "status": "opaque"
+    },
+    {
+      "id": "swfgalaxy-papaspizzeria",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [],
+      "status": "opaque"
+    },
+    {
+      "id": "swfgalaxy-papasscooperia",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [],
+      "status": "opaque"
+    },
+    {
+      "id": "swfgalaxy-papassushiria",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [],
+      "status": "opaque"
+    },
+    {
+      "id": "swfgalaxy-papaswingeria",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [],
+      "status": "opaque"
+    },
+    {
+      "id": "swfgalaxy-games-pingpongchaos-pingpongchaos",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [
+        "indexedDB",
+        "unity-fs"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "swfgalaxy-pokemontowerdefense",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [
+        "cookie"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "swfgalaxy-qwop",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [
+        "cookie"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "swfgalaxy-radiusraid",
+      "host": "swfgalaxy",
+      "opaque": false,
+      "storage": [
+        "localStorage"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "swfgalaxy-raze2",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [
+        "cookie"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "swfgalaxy-raze3",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [
+        "cookie"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "swfgalaxy-games-rooftopsnipers-rooftopsnipers",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [
+        "localStorage",
+        "indexedDB"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "swfgalaxy-run3",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [
+        "cookie"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "swfgalaxy-spacecompany",
+      "host": "swfgalaxy",
+      "opaque": false,
+      "storage": [],
+      "status": "stateless"
+    },
+    {
+      "id": "swfgalaxy-sportsheadsbasketballchampionship",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [],
+      "status": "opaque"
+    },
+    {
+      "id": "swfgalaxy-sportsheadssoccer",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [],
+      "status": "opaque"
+    },
+    {
+      "id": "swfgalaxy-sportsheadstennis",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [],
+      "status": "opaque"
+    },
+    {
+      "id": "swfgalaxy-sportsheadsvolleyball",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [],
+      "status": "opaque"
+    },
+    {
+      "id": "swfgalaxy-stealingthediamond",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [
+        "cookie"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "swfgalaxy-stickrpg",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [
+        "cookie"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "swfgalaxy-stickwar",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [
+        "cookie"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "swfgalaxy-stickwar2",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [
+        "cookie"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "swfgalaxy-strikeforceheroes3",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [
+        "cookie"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "swfgalaxy-strikeforceheroes",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [
+        "cookie"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "flash-sugarsugar",
+      "host": "flashgames",
+      "opaque": true,
+      "storage": [],
+      "status": "opaque"
+    },
+    {
+      "id": "flash-sugarsugar2",
+      "host": "flashgames",
+      "opaque": false,
+      "storage": [],
+      "status": "stateless"
+    },
+    {
+      "id": "flash-sugarsugar3",
+      "host": "flashgames",
+      "opaque": false,
+      "storage": [],
+      "status": "stateless"
+    },
+    {
+      "id": "flash-supersmash",
+      "host": "flashgames",
+      "opaque": true,
+      "storage": [],
+      "status": "opaque"
+    },
+    {
+      "id": "swfgalaxy-supersmashflash",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [],
+      "status": "opaque"
+    },
+    {
+      "id": "swfgalaxy-superfighters",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [
+        "cookie"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "swfgalaxy-superfightersultimate",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [
+        "cookie"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "swfgalaxy-supermario63",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [
+        "cookie"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "swfgalaxy-supermarioflash",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [
+        "cookie"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "swfgalaxy-supermarioflash2",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [
+        "cookie"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "swfgalaxy-swfminer",
+      "host": "swfgalaxy",
+      "opaque": false,
+      "storage": [],
+      "status": "stateless"
+    },
+    {
+      "id": "swfgalaxy-swordsandsandals2",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [
+        "cookie"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "swfgalaxy-swordsandsouls",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [
+        "cookie"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "swfgalaxy-tanktrouble",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [],
+      "status": "opaque"
+    },
+    {
+      "id": "swfgalaxy-territorywar",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [
+        "cookie"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "swfgalaxy-testzombo",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [
+        "cookie"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "swfgalaxy-tetris",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [],
+      "status": "opaque"
+    },
+    {
+      "id": "swfgalaxy-thebindingofissac",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [],
+      "status": "opaque"
+    },
+    {
+      "id": "swfgalaxy-thefloodrunner2",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [
+        "cookie"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "swfgalaxy-thelaststandunion",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [
+        "cookie"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "swfgalaxy-themehotel",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [
+        "cookie"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "swfgalaxy-themehotelhacked",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [
+        "cookie"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "swfgalaxy-unfairmario",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [
+        "cookie"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "swfgalaxy-uno",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [
+        "cookie"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "swfgalaxy-vex",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [],
+      "status": "opaque"
+    },
+    {
+      "id": "swfgalaxy-zombocalyps3",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [],
+      "status": "opaque"
+    },
+    {
+      "id": "swfgalaxy-zombocalypse",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [
+        "cookie"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "swfgalaxy-ducklife2",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [
+        "cookie"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "swfgalaxy-ducklife3",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [
+        "cookie"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "swfgalaxy-escapingtheprison",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [
+        "cookie"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "swfgalaxy-learntofly",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [
+        "cookie"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "swfgalaxy-learntofly2",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [
+        "cookie"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "swfgalaxy-zombocalypse3",
+      "host": "swfgalaxy",
+      "opaque": true,
+      "storage": [
+        "cookie"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "huge-backrooms",
+      "host": "games-huge",
+      "opaque": true,
+      "storage": [
+        "indexedDB",
+        "unity-fs"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "huge-baldis-basics",
+      "host": "games-huge",
+      "opaque": true,
+      "storage": [
+        "indexedDB",
+        "unity-fs"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "fnaf-sl",
+      "host": "hd_fnaf",
+      "opaque": false,
+      "storage": [],
+      "status": "stateless"
+    },
+    {
+      "id": "fnaf-ucn",
+      "host": "hd_fnaf",
+      "opaque": false,
+      "storage": [],
+      "status": "stateless"
+    },
+    {
+      "id": "fnaf-1",
+      "host": "hd_fnaf",
+      "opaque": false,
+      "storage": [],
+      "status": "stateless"
+    },
+    {
+      "id": "fnaf-2",
+      "host": "hd_fnaf",
+      "opaque": false,
+      "storage": [],
+      "status": "stateless"
+    },
+    {
+      "id": "fnaf-3",
+      "host": "hd_fnaf",
+      "opaque": false,
+      "storage": [],
+      "status": "stateless"
+    },
+    {
+      "id": "fnaf-4",
+      "host": "hd_fnaf",
+      "opaque": false,
+      "storage": [],
+      "status": "stateless"
+    },
+    {
+      "id": "huge-csgo-clicker",
+      "host": "games-huge",
+      "opaque": false,
+      "storage": [
+        "localStorage"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "huge-achievementunlocked",
+      "host": "games-huge",
+      "opaque": true,
+      "storage": [
+        "localStorage"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "huge-adrenalinechallenge",
+      "host": "games-huge",
+      "opaque": true,
+      "storage": [
+        "localStorage"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "huge-boxel-rebound",
+      "host": "games-huge",
+      "opaque": false,
+      "storage": [],
+      "status": "stateless"
+    },
+    {
+      "id": "huge-cluster-rush",
+      "host": "games-huge",
+      "opaque": true,
+      "storage": [
+        "indexedDB",
+        "unity-fs"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "huge-dadish",
+      "host": "games-huge",
+      "opaque": false,
+      "storage": [],
+      "status": "stateless"
+    },
+    {
+      "id": "huge-doodle-jump",
+      "host": "games-huge",
+      "opaque": false,
+      "storage": [],
+      "status": "stateless"
+    },
+    {
+      "id": "100ng",
+      "host": "games-huge",
+      "opaque": false,
+      "storage": [],
+      "status": "stateless"
+    },
+    {
+      "id": "huge-align-4",
+      "host": "games-huge",
+      "opaque": false,
+      "storage": [
+        "cookie"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "huge-astray",
+      "host": "games-huge",
+      "opaque": false,
+      "storage": [],
+      "status": "stateless"
+    },
+    {
+      "id": "huge-bigredbutton",
+      "host": "games-huge",
+      "opaque": true,
+      "storage": [
+        "localStorage"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "bloxors",
+      "host": "games-huge",
+      "opaque": true,
+      "storage": [
+        "localStorage"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "huge-breakingthebank",
+      "host": "games-huge",
+      "opaque": true,
+      "storage": [
+        "localStorage"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "huge-breaklock",
+      "host": "games-huge",
+      "opaque": false,
+      "storage": [
+        "localStorage"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "huge-cell-machine",
+      "host": "games-huge",
+      "opaque": true,
+      "storage": [
+        "indexedDB",
+        "unity-fs"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "huge-circlo",
+      "host": "games-huge",
+      "opaque": false,
+      "storage": [],
+      "status": "stateless"
+    },
+    {
+      "id": "huge-city-blocks-2",
+      "host": "games-huge",
+      "opaque": true,
+      "storage": [],
+      "status": "opaque"
+    },
+    {
+      "id": "huge-cuttherope",
+      "host": "games-huge",
+      "opaque": false,
+      "storage": [
+        "localStorage"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "ctr-holiday",
+      "host": "games-huge",
+      "opaque": false,
+      "storage": [
+        "localStorage"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "huge-cars-simulator",
+      "host": "games-huge",
+      "opaque": true,
+      "storage": [
+        "indexedDB",
+        "unity-fs"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "ctr",
+      "host": "games-huge",
+      "opaque": false,
+      "storage": [
+        "localStorage"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "huge-drive-mad",
+      "host": "games-huge",
+      "opaque": false,
+      "storage": [],
+      "status": "stateless"
+    },
+    {
+      "id": "huge-adarkroom",
+      "host": "games-huge",
+      "opaque": false,
+      "storage": [
+        "localStorage"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "fnaf-world",
+      "host": "hd_fnaf",
+      "opaque": false,
+      "storage": [],
+      "status": "stateless"
+    },
+    {
+      "id": "huge-bitlife",
+      "host": "games-huge",
+      "opaque": true,
+      "storage": [
+        "indexedDB",
+        "unity-fs"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "fnaf-ps",
+      "host": "hd_fnaf",
+      "opaque": false,
+      "storage": [],
+      "status": "stateless"
+    },
+    {
+      "id": "huge-8ball-billards-classic",
+      "host": "games-huge",
+      "opaque": false,
+      "storage": [],
+      "status": "stateless"
+    },
+    {
+      "id": "huge-backcountry",
+      "host": "games-huge",
+      "opaque": false,
+      "storage": [],
+      "status": "stateless"
+    },
+    {
+      "id": "basket-bros-io",
+      "host": "games-huge",
+      "opaque": false,
+      "storage": [],
+      "status": "stateless"
+    },
+    {
+      "id": "huge-basketball-io",
+      "host": "games-huge",
+      "opaque": true,
+      "storage": [
+        "indexedDB",
+        "unity-fs"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "huge-basketball-stars",
+      "host": "games-huge",
+      "opaque": false,
+      "storage": [],
+      "status": "stateless"
+    },
+    {
+      "id": "huge-cannon-basketball-4",
+      "host": "games-huge",
+      "opaque": false,
+      "storage": [],
+      "status": "stateless"
+    },
+    {
+      "id": "huge-age-of-war",
+      "host": "games-huge",
+      "opaque": true,
+      "storage": [
+        "localStorage"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "huge-among-us",
+      "host": "games-huge",
+      "opaque": false,
+      "storage": [],
+      "status": "stateless"
+    },
+    {
+      "id": "huge-battleforgondor",
+      "host": "games-huge",
+      "opaque": true,
+      "storage": [
+        "localStorage"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "bloonstd",
+      "host": "games-huge",
+      "opaque": true,
+      "storage": [
+        "localStorage"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "bloonstd2",
+      "host": "games-huge",
+      "opaque": true,
+      "storage": [
+        "localStorage"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "huge-btd4",
+      "host": "games-huge",
+      "opaque": false,
+      "storage": [],
+      "status": "stateless"
+    },
+    {
+      "id": "btts",
+      "host": "games-huge",
+      "opaque": false,
+      "storage": [
+        "localStorage",
+        "indexedDB"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "huge-canyondefense",
+      "host": "games-huge",
+      "opaque": true,
+      "storage": [
+        "localStorage"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "huge-deal-or-no-deal",
+      "host": "games-huge",
+      "opaque": true,
+      "storage": [
+        "localStorage"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "huge-push-your-luck",
+      "host": "games-huge",
+      "opaque": false,
+      "storage": [
+        "localStorage"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "huge-pushback",
+      "host": "games-huge",
+      "opaque": false,
+      "storage": [
+        "localStorage"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "huge-puzzle-ball",
+      "host": "games-huge",
+      "opaque": false,
+      "storage": [
+        "localStorage"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "huge-q1k3",
+      "host": "games-huge",
+      "opaque": false,
+      "storage": [],
+      "status": "stateless"
+    },
+    {
+      "id": "huge-radiusraid",
+      "host": "games-huge",
+      "opaque": false,
+      "storage": [
+        "localStorage"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "huge-retrohaunt",
+      "host": "games-huge",
+      "opaque": false,
+      "storage": [],
+      "status": "stateless"
+    },
+    {
+      "id": "huge-roadblocks",
+      "host": "games-huge",
+      "opaque": false,
+      "storage": [
+        "localStorage"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "huge-rolling-forests",
+      "host": "games-huge",
+      "opaque": false,
+      "storage": [],
+      "status": "stateless"
+    },
+    {
+      "id": "huge-rolly-vortex",
+      "host": "games-huge",
+      "opaque": false,
+      "storage": [
+        "localStorage",
+        "indexedDB"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "huge-sand-game",
+      "host": "games-huge",
+      "opaque": false,
+      "storage": [],
+      "status": "stateless"
+    },
+    {
+      "id": "huge-sandboxels",
+      "host": "games-huge",
+      "opaque": false,
+      "storage": [
+        "localStorage"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "huge-shuttledeck",
+      "host": "games-huge",
+      "opaque": false,
+      "storage": [],
+      "status": "stateless"
+    },
+    {
+      "id": "huge-skyblock",
+      "host": "games-huge",
+      "opaque": false,
+      "storage": [],
+      "status": "stateless"
+    },
+    {
+      "id": "huge-sleepingbeauty",
+      "host": "games-huge",
+      "opaque": false,
+      "storage": [],
+      "status": "stateless"
+    },
+    {
+      "id": "huge-slice-of-sasha",
+      "host": "games-huge",
+      "opaque": false,
+      "storage": [
+        "localStorage",
+        "indexedDB"
+      ],
+      "status": "saves"
+    },
+    {
+      "id": "huge-slither",
+      "host": "games-huge",
+      "opaque": false,
+      "storage": [],
+      "status": "stateless"
+    },
+    {
+      "id": "huge-slope-ball",
+      "host": "games-huge",
+      "opaque": false,
+      "storage": [],
+      "status": "stateless"
+    },
+    {
+      "id": "huge-smashkarts",
+      "host": "games-huge",
+      "opaque": true,
+      "storage": [],
+      "status": "opaque"
+    },
+    {
+      "id": "huge-snake",
+      "host": "games-huge",
+      "opaque": false,
+      "storage": [],
+      "status": "stateless"
+    }
+  ]
+}

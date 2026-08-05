@@ -131,7 +131,10 @@ router.patch("/admin/feedback/:id", staff, (req, res, next) => {
 
 /* --------------------------------------------------------- game progress */
 
-const MAX_SAVE_BYTES = 1024 * 1024;   // per host
+/* Per host. Generous because IndexedDB saves carry binary — Unity keeps its
+   whole virtual filesystem there — and it is base64'd to survive JSON, which
+   inflates it by a third. The bridge caps its own side at 3 MB encoded. */
+const MAX_SAVE_BYTES = 4 * 1024 * 1024;
 const HOSTS = /^[a-z0-9._-]{1,64}$/i;
 
 /* Third-party games keep progress in their own origin's localStorage. The

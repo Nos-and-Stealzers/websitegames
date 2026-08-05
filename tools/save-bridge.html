@@ -84,6 +84,192 @@
     return { written: written, kept: kept };
   }
 
+  /* ---------------------------------------------------------- indexedDB
+   *
+   * Plenty of games — anything Unity, and most of the newer HTML5 ones —
+   * keep their save in IndexedDB rather than localStorage. An audit of the
+   * catalogue found 18 titles storing progress *only* there, so a bridge
+   * that reads localStorage alone silently misses them.
+   *
+   * Values can be binary (Unity's IDBFS stores files as Uint8Array), which
+   * JSON cannot carry, so they are tagged and base64'd on the way out and
+   * rebuilt on the way back in.
+   */
+
+  var IDB_BUDGET = 3 * 1024 * 1024;   // per origin, encoded
+
+  function b64(bytes) {
+    var out = "";
+    for (var i = 0; i < bytes.length; i += 0x8000) {
+      out += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+    }
+    return btoa(out);
+  }
+
+  function unb64(text) {
+    var bin = atob(text);
+    var bytes = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    return bytes;
+  }
+
+  function encode(value) {
+    if (value instanceof Uint8Array) return { $b: b64(value) };
+    if (value instanceof ArrayBuffer) return { $b: b64(new Uint8Array(value)) };
+    if (ArrayBuffer.isView(value)) {
+      return { $b: b64(new Uint8Array(value.buffer)), $v: value.constructor.name };
+    }
+    if (value instanceof Date) return { $d: value.toISOString() };
+    if (value && typeof value === "object") {
+      var out = Array.isArray(value) ? [] : {};
+      Object.keys(value).forEach(function (k) { out[k] = encode(value[k]); });
+      return out;
+    }
+    return value;
+  }
+
+  function decode(value) {
+    if (value && typeof value === "object") {
+      if (typeof value.$b === "string") {
+        var bytes = unb64(value.$b);
+        if (value.$v && window[value.$v] && value.$v !== "Uint8Array") {
+          try { return new window[value.$v](bytes.buffer); } catch (e) { return bytes; }
+        }
+        return bytes;
+      }
+      if (typeof value.$d === "string") return new Date(value.$d);
+      var out = Array.isArray(value) ? [] : {};
+      Object.keys(value).forEach(function (k) { out[k] = decode(value[k]); });
+      return out;
+    }
+    return value;
+  }
+
+  function openDb(name, version) {
+    return new Promise(function (resolve, reject) {
+      var req = version ? indexedDB.open(name, version) : indexedDB.open(name);
+      req.onsuccess = function () { resolve(req.result); };
+      req.onerror = function () { reject(req.error); };
+      req.onblocked = function () { reject(new Error("blocked")); };
+    });
+  }
+
+  function readIdb() {
+    /* indexedDB.databases() is Chromium and Safari only. Firefox has no way
+       to enumerate, so there is nothing to snapshot there — say so rather
+       than reporting an empty success. */
+    if (!indexedDB || typeof indexedDB.databases !== "function") {
+      return Promise.resolve({ data: {}, unsupported: true });
+    }
+
+    return indexedDB.databases().then(function (list) {
+      var out = {};
+      var used = 0;
+
+      return (list || []).reduce(function (chain, info) {
+        return chain.then(function () {
+          if (!info.name || used > IDB_BUDGET) return;
+          return openDb(info.name).then(function (db) {
+            var stores = Array.prototype.slice.call(db.objectStoreNames);
+            if (!stores.length) { db.close(); return; }
+
+            return new Promise(function (resolve) {
+              var tx = db.transaction(stores, "readonly");
+              var left = stores.length;
+              var dbOut = {};
+
+              stores.forEach(function (storeName) {
+                var store = tx.objectStore(storeName);
+                var keysReq = store.getAllKeys();
+                var valsReq = store.getAll();
+                var pair = {};
+
+                keysReq.onsuccess = function () { pair.keys = keysReq.result; done(); };
+                valsReq.onsuccess = function () { pair.values = valsReq.result; done(); };
+                keysReq.onerror = valsReq.onerror = function () { finish(); };
+
+                function done() {
+                  if (!pair.keys || !pair.values) return;
+                  finish();
+                }
+                function finish() {
+                  if (pair.recorded) return;
+                  pair.recorded = true;
+                  if (pair.keys && pair.values) {
+                    dbOut[storeName] = pair.keys.map(function (k, i) {
+                      return { k: encode(k), v: encode(pair.values[i]) };
+                    });
+                  }
+                  if (--left === 0) {
+                    var text = JSON.stringify(dbOut);
+                    used += text.length;
+                    if (used <= IDB_BUDGET) out[info.name] = dbOut;
+                    db.close();
+                    resolve();
+                  }
+                }
+              });
+
+              tx.onerror = function () { db.close(); resolve(); };
+            });
+          }).catch(function () { /* locked or blocked — skip it */ });
+        });
+      }, Promise.resolve()).then(function () {
+        return { data: out, unsupported: false, bytes: used };
+      });
+    }).catch(function () { return { data: {}, unsupported: true }; });
+  }
+
+  function writeIdb(dump, overwrite) {
+    if (!indexedDB || !dump) return Promise.resolve({ written: 0 });
+    var written = 0;
+
+    return Object.keys(dump).reduce(function (chain, dbName) {
+      return chain.then(function () {
+        return openDb(dbName).then(function (db) {
+          var stores = Object.keys(dump[dbName])
+            .filter(function (s) { return db.objectStoreNames.contains(s); });
+          if (!stores.length) { db.close(); return; }
+
+          return new Promise(function (resolve) {
+            var tx = db.transaction(stores, "readwrite");
+            stores.forEach(function (storeName) {
+              var store = tx.objectStore(storeName);
+              dump[dbName][storeName].forEach(function (row) {
+                try {
+                  var key = decode(row.k);
+                  var value = decode(row.v);
+                  /* Only fill gaps unless told otherwise, so restoring onto a
+                     device with newer progress does not destroy it. */
+                  if (overwrite) {
+                    store.keyPath === null || store.keyPath === undefined
+                      ? store.put(value, key) : store.put(value);
+                    written++;
+                  } else {
+                    var probe = store.get(key);
+                    probe.onsuccess = function () {
+                      if (probe.result === undefined) {
+                        store.keyPath === null || store.keyPath === undefined
+                          ? store.put(value, key) : store.put(value);
+                        written++;
+                      }
+                    };
+                  }
+                } catch (e) { /* one bad row shouldn't sink the batch */ }
+              });
+            });
+            tx.oncomplete = function () { db.close(); resolve(); };
+            tx.onerror = function () { db.close(); resolve(); };
+          });
+        }).catch(function () { /* db missing on this device */ });
+      });
+    }, Promise.resolve()).then(function () { return { written: written }; });
+  }
+
+  function send(event, reply) {
+    event.source.postMessage(reply, event.origin);
+  }
+
   window.addEventListener("message", function (event) {
     if (!permitted(event.origin)) return;
 
@@ -92,18 +278,36 @@
 
     var reply = { channel: "ach-save-bridge", id: msg.id, ok: true };
 
+    /* The IndexedDB paths are async, so they answer on their own. */
+    if (msg.action === "read") {
+      var shot = snapshot();
+      reply.data = shot.data;
+      reply.keys = Object.keys(shot.data).length;
+      reply.skipped = shot.skipped;
+      readIdb().then(function (idb) {
+        reply.idb = idb.data;
+        reply.idbUnsupported = idb.unsupported;
+        reply.idbBytes = idb.bytes || 0;
+        send(event, reply);
+      }, function () { send(event, reply); });
+      return;
+    }
+
+    if (msg.action === "write") {
+      var res = restore(msg.data, !!msg.overwrite);
+      reply.written = res.written;
+      reply.kept = res.kept;
+      writeIdb(msg.idb, !!msg.overwrite).then(function (out) {
+        reply.idbWritten = out.written;
+        send(event, reply);
+      }, function () { send(event, reply); });
+      return;
+    }
+
     try {
       if (msg.action === "ping") {
         reply.host = location.host;
-      } else if (msg.action === "read") {
-        var shot = snapshot();
-        reply.data = shot.data;
-        reply.keys = Object.keys(shot.data).length;
-        reply.skipped = shot.skipped;
-      } else if (msg.action === "write") {
-        var res = restore(msg.data, !!msg.overwrite);
-        reply.written = res.written;
-        reply.kept = res.kept;
+        reply.idbSupported = !!(indexedDB && typeof indexedDB.databases === "function");
       } else if (msg.action === "remove") {
         var gone = 0;
         (msg.keys || []).forEach(function (key) {
