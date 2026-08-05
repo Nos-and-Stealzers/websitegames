@@ -1,0 +1,163 @@
+/* Settings resolution.
+ *
+ * This exists because of a specific bug class: a setting gets added to
+ * SITE.defaults, the resolver doesn't know about it, and it reads as
+ * `undefined` — or worse, as `false`, which silently switches a new feature
+ * off for every user whose saved blob predates it.
+ *
+ *   node tools/test-settings.js
+ */
+"use strict";
+
+const fs = require("fs");
+const path = require("path");
+const vm = require("vm");
+
+const ROOT = path.join(__dirname, "..");
+
+let passed = 0;
+const failures = [];
+function ok(label, cond, extra) {
+  if (cond) { passed++; console.log("  ok   " + label + (extra ? "   " + extra : "")); }
+  else { failures.push(label); console.log("  FAIL " + label + (extra ? "   " + extra : "")); }
+}
+
+/* A fresh sandbox per case, so one test's writes can't leak into the next. */
+function withSaved(savedBlob) {
+  const stored = {};
+  if (savedBlob !== undefined) stored["ach:settings"] = JSON.stringify(savedBlob);
+
+  const sandbox = { console };
+  sandbox.window = sandbox;
+  sandbox.localStorage = {
+    getItem: (k) => (k in stored ? stored[k] : null),
+    setItem: (k, v) => { stored[k] = String(v); },
+    removeItem: (k) => { delete stored[k]; }
+  };
+  sandbox.document = { dispatchEvent() {}, addEventListener() {}, readyState: "complete" };
+  sandbox.CustomEvent = class {};
+  vm.createContext(sandbox);
+
+  for (const f of ["js/config.js", "js/store.js"]) {
+    vm.runInContext(fs.readFileSync(path.join(ROOT, f), "utf8"), sandbox, { filename: f });
+  }
+  return sandbox;
+}
+
+const base = withSaved(undefined);
+const DEFAULTS = base.SITE.defaults;
+
+console.log("resolution");
+{
+  const s = base.Store.settings();
+  ok("every default key is present",
+     Object.keys(DEFAULTS).every((k) => s[k] !== undefined),
+     Object.keys(DEFAULTS).length + " keys");
+  ok("no extra keys invented",
+     Object.keys(s).every((k) => k in DEFAULTS));
+  ok("empty storage yields exactly the defaults",
+     Object.keys(DEFAULTS).every((k) => s[k] === DEFAULTS[k]));
+}
+
+console.log("\nthe bug this file exists for");
+{
+  /* An old blob that predates most of the settings. This is what everyone
+     who used the site before today actually has. */
+  const s = withSaved({ skin: "paper", view: "list" }).Store.settings();
+
+  ok("saved keys are honoured", s.skin === "paper" && s.view === "list");
+
+  const missing = Object.keys(DEFAULTS).filter((k) => k !== "skin" && k !== "view");
+  ok("every absent key falls back to its default, not false",
+     missing.every((k) => s[k] === DEFAULTS[k]),
+     missing.length + " absent keys");
+
+  const boolKeys = missing.filter((k) => typeof DEFAULTS[k] === "boolean" && DEFAULTS[k] === true);
+  ok("features defaulting to on stay on for old blobs",
+     boolKeys.every((k) => s[k] === true),
+     boolKeys.join(", "));
+}
+
+console.log("\nrejecting nonsense");
+{
+  const s = withSaved({
+    skin: "not-a-skin",
+    textSize: "gigantic",
+    view: "carousel",
+    sort: "vibes",
+    shortcuts: "yes",
+    dock: 1,
+    motion: null
+  }).Store.settings();
+
+  ok("unknown skin rejected", s.skin === DEFAULTS.skin, s.skin);
+  ok("unknown text size rejected", s.textSize === DEFAULTS.textSize);
+  ok("unknown view rejected", s.view === DEFAULTS.view);
+  ok("unknown sort rejected", s.sort === DEFAULTS.sort);
+  ok("string where boolean expected rejected", s.shortcuts === DEFAULTS.shortcuts);
+  ok("number where boolean expected rejected", s.dock === DEFAULTS.dock);
+  ok("null rejected", s.motion === DEFAULTS.motion);
+}
+
+console.log("\nlegacy migration");
+{
+  let s = withSaved({ theme: "light" }).Store.settings();
+  ok("v1 theme maps to a skin", s.skin === "paper", s.skin);
+
+  s = withSaved({ theme: "arcade" }).Store.settings();
+  ok("v1 arcade maps to terminal", s.skin === "terminal");
+
+  s = withSaved({ theme: "light", skin: "noir" }).Store.settings();
+  ok("an explicit skin beats the legacy theme", s.skin === "noir");
+
+  s = withSaved({ fast: true }).Store.settings();
+  ok("v1 fast maps to lite", s.lite === true);
+
+  s = withSaved({ fast: true, lite: false }).Store.settings();
+  ok("an explicit lite beats legacy fast", s.lite === false);
+
+  s = withSaved({ theme: "nonsense-theme" }).Store.settings();
+  ok("unmappable legacy theme falls back", s.skin === DEFAULTS.skin);
+}
+
+console.log("\nround trip");
+{
+  const box = withSaved({});
+  box.Store.setSetting("skin", "grape");
+  box.Store.setSetting("textSize", "huge");
+  const s = box.Store.settings();
+  ok("a written setting reads back", s.skin === "grape" && s.textSize === "huge");
+  ok("writing one setting keeps the others",
+     Object.keys(DEFAULTS).every((k) => s[k] !== undefined));
+}
+
+console.log("\nno drift between the boot script and config");
+{
+  /* theme-boot runs in <head>, before config.js exists, so it has to carry
+     its own copy of the valid skins. That duplication can rot. */
+  const boot = fs.readFileSync(path.join(ROOT, "js", "theme-boot.js"), "utf8");
+  const declared = (boot.match(/var VALID = \{([\s\S]*?)\}/) || [])[1] || "";
+  const bootSkins = (declared.match(/[a-z]+(?=\s*:)/g) || []).sort();
+  const configSkins = base.SITE.skins.map((s) => s.id).sort();
+
+  ok("theme-boot knows every skin in config",
+     JSON.stringify(bootSkins) === JSON.stringify(configSkins),
+     "boot=[" + bootSkins + "] config=[" + configSkins + "]");
+
+  const aliasTargets = Object.values(base.SITE.skinAliases);
+  ok("every legacy alias points at a real skin",
+     aliasTargets.every((t) => configSkins.indexOf(t) !== -1),
+     aliasTargets.join(","));
+
+  const bootAliases = (boot.match(/var ALIAS = \{([\s\S]*?)\}/) || [])[1] || "";
+  ok("theme-boot's alias table matches config",
+     Object.keys(base.SITE.skinAliases).every((k) => bootAliases.indexOf(k) !== -1));
+}
+
+console.log("\n" + "=".repeat(52));
+if (failures.length) {
+  console.log("FAILED " + failures.length + " of " + (passed + failures.length));
+  failures.forEach((f) => console.log("  " + f));
+  process.exit(1);
+}
+console.log("All " + passed + " settings checks passed.");

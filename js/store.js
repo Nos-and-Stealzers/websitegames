@@ -44,39 +44,65 @@
 
   var MAX_RECENTS = 40;
 
+  /* Enumerated settings and the values they accept. Anything not listed here
+     is validated by type alone. Built from SITE where the list already exists,
+     so adding a skin doesn't mean remembering to update this too. */
+  var ALLOWED = {
+    skin: (window.SITE.skins || []).map(function (s) { return s.id; }),
+    textSize: ["normal", "large", "huge"],
+    view: ["grid", "list"],
+    sort: ["relevance", "title", "title-desc", "category", "played", "recent", "random"]
+  };
+
   var Store = {
     available: hasLS,
 
     /* ---------------- settings ---------------- */
 
+    /* Resolved settings: every key in SITE.defaults, always.
+     *
+     * Derived from the defaults rather than hand-listed. The hand-listed
+     * version had a real failure mode — add a key to defaults, forget to add
+     * it here, and it reads as `undefined` everywhere. An earlier version was
+     * worse: it fell back to `false`, which would switch a newly added feature
+     * off for every existing user, because their saved blob predates the key.
+     *
+     * A saved value is honoured only if it still makes sense: right type, and
+     * for enumerated settings a value that is actually offered. That stops a
+     * stale or hand-edited blob putting the interface into a state the CSS has
+     * no rules for. */
     settings: function () {
       var d = window.SITE.defaults;
-      var s = read("settings", {});
-      /* v1 saved `theme`/`fast`; map them onto the v2 skins once. */
-      var skin = s.skin || window.SITE.skinAliases[s.theme] || d.skin;
+      var saved = read("settings", {}) || {};
+      var out = {};
 
-      /* Anything absent falls back to the default rather than to `false`,
-         so adding a setting never silently switches a feature off for
-         everyone who already has a saved settings blob. */
-      function bool(key) {
-        return typeof s[key] === "boolean" ? s[key] : d[key];
+      Object.keys(d).forEach(function (key) {
+        var value = saved[key];
+        var usable = value !== null && value !== undefined &&
+                     typeof value === typeof d[key];
+
+        if (usable && ALLOWED[key] && ALLOWED[key].indexOf(value) === -1) {
+          usable = false;              // known key, value no longer offered
+        }
+        out[key] = usable ? value : d[key];
+      });
+
+      /* Migrations. v1 stored `theme` and `fast`; only consult them when the
+         current key is absent, so a later explicit choice always wins. */
+      if (saved.skin === undefined && saved.theme) {
+        var mapped = window.SITE.skinAliases[saved.theme];
+        if (mapped && ALLOWED.skin.indexOf(mapped) !== -1) out.skin = mapped;
+      }
+      if (typeof saved.lite !== "boolean" && typeof saved.fast === "boolean") {
+        out.lite = saved.fast;
       }
 
-      return {
-        skin: skin,
-        lite: typeof s.lite === "boolean" ? s.lite : (typeof s.fast === "boolean" ? s.fast : d.lite),
-        motion: bool("motion"),
-        textSize: s.textSize || d.textSize,
-        autoFullscreen: bool("autoFullscreen"),
-        confirmExternal: bool("confirmExternal"),
-        view: s.view || d.view,
-        sort: s.sort || d.sort,
-        shortcuts: bool("shortcuts"),
-        dock: bool("dock"),
-        autoBackup: bool("autoBackup"),
-        hideUnavailable: bool("hideUnavailable")
-      };
+      return out;
     },
+
+    /* The values each enumerated setting accepts, so tests and UI read from
+       one place instead of restating them. */
+    allowed: function () { return ALLOWED; },
 
     setSetting: function (key, value) {
       var s = Store.settings();
