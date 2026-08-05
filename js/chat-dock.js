@@ -288,9 +288,9 @@
     if (m.image) {
       var img = document.createElement("img");
       img.className = "dock-img";
-      img.src = m.image.url;
       img.alt = m.image.kind === "screenshot" ? "Shared screenshot" : "Shared image";
       img.loading = "lazy";
+      window.UI.attachImage(img, m.image);
       bubble.appendChild(img);
     }
     if (m.deleted) {

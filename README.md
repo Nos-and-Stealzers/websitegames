@@ -4,11 +4,19 @@ A browser arcade for **arcadecampushub.online**. 216 games, no build step, no tr
 no webfonts. Two halves that work independently:
 
 - **The site** — static HTML/CSS/JS. Deploys anywhere, works offline, needs nothing.
-- **The hub** — an optional Node + SQLite backend in [`server/`](server/README.md) adding
-  accounts, friends, direct messages, save sync and moderation.
+- **The hub** — accounts, friends, messages, notifications and save sync, from **either**
+  a Node + SQLite server in [`server/`](server/README.md) **or** Supabase
+  ([`supabase/schema.sql`](supabase/schema.sql)). One line in `js/config.js` picks:
 
-Without the backend running, every account feature detects its absence and hides itself.
-The arcade carries on exactly as before.
+  ```js
+  backend: "supabase" | "node" | "auto" | "none"
+  ```
+
+  Both speak the same client interface, so no page code changes between them. Supabase is
+  the one that works on Vercel, because it needs no server of your own.
+
+Without a backend, every account feature detects its absence and hides itself. The arcade
+carries on exactly as before.
 
 ## The interface
 
@@ -144,8 +152,12 @@ js/store.js                localStorage: settings, pins, recents, stats, ratings
 js/catalog.js              normalise, search, filter, sort, recommendations
 js/art.js                  generated cover plates + identicon avatars
 js/ui.js                   tiles, list rows, flags, toasts, formatting
-js/api.js                  API client; degrades to "no backend" cleanly
+js/api.js                  API client for the Node backend
+js/api-supabase.js         same surface, against Supabase — no CDN dependency
 js/session.js              who's signed in, save sync, unread badges
+js/capture.js              screenshot / camera / file, downscaled in-browser
+js/chat-dock.js            the floating bottom-right chat
+supabase/schema.sql        Postgres schema, RLS policies and RPCs
 js/social-ui.js            people rows, relation buttons, page gating
 js/shell.js                rail, topbar, tabbar, settings sheet, finder, shortcuts
 js/page-*.js               one file per page

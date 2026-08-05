@@ -45,7 +45,58 @@ goes somewhere that can actually keep them.
 
 ---
 
-## 2 · The backend, on Render (optional)
+## 2 · Accounts on Supabase (recommended)
+
+Supabase is hosted Postgres + Auth, so the browser talks to it directly and
+there is **no second server to run**. This is the path that works with the
+Vercel deploy above.
+
+1. **Apply the schema.** Supabase dashboard → *SQL Editor → New query* → paste
+   all of [`supabase/schema.sql`](supabase/schema.sql) → **Run**. It is
+   idempotent, so re-running after an update is safe.
+
+2. **Turn off email confirmation.** *Authentication → Providers → Email* →
+   uncheck **Confirm email**.
+
+   > The hub is username-only. Supabase Auth needs an address, so one is
+   > derived (`you@users.arcadecampushub.online`) and never used. Leave
+   > confirmation on and every signup hangs waiting for an email that will
+   > never arrive.
+
+3. **Switch the frontend over** in [`js/config.js`](js/config.js):
+
+   ```js
+   backend: "supabase",
+   ```
+
+   The URL and anon key are already filled in.
+
+4. Push. Vercel redeploys, and the first account you create becomes the
+   **administrator**.
+
+### About that anon key
+
+It is *supposed* to be public — it identifies the project, and row-level
+security is what actually protects the data. Every table is RLS-enabled and
+deny-by-default.
+
+**Never put a `sb_secret_…` / service-role key in `js/config.js`.** It bypasses
+RLS entirely, and anything in that file is readable by every visitor. If one has
+ever been pasted somewhere public, rotate it in *Project Settings → API Keys*.
+
+### What Supabase can't do that the Node backend can
+
+- **Per-device session list.** Supabase doesn't expose one to the client, so
+  Settings shows only the current device.
+- **Deleting the auth user.** Deleting your account removes the profile and
+  cascades everything it owns; the underlying auth row needs the service role,
+  so it is left orphaned and inert. The username frees up.
+- **Server-side rate limits.** Supabase applies its own; the per-route limits in
+  the Node backend have no equivalent here.
+
+---
+
+## 3 · Or: the Node backend, on Render
 
 Only needed if you want accounts, friends, messages and notifications.
 

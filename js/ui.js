@@ -234,6 +234,26 @@
     window.setTimeout(function () { node.remove(); }, ms || 2100);
   }
 
+  /* Chat attachments arrive differently per backend: the Node API serves a
+     real URL, while PostgREST can only hand back base64 in a JSON row. The
+     adapter attaches a `fetchData` loader in that case, so renderers set the
+     source through here and don't have to care which backend is live. */
+  function attachImage(img, image) {
+    if (!image) return img;
+    if (typeof image.fetchData === "function") {
+      img.dataset.loading = "1";
+      image.fetchData().then(function (src) {
+        if (src) img.src = src;
+        delete img.dataset.loading;
+      }).catch(function () {
+        img.remove();
+      });
+    } else {
+      img.src = image.url;
+    }
+    return img;
+  }
+
   /* ---- image lightbox ---- */
 
   function lightbox(src, alt) {
@@ -294,6 +314,7 @@
     launchLabel: launchLabel,
     coverInto: coverInto,
     playHref: playHref,
+    attachImage: attachImage,
     lightbox: lightbox,
     toast: toast,
     formatDuration: formatDuration,

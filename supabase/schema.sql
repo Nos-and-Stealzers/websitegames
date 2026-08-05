@@ -664,6 +664,457 @@ grant execute on function public.badge_counts()                    to authentica
 grant execute on function public.touch_last_seen()                 to authenticated;
 
 -- =====================================================================
+-- 9 · FRIEND CODES, GROUPS, ATTACHMENTS
+--
+-- Parity with the Node backend. Everything below is additive and
+-- idempotent, so re-running this whole file is safe.
+-- =====================================================================
+
+-- ---- friend codes ----
+
+alter table public.profiles add column if not exists friend_code text;
+create unique index if not exists profiles_code_uniq on public.profiles (friend_code);
+
+-- Ambiguous glyphs (O/0, I/1/L) left out so a code survives being read aloud.
+create or replace function public.make_friend_code()
+returns text language plpgsql security definer set search_path = public as $$
+declare
+  alphabet text := 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
+  candidate text;
+  i int;
+begin
+  for attempt in 1..40 loop
+    candidate := '';
+    for i in 1..6 loop
+      candidate := candidate || substr(alphabet, 1 + floor(random() * length(alphabet))::int, 1);
+    end loop;
+    candidate := substr(candidate, 1, 3) || '-' || substr(candidate, 4, 3);
+    if not exists (select 1 from public.profiles where friend_code = candidate) then
+      return candidate;
+    end if;
+  end loop;
+  raise exception 'Could not allocate a friend code.';
+end;
+$$;
+
+update public.profiles set friend_code = public.make_friend_code() where friend_code is null;
+
+create or replace function public.rotate_friend_code()
+returns text language plpgsql security definer set search_path = public as $$
+declare fresh text;
+begin
+  if auth.uid() is null then raise exception 'Not signed in.'; end if;
+  fresh := public.make_friend_code();
+  update public.profiles set friend_code = fresh where id = auth.uid();
+  return fresh;
+end;
+$$;
+
+-- A code is a lookup key, not a public field: this returns only the bare
+-- minimum, and never exposes anyone else's code.
+create or replace function public.find_by_code(code text)
+returns jsonb language plpgsql security definer set search_path = public as $$
+declare tidy text; hit public.profiles%rowtype;
+begin
+  if auth.uid() is null then raise exception 'Not signed in.'; end if;
+  tidy := upper(regexp_replace(coalesce(code, ''), '[^A-Za-z0-9]', '', 'g'));
+  if length(tidy) <> 6 then raise exception 'Friend codes are six characters, like ABC-123.'; end if;
+  tidy := substr(tidy, 1, 3) || '-' || substr(tidy, 4, 3);
+
+  select * into hit from public.profiles where friend_code = tidy;
+  if hit.id is null then raise exception 'No account uses that code.'; end if;
+  if hit.id = auth.uid() then raise exception 'That is your own code.'; end if;
+  if public.blocked_between(auth.uid(), hit.id) then raise exception 'No account uses that code.'; end if;
+
+  return jsonb_build_object(
+    'id', hit.id, 'username', hit.username,
+    'displayName', coalesce(nullif(hit.display_name, ''), hit.username),
+    'online', (now() - hit.last_seen) < interval '150 seconds'
+  );
+end;
+$$;
+
+-- ---- groups ----
+
+alter table public.threads add column if not exists is_group boolean not null default false;
+alter table public.threads add column if not exists title text not null default '';
+alter table public.threads add column if not exists owner_id uuid references public.profiles(id) on delete set null;
+
+-- A group has no pair, so the ordered-pair constraint can only apply to DMs.
+alter table public.threads drop constraint if exists ordered_pair;
+alter table public.threads drop constraint if exists one_thread_per_pair;
+alter table public.threads alter column a drop not null;
+alter table public.threads alter column b drop not null;
+create unique index if not exists threads_dm_uniq on public.threads (a, b) where is_group = false;
+
+create table if not exists public.thread_members (
+  thread_id bigint not null references public.threads(id) on delete cascade,
+  user_id   uuid   not null references public.profiles(id) on delete cascade,
+  role      text   not null default 'member',
+  joined_at timestamptz not null default now(),
+  primary key (thread_id, user_id)
+);
+create index if not exists thread_members_user on public.thread_members (user_id);
+
+-- Back-fill membership for threads created before groups existed.
+insert into public.thread_members (thread_id, user_id)
+  select t.id, t.a from public.threads t where t.a is not null
+   on conflict do nothing;
+insert into public.thread_members (thread_id, user_id)
+  select t.id, t.b from public.threads t where t.b is not null
+   on conflict do nothing;
+
+alter table public.thread_members enable row level security;
+
+drop policy if exists thread_members_read on public.thread_members;
+create policy thread_members_read on public.thread_members for select
+  to authenticated using (public.in_thread(thread_id));
+
+-- Membership changes go through the RPCs below, never direct writes.
+
+-- Membership is now the single source of truth for thread access.
+create or replace function public.in_thread(t bigint)
+returns boolean language sql stable security definer set search_path = public as $$
+  select exists (
+    select 1 from public.thread_members where thread_id = t and user_id = auth.uid()
+  );
+$$;
+
+drop policy if exists threads_read on public.threads;
+create policy threads_read on public.threads for select
+  to authenticated using (public.in_thread(id));
+
+drop policy if exists threads_insert on public.threads;
+drop policy if exists threads_update on public.threads;
+
+-- ---- attachments ----
+
+create table if not exists public.attachments (
+  id          bigint generated always as identity primary key,
+  thread_id   bigint not null references public.threads(id) on delete cascade,
+  uploader    uuid   not null references public.profiles(id) on delete cascade,
+  kind        text   not null default 'upload',
+  mime        text   not null,
+  width       int    not null default 0,
+  height      int    not null default 0,
+  bytes       int    not null,
+  data        text   not null,          -- base64, capped by send_message
+  created_at  timestamptz not null default now()
+);
+create index if not exists attachments_thread on public.attachments (thread_id);
+
+alter table public.messages add column if not exists attachment_id bigint
+  references public.attachments(id) on delete set null;
+
+alter table public.attachments enable row level security;
+
+drop policy if exists attachments_read on public.attachments;
+create policy attachments_read on public.attachments for select
+  to authenticated using (public.in_thread(thread_id));
+
+-- Messages may now carry an image instead of text, so the length floor moves
+-- into send_message where both halves can be checked together.
+alter table public.messages drop constraint if exists messages_body_check;
+
+-- ---- group RPCs ----
+
+create or replace function public.create_group(title text, usernames text[])
+returns bigint language plpgsql security definer set search_path = public as $$
+declare tid bigint; name text; other uuid;
+begin
+  if auth.uid() is null then raise exception 'Not signed in.'; end if;
+  if coalesce(array_length(usernames, 1), 0) = 0 then raise exception 'Pick at least one person.'; end if;
+  if array_length(usernames, 1) > 25 then raise exception 'Groups hold 25 people.'; end if;
+
+  insert into public.threads (is_group, title, owner_id, last_at)
+  values (true, left(coalesce(title, ''), 60), auth.uid(), now())
+  returning id into tid;
+
+  insert into public.thread_members (thread_id, user_id, role) values (tid, auth.uid(), 'owner');
+
+  foreach name in array usernames loop
+    select id into other from public.profiles where username = ltrim(name, '@');
+    if other is null then raise exception 'No user called %.', name; end if;
+    if other <> auth.uid() then
+      -- Friends only, or a group becomes a way around friends-only DMs.
+      if not public.are_friends(auth.uid(), other) then
+        raise exception 'You can only add friends to a group — % is not one yet.', name;
+      end if;
+      insert into public.thread_members (thread_id, user_id) values (tid, other)
+        on conflict do nothing;
+      perform public.notify(other, 'group', auth.uid(),
+        'You were added to ' || coalesce(nullif(title, ''), 'a group'),
+        'messages.html?thread=' || tid);
+    end if;
+  end loop;
+
+  return tid;
+end;
+$$;
+
+create or replace function public.add_to_group(t bigint, username text)
+returns void language plpgsql security definer set search_path = public as $$
+declare other uuid; grp public.threads%rowtype;
+begin
+  select * into grp from public.threads where id = t;
+  if grp.id is null or not public.in_thread(t) then raise exception 'No such thread.'; end if;
+  if not grp.is_group then raise exception 'Make a group first.'; end if;
+  if (select count(*) from public.thread_members where thread_id = t) >= 25 then
+    raise exception 'That group is full.';
+  end if;
+
+  select id into other from public.profiles where profiles.username = ltrim(add_to_group.username, '@');
+  if other is null then raise exception 'No such user.'; end if;
+  if not public.are_friends(auth.uid(), other) then
+    raise exception 'You can only add your own friends to a group.';
+  end if;
+
+  insert into public.thread_members (thread_id, user_id) values (t, other) on conflict do nothing;
+  perform public.notify(other, 'group', auth.uid(),
+    'You were added to ' || coalesce(nullif(grp.title, ''), 'a group'),
+    'messages.html?thread=' || t);
+end;
+$$;
+
+create or replace function public.leave_thread(t bigint, who uuid default null)
+returns void language plpgsql security definer set search_path = public as $$
+declare grp public.threads%rowtype; target uuid; remaining uuid;
+begin
+  select * into grp from public.threads where id = t;
+  if grp.id is null or not public.in_thread(t) then raise exception 'No such thread.'; end if;
+  if not grp.is_group then raise exception 'You cannot leave a direct message.'; end if;
+
+  target := coalesce(who, auth.uid());
+  if target <> auth.uid() and grp.owner_id <> auth.uid() then
+    raise exception 'Only the owner can remove people.';
+  end if;
+
+  delete from public.thread_members where thread_id = t and user_id = target;
+
+  select user_id into remaining from public.thread_members where thread_id = t limit 1;
+  if remaining is null then
+    delete from public.threads where id = t;
+  elsif grp.owner_id = target then
+    -- Hand ownership on rather than leaving the group headless.
+    update public.threads set owner_id = remaining where id = t;
+    update public.thread_members set role = 'owner' where thread_id = t and user_id = remaining;
+  end if;
+end;
+$$;
+
+-- The parameter is deliberately not called `title`: UPDATE ... SET takes a
+-- bare column name (SET threads.title is a syntax error), so a same-named
+-- parameter would be unresolvable.
+--
+-- Dropped first because CREATE OR REPLACE refuses to rename an input
+-- parameter, and an earlier revision of this file shipped it as `title`.
+drop function if exists public.rename_group(bigint, text);
+create or replace function public.rename_group(t bigint, new_title text)
+returns void language plpgsql security definer set search_path = public as $$
+begin
+  if not exists (select 1 from public.threads where id = t and owner_id = auth.uid()) then
+    raise exception 'Only the owner can rename this.';
+  end if;
+  update public.threads set title = left(coalesce(new_title, ''), 60) where id = t;
+end;
+$$;
+
+-- One entry point for sending, so the body/image rules and the per-thread
+-- notification fan-out live in exactly one place.
+create or replace function public.send_message(t bigint, body text, image jsonb default null)
+returns bigint language plpgsql security definer set search_path = public as $$
+declare
+  att bigint;
+  mid bigint;
+  clean text;
+  raw text;
+  member record;
+  sender_name text;
+begin
+  if auth.uid() is null then raise exception 'Not signed in.'; end if;
+  if not public.in_thread(t) then raise exception 'No such thread.'; end if;
+
+  clean := btrim(coalesce(body, ''));
+  if clean = '' and image is null then raise exception 'Say something or attach an image.'; end if;
+  if length(clean) > 2000 then raise exception 'Message must be 2000 characters or fewer.'; end if;
+
+  if image is not null then
+    raw := image->>'dataUrl';
+    if raw is null or raw !~ '^data:image/(jpeg|png|webp|gif);base64,' then
+      raise exception 'Only JPEG, PNG, WebP and GIF images are allowed.';
+    end if;
+    raw := split_part(raw, ',', 2);
+    -- base64 inflates 4/3, so this is roughly a 600 KB decoded ceiling.
+    if length(raw) > 820000 then raise exception 'That image is too large.'; end if;
+
+    insert into public.attachments (thread_id, uploader, kind, mime, width, height, bytes, data)
+    values (t, auth.uid(),
+            coalesce(image->>'kind', 'upload'),
+            split_part(split_part(image->>'dataUrl', ';', 1), ':', 2),
+            coalesce((image->>'width')::int, 0),
+            coalesce((image->>'height')::int, 0),
+            (length(raw) * 3) / 4,
+            raw)
+    returning id into att;
+  end if;
+
+  insert into public.messages (thread_id, sender, body, attachment_id)
+  values (t, auth.uid(), clean, att)
+  returning id into mid;
+
+  update public.threads set last_at = now() where id = t;
+
+  select coalesce(nullif(display_name, ''), username) into sender_name
+    from public.profiles where id = auth.uid();
+
+  for member in select user_id from public.thread_members
+                 where thread_id = t and user_id <> auth.uid() loop
+    perform public.notify(member.user_id, 'message', auth.uid(),
+      'New message from ' || sender_name, 'messages.html?thread=' || t, 5);
+  end loop;
+
+  return mid;
+end;
+$$;
+
+-- send_message is now the only way in: it enforces the body/image rules and
+-- fans out notifications. Allowing a direct INSERT would bypass both, so the
+-- insert policy goes away and the old notify trigger with it.
+drop policy if exists messages_insert on public.messages;
+drop trigger if exists messages_notify on public.messages;
+
+create or replace function public.on_message_touch()
+returns trigger language plpgsql security definer set search_path = public as $$
+begin
+  update public.threads set last_at = now() where id = new.thread_id;
+  return new;
+end;
+$$;
+
+drop trigger if exists messages_touch on public.messages;
+create trigger messages_touch
+  after insert on public.messages
+  for each row execute function public.on_message_touch();
+
+-- ---- admin ----
+--
+-- The admin console cannot be assembled from plain table reads. `profiles` is
+-- readable by every signed-in user (search needs it), so building aggregates
+-- client-side would hand account totals to anyone with a session — and RLS
+-- returns an empty set rather than an error, so it would look like it worked.
+-- These two check is_staff() and raise otherwise, restoring the same
+-- server-side gate the Node backend has.
+
+create or replace function public.admin_overview()
+returns jsonb language plpgsql stable security definer set search_path = public as $$
+declare online_cut timestamptz := now() - interval '150 seconds';
+begin
+  if not public.is_staff() then raise exception 'You do not have access to that.'; end if;
+
+  return jsonb_build_object(
+    'users', jsonb_build_object(
+      'total',       (select count(*) from public.profiles),
+      'active',      (select count(*) from public.profiles where state = 'active'),
+      'suspended',   (select count(*) from public.profiles where state = 'suspended'),
+      'online',      (select count(*) from public.profiles where last_seen > online_cut),
+      'newToday',    (select count(*) from public.profiles where created_at > now() - interval '1 day'),
+      'newThisWeek', (select count(*) from public.profiles where created_at > now() - interval '7 days')
+    ),
+    'social', jsonb_build_object(
+      'friendships',   (select count(*) from public.friendships where state = 'accepted'),
+      'pending',       (select count(*) from public.friendships where state = 'pending'),
+      'blocks',        (select count(*) from public.friendships where state = 'blocked'),
+      'threads',       (select count(*) from public.threads),
+      'messages',      (select count(*) from public.messages where not deleted),
+      'messagesToday', (select count(*) from public.messages where created_at > now() - interval '1 day')
+    ),
+    'reports', jsonb_build_object(
+      'open',  (select count(*) from public.reports where state = 'open'),
+      'total', (select count(*) from public.reports)
+    ),
+    'sessions', 0,
+    'topGames', coalesce((
+      select jsonb_agg(g) from (
+        select game_id as id, plays, seconds
+          from public.game_stats order by seconds desc limit 10
+      ) g
+    ), '[]'::jsonb)
+  );
+end;
+$$;
+
+create or replace function public.admin_users(q text default null)
+returns jsonb language plpgsql stable security definer set search_path = public as $$
+begin
+  if not public.is_staff() then raise exception 'You do not have access to that.'; end if;
+
+  return coalesce((
+    select jsonb_agg(row_to_json(u)) from (
+      select p.id, p.username, p.display_name, p.bio, p.role, p.state,
+             p.accepts_dms, p.created_at, p.last_seen,
+             (select count(*) from public.friendships f
+               where f.state = 'accepted'
+                 and (f.requester = p.id or f.addressee = p.id)) as friends,
+             (select count(*) from public.messages m
+               where m.sender = p.id and not m.deleted)          as messages
+        from public.profiles p
+       where q is null or p.username ilike q || '%'
+       order by p.created_at desc limit 200
+    ) u
+  ), '[]'::jsonb);
+end;
+$$;
+
+revoke all on function public.admin_overview()   from public, anon;
+revoke all on function public.admin_users(text)  from public, anon;
+grant execute on function public.admin_overview()  to authenticated;
+grant execute on function public.admin_users(text) to authenticated;
+
+-- ---- grants ----
+
+-- Only the SECURITY DEFINER functions above may mint codes; nobody calls
+-- this one directly.
+revoke all on function public.make_friend_code() from public, anon, authenticated;
+
+revoke all on function public.rotate_friend_code()               from public, anon;
+revoke all on function public.find_by_code(text)                 from public, anon;
+revoke all on function public.create_group(text, text[])         from public, anon;
+revoke all on function public.add_to_group(bigint, text)         from public, anon;
+revoke all on function public.leave_thread(bigint, uuid)         from public, anon;
+revoke all on function public.rename_group(bigint, text)         from public, anon;
+revoke all on function public.send_message(bigint, text, jsonb)  from public, anon;
+
+grant execute on function public.rotate_friend_code()              to authenticated;
+grant execute on function public.find_by_code(text)                to authenticated;
+grant execute on function public.create_group(text, text[])        to authenticated;
+grant execute on function public.add_to_group(bigint, text)        to authenticated;
+grant execute on function public.leave_thread(bigint, uuid)        to authenticated;
+grant execute on function public.rename_group(bigint, text)        to authenticated;
+grant execute on function public.send_message(bigint, text, jsonb) to authenticated;
+
+-- New accounts get a code at creation time.
+create or replace function public.handle_new_user()
+returns trigger language plpgsql security definer set search_path = public as $$
+declare
+  wanted text;
+  is_first boolean;
+begin
+  wanted := coalesce(new.raw_user_meta_data->>'username', 'user' || left(new.id::text, 8));
+  select count(*) = 0 into is_first from public.profiles;
+
+  insert into public.profiles (id, username, display_name, role, friend_code)
+  values (
+    new.id,
+    wanted,
+    coalesce(nullif(new.raw_user_meta_data->>'display_name',''), wanted),
+    case when is_first then 'admin' else 'user' end,
+    public.make_friend_code()
+  );
+  return new;
+end;
+$$;
+
+-- =====================================================================
 -- Done. Next:
 --   1. Authentication → Providers → Email: turn OFF "Confirm email"
 --      (the hub signs up with username-derived addresses, so there is

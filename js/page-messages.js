@@ -202,8 +202,8 @@
           if (m.image) {
             var img = document.createElement("img");
             img.className = "chat-img";
-            img.src = m.image.url;
             img.alt = m.image.kind === "screenshot" ? "Shared screenshot" : "Shared image";
+            UI.attachImage(img, m.image);
             img.loading = "lazy";
             img.style.maxWidth = "100%";
             img.style.display = "block";
