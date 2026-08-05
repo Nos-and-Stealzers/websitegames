@@ -124,8 +124,13 @@
 
     var foot = el("div", "tile-foot");
     foot.appendChild(el("span", "tile-cat", game.categoryLabel));
-    foot.appendChild(riskFlag(game));
+    /* Say it on the card, not after the click. */
+    foot.appendChild(game.unavailable
+      ? el("span", "flag flag-bad", "Unavailable")
+      : riskFlag(game));
     body.appendChild(foot);
+
+    if (game.unavailable) root.classList.add("is-gone");
 
     root.appendChild(body);
     return root;

@@ -725,6 +725,40 @@ select { cursor: pointer; }
 .stage iframe { width: 100%; height: 100%; border: 0; display: block; }
 .stage:fullscreen { aspect-ratio: auto; height: 100dvh; border: 0; }
 
+/* Large Unity builds take a while off a CDN — an unexplained black box reads
+   as broken, so say what's happening. */
+.stage-loading {
+  position: absolute; inset: 0; z-index: 1;
+  display: grid; place-content: center; justify-items: center; gap: 0.6rem;
+  background: var(--paper);
+  text-align: center; padding: 1.5rem;
+}
+.stage-loading[hidden] { display: none; }
+.stage-loading p { margin: 0; color: var(--ink-3); max-width: 34ch; }
+
+.spinner {
+  width: 1.6rem; height: 1.6rem;
+  border: 2px solid var(--line-2);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+html[data-lite="on"] .spinner { animation: none; border-top-color: var(--line-2); }
+
+/* Quiet confirmation that game progress is being kept. */
+.save-state {
+  font-family: var(--mono); font-size: 0.66rem;
+  letter-spacing: 0.06em; color: var(--ink-3);
+  align-self: center; padding: 0 0.4rem;
+}
+.save-state.ok { color: var(--good); }
+.save-state.warn { color: var(--warn); }
+
+/* A title no host carries. Still listed, visibly not playable. */
+.tile.is-gone .tile-art { filter: grayscale(1); opacity: 0.55; }
+.tile.is-gone .tile-name { color: var(--ink-3); }
+
 .curtain {
   position: absolute; inset: 0;
   display: grid; place-items: center; text-align: center;

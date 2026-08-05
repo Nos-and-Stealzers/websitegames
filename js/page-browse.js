@@ -144,13 +144,18 @@
       opts = opts || {};
       syncControls();
 
+      /* The index lists everything, including titles no host carries — they
+         are flagged on the card. Hiding them would mean searching for a game
+         you know exists returns nothing, which is worse than an honest
+         "unavailable". Only the surfaces that *pick for you* skip them. */
       var list = Catalog.filter({
         query: state.q,
         category: state.category,
         embeddableOnly: state.embed,
         lowRiskOnly: state.risk,
         localOnly: state.local,
-        favoritesOnly: state.fav
+        favoritesOnly: state.fav,
+        includeUnavailable: true
       });
 
       var mode = state.sort;

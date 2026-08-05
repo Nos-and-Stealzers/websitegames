@@ -121,9 +121,13 @@
 
   /* ---- filter + sort ---- */
 
+  /* Titles no host carries. They stay in the index so the catalog is honest,
+     but anything that *picks* a game for you should never land on one. */
+  var playable = all.filter(function (g) { return !g.unavailable; });
+
   function filter(opts) {
     opts = opts || {};
-    var list = all;
+    var list = opts.includeUnavailable ? all : playable;
 
     if (opts.category && opts.category !== "all") {
       list = list.filter(function (g) { return g.category === opts.category; });
@@ -191,21 +195,23 @@
   }
 
   function daily(count, pool) {
-    return shuffle((pool || all).slice(), daySeed()).slice(0, count || 12);
+    return shuffle((pool || playable).slice(), daySeed()).slice(0, count || 12);
   }
 
   function randomGame() {
-    return all[Math.floor(Math.random() * all.length)];
+    return playable[Math.floor(Math.random() * playable.length)];
   }
 
   /* ---- recommendations ---- */
 
   function related(game, count) {
     if (!game) return [];
-    var sameCat = all.filter(function (g) { return g.id !== game.id && g.category === game.category; });
+    var sameCat = playable.filter(function (g) {
+      return g.id !== game.id && g.category === game.category;
+    });
     var picked = shuffle(sameCat, daySeed() + game.index).slice(0, count || 8);
     if (picked.length < (count || 8)) {
-      var filler = shuffle(all.filter(function (g) {
+      var filler = shuffle(playable.filter(function (g) {
         return g.id !== game.id && picked.indexOf(g) === -1 && g.category !== game.category;
       }), daySeed()).slice(0, (count || 8) - picked.length);
       picked = picked.concat(filler);
@@ -226,7 +232,7 @@
       weight[g.category] = (weight[g.category] || 0) + (stats[id].plays || 1);
     });
 
-    var unplayed = all.filter(function (g) { return played.indexOf(g.id) === -1; });
+    var unplayed = playable.filter(function (g) { return played.indexOf(g.id) === -1; });
     unplayed.sort(function (a, b) {
       return (weight[b.category] || 0) - (weight[a.category] || 0);
     });
@@ -248,6 +254,7 @@
 
   window.Catalog = {
     all: all,
+    playable: playable,
     byId: function (id) { return byId[id] || null; },
     categories: categories,
     counts: counts,

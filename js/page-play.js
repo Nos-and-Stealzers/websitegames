@@ -7,6 +7,7 @@
   var frame = null;
   var since = 0;
   var tall = false;
+  var loaded = false;
 
   function $(id) { return document.getElementById(id); }
   function stage() { return $("stage"); }
@@ -40,11 +41,24 @@
     else prompt();
 
     document.addEventListener("visibilitychange", function () {
-      if (document.hidden) flush();
-      else if (frame) since = Date.now();
+      if (document.hidden) {
+        flush();
+        /* Tabbing away is the most common way a session ends, so treat it as
+           a save point rather than waiting for the interval. */
+        if (playedLongEnough()) backupProgress("hidden");
+      } else if (frame) {
+        since = Date.now();
+      }
     });
-    window.addEventListener("beforeunload", flush);
+
+    window.addEventListener("beforeunload", function () {
+      flush();
+      if (playedLongEnough()) backupProgress("unload");
+    });
     window.setInterval(flush, 30000);
+
+    window.Session.ready.then(watchProgress);
+    document.addEventListener("session:change", watchProgress);
   }
 
   /* --------------------------------------------------------------- details */
@@ -66,6 +80,10 @@
       game.embeddable && !game.preferDirect ? "Plays in page" : "Opens a new tab");
     flags.appendChild(launch);
     if (game.platform === "local") flags.appendChild(UI.el("span", "flag", "Hosted here"));
+
+    /* Pre-fills the game on the feedback form, so a broken title takes one
+       click to report from the place you noticed it. */
+    $("a-report").href = "feedback.html?game=" + encodeURIComponent(game.id);
 
     $("m-cat").textContent = game.categoryLabel;
     $("m-risk").textContent = UI.riskLabel(game);
@@ -102,7 +120,12 @@
     frame.allow = "autoplay; fullscreen; gamepad; clipboard-write";
     frame.setAttribute("allowfullscreen", "");
     if (game.sandbox) frame.setAttribute("sandbox", game.sandbox);
+
+    loaded = false;
+    showLoading(true);
     frame.addEventListener("load", function () {
+      loaded = true;
+      showLoading(false);
       window.setTimeout(function () { try { frame.focus(); } catch (e) {} }, 60);
     });
     stage().insertBefore(frame, curtain());
@@ -168,24 +191,35 @@
     if (out && out.catch) out.catch(function () { window.UI.toast("Fullscreen was blocked"); });
   }
 
-  /* If a framed game never paints, offer the new-tab route. */
+  /* Some of these are large Unity builds on a CDN, so a blank black box for
+     ten seconds is normal, not broken. Say so instead of showing nothing. */
+  function showLoading(on) {
+    var box = $("stage-loading");
+    if (!box) return;
+    box.hidden = !on;
+  }
+
+  /* If a framed game never loads at all, offer the new-tab route.
+     This used to read frame.contentDocument, which silently stopped working
+     the moment games moved to their own origin — cross-origin access always
+     throws, and the catch treated that as success, so the fallback could
+     never fire. The load event crosses origins; the document does not. */
   function watchdog() {
     window.setTimeout(function () {
-      if (!frame) return;
-      try {
-        var doc = frame.contentDocument;
-        if (doc && doc.body && doc.body.childElementCount === 0) {
-          var c = curtain();
-          c.hidden = false;
-          c.dataset.mode = "direct";
-          $("c-label").textContent = "Timed out";
-          $("c-title").textContent = "This one didn't load";
-          $("c-body").textContent = "It may be blocked on this network. A separate tab usually works.";
-          $("c-action").textContent = "↗ Open in a new tab";
-          $("c-alt").hidden = true;
-        }
-      } catch (err) { /* cross-origin means it loaded fine */ }
-    }, 6000);
+      if (!frame || loaded) return;
+      showLoading(false);
+      var c = curtain();
+      c.hidden = false;
+      c.dataset.mode = "direct";
+      $("c-label").textContent = "Timed out";
+      $("c-title").textContent = "This one is taking too long";
+      $("c-body").textContent =
+        "It may be blocked on this network, or the host is slow. A separate " +
+        "tab usually works — the game keeps loading there.";
+      $("c-action").textContent = "↗ Open in a new tab";
+      $("c-alt").hidden = false;
+      $("c-alt").textContent = "Keep waiting";
+    }, 20000);
   }
 
   /* -------------------------------------------------------------- playtime */
@@ -196,6 +230,71 @@
     since = document.hidden ? 0 : Date.now();
     window.Store.addSeconds(game.id, seconds);
     counters();
+  }
+
+  /* ------------------------------------------------------- progress backup */
+
+  /* The game writes its own progress into its origin's localStorage as you
+     play. Backing that up only when someone remembers to press a button in
+     Settings is how saves get lost, so it happens here instead: once the
+     session has been long enough to be worth keeping, and again on the way
+     out. Silent — it is not something to interrupt play over. */
+  var MIN_SESSION = 45;          // seconds before a backup is worth doing
+  var backupTimer = null;
+  var lastBackup = 0;
+
+  /* A two-second glance at a game has no progress worth storing, and backing
+     up then would only overwrite a good save with an empty one. */
+  function playedLongEnough() {
+    if (!since) return false;
+    return (Date.now() - since) / 1000 >= MIN_SESSION ||
+           window.Store.statFor(game.id).seconds >= MIN_SESSION;
+  }
+
+  function canBackup() {
+    return window.GameSaves && window.Session && window.Session.user &&
+           game && game.host && !game.unavailable;
+  }
+
+  function markSaved(text, tone) {
+    var badge = $("save-state");
+    if (!badge) return;
+    badge.hidden = false;
+    badge.textContent = text;
+    badge.className = "save-state" + (tone ? " " + tone : "");
+  }
+
+  function backupProgress(reason) {
+    if (!canBackup()) return Promise.resolve();
+    if (Date.now() - lastBackup < 20000) return Promise.resolve();
+    lastBackup = Date.now();
+
+    var origin = (window.SITE.gameHosts || {})[game.host];
+    if (!origin) return Promise.resolve();
+
+    return window.GameSaves.readAll(window.GameSaves.hostKey(origin))
+      .then(function (res) {
+        var keys = Object.keys(res.data || {});
+        if (!keys.length) return null;
+        return window.API.putGameSave(res.host, res.data).then(function () {
+          markSaved("progress saved", "ok");
+          return keys.length;
+        });
+      })
+      .catch(function () {
+        /* Offline, bridge not deployed, or storage blocked — say so quietly
+           rather than pretending it worked. */
+        markSaved("progress not synced", "warn");
+      });
+  }
+
+  function watchProgress() {
+    if (!canBackup()) return;
+    markSaved("progress syncs to your account", "");
+    window.clearInterval(backupTimer);
+    backupTimer = window.setInterval(function () {
+      if (!document.hidden && frame) backupProgress("interval");
+    }, 120000);
   }
 
   /* --------------------------------------------------------------- actions */

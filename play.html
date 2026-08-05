@@ -46,11 +46,18 @@
         <button class="btn" type="button" id="a-tab">↗ New tab</button>
         <button class="btn" type="button" id="a-aspect">4:3</button>
         <span class="spacer"></span>
+        <span class="save-state" id="save-state" hidden></span>
         <button class="btn" type="button" id="a-pin" aria-pressed="false">☆ Pin</button>
         <button class="btn" type="button" id="a-share">⧉ Copy link</button>
+        <a class="btn btn-flat" id="a-report" href="feedback.html">⚑ Report</a>
       </div>
 
       <div class="stage" id="stage">
+        <div class="stage-loading" id="stage-loading" hidden>
+          <span class="spinner" aria-hidden="true"></span>
+          <span class="label">Loading</span>
+          <p class="tiny">Some of these are large builds — give it a moment.</p>
+        </div>
         <div class="curtain" id="curtain">
           <div class="inner">
             <span class="label" id="c-label">Standby</span>
