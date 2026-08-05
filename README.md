@@ -159,15 +159,48 @@ sw.js manifest.json robots.txt sitemap.xml assets/icon.svg
 
 ## Where the games come from
 
-The catalog stores root-relative paths like `/games/huge/snow-rider/index.html`.
-`js/config.js` decides what host those resolve against — game sources *and* cover images:
+The games live in four separate repos. Every catalog entry names which one serves it
+(`"host": "games-huge"`) plus the exact path inside that repo, resolved once by
+[`tools/rehost-catalog.js`](tools/rehost-catalog.js) against the real git trees — the site
+does no guessing at runtime.
+
+| host | repo | titles |
+| --- | --- | --- |
+| `swfgalaxy` | [Nos-and-Stealzers/swfgalaxy](https://github.com/Nos-and-Stealzers/swfgalaxy) | 96 |
+| `games-huge` | [LucasGrimm389/games-huge](https://github.com/LucasGrimm389/games-huge) | 89 |
+| `flashgames` | [LucasGrimm389/flashgames](https://github.com/LucasGrimm389/flashgames) | 11 |
+| `hd_fnaf` | [LucasGrimm389/hd_fnaf](https://github.com/LucasGrimm389/hd_fnaf) | 8 |
+
+**204 of 216 playable. 1 external. 11 unavailable** — those eleven point at paths no repo
+carries (`/games/websie/…`, `/games/retro-bowl/…`, four `swf-*` aliases). They stay in the
+index but are flagged, and the player says so instead of loading a frame that would only
+404.
+
+`js/config.js` maps each host to an origin:
 
 ```js
-gameBase: "https://arcadecampushub.online"   // games served from the live site
-gameBase: ""                                 // games/ folder sits next to this site
+gameHosts: {
+  "games-huge": "https://lucasgrimm389.github.io/games-huge",
+  "swfgalaxy":  "https://nos-and-stealzers.github.io/swfgalaxy",
+  "flashgames": "https://lucasgrimm389.github.io/flashgames",
+  "hd_fnaf":    "https://lucasgrimm389.github.io/hd_fnaf"
+}
 ```
 
-Set it to `""` once you copy the `games/` directory in beside these files.
+**Enable GitHub Pages on each repo** for these to work: *Settings → Pages → Deploy from a
+branch → `main` → `/ (root)`*. Swap any entry for Vercel, Netlify or your own host and only
+this table changes.
+
+### Re-resolving after the game repos change
+
+```bash
+# trees only — fast even for 22k files
+git clone --filter=blob:none --no-checkout --depth 1 <repo-url> /tmp/repos/<name>
+
+node tools/map-game-hosts.js /tmp/repos     # report coverage, change nothing
+node tools/rehost-catalog.js /tmp/repos     # rewrite data/games.json
+powershell -File tools/build-sitemap.ps1    # regenerate games.js + sitemap
+```
 
 ## Running it locally
 

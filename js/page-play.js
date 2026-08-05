@@ -35,7 +35,8 @@
     stars();
     window.UI.render($("g-related"), window.Catalog.related(game, 12), { desc: false });
 
-    if (game.embeddable && !game.preferDirect) embed();
+    if (game.unavailable) unavailable();
+    else if (game.embeddable && !game.preferDirect) embed();
     else prompt();
 
     document.addEventListener("visibilitychange", function () {
@@ -117,6 +118,23 @@
     watchdog();
   }
 
+  /* No repo carries this title's files. Say so, rather than loading a frame
+     that will only ever 404. */
+  function unavailable() {
+    var c = curtain();
+    c.hidden = false;
+    c.dataset.mode = "gone";
+    $("c-label").textContent = "Unavailable";
+    $("c-title").textContent = "This one isn't hosted anywhere";
+    $("c-body").textContent =
+      "It's still listed so the index stays honest, but none of the game hosts " +
+      "carry its files. Nothing to load.";
+    $("c-action").textContent = "⇢ Play something else";
+    $("c-alt").hidden = true;
+
+    ["a-play", "a-full", "a-tab"].forEach(function (id) { $(id).disabled = true; });
+  }
+
   function prompt(reason) {
     var c = curtain();
     c.hidden = false;
@@ -189,7 +207,9 @@
     });
 
     $("c-action").addEventListener("click", function () {
-      if (curtain().dataset.mode === "embed") embed();
+      var mode = curtain().dataset.mode;
+      if (mode === "gone") window.Shell.playRandom();
+      else if (mode === "embed") embed();
       else newTab();
     });
 

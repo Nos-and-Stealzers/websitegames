@@ -12,11 +12,22 @@
     domain: "arcadecampushub.online",
     build: "v2",
 
-    /* Where the actual game folders live.
-       - ""  ................. games/ sits next to this site (self-hosted)
-       - "https://host" ...... games are served from another origin
-       Root-relative sources in the catalog ("/games/...") get this prefix. */
-    gameBase: "https://arcadecampushub.online",
+    /* Where the games are served from.
+       Each catalog entry names its `host`; this maps that to an origin.
+       The four repos are separate GitHub Pages sites — enable Pages on each
+       (Settings → Pages → Deploy from branch → main → /root) and these URLs
+       start working. Swap any of them for Vercel/Netlify/your own host and
+       only this table changes. */
+    gameHosts: {
+      "games-huge": "https://lucasgrimm389.github.io/games-huge",
+      "swfgalaxy":  "https://nos-and-stealzers.github.io/swfgalaxy",
+      "flashgames": "https://lucasgrimm389.github.io/flashgames",
+      "hd_fnaf":    "https://lucasgrimm389.github.io/hd_fnaf"
+    },
+
+    /* Fallback for any entry without a `host`, and for legacy catalogs whose
+       paths are still root-relative. Empty means "same origin as this site". */
+    gameBase: "",
 
     /* ---------------------------------------------------------------
        Accounts backend. Pick ONE, or neither.
@@ -38,6 +49,10 @@
                     for local development; on static hosting it finds
                     nothing and quietly settles on "none".
        --------------------------------------------------------------- */
+    /* Stays "auto" until the Supabase client adapter lands — the credentials
+       below are wired and supabase/schema.sql is ready, but flipping this to
+       "supabase" now would just switch accounts off, because nothing yet
+       speaks to Supabase. "auto" keeps the tested Node backend working. */
     backend: "auto",
 
     /* Used when backend === "supabase".
@@ -46,8 +61,11 @@
        here; it bypasses RLS and would hand every visitor full database
        access. If one has ever been pasted anywhere public, rotate it. */
     supabase: {
-      url: "",          // https://xxxxxxxxxxxx.supabase.co
-      anonKey: ""       // sb_publishable_…  or  eyJhbGciOi…
+      url: "https://jtpostzpnhyyvuvywbiy.supabase.co",
+      anonKey:
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." +
+        "eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp0cG9zdHpwbmh5eXZ1dnl3Yml5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU4OTEyNjgsImV4cCI6MjEwMTQ2NzI2OH0." +
+        "pBbjcEMqRMLjzRc0uvL0mAEcyYaxgvzjho0kXwH7eKA"
     },
 
     /* Used when backend === "node". Empty means same origin. */

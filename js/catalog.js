@@ -16,12 +16,19 @@
     return (words[0][0] + words[1][0]).toUpperCase();
   }
 
-  /* Root-relative game paths get the configured origin prefix so the site
-     works whether or not games/ is deployed alongside it. */
-  function resolveUrl(path) {
+  /* Each catalog entry names the repo that serves it; SITE.gameHosts maps that
+     to an origin. Entries without a host fall back to gameBase, which keeps
+     older catalogs and self-hosted setups working unchanged. */
+  function originFor(host) {
+    var hosts = SITE.gameHosts || {};
+    var base = (host && hosts[host]) || SITE.gameBase || "";
+    return String(base).replace(/\/+$/, "");
+  }
+
+  function resolveUrl(path, host) {
     if (!path) return "";
     if (/^(https?:)?\/\//i.test(path)) return path;
-    var base = (SITE.gameBase || "").replace(/\/+$/, "");
+    var base = originFor(host);
     if (path.charAt(0) === "/") return base + path;
     return base ? base + "/" + path : path;
   }
@@ -46,11 +53,15 @@
       /* Real cover art, where a title ships one — `icon` is harvested from the
          game's own page by tools/harvest-icons.js. Resolved through the same
          base as the game itself; the generated plate takes over if it 404s. */
-      art: resolveUrl(entry.icon || entry.pfp || entry.image || ""),
+      art: resolveUrl(entry.icon || entry.pfp || entry.image || "", entry.host),
+      host: entry.host || "",
+      /* Titles no repo actually carries. Kept in the index so the catalog
+         stays honest, but the player says so instead of showing a dead frame. */
+      unavailable: !!entry.unavailable,
       source: entry.source || entry.direct || "",
       direct: entry.direct || entry.source || "",
-      sourceUrl: resolveUrl(entry.source || entry.direct || ""),
-      directUrl: resolveUrl(entry.direct || entry.source || ""),
+      sourceUrl: resolveUrl(entry.source || entry.direct || "", entry.host),
+      directUrl: resolveUrl(entry.direct || entry.source || "", entry.host),
       platform: entry.platform || "local",
       embeddable: embeddable,
       preferDirect: preferDirect,

@@ -5,39 +5,42 @@
     "category": "action",
     "description": "Survive 10 minutes against endless monster hordes in this top-down roguelike shooter.",
     "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
-    "source": "/games/huge/10-minutes-till-dawn/index.html",
-    "direct": "/games/huge/10-minutes-till-dawn/index.html",
+    "source": "10-minutes-till-dawn/index.html",
+    "direct": "10-minutes-till-dawn/index.html",
     "platform": "local",
     "embed": "allowed",
     "schoolRisk": "low",
-    "icon": "/games/huge/10-minutes-till-dawn/icon.png"
+    "icon": "10-minutes-till-dawn/icon.png",
+    "host": "games-huge"
   },
   {
     "id": "huge-1v1lol",
     "title": "1v1.LOL",
     "category": "action",
-    "description": "1v1.LOL ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â build structures and outshoot opponents in this construction-battle game.",
+    "description": "1v1.LOL ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â build structures and outshoot opponents in this construction-battle game.",
     "gradient": "linear-gradient(135deg, #2563eb, #1e3a8a)",
-    "source": "/games/huge/1v1lol/index.html",
-    "direct": "/games/huge/1v1lol/index.html",
+    "source": "1v1lol/index.html",
+    "direct": "1v1lol/index.html",
     "platform": "local",
     "embed": "allowed",
     "schoolRisk": "medium",
-    "icon": "/games/huge/1v1lol/favicon.png"
+    "icon": "1v1lol/favicon.png",
+    "host": "games-huge"
   },
   {
     "id": "1v1space",
     "title": "1v1.Space",
     "category": "action",
-    "description": "Intense 1v1 dogfighting in space ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â upgrade your ship and outmaneuver opponents.",
+    "description": "Intense 1v1 dogfighting in space ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â upgrade your ship and outmaneuver opponents.",
     "gradient": "linear-gradient(135deg, #fa709a 0%, #fee140 100%)",
-    "source": "/games/huge/1v1space/index.html",
-    "direct": "/games/huge/1v1space/index.html",
+    "source": "1v1space/index.html",
+    "direct": "1v1space/index.html",
     "preferDirect": true,
     "platform": "web",
     "embed": false,
     "schoolRisk": "low",
-    "icon": "/games/huge/1v1space/splash.png"
+    "icon": "1v1space/splash.png",
+    "host": "games-huge"
   },
   {
     "id": "huge-alienhominid",
@@ -45,12 +48,13 @@
     "category": "action",
     "description": "Run-and-gun action inspired by the classic Alien Hominid console game.",
     "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
-    "source": "/games/huge/alienhominid/index.html",
-    "direct": "/games/huge/alienhominid/index.html",
+    "source": "alienhominid/index.html",
+    "direct": "alienhominid/index.html",
     "platform": "local",
     "embed": "allowed",
     "schoolRisk": "medium",
-    "icon": "/games/huge/alienhominid/alienhominid.jpeg"
+    "icon": "alienhominid/alienhominid.jpeg",
+    "host": "games-huge"
   },
   {
     "id": "arena-drift",
@@ -62,47 +66,51 @@
     "direct": "games/websie/arena-drift.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "low"
+    "schoolRisk": "low",
+    "unavailable": true
   },
   {
     "id": "huge-awesome-tanks-2",
     "title": "Awesome Tanks 2",
     "category": "action",
-    "description": "Top-down tank warfare ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â destroy enemy tanks and bases across 30 levels.",
+    "description": "Top-down tank warfare ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â destroy enemy tanks and bases across 30 levels.",
     "gradient": "linear-gradient(135deg, #2563eb, #1e3a8a)",
-    "source": "/games/huge/awesome-tanks-2/index.html",
-    "direct": "/games/huge/awesome-tanks-2/index.html",
+    "source": "awesome-tanks-2/index.html",
+    "direct": "awesome-tanks-2/index.html",
     "platform": "local",
     "embed": "allowed",
     "schoolRisk": "low",
-    "icon": "/games/huge/awesome-tanks-2/icon.png"
+    "icon": "awesome-tanks-2/icon.png",
+    "host": "games-huge"
   },
   {
     "id": "huge-blackknight",
     "title": "Black Knight",
     "category": "action",
-    "description": "Side-scrolling hack-and-slash ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â fight your way through a dark medieval world.",
+    "description": "Side-scrolling hack-and-slash ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â fight your way through a dark medieval world.",
     "gradient": "linear-gradient(135deg, #64748b, #0f172a)",
-    "source": "/games/huge/blackknight/index.html",
-    "direct": "/games/huge/blackknight/index.html",
+    "source": "blackknight/index.html",
+    "direct": "blackknight/index.html",
     "platform": "local",
     "embed": "allowed",
     "schoolRisk": "low",
-    "icon": "/games/huge/blackknight/blackknight.png"
+    "icon": "blackknight/blackknight.png",
+    "host": "games-huge"
   },
   {
     "id": "boxhead2play",
     "title": "Boxhead 2 Play",
     "category": "action",
-    "description": "Classic zombie survival shooter ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â hold off endless undead hordes with upgradeable weapons.",
+    "description": "Classic zombie survival shooter ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â hold off endless undead hordes with upgradeable weapons.",
     "gradient": "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-    "source": "/games/huge/boxhead2play/index.html",
-    "direct": "/games/huge/boxhead2play/index.html",
+    "source": "boxhead2play/index.html",
+    "direct": "boxhead2play/index.html",
     "preferDirect": true,
     "platform": "web",
     "embed": false,
     "schoolRisk": "low",
-    "icon": "/games/huge/boxhead2play/boxhead2play.jpg"
+    "icon": "boxhead2play/boxhead2play.jpg",
+    "host": "games-huge"
   },
   {
     "id": "brotatofm",
@@ -115,21 +123,23 @@
     "sandbox": "allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-pointer-lock allow-downloads",
     "platform": "external",
     "embed": "blocked",
-    "schoolRisk": "high"
+    "schoolRisk": "high",
+    "host": "external"
   },
   {
     "id": "burning-man-2",
     "title": "Burning Man 2",
     "category": "action",
-    "description": "Stickman brawler with ragdoll physics ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â beat up enemies in chaotic arenas.",
+    "description": "Stickman brawler with ragdoll physics ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â beat up enemies in chaotic arenas.",
     "gradient": "linear-gradient(135deg, #ff9a56 0%, #ff6a88 100%)",
-    "source": "/games/huge/burning-man-2/index.html",
-    "direct": "/games/huge/burning-man-2/index.html",
+    "source": "burning-man-2/index.html",
+    "direct": "burning-man-2/index.html",
     "preferDirect": true,
     "platform": "web",
     "embed": false,
     "schoolRisk": "low",
-    "icon": "/games/huge/burning-man-2/style/favicon.ico"
+    "icon": "burning-man-2/style/favicon.ico",
+    "host": "games-huge"
   },
   {
     "id": "huge-captaincallisto",
@@ -137,24 +147,26 @@
     "category": "action",
     "description": "Space exploration platformer with retro pixel art and shooting mechanics.",
     "gradient": "linear-gradient(135deg, #0ea5e9, #1e293b)",
-    "source": "/games/huge/captaincallisto/index.html",
-    "direct": "/games/huge/captaincallisto/index.html",
+    "source": "captaincallisto/index.html",
+    "direct": "captaincallisto/index.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "low"
+    "schoolRisk": "low",
+    "host": "games-huge"
   },
   {
     "id": "huge-championarcher",
     "title": "Champion Archer",
     "category": "action",
-    "description": "Precision archery challenge ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â adjust angle and power to hit distant targets.",
+    "description": "Precision archery challenge ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â adjust angle and power to hit distant targets.",
     "gradient": "linear-gradient(135deg, #16a34a, #14532d)",
-    "source": "/games/huge/championarcher/index.html",
-    "direct": "/games/huge/championarcher/index.html",
+    "source": "championarcher/index.html",
+    "direct": "championarcher/index.html",
     "platform": "local",
     "embed": "allowed",
     "schoolRisk": "low",
-    "icon": "/games/huge/championarcher/championarcher.png"
+    "icon": "championarcher/championarcher.png",
+    "host": "games-huge"
   },
   {
     "id": "chromaincident",
@@ -162,38 +174,41 @@
     "category": "action",
     "description": "Puzzle-platformer where color is the key mechanic to solve every level.",
     "gradient": "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-    "source": "/games/huge/chromaincident/index.html",
-    "direct": "/games/huge/chromaincident/index.html",
+    "source": "chromaincident/index.html",
+    "direct": "chromaincident/index.html",
     "preferDirect": true,
     "platform": "web",
     "embed": false,
-    "schoolRisk": "low"
+    "schoolRisk": "low",
+    "host": "games-huge"
   },
   {
     "id": "huge-brave-explorers",
     "title": "Brave Explorers",
     "category": "adventure",
-    "description": "Multiplayer co-op platformer ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â explore dungeons and battle monsters together.",
+    "description": "Multiplayer co-op platformer ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â explore dungeons and battle monsters together.",
     "gradient": "linear-gradient(135deg, #22c55e, #14532d)",
-    "source": "/games/huge/brave-explorers/index.html",
-    "direct": "/games/huge/brave-explorers/index.html",
+    "source": "brave-explorers/index.html",
+    "direct": "brave-explorers/index.html",
     "platform": "local",
     "embed": "allowed",
     "schoolRisk": "low",
-    "icon": "/games/huge/brave-explorers/favicon.ico"
+    "icon": "brave-explorers/favicon.ico",
+    "host": "games-huge"
   },
   {
     "id": "huge-2020-game",
     "title": "2020 Game",
     "category": "arcade",
-    "description": "Survival game set in the chaos of 2020 ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â dodge every disaster thrown at you.",
+    "description": "Survival game set in the chaos of 2020 ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â dodge every disaster thrown at you.",
     "gradient": "linear-gradient(135deg, #22c55e, #14532d)",
-    "source": "/games/huge/2020-game/index.html",
-    "direct": "/games/huge/2020-game/index.html",
+    "source": "2020-game/index.html",
+    "direct": "2020-game/index.html",
     "platform": "local",
     "embed": "allowed",
     "schoolRisk": "low",
-    "icon": "/games/huge/2020-game/logo/32x32.png"
+    "icon": "2020-game/logo/32x32.png",
+    "host": "games-huge"
   },
   {
     "id": "swfgalaxy-2048",
@@ -201,37 +216,40 @@
     "category": "arcade",
     "description": "Swfgalaxy game: 2048.",
     "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
-    "source": "games-swfgalaxy/2048.html",
-    "direct": "games-swfgalaxy/2048.html",
+    "source": "2048.html",
+    "direct": "2048.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "alien-invaders-io",
     "title": "Alien Invaders.io",
     "category": "arcade",
-    "description": "Multiplayer take on Space Invaders ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â defend against waves of alien attackers.",
+    "description": "Multiplayer take on Space Invaders ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â defend against waves of alien attackers.",
     "gradient": "linear-gradient(135deg, #fa709a 0%, #fee140 100%)",
-    "source": "/games/huge/alien-invaders-io/index.html",
-    "direct": "/games/huge/alien-invaders-io/index.html",
+    "source": "alien-invaders-io/index.html",
+    "direct": "alien-invaders-io/index.html",
     "preferDirect": true,
     "platform": "web",
     "embed": false,
     "schoolRisk": "low",
-    "icon": "/games/huge/alien-invaders-io/style/favicon.ico"
+    "icon": "alien-invaders-io/style/favicon.ico",
+    "host": "games-huge"
   },
   {
     "id": "huge-angry-birds",
     "title": "Angry Birds",
     "category": "arcade",
-    "description": "Browser port of Angry Birds ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â sling birds to demolish pig fortresses.",
+    "description": "Browser port of Angry Birds ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â sling birds to demolish pig fortresses.",
     "gradient": "linear-gradient(135deg, #ef4444, #b91c1c)",
-    "source": "/games/huge/angry-birds/index.html",
-    "direct": "/games/huge/angry-birds/index.html",
+    "source": "angry-birds/index.html",
+    "direct": "angry-birds/index.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "low"
+    "schoolRisk": "low",
+    "host": "games-huge"
   },
   {
     "id": "huge-arcade-wizard",
@@ -239,24 +257,26 @@
     "category": "arcade",
     "description": "Retro arcade puzzle game with classic gameplay mechanics.",
     "gradient": "linear-gradient(135deg, #8b5cf6, #312e81)",
-    "source": "/games/huge/arcade-wizard/index.html",
-    "direct": "/games/huge/arcade-wizard/index.html",
+    "source": "arcade-wizard/index.html",
+    "direct": "arcade-wizard/index.html",
     "platform": "local",
     "embed": "allowed",
     "schoolRisk": "low",
-    "icon": "/games/huge/arcade-wizard/icon.png"
+    "icon": "arcade-wizard/icon.png",
+    "host": "games-huge"
   },
   {
     "id": "huge-asteroids",
     "title": "Asteroids",
     "category": "arcade",
-    "description": "Classic Asteroids arcade game ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â shoot rotating rocks before they hit your ship.",
+    "description": "Classic Asteroids arcade game ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â shoot rotating rocks before they hit your ship.",
     "gradient": "linear-gradient(135deg, #06b6d4, #164e63)",
-    "source": "/games/huge/asteroids/index.html",
-    "direct": "/games/huge/asteroids/index.html",
+    "source": "asteroids/index.html",
+    "direct": "asteroids/index.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "low"
+    "schoolRisk": "low",
+    "host": "games-huge"
   },
   {
     "id": "huge-avalanche",
@@ -264,25 +284,27 @@
     "category": "arcade",
     "description": "Dodge falling rocks in this fast-paced endless survival game.",
     "gradient": "linear-gradient(135deg, #38bdf8, #1d4ed8)",
-    "source": "/games/huge/avalanche/index.html",
-    "direct": "/games/huge/avalanche/index.html",
+    "source": "avalanche/index.html",
+    "direct": "avalanche/index.html",
     "platform": "local",
     "embed": "allowed",
     "schoolRisk": "low",
-    "icon": "/games/huge/avalanche/avalanche.png"
+    "icon": "avalanche/avalanche.png",
+    "host": "games-huge"
   },
   {
     "id": "huge-bad-ice-cream",
     "title": "Bad Ice Cream",
     "category": "arcade",
-    "description": "Icy maze game ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â break walls and collect fruit while dodging enemies.",
+    "description": "Icy maze game ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â break walls and collect fruit while dodging enemies.",
     "gradient": "linear-gradient(135deg, #06b6d4, #0ea5e9)",
-    "source": "/games/huge/bad-ice-cream/index.html",
-    "direct": "/games/huge/bad-ice-cream/index.html",
+    "source": "bad-ice-cream/index.html",
+    "direct": "bad-ice-cream/index.html",
     "platform": "local",
     "embed": "allowed",
     "schoolRisk": "low",
-    "icon": "/games/huge/bad-ice-cream/bad-ice-cream.png"
+    "icon": "bad-ice-cream/bad-ice-cream.png",
+    "host": "games-huge"
   },
   {
     "id": "huge-bad-ice-cream-2",
@@ -290,12 +312,13 @@
     "category": "arcade",
     "description": "More frozen mazes and fruit to collect in the Bad Ice Cream sequel.",
     "gradient": "linear-gradient(135deg, #22c55e, #15803d)",
-    "source": "/games/huge/bad-ice-cream-2/index.html",
-    "direct": "/games/huge/bad-ice-cream-2/index.html",
+    "source": "bad-ice-cream-2/index.html",
+    "direct": "bad-ice-cream-2/index.html",
     "platform": "local",
     "embed": "allowed",
     "schoolRisk": "low",
-    "icon": "/games/huge/bad-ice-cream-2/bad-ice-cream-2.png"
+    "icon": "bad-ice-cream-2/bad-ice-cream-2.png",
+    "host": "games-huge"
   },
   {
     "id": "huge-bad-ice-cream-3",
@@ -303,12 +326,13 @@
     "category": "arcade",
     "description": "Three-player co-op ice cream mayhem with new maze challenges.",
     "gradient": "linear-gradient(135deg, #14b8a6, #0f766e)",
-    "source": "/games/huge/bad-ice-cream-3/index.html",
-    "direct": "/games/huge/bad-ice-cream-3/index.html",
+    "source": "bad-ice-cream-3/index.html",
+    "direct": "bad-ice-cream-3/index.html",
     "platform": "local",
     "embed": "allowed",
     "schoolRisk": "low",
-    "icon": "/games/huge/bad-ice-cream-3/bad-ice-cream-3.png"
+    "icon": "bad-ice-cream-3/bad-ice-cream-3.png",
+    "host": "games-huge"
   },
   {
     "id": "swfgalaxy-billiards",
@@ -316,11 +340,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Billiards.",
     "gradient": "linear-gradient(135deg, #22c55e, #15803d)",
-    "source": "games-swfgalaxy/billiards.html",
-    "direct": "games-swfgalaxy/billiards.html",
+    "source": "billiards.html",
+    "direct": "billiards.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-bitdungeon",
@@ -328,49 +353,53 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Bitdungeon.",
     "gradient": "linear-gradient(135deg, #3b82f6, #1e3a8a)",
-    "source": "games-swfgalaxy/bitdungeon.html",
-    "direct": "games-swfgalaxy/bitdungeon.html",
+    "source": "bitdungeon.html",
+    "direct": "bitdungeon.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-btd5",
     "title": "Bloons Tower Defense 5",
     "category": "arcade",
-    "description": "Bloons Tower Defense 5 ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â place towers and pop balloons across 20+ tracks.",
+    "description": "Bloons Tower Defense 5 ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â place towers and pop balloons across 20+ tracks.",
     "gradient": "linear-gradient(135deg, #ec4899, #be185d)",
-    "source": "games-swfgalaxy/btd5.html",
-    "direct": "games-swfgalaxy/btd5.html",
+    "source": "btd5.html",
+    "direct": "btd5.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "huge-bounceback",
     "title": "Bounce Back",
     "category": "arcade",
-    "description": "Ball-bouncing puzzle ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â launch the ball at the right angle to clear all pegs.",
+    "description": "Ball-bouncing puzzle ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â launch the ball at the right angle to clear all pegs.",
     "gradient": "linear-gradient(135deg, #06b6d4, #0f766e)",
-    "source": "/games/huge/bounceback/index.html",
-    "direct": "/games/huge/bounceback/index.html",
+    "source": "bounceback/index.html",
+    "direct": "bounceback/index.html",
     "platform": "local",
     "embed": "allowed",
     "schoolRisk": "low",
-    "icon": "/games/huge/bounceback/screenshot.png"
+    "icon": "bounceback/screenshot.png",
+    "host": "games-huge"
   },
   {
     "id": "huge-breakout",
     "title": "Breakout",
     "category": "arcade",
-    "description": "Classic Breakout/Arkanoid ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â smash all bricks using a bouncing ball and paddle.",
+    "description": "Classic Breakout/Arkanoid ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â smash all bricks using a bouncing ball and paddle.",
     "gradient": "linear-gradient(135deg, #22c55e, #166534)",
-    "source": "/games/huge/breakout/index.html",
-    "direct": "/games/huge/breakout/index.html",
+    "source": "breakout/index.html",
+    "direct": "breakout/index.html",
     "platform": "local",
     "embed": "allowed",
     "schoolRisk": "low",
-    "icon": "/games/huge/breakout/images/up.png"
+    "icon": "breakout/images/up.png",
+    "host": "games-huge"
   },
   {
     "id": "swfgalaxy-btd5hacked",
@@ -378,11 +407,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Btd5Hacked.",
     "gradient": "linear-gradient(135deg, #eab308, #a16207)",
-    "source": "games-swfgalaxy/btd5hacked.html",
-    "direct": "games-swfgalaxy/btd5hacked.html",
+    "source": "btd5hacked.html",
+    "direct": "btd5hacked.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-chess",
@@ -390,11 +420,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Chess.",
     "gradient": "linear-gradient(135deg, #14b8a6, #0f766e)",
-    "source": "games-swfgalaxy/chess.html",
-    "direct": "games-swfgalaxy/chess.html",
+    "source": "chess.html",
+    "direct": "chess.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-chibiknight",
@@ -402,37 +433,40 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Chibiknight.",
     "gradient": "linear-gradient(135deg, #8b5cf6, #4c1d95)",
-    "source": "games-swfgalaxy/chibiknight.html",
-    "direct": "games-swfgalaxy/chibiknight.html",
+    "source": "chibiknight.html",
+    "direct": "chibiknight.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "huge-chrome-dino",
     "title": "Chrome Dino",
     "category": "arcade",
-    "description": "The original Chrome dino runner ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â jump over cacti and duck under pterodactyls.",
+    "description": "The original Chrome dino runner ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â jump over cacti and duck under pterodactyls.",
     "gradient": "linear-gradient(135deg, #84cc16, #365314)",
-    "source": "/games/huge/chrome-dino/index.html",
-    "direct": "/games/huge/chrome-dino/index.html",
+    "source": "chrome-dino/index.html",
+    "direct": "chrome-dino/index.html",
     "platform": "local",
     "embed": "allowed",
     "schoolRisk": "low",
-    "icon": "/games/huge/chrome-dino/icons/icon-256.png"
+    "icon": "chrome-dino/icons/icon-256.png",
+    "host": "games-huge"
   },
   {
     "id": "huge-clean-up-io",
     "title": "Clean Up.io",
     "category": "arcade",
-    "description": "Multiplayer territory game ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â clean more tiles than opponents to win.",
+    "description": "Multiplayer territory game ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â clean more tiles than opponents to win.",
     "gradient": "linear-gradient(135deg, #34d399, #065f46)",
-    "source": "/games/huge/clean-up-io/index.html",
-    "direct": "/games/huge/clean-up-io/index.html",
+    "source": "clean-up-io/index.html",
+    "direct": "clean-up-io/index.html",
     "platform": "local",
     "embed": "allowed",
     "schoolRisk": "low",
-    "icon": "/games/huge/clean-up-io/style/favicon.ico"
+    "icon": "clean-up-io/style/favicon.ico",
+    "host": "games-huge"
   },
   {
     "id": "swfgalaxy-clickerheroes",
@@ -440,11 +474,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Clickerheroes.",
     "gradient": "linear-gradient(135deg, #f43f5e, #9f1239)",
-    "source": "games-swfgalaxy/clickerheroes.html",
-    "direct": "games-swfgalaxy/clickerheroes.html",
+    "source": "clickerheroes.html",
+    "direct": "clickerheroes.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-cooking",
@@ -452,11 +487,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Cooking.",
     "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
-    "source": "games-swfgalaxy/cooking.html",
-    "direct": "games-swfgalaxy/cooking.html",
+    "source": "cooking.html",
+    "direct": "cooking.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "flash-crashbandicoot",
@@ -464,11 +500,12 @@
     "category": "arcade",
     "description": "Flash classic: Crash Bandicoot.",
     "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
-    "source": "games-flash/crashbandicoot.html",
-    "direct": "games-flash/crashbandicoot.html",
+    "source": "crashbandicoot.html",
+    "direct": "crashbandicoot.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "flashgames"
   },
   {
     "id": "huge-crossyroad",
@@ -476,12 +513,13 @@
     "category": "arcade",
     "description": "Hop across traffic, rivers, and hazards in an endlessly restartable arcade run.",
     "gradient": "linear-gradient(135deg, #facc15, #ca8a04)",
-    "source": "/games/huge/crossyroad/index.html",
-    "direct": "/games/huge/crossyroad/index.html",
+    "source": "crossyroad/index.html",
+    "direct": "crossyroad/index.html",
     "platform": "local",
     "embed": "allowed",
     "schoolRisk": "low",
-    "icon": "/games/huge/crossyroad/crossyroad.png"
+    "icon": "crossyroad/crossyroad.png",
+    "host": "games-huge"
   },
   {
     "id": "huge-cubefield",
@@ -489,12 +527,13 @@
     "category": "arcade",
     "description": "High-speed cube dodging with simple controls and a relentless forward run.",
     "gradient": "linear-gradient(135deg, #8b5cf6, #312e81)",
-    "source": "/games/huge/cubefield/index.html",
-    "direct": "/games/huge/cubefield/index.html",
+    "source": "cubefield/index.html",
+    "direct": "cubefield/index.html",
     "platform": "local",
     "embed": "allowed",
     "schoolRisk": "low",
-    "icon": "/games/huge/cubefield/assets/unnamed.png"
+    "icon": "cubefield/assets/unnamed.png",
+    "host": "games-huge"
   },
   {
     "id": "swfgalaxy-strikeforceheroes2",
@@ -502,11 +541,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Dagobah Str1Ke Force Heroes.",
     "gradient": "linear-gradient(135deg, #3b82f6, #1e3a8a)",
-    "source": "games-swfgalaxy/strikeforceheroes2.html",
-    "direct": "games-swfgalaxy/strikeforceheroes2.html",
+    "source": "strikeforceheroes2.html",
+    "direct": "strikeforceheroes2.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-games-deadvalley-deadvalley",
@@ -514,25 +554,27 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Deadvalley.",
     "gradient": "linear-gradient(135deg, #ec4899, #be185d)",
-    "source": "games-swfgalaxy/games/deadvalley/deadvalley.html",
-    "direct": "games-swfgalaxy/games/deadvalley/deadvalley.html",
+    "source": "games/deadvalley/deadvalley.html",
+    "direct": "games/deadvalley/deadvalley.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "dino",
     "title": "Dino",
     "category": "arcade",
-    "description": "The classic Chrome offline dino runner ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â jump cacti and duck pterodactyls.",
+    "description": "The classic Chrome offline dino runner ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â jump cacti and duck pterodactyls.",
     "gradient": "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-    "source": "/games/huge/dino/index.html",
-    "direct": "/games/huge/dino/index.html",
+    "source": "dino/index.html",
+    "direct": "dino/index.html",
     "preferDirect": true,
     "platform": "web",
     "embed": false,
     "schoolRisk": "low",
-    "icon": "/games/huge/dino/icons/icon-256.png"
+    "icon": "dino/icons/icon-256.png",
+    "host": "games-huge"
   },
   {
     "id": "huge-dodge",
@@ -540,12 +582,13 @@
     "category": "arcade",
     "description": "A reflex test focused on movement, timing, and staying alive under pressure.",
     "gradient": "linear-gradient(135deg, #0ea5e9, #1e293b)",
-    "source": "/games/huge/dodge/index.html",
-    "direct": "/games/huge/dodge/index.html",
+    "source": "dodge/index.html",
+    "direct": "dodge/index.html",
     "platform": "local",
     "embed": "allowed",
     "schoolRisk": "low",
-    "icon": "/games/huge/dodge/icon.png"
+    "icon": "dodge/icon.png",
+    "host": "games-huge"
   },
   {
     "id": "swfgalaxy-dreamcarracing",
@@ -553,11 +596,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Dreamcarracing.",
     "gradient": "linear-gradient(135deg, #22c55e, #15803d)",
-    "source": "games-swfgalaxy/dreamcarracing.html",
-    "direct": "games-swfgalaxy/dreamcarracing.html",
+    "source": "dreamcarracing.html",
+    "direct": "dreamcarracing.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "flash-ducklife",
@@ -565,11 +609,12 @@
     "category": "arcade",
     "description": "Flash classic: Duck Life.",
     "gradient": "linear-gradient(135deg, #22c55e, #15803d)",
-    "source": "games-flash/ducklife.html",
-    "direct": "games-flash/ducklife.html",
+    "source": "ducklife.html",
+    "direct": "ducklife.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "flashgames"
   },
   {
     "id": "flash-ducklife2",
@@ -577,11 +622,12 @@
     "category": "arcade",
     "description": "Flash classic: Duck Life 2.",
     "gradient": "linear-gradient(135deg, #3b82f6, #1e3a8a)",
-    "source": "games-flash/ducklife2.html",
-    "direct": "games-flash/ducklife2.html",
+    "source": "ducklife2.html",
+    "direct": "ducklife2.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "flashgames"
   },
   {
     "id": "flash-ducklife3",
@@ -589,11 +635,12 @@
     "category": "arcade",
     "description": "Flash classic: Duck Life 3.",
     "gradient": "linear-gradient(135deg, #ec4899, #be185d)",
-    "source": "games-flash/ducklife3.html",
-    "direct": "games-flash/ducklife3.html",
+    "source": "ducklife3.html",
+    "direct": "ducklife3.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "flashgames"
   },
   {
     "id": "swfgalaxy-ducklife4",
@@ -601,11 +648,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Duck Life 4.",
     "gradient": "linear-gradient(135deg, #eab308, #a16207)",
-    "source": "games-swfgalaxy/ducklife4.html",
-    "direct": "games-swfgalaxy/ducklife4.html",
+    "source": "ducklife4.html",
+    "direct": "ducklife4.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-fancypantsadventure",
@@ -613,11 +661,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Fancypantsadventure.",
     "gradient": "linear-gradient(135deg, #8b5cf6, #4c1d95)",
-    "source": "games-swfgalaxy/fancypantsadventure.html",
-    "direct": "games-swfgalaxy/fancypantsadventure.html",
+    "source": "fancypantsadventure.html",
+    "direct": "fancypantsadventure.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-fighting",
@@ -625,11 +674,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Fighting.",
     "gradient": "linear-gradient(135deg, #f43f5e, #9f1239)",
-    "source": "games-swfgalaxy/fighting.html",
-    "direct": "games-swfgalaxy/fighting.html",
+    "source": "fighting.html",
+    "direct": "fighting.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-swf-final-ninja",
@@ -641,7 +691,8 @@
     "direct": "games-swfgalaxy/swf-final-ninja.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "unavailable": true
   },
   {
     "id": "swfgalaxy-flappybird",
@@ -649,11 +700,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Flappy Bird.",
     "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
-    "source": "games-swfgalaxy/flappybird.html",
-    "direct": "games-swfgalaxy/flappybird.html",
+    "source": "flappybird.html",
+    "direct": "flappybird.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-fleeingthecomplex",
@@ -661,11 +713,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Fleeingthecomplex.",
     "gradient": "linear-gradient(135deg, #22c55e, #15803d)",
-    "source": "games-swfgalaxy/fleeingthecomplex.html",
-    "direct": "games-swfgalaxy/fleeingthecomplex.html",
+    "source": "fleeingthecomplex.html",
+    "direct": "fleeingthecomplex.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-frogger",
@@ -673,23 +726,25 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Frogger.",
     "gradient": "linear-gradient(135deg, #3b82f6, #1e3a8a)",
-    "source": "games-swfgalaxy/frogger.html",
-    "direct": "games-swfgalaxy/frogger.html",
+    "source": "frogger.html",
+    "direct": "frogger.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-geometrydash",
     "title": "Geometrydash",
     "category": "arcade",
-    "description": "Rhythm-based platformer ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â tap to jump over spikes in sync with the music.",
+    "description": "Rhythm-based platformer ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â tap to jump over spikes in sync with the music.",
     "gradient": "linear-gradient(135deg, #ec4899, #be185d)",
-    "source": "games-swfgalaxy/geometrydash.html",
-    "direct": "games-swfgalaxy/geometrydash.html",
+    "source": "geometrydash.html",
+    "direct": "geometrydash.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-games-getaway shootout-getawayshootout",
@@ -697,11 +752,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Getawayshootout.",
     "gradient": "linear-gradient(135deg, #eab308, #a16207)",
-    "source": "games-swfgalaxy/games/getaway shootout/getawayshootout.html",
-    "direct": "games-swfgalaxy/games/getaway shootout/getawayshootout.html",
+    "source": "games/getaway shootout/getawayshootout.html",
+    "direct": "games/getaway shootout/getawayshootout.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-getontop",
@@ -709,11 +765,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Getontop.",
     "gradient": "linear-gradient(135deg, #eab308, #a16207)",
-    "source": "games-swfgalaxy/getontop.html",
-    "direct": "games-swfgalaxy/getontop.html",
+    "source": "getontop.html",
+    "direct": "getontop.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-giveup2",
@@ -721,11 +778,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Give Up 2.",
     "gradient": "linear-gradient(135deg, #14b8a6, #0f766e)",
-    "source": "games-swfgalaxy/giveup2.html",
-    "direct": "games-swfgalaxy/giveup2.html",
+    "source": "giveup2.html",
+    "direct": "giveup2.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-giveuprobot2",
@@ -733,11 +791,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Give Up Robot 2.",
     "gradient": "linear-gradient(135deg, #8b5cf6, #4c1d95)",
-    "source": "games-swfgalaxy/giveuprobot2.html",
-    "direct": "games-swfgalaxy/giveuprobot2.html",
+    "source": "giveuprobot2.html",
+    "direct": "giveuprobot2.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-gunmayhem2",
@@ -745,23 +804,25 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Gunmayhem2.",
     "gradient": "linear-gradient(135deg, #f43f5e, #9f1239)",
-    "source": "games-swfgalaxy/gunmayhem2.html",
-    "direct": "games-swfgalaxy/gunmayhem2.html",
+    "source": "gunmayhem2.html",
+    "direct": "gunmayhem2.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-happywheels",
     "title": "Happywheels",
     "category": "arcade",
-    "description": "Gory physics ragdoll game ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â ride vehicles through lethal obstacle courses.",
+    "description": "Gory physics ragdoll game ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ride vehicles through lethal obstacle courses.",
     "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
-    "source": "games-swfgalaxy/happywheels.html",
-    "direct": "games-swfgalaxy/happywheels.html",
+    "source": "happywheels.html",
+    "direct": "happywheels.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-hextris",
@@ -769,11 +830,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Hextris.",
     "gradient": "linear-gradient(135deg, #22c55e, #15803d)",
-    "source": "games-swfgalaxy/hextris.html",
-    "direct": "games-swfgalaxy/hextris.html",
+    "source": "hextris.html",
+    "direct": "hextris.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-idlewebtycoon",
@@ -781,11 +843,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Idlewebtycoon.",
     "gradient": "linear-gradient(135deg, #3b82f6, #1e3a8a)",
-    "source": "games-swfgalaxy/idlewebtycoon.html",
-    "direct": "games-swfgalaxy/idlewebtycoon.html",
+    "source": "idlewebtycoon.html",
+    "direct": "idlewebtycoon.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-impossiblequiz",
@@ -793,11 +856,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Impossiblequiz.",
     "gradient": "linear-gradient(135deg, #ec4899, #be185d)",
-    "source": "games-swfgalaxy/impossiblequiz.html",
-    "direct": "games-swfgalaxy/impossiblequiz.html",
+    "source": "impossiblequiz.html",
+    "direct": "impossiblequiz.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-impossiblequiz2",
@@ -805,11 +869,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Impossiblequiz2.",
     "gradient": "linear-gradient(135deg, #eab308, #a16207)",
-    "source": "games-swfgalaxy/impossiblequiz2.html",
-    "direct": "games-swfgalaxy/impossiblequiz2.html",
+    "source": "impossiblequiz2.html",
+    "direct": "impossiblequiz2.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-impossiblequizhacked",
@@ -817,11 +882,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Impossiblequizhacked.",
     "gradient": "linear-gradient(135deg, #14b8a6, #0f766e)",
-    "source": "games-swfgalaxy/impossiblequizhacked.html",
-    "direct": "games-swfgalaxy/impossiblequizhacked.html",
+    "source": "impossiblequizhacked.html",
+    "direct": "impossiblequizhacked.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-indestructotank",
@@ -829,11 +895,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Indestructotank.",
     "gradient": "linear-gradient(135deg, #8b5cf6, #4c1d95)",
-    "source": "games-swfgalaxy/indestructotank.html",
-    "direct": "games-swfgalaxy/indestructotank.html",
+    "source": "indestructotank.html",
+    "direct": "indestructotank.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-games-hextris-index",
@@ -841,12 +908,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Index.",
     "gradient": "linear-gradient(135deg, #14b8a6, #0f766e)",
-    "source": "games-swfgalaxy/games/hextris/index.html",
-    "direct": "games-swfgalaxy/games/hextris/index.html",
+    "source": "games/hextris/index.html",
+    "direct": "games/hextris/index.html",
     "platform": "local",
     "embed": "allowed",
     "schoolRisk": "medium",
-    "icon": "http://hextris.github.io/hextris/images/facebook-opengraph.png"
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-infilteratingtheairship",
@@ -854,11 +921,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Infilteratingtheairship.",
     "gradient": "linear-gradient(135deg, #f43f5e, #9f1239)",
-    "source": "games-swfgalaxy/infilteratingtheairship.html",
-    "direct": "games-swfgalaxy/infilteratingtheairship.html",
+    "source": "infilteratingtheairship.html",
+    "direct": "infilteratingtheairship.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-jacksmith",
@@ -866,11 +934,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Jacksmith.",
     "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
-    "source": "games-swfgalaxy/jacksmith.html",
-    "direct": "games-swfgalaxy/jacksmith.html",
+    "source": "jacksmith.html",
+    "direct": "jacksmith.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-learntofly3",
@@ -878,11 +947,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Learn To Fly 3.",
     "gradient": "linear-gradient(135deg, #ec4899, #be185d)",
-    "source": "games-swfgalaxy/learntofly3.html",
-    "direct": "games-swfgalaxy/learntofly3.html",
+    "source": "learntofly3.html",
+    "direct": "learntofly3.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "flash-learntofly",
@@ -890,11 +960,12 @@
     "category": "arcade",
     "description": "Flash classic: Learn to Fly.",
     "gradient": "linear-gradient(135deg, #14b8a6, #0f766e)",
-    "source": "games-flash/learntofly.html",
-    "direct": "games-flash/learntofly.html",
+    "source": "learntofly.html",
+    "direct": "learntofly.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "flashgames"
   },
   {
     "id": "flash-learntofly2",
@@ -902,11 +973,12 @@
     "category": "arcade",
     "description": "Flash classic: Learn to Fly 2.",
     "gradient": "linear-gradient(135deg, #8b5cf6, #4c1d95)",
-    "source": "games-flash/learntofly2.html",
-    "direct": "games-flash/learntofly2.html",
+    "source": "learntofly2.html",
+    "direct": "learntofly2.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "flashgames"
   },
   {
     "id": "swfgalaxy-miraginewar",
@@ -914,11 +986,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Miraginewar.",
     "gradient": "linear-gradient(135deg, #eab308, #a16207)",
-    "source": "games-swfgalaxy/miraginewar.html",
-    "direct": "games-swfgalaxy/miraginewar.html",
+    "source": "miraginewar.html",
+    "direct": "miraginewar.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-multitask",
@@ -926,11 +999,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Multitask.",
     "gradient": "linear-gradient(135deg, #14b8a6, #0f766e)",
-    "source": "games-swfgalaxy/multitask.html",
-    "direct": "games-swfgalaxy/multitask.html",
+    "source": "multitask.html",
+    "direct": "multitask.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-n",
@@ -938,11 +1012,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: N.",
     "gradient": "linear-gradient(135deg, #8b5cf6, #4c1d95)",
-    "source": "games-swfgalaxy/n.html",
-    "direct": "games-swfgalaxy/n.html",
+    "source": "n.html",
+    "direct": "n.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-obeythegame",
@@ -950,11 +1025,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Obeythegame.",
     "gradient": "linear-gradient(135deg, #f43f5e, #9f1239)",
-    "source": "games-swfgalaxy/obeythegame.html",
-    "direct": "games-swfgalaxy/obeythegame.html",
+    "source": "obeythegame.html",
+    "direct": "obeythegame.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "flash-pacman",
@@ -962,11 +1038,12 @@
     "category": "arcade",
     "description": "Flash classic: Pac Man.",
     "gradient": "linear-gradient(135deg, #f43f5e, #9f1239)",
-    "source": "games-flash/pacman.html",
-    "direct": "games-flash/pacman.html",
+    "source": "pacman.html",
+    "direct": "pacman.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "flashgames"
   },
   {
     "id": "swfgalaxy-papasbakeria",
@@ -974,11 +1051,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Papasbakeria.",
     "gradient": "linear-gradient(135deg, #22c55e, #15803d)",
-    "source": "games-swfgalaxy/papasbakeria.html",
-    "direct": "games-swfgalaxy/papasbakeria.html",
+    "source": "papasbakeria.html",
+    "direct": "papasbakeria.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-papasburgeria",
@@ -986,11 +1064,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Papasburgeria.",
     "gradient": "linear-gradient(135deg, #3b82f6, #1e3a8a)",
-    "source": "games-swfgalaxy/papasburgeria.html",
-    "direct": "games-swfgalaxy/papasburgeria.html",
+    "source": "papasburgeria.html",
+    "direct": "papasburgeria.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-papasdonuteria",
@@ -998,11 +1077,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Papasdonuteria.",
     "gradient": "linear-gradient(135deg, #eab308, #a16207)",
-    "source": "games-swfgalaxy/papasdonuteria.html",
-    "direct": "games-swfgalaxy/papasdonuteria.html",
+    "source": "papasdonuteria.html",
+    "direct": "papasdonuteria.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-papasfreezeria",
@@ -1010,11 +1090,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Papasfeezeria.",
     "gradient": "linear-gradient(135deg, #14b8a6, #0f766e)",
-    "source": "games-swfgalaxy/papasfreezeria.html",
-    "direct": "games-swfgalaxy/papasfreezeria.html",
+    "source": "papasfreezeria.html",
+    "direct": "papasfreezeria.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-papasdogeria",
@@ -1022,11 +1103,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Papashotdoggeria.",
     "gradient": "linear-gradient(135deg, #ec4899, #be185d)",
-    "source": "games-swfgalaxy/papasdogeria.html",
-    "direct": "games-swfgalaxy/papasdogeria.html",
+    "source": "papasdogeria.html",
+    "direct": "papasdogeria.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-papaspizzeria",
@@ -1034,11 +1116,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Papaspizzeria.",
     "gradient": "linear-gradient(135deg, #8b5cf6, #4c1d95)",
-    "source": "games-swfgalaxy/papaspizzeria.html",
-    "direct": "games-swfgalaxy/papaspizzeria.html",
+    "source": "papaspizzeria.html",
+    "direct": "papaspizzeria.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-papasscooperia",
@@ -1046,11 +1129,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Papasscooperia.",
     "gradient": "linear-gradient(135deg, #f43f5e, #9f1239)",
-    "source": "games-swfgalaxy/papasscooperia.html",
-    "direct": "games-swfgalaxy/papasscooperia.html",
+    "source": "papasscooperia.html",
+    "direct": "papasscooperia.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-papassushiria",
@@ -1058,11 +1142,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Papassushiria.",
     "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
-    "source": "games-swfgalaxy/papassushiria.html",
-    "direct": "games-swfgalaxy/papassushiria.html",
+    "source": "papassushiria.html",
+    "direct": "papassushiria.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-papaswingeria",
@@ -1070,11 +1155,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Papaswingeria.",
     "gradient": "linear-gradient(135deg, #22c55e, #15803d)",
-    "source": "games-swfgalaxy/papaswingeria.html",
-    "direct": "games-swfgalaxy/papaswingeria.html",
+    "source": "papaswingeria.html",
+    "direct": "papaswingeria.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-games-pingpongchaos-pingpongchaos",
@@ -1082,11 +1168,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Pingpongchaos.",
     "gradient": "linear-gradient(135deg, #f43f5e, #9f1239)",
-    "source": "games-swfgalaxy/games/pingpongchaos/pingpongchaos.html",
-    "direct": "games-swfgalaxy/games/pingpongchaos/pingpongchaos.html",
+    "source": "games/pingpongchaos/pingpongchaos.html",
+    "direct": "games/pingpongchaos/pingpongchaos.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-pokemontowerdefense",
@@ -1094,11 +1181,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Pokemon Tower Defense.",
     "gradient": "linear-gradient(135deg, #3b82f6, #1e3a8a)",
-    "source": "games-swfgalaxy/pokemontowerdefense.html",
-    "direct": "games-swfgalaxy/pokemontowerdefense.html",
+    "source": "pokemontowerdefense.html",
+    "direct": "pokemontowerdefense.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-qwop",
@@ -1106,11 +1194,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Qwop.",
     "gradient": "linear-gradient(135deg, #ec4899, #be185d)",
-    "source": "games-swfgalaxy/qwop.html",
-    "direct": "games-swfgalaxy/qwop.html",
+    "source": "qwop.html",
+    "direct": "qwop.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-radiusraid",
@@ -1118,11 +1207,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Radiusraid.",
     "gradient": "linear-gradient(135deg, #eab308, #a16207)",
-    "source": "games-swfgalaxy/radiusraid.html",
-    "direct": "games-swfgalaxy/radiusraid.html",
+    "source": "radiusraid.html",
+    "direct": "radiusraid.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-raze2",
@@ -1130,11 +1220,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Raze2.",
     "gradient": "linear-gradient(135deg, #14b8a6, #0f766e)",
-    "source": "games-swfgalaxy/raze2.html",
-    "direct": "games-swfgalaxy/raze2.html",
+    "source": "raze2.html",
+    "direct": "raze2.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-raze3",
@@ -1142,11 +1233,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Raze3.",
     "gradient": "linear-gradient(135deg, #8b5cf6, #4c1d95)",
-    "source": "games-swfgalaxy/raze3.html",
-    "direct": "games-swfgalaxy/raze3.html",
+    "source": "raze3.html",
+    "direct": "raze3.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-games-rooftopsnipers-rooftopsnipers",
@@ -1154,11 +1246,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Rooftopsnipers.",
     "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
-    "source": "games-swfgalaxy/games/rooftopsnipers/rooftopsnipers.html",
-    "direct": "games-swfgalaxy/games/rooftopsnipers/rooftopsnipers.html",
+    "source": "games/rooftopsnipers/rooftopsnipers.html",
+    "direct": "games/rooftopsnipers/rooftopsnipers.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-swf-run-2",
@@ -1170,7 +1263,8 @@
     "direct": "games-swfgalaxy/swf-run-2.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "unavailable": true
   },
   {
     "id": "swfgalaxy-run3",
@@ -1178,11 +1272,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Run3.",
     "gradient": "linear-gradient(135deg, #f43f5e, #9f1239)",
-    "source": "games-swfgalaxy/run3.html",
-    "direct": "games-swfgalaxy/run3.html",
+    "source": "run3.html",
+    "direct": "run3.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-spacecompany",
@@ -1190,11 +1285,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Spacecompany.",
     "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
-    "source": "games-swfgalaxy/spacecompany.html",
-    "direct": "games-swfgalaxy/spacecompany.html",
+    "source": "spacecompany.html",
+    "direct": "spacecompany.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-sportsheadsbasketballchampionship",
@@ -1202,11 +1298,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Sportsheadsbasketballchampionship.",
     "gradient": "linear-gradient(135deg, #22c55e, #15803d)",
-    "source": "games-swfgalaxy/sportsheadsbasketballchampionship.html",
-    "direct": "games-swfgalaxy/sportsheadsbasketballchampionship.html",
+    "source": "sportsheadsbasketballchampionship.html",
+    "direct": "sportsheadsbasketballchampionship.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-sportsheadssoccer",
@@ -1214,11 +1311,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Sportsheadssoccer.",
     "gradient": "linear-gradient(135deg, #3b82f6, #1e3a8a)",
-    "source": "games-swfgalaxy/sportsheadssoccer.html",
-    "direct": "games-swfgalaxy/sportsheadssoccer.html",
+    "source": "sportsheadssoccer.html",
+    "direct": "sportsheadssoccer.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-sportsheadstennis",
@@ -1226,11 +1324,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Sportsheadstennis.",
     "gradient": "linear-gradient(135deg, #ec4899, #be185d)",
-    "source": "games-swfgalaxy/sportsheadstennis.html",
-    "direct": "games-swfgalaxy/sportsheadstennis.html",
+    "source": "sportsheadstennis.html",
+    "direct": "sportsheadstennis.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-sportsheadsvolleyball",
@@ -1238,11 +1337,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Sportsheadsvolleyball.",
     "gradient": "linear-gradient(135deg, #eab308, #a16207)",
-    "source": "games-swfgalaxy/sportsheadsvolleyball.html",
-    "direct": "games-swfgalaxy/sportsheadsvolleyball.html",
+    "source": "sportsheadsvolleyball.html",
+    "direct": "sportsheadsvolleyball.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-stealingthediamond",
@@ -1250,11 +1350,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Stealingthediamond.",
     "gradient": "linear-gradient(135deg, #14b8a6, #0f766e)",
-    "source": "games-swfgalaxy/stealingthediamond.html",
-    "direct": "games-swfgalaxy/stealingthediamond.html",
+    "source": "stealingthediamond.html",
+    "direct": "stealingthediamond.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-stickrpg",
@@ -1262,11 +1363,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Stickrpg.",
     "gradient": "linear-gradient(135deg, #8b5cf6, #4c1d95)",
-    "source": "games-swfgalaxy/stickrpg.html",
-    "direct": "games-swfgalaxy/stickrpg.html",
+    "source": "stickrpg.html",
+    "direct": "stickrpg.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-stickwar",
@@ -1274,11 +1376,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Stickwar.",
     "gradient": "linear-gradient(135deg, #f43f5e, #9f1239)",
-    "source": "games-swfgalaxy/stickwar.html",
-    "direct": "games-swfgalaxy/stickwar.html",
+    "source": "stickwar.html",
+    "direct": "stickwar.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-stickwar2",
@@ -1286,11 +1389,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Stickwar2.",
     "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
-    "source": "games-swfgalaxy/stickwar2.html",
-    "direct": "games-swfgalaxy/stickwar2.html",
+    "source": "stickwar2.html",
+    "direct": "stickwar2.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-strikeforceheroes3",
@@ -1298,11 +1402,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Str1Keforceheroes3.",
     "gradient": "linear-gradient(135deg, #ec4899, #be185d)",
-    "source": "games-swfgalaxy/strikeforceheroes3.html",
-    "direct": "games-swfgalaxy/strikeforceheroes3.html",
+    "source": "strikeforceheroes3.html",
+    "direct": "strikeforceheroes3.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-strikeforceheroes",
@@ -1310,11 +1415,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Strikeforceheroes.",
     "gradient": "linear-gradient(135deg, #22c55e, #15803d)",
-    "source": "games-swfgalaxy/strikeforceheroes.html",
-    "direct": "games-swfgalaxy/strikeforceheroes.html",
+    "source": "strikeforceheroes.html",
+    "direct": "strikeforceheroes.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "flash-sugarsugar",
@@ -1322,11 +1428,12 @@
     "category": "arcade",
     "description": "Flash classic: Sugar Sugar.",
     "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
-    "source": "games-flash/sugarsugar.html",
-    "direct": "games-flash/sugarsugar.html",
+    "source": "sugarsugar.html",
+    "direct": "sugarsugar.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "flashgames"
   },
   {
     "id": "flash-sugarsugar2",
@@ -1334,11 +1441,12 @@
     "category": "arcade",
     "description": "Flash classic: Sugar Sugar 2.",
     "gradient": "linear-gradient(135deg, #22c55e, #15803d)",
-    "source": "games-flash/sugarsugar2.html",
-    "direct": "games-flash/sugarsugar2.html",
+    "source": "sugarsugar2.html",
+    "direct": "sugarsugar2.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "flashgames"
   },
   {
     "id": "flash-sugarsugar3",
@@ -1346,11 +1454,12 @@
     "category": "arcade",
     "description": "Flash classic: Sugar Sugar 3.",
     "gradient": "linear-gradient(135deg, #3b82f6, #1e3a8a)",
-    "source": "games-flash/sugarsugar3.html",
-    "direct": "games-flash/sugarsugar3.html",
+    "source": "sugarsugar3.html",
+    "direct": "sugarsugar3.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "flashgames"
   },
   {
     "id": "flash-supersmash",
@@ -1358,23 +1467,25 @@
     "category": "arcade",
     "description": "Flash classic: Super Smash.",
     "gradient": "linear-gradient(135deg, #ec4899, #be185d)",
-    "source": "games-flash/supersmash.html",
-    "direct": "games-flash/supersmash.html",
+    "source": "supersmash.html",
+    "direct": "supersmash.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "flashgames"
   },
   {
     "id": "swfgalaxy-supersmashflash",
     "title": "Super Smash Flash",
     "category": "arcade",
-    "description": "Fan-made Super Smash Bros in Flash ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â battle Nintendo icons on iconic stages.",
+    "description": "Fan-made Super Smash Bros in Flash ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â battle Nintendo icons on iconic stages.",
     "gradient": "linear-gradient(135deg, #22c55e, #15803d)",
-    "source": "games-swfgalaxy/supersmashflash.html",
-    "direct": "games-swfgalaxy/supersmashflash.html",
+    "source": "supersmashflash.html",
+    "direct": "supersmashflash.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-swf-super-smash-flash",
@@ -1386,7 +1497,8 @@
     "direct": "games-swfgalaxy/swf-super-smash-flash.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "unavailable": true
   },
   {
     "id": "swfgalaxy-superfighters",
@@ -1394,11 +1506,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Superfighters.",
     "gradient": "linear-gradient(135deg, #eab308, #a16207)",
-    "source": "games-swfgalaxy/superfighters.html",
-    "direct": "games-swfgalaxy/superfighters.html",
+    "source": "superfighters.html",
+    "direct": "superfighters.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-superfightersultimate",
@@ -1406,11 +1519,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Superfightersultimate.",
     "gradient": "linear-gradient(135deg, #14b8a6, #0f766e)",
-    "source": "games-swfgalaxy/superfightersultimate.html",
-    "direct": "games-swfgalaxy/superfightersultimate.html",
+    "source": "superfightersultimate.html",
+    "direct": "superfightersultimate.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-supermario63",
@@ -1418,11 +1532,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Supermario63.",
     "gradient": "linear-gradient(135deg, #8b5cf6, #4c1d95)",
-    "source": "games-swfgalaxy/supermario63.html",
-    "direct": "games-swfgalaxy/supermario63.html",
+    "source": "supermario63.html",
+    "direct": "supermario63.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-supermarioflash",
@@ -1430,11 +1545,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Supermarioflash.",
     "gradient": "linear-gradient(135deg, #f43f5e, #9f1239)",
-    "source": "games-swfgalaxy/supermarioflash.html",
-    "direct": "games-swfgalaxy/supermarioflash.html",
+    "source": "supermarioflash.html",
+    "direct": "supermarioflash.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-supermarioflash2",
@@ -1442,11 +1558,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Supermarioflash2.",
     "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
-    "source": "games-swfgalaxy/supermarioflash2.html",
-    "direct": "games-swfgalaxy/supermarioflash2.html",
+    "source": "supermarioflash2.html",
+    "direct": "supermarioflash2.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-swfminer",
@@ -1454,11 +1571,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Swfminer.",
     "gradient": "linear-gradient(135deg, #8b5cf6, #4c1d95)",
-    "source": "games-swfgalaxy/swfminer.html",
-    "direct": "games-swfgalaxy/swfminer.html",
+    "source": "swfminer.html",
+    "direct": "swfminer.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-swordsandsandals2",
@@ -1466,11 +1584,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Swords And Sandals 2 (Full).",
     "gradient": "linear-gradient(135deg, #f43f5e, #9f1239)",
-    "source": "games-swfgalaxy/swordsandsandals2.html",
-    "direct": "games-swfgalaxy/swordsandsandals2.html",
+    "source": "swordsandsandals2.html",
+    "direct": "swordsandsandals2.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-swf-swords-and-sandals-2",
@@ -1482,7 +1601,8 @@
     "direct": "games-swfgalaxy/swf-swords-and-sandals-2.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "unavailable": true
   },
   {
     "id": "swfgalaxy-swordsandsouls",
@@ -1490,11 +1610,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Swordsandsouls.",
     "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
-    "source": "games-swfgalaxy/swordsandsouls.html",
-    "direct": "games-swfgalaxy/swordsandsouls.html",
+    "source": "swordsandsouls.html",
+    "direct": "swordsandsouls.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-tanktrouble",
@@ -1502,11 +1623,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Tank Trouble.",
     "gradient": "linear-gradient(135deg, #22c55e, #15803d)",
-    "source": "games-swfgalaxy/tanktrouble.html",
-    "direct": "games-swfgalaxy/tanktrouble.html",
+    "source": "tanktrouble.html",
+    "direct": "tanktrouble.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-territorywar",
@@ -1514,11 +1636,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Territorywar.",
     "gradient": "linear-gradient(135deg, #3b82f6, #1e3a8a)",
-    "source": "games-swfgalaxy/territorywar.html",
-    "direct": "games-swfgalaxy/territorywar.html",
+    "source": "territorywar.html",
+    "direct": "territorywar.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-testzombo",
@@ -1526,11 +1649,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Testzombo.",
     "gradient": "linear-gradient(135deg, #ec4899, #be185d)",
-    "source": "games-swfgalaxy/testzombo.html",
-    "direct": "games-swfgalaxy/testzombo.html",
+    "source": "testzombo.html",
+    "direct": "testzombo.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-tetris",
@@ -1538,11 +1662,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Tetris.",
     "gradient": "linear-gradient(135deg, #eab308, #a16207)",
-    "source": "games-swfgalaxy/tetris.html",
-    "direct": "games-swfgalaxy/tetris.html",
+    "source": "tetris.html",
+    "direct": "tetris.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-thebindingofissac",
@@ -1550,11 +1675,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: The Binding Of Issac.",
     "gradient": "linear-gradient(135deg, #14b8a6, #0f766e)",
-    "source": "games-swfgalaxy/thebindingofissac.html",
-    "direct": "games-swfgalaxy/thebindingofissac.html",
+    "source": "thebindingofissac.html",
+    "direct": "thebindingofissac.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-thefloodrunner2",
@@ -1562,11 +1688,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Thefloodrunner2.",
     "gradient": "linear-gradient(135deg, #8b5cf6, #4c1d95)",
-    "source": "games-swfgalaxy/thefloodrunner2.html",
-    "direct": "games-swfgalaxy/thefloodrunner2.html",
+    "source": "thefloodrunner2.html",
+    "direct": "thefloodrunner2.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-thelaststandunion",
@@ -1574,11 +1701,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Thelaststandunion.",
     "gradient": "linear-gradient(135deg, #f43f5e, #9f1239)",
-    "source": "games-swfgalaxy/thelaststandunion.html",
-    "direct": "games-swfgalaxy/thelaststandunion.html",
+    "source": "thelaststandunion.html",
+    "direct": "thelaststandunion.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-themehotel",
@@ -1586,11 +1714,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Themehotel.",
     "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
-    "source": "games-swfgalaxy/themehotel.html",
-    "direct": "games-swfgalaxy/themehotel.html",
+    "source": "themehotel.html",
+    "direct": "themehotel.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-themehotelhacked",
@@ -1598,11 +1727,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Themehotelhacked.",
     "gradient": "linear-gradient(135deg, #22c55e, #15803d)",
-    "source": "games-swfgalaxy/themehotelhacked.html",
-    "direct": "games-swfgalaxy/themehotelhacked.html",
+    "source": "themehotelhacked.html",
+    "direct": "themehotelhacked.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-unfairmario",
@@ -1610,11 +1740,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Unfairmario.",
     "gradient": "linear-gradient(135deg, #3b82f6, #1e3a8a)",
-    "source": "games-swfgalaxy/unfairmario.html",
-    "direct": "games-swfgalaxy/unfairmario.html",
+    "source": "unfairmario.html",
+    "direct": "unfairmario.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-uno",
@@ -1622,11 +1753,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Uno.",
     "gradient": "linear-gradient(135deg, #ec4899, #be185d)",
-    "source": "games-swfgalaxy/uno.html",
-    "direct": "games-swfgalaxy/uno.html",
+    "source": "uno.html",
+    "direct": "uno.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-vex",
@@ -1634,11 +1766,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Vex.",
     "gradient": "linear-gradient(135deg, #eab308, #a16207)",
-    "source": "games-swfgalaxy/vex.html",
-    "direct": "games-swfgalaxy/vex.html",
+    "source": "vex.html",
+    "direct": "vex.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-zombocalyps3",
@@ -1646,11 +1779,12 @@
     "category": "arcade",
     "description": "Swfgalaxy game: Zombocalyps3.",
     "gradient": "linear-gradient(135deg, #14b8a6, #0f766e)",
-    "source": "games-swfgalaxy/zombocalyps3.html",
-    "direct": "games-swfgalaxy/zombocalyps3.html",
+    "source": "zombocalyps3.html",
+    "direct": "zombocalyps3.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-zombocalypse",
@@ -1658,11 +1792,12 @@
     "category": "arcade",
     "description": "Survive endless zombie hordes with upgradeable weapons and a helicopter drop.",
     "gradient": "linear-gradient(135deg, #8b5cf6, #4c1d95)",
-    "source": "games-swfgalaxy/zombocalypse.html",
-    "direct": "games-swfgalaxy/zombocalypse.html",
+    "source": "zombocalypse.html",
+    "direct": "zombocalypse.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-ducklife2",
@@ -1670,11 +1805,12 @@
     "category": "arcade",
     "description": "Train your duck in speed, climbing, swimming and flying to win the World Championship.",
     "gradient": "linear-gradient(135deg, #facc15, #92400e)",
-    "source": "games-swfgalaxy/ducklife2.html",
-    "direct": "games-swfgalaxy/ducklife2.html",
+    "source": "ducklife2.html",
+    "direct": "ducklife2.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "low"
+    "schoolRisk": "low",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-ducklife3",
@@ -1682,11 +1818,12 @@
     "category": "arcade",
     "description": "Train your duck through evolutionary stages to become the ultimate racing champion.",
     "gradient": "linear-gradient(135deg, #86efac, #14532d)",
-    "source": "games-swfgalaxy/ducklife3.html",
-    "direct": "games-swfgalaxy/ducklife3.html",
+    "source": "ducklife3.html",
+    "direct": "ducklife3.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "low"
+    "schoolRisk": "low",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-escapingtheprison",
@@ -1694,11 +1831,12 @@
     "category": "adventure",
     "description": "Henry Stickmin must break out of prison with comedic tools and ridiculous plans.",
     "gradient": "linear-gradient(135deg, #94a3b8, #1e293b)",
-    "source": "games-swfgalaxy/escapingtheprison.html",
-    "direct": "games-swfgalaxy/escapingtheprison.html",
+    "source": "escapingtheprison.html",
+    "direct": "escapingtheprison.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "low"
+    "schoolRisk": "low",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-learntofly",
@@ -1706,11 +1844,12 @@
     "category": "arcade",
     "description": "Help a penguin learn to fly by upgrading your glider, rocket, and fuel.",
     "gradient": "linear-gradient(135deg, #7dd3fc, #0369a1)",
-    "source": "games-swfgalaxy/learntofly.html",
-    "direct": "games-swfgalaxy/learntofly.html",
+    "source": "learntofly.html",
+    "direct": "learntofly.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "low"
+    "schoolRisk": "low",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-learntofly2",
@@ -1718,11 +1857,12 @@
     "category": "arcade",
     "description": "The penguin returns with more upgrades, sleds, and missions to fly further and faster.",
     "gradient": "linear-gradient(135deg, #a5f3fc, #0e7490)",
-    "source": "games-swfgalaxy/learntofly2.html",
-    "direct": "games-swfgalaxy/learntofly2.html",
+    "source": "learntofly2.html",
+    "direct": "learntofly2.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "low"
+    "schoolRisk": "low",
+    "host": "swfgalaxy"
   },
   {
     "id": "swfgalaxy-zombocalypse3",
@@ -1730,11 +1870,12 @@
     "category": "action",
     "description": "Battle endless zombie waves with a massive arsenal in this fast-paced survival shooter.",
     "gradient": "linear-gradient(135deg, #4ade80, #15803d)",
-    "source": "games-swfgalaxy/zombocalypse3.html",
-    "direct": "games-swfgalaxy/zombocalypse3.html",
+    "source": "zombocalypse3.html",
+    "direct": "zombocalypse3.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "host": "swfgalaxy"
   },
   {
     "id": "sweet-bakery-local",
@@ -1747,7 +1888,8 @@
     "direct": "games/sweet-bakery/index.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "low"
+    "schoolRisk": "low",
+    "unavailable": true
   },
   {
     "id": "huge-backrooms",
@@ -1755,12 +1897,13 @@
     "category": "horror",
     "description": "Explore a liminal maze and keep your nerve while finding a way back out.",
     "gradient": "linear-gradient(135deg, #facc15, #4b5563)",
-    "source": "/games/huge/backrooms/index.html",
-    "direct": "/games/huge/backrooms/index.html",
+    "source": "backrooms/index.html",
+    "direct": "backrooms/index.html",
     "platform": "local",
     "embed": "allowed",
     "schoolRisk": "medium",
-    "icon": "/games/huge/backrooms/TemplateData/favicon.ico"
+    "icon": "backrooms/TemplateData/favicon.ico",
+    "host": "games-huge"
   },
   {
     "id": "huge-baldis-basics",
@@ -1768,12 +1911,13 @@
     "category": "horror",
     "description": "Collect notebooks and evade pursuers in a retro school-hall survival challenge.",
     "gradient": "linear-gradient(135deg, #65a30d, #14532d)",
-    "source": "/games/huge/baldis-basics/index.html",
-    "direct": "/games/huge/baldis-basics/index.html",
+    "source": "baldis-basics/index.html",
+    "direct": "baldis-basics/index.html",
     "platform": "local",
     "embed": "allowed",
     "schoolRisk": "medium",
-    "icon": "/games/huge/baldis-basics/TemplateData/favicon.ico"
+    "icon": "baldis-basics/TemplateData/favicon.ico",
+    "host": "games-huge"
   },
   {
     "id": "fnaf-sl",
@@ -1781,14 +1925,15 @@
     "category": "horror",
     "description": "Local HTML5 port from hd_fnaf pack.",
     "gradient": "linear-gradient(135deg, #6677a8, #252d47)",
-    "pfp": "games/fnaf/sl/resources/animatronic.png",
-    "source": "games/fnaf/sl/index.html",
-    "direct": "games/fnaf/sl/index.html",
+    "pfp": "sl/resources/animatronic.png",
+    "source": "sl/index.html",
+    "direct": "sl/index.html",
     "platform": "local",
     "embed": "allowed",
     "schoolRisk": "medium",
     "preferDirect": true,
-    "icon": "/games/fnaf/sl/favicon.ico"
+    "icon": "sl/favicon.ico",
+    "host": "hd_fnaf"
   },
   {
     "id": "fnaf-ucn",
@@ -1796,14 +1941,15 @@
     "category": "horror",
     "description": "Local HTML5 port from hd_fnaf pack.",
     "gradient": "linear-gradient(135deg, #7f4f9b, #301943)",
-    "pfp": "games/fnaf/ucn/resources/animatronic.png",
-    "source": "games/fnaf/ucn/index.html",
-    "direct": "games/fnaf/ucn/index.html",
+    "pfp": "ucn/resources/animatronic.png",
+    "source": "ucn/index.html",
+    "direct": "ucn/index.html",
     "platform": "local",
     "embed": "allowed",
     "schoolRisk": "medium",
     "preferDirect": true,
-    "icon": "/games/fnaf/ucn/favicon.ico"
+    "icon": "ucn/favicon.ico",
+    "host": "hd_fnaf"
   },
   {
     "id": "fnaf-1",
@@ -1811,14 +1957,15 @@
     "category": "horror",
     "description": "Local HTML5 port from hd_fnaf pack.",
     "gradient": "linear-gradient(135deg, #454545, #1b1b1b)",
-    "pfp": "games/fnaf/1/resources/animatronic.png",
-    "source": "games/fnaf/1/index.html",
-    "direct": "games/fnaf/1/index.html",
+    "pfp": "1/resources/animatronic.png",
+    "source": "1/index.html",
+    "direct": "1/index.html",
     "platform": "local",
     "embed": "allowed",
     "schoolRisk": "medium",
     "preferDirect": true,
-    "icon": "/games/fnaf/1/favicon.ico"
+    "icon": "1/favicon.ico",
+    "host": "hd_fnaf"
   },
   {
     "id": "fnaf-2",
@@ -1826,14 +1973,15 @@
     "category": "horror",
     "description": "Local HTML5 port from hd_fnaf pack.",
     "gradient": "linear-gradient(135deg, #536878, #222d38)",
-    "pfp": "games/fnaf/2/resources/animatronic.png",
-    "source": "games/fnaf/2/index.html",
-    "direct": "games/fnaf/2/index.html",
+    "pfp": "2/resources/animatronic.png",
+    "source": "2/index.html",
+    "direct": "2/index.html",
     "platform": "local",
     "embed": "allowed",
     "schoolRisk": "medium",
     "preferDirect": true,
-    "icon": "/games/fnaf/2/favicon.ico"
+    "icon": "2/favicon.ico",
+    "host": "hd_fnaf"
   },
   {
     "id": "fnaf-3",
@@ -1841,14 +1989,15 @@
     "category": "horror",
     "description": "Local HTML5 port from hd_fnaf pack.",
     "gradient": "linear-gradient(135deg, #6a7c4d, #324125)",
-    "pfp": "games/fnaf/3/resources/animatronic.png",
-    "source": "games/fnaf/3/index.html",
-    "direct": "games/fnaf/3/index.html",
+    "pfp": "3/resources/animatronic.png",
+    "source": "3/index.html",
+    "direct": "3/index.html",
     "platform": "local",
     "embed": "allowed",
     "schoolRisk": "medium",
     "preferDirect": true,
-    "icon": "/games/fnaf/3/favicon.ico"
+    "icon": "3/favicon.ico",
+    "host": "hd_fnaf"
   },
   {
     "id": "fnaf-4",
@@ -1856,27 +2005,28 @@
     "category": "horror",
     "description": "Local HTML5 port from hd_fnaf pack.",
     "gradient": "linear-gradient(135deg, #4a3f58, #1f1a28)",
-    "pfp": "games/fnaf/4/resources/animatronic.png",
-    "source": "games/fnaf/4/index.html",
-    "direct": "games/fnaf/4/index.html",
+    "pfp": "4/resources/animatronic.png",
+    "source": "4/index.html",
+    "direct": "4/index.html",
     "platform": "local",
     "embed": "allowed",
     "schoolRisk": "medium",
     "preferDirect": true,
-    "icon": "/games/fnaf/4/favicon.ico"
+    "icon": "4/favicon.ico",
+    "host": "hd_fnaf"
   },
   {
     "id": "huge-csgo-clicker",
     "title": "CS:GO Clicker",
     "category": "idle",
-    "description": "CS:GO idle clicker ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â earn money, buy weapons, and rank up.",
+    "description": "CS:GO idle clicker ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â earn money, buy weapons, and rank up.",
     "gradient": "linear-gradient(135deg, #0ea5e9, #1e293b)",
-    "source": "/games/huge/csgo-clicker/index.html",
-    "direct": "/games/huge/csgo-clicker/index.html",
+    "source": "csgo-clicker/index.html",
+    "direct": "csgo-clicker/index.html",
     "platform": "local",
     "embed": "allowed",
     "schoolRisk": "low",
-    "icon": "http://i.imgur.com/BzuCWzL.png"
+    "host": "games-huge"
   },
   {
     "id": "huge-achievementunlocked",
@@ -1884,12 +2034,13 @@
     "category": "platformer",
     "description": "Explore a compact platformer where every tiny action triggers a new achievement.",
     "gradient": "linear-gradient(135deg, #22c55e, #166534)",
-    "source": "/games/huge/achievementunlocked/index.html",
-    "direct": "/games/huge/achievementunlocked/index.html",
+    "source": "achievementunlocked/index.html",
+    "direct": "achievementunlocked/index.html",
     "platform": "local",
     "embed": "allowed",
     "schoolRisk": "low",
-    "icon": "/games/huge/achievementunlocked/achievementunlocked.png"
+    "icon": "achievementunlocked/achievementunlocked.png",
+    "host": "games-huge"
   },
   {
     "id": "huge-adrenalinechallenge",
@@ -1897,12 +2048,13 @@
     "category": "platformer",
     "description": "Ride, jump, and keep speed through a kinetic challenge course with momentum-heavy movement.",
     "gradient": "linear-gradient(135deg, #ef4444, #7f1d1d)",
-    "source": "/games/huge/adrenalinechallenge/index.html",
-    "direct": "/games/huge/adrenalinechallenge/index.html",
+    "source": "adrenalinechallenge/index.html",
+    "direct": "adrenalinechallenge/index.html",
     "platform": "local",
     "embed": "allowed",
     "schoolRisk": "medium",
-    "icon": "/games/huge/adrenalinechallenge/adrenalinechallenge.jpg"
+    "icon": "adrenalinechallenge/adrenalinechallenge.jpg",
+    "host": "games-huge"
   },
   {
     "id": "huge-boxel-rebound",
@@ -1910,12 +2062,13 @@
     "category": "platformer",
     "description": "Dash through geometric obstacle courses with one-touch jumps and speed timing.",
     "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
-    "source": "/games/huge/boxel-rebound/index.html",
-    "direct": "/games/huge/boxel-rebound/index.html",
+    "source": "boxel-rebound/index.html",
+    "direct": "boxel-rebound/index.html",
     "platform": "local",
     "embed": "allowed",
     "schoolRisk": "low",
-    "icon": "/games/huge/boxel-rebound/img/icons/icon.png"
+    "icon": "boxel-rebound/img/icons/icon.png",
+    "host": "games-huge"
   },
   {
     "id": "cave-hopper",
@@ -1927,45 +2080,49 @@
     "direct": "games/websie/cave-hopper.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "low"
+    "schoolRisk": "low",
+    "unavailable": true
   },
   {
     "id": "huge-cluster-rush",
     "title": "Cluster Rush",
     "category": "platformer",
-    "description": "Wildly chaotic runner ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â leap between speeding trucks without falling.",
+    "description": "Wildly chaotic runner ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â leap between speeding trucks without falling.",
     "gradient": "linear-gradient(135deg, #a855f7, #4c1d95)",
-    "source": "/games/huge/cluster-rush/index.html",
-    "direct": "/games/huge/cluster-rush/index.html",
+    "source": "cluster-rush/index.html",
+    "direct": "cluster-rush/index.html",
     "platform": "local",
     "embed": "allowed",
     "schoolRisk": "low",
-    "icon": "/games/huge/cluster-rush/TemplateData/logo.png"
+    "icon": "cluster-rush/TemplateData/logo.png",
+    "host": "games-huge"
   },
   {
     "id": "huge-dadish",
     "title": "Dadish",
     "category": "platformer",
-    "description": "Platformer about a radish dad rescuing his kids ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â deceptively tough controls.",
+    "description": "Platformer about a radish dad rescuing his kids ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â deceptively tough controls.",
     "gradient": "linear-gradient(135deg, #fb7185, #be123c)",
-    "source": "/games/huge/dadish/index.html",
-    "direct": "/games/huge/dadish/index.html",
+    "source": "dadish/index.html",
+    "direct": "dadish/index.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "low"
+    "schoolRisk": "low",
+    "host": "games-huge"
   },
   {
     "id": "huge-doodle-jump",
     "title": "Doodle Jump",
     "category": "platformer",
-    "description": "Endless vertical platformer ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â bounce on platforms and avoid falling.",
+    "description": "Endless vertical platformer ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â bounce on platforms and avoid falling.",
     "gradient": "linear-gradient(135deg, #22c55e, #14532d)",
-    "source": "/games/huge/doodle-jump/index.html",
-    "direct": "/games/huge/doodle-jump/index.html",
+    "source": "doodle-jump/index.html",
+    "direct": "doodle-jump/index.html",
     "platform": "local",
     "embed": "allowed",
     "schoolRisk": "low",
-    "icon": "/games/huge/doodle-jump/sprites.png"
+    "icon": "doodle-jump/sprites.png",
+    "host": "games-huge"
   },
   {
     "id": "100ng",
@@ -1973,13 +2130,14 @@
     "category": "puzzle",
     "description": "Play Pong against 99 other players simultaneously in this chaotic browser game.",
     "gradient": "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)",
-    "source": "/games/huge/100ng/index.html",
-    "direct": "/games/huge/100ng/index.html",
+    "source": "100ng/index.html",
+    "direct": "100ng/index.html",
     "preferDirect": true,
     "platform": "web",
     "embed": false,
     "schoolRisk": "low",
-    "icon": "/games/huge/100ng/100ng.jpg"
+    "icon": "100ng/100ng.jpg",
+    "host": "games-huge"
   },
   {
     "id": "huge-align-4",
@@ -1987,12 +2145,13 @@
     "category": "puzzle",
     "description": "Drop pieces and out-position your opponent to line up four before they do.",
     "gradient": "linear-gradient(135deg, #facc15, #ca8a04)",
-    "source": "/games/huge/align-4/index.html",
-    "direct": "/games/huge/align-4/index.html",
+    "source": "align-4/index.html",
+    "direct": "align-4/index.html",
     "platform": "local",
     "embed": "allowed",
     "schoolRisk": "low",
-    "icon": "/games/huge/align-4/img/FrFlag.png"
+    "icon": "align-4/img/FrFlag.png",
+    "host": "games-huge"
   },
   {
     "id": "huge-astray",
@@ -2000,11 +2159,12 @@
     "category": "puzzle",
     "description": "A compact navigation puzzle that focuses on movement, position, and escape routes.",
     "gradient": "linear-gradient(135deg, #06b6d4, #164e63)",
-    "source": "/games/huge/astray/index.html",
-    "direct": "/games/huge/astray/index.html",
+    "source": "astray/index.html",
+    "direct": "astray/index.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "low"
+    "schoolRisk": "low",
+    "host": "games-huge"
   },
   {
     "id": "huge-bigredbutton",
@@ -2012,12 +2172,13 @@
     "category": "puzzle",
     "description": "Experiment with one obvious button and discover a chain of playful logic outcomes.",
     "gradient": "linear-gradient(135deg, #ef4444, #991b1b)",
-    "source": "/games/huge/bigredbutton/index.html",
-    "direct": "/games/huge/bigredbutton/index.html",
+    "source": "bigredbutton/index.html",
+    "direct": "bigredbutton/index.html",
     "platform": "local",
     "embed": "allowed",
     "schoolRisk": "low",
-    "icon": "/games/huge/bigredbutton/bigredbutton.png"
+    "icon": "bigredbutton/bigredbutton.png",
+    "host": "games-huge"
   },
   {
     "id": "bloxors",
@@ -2025,13 +2186,14 @@
     "category": "puzzle",
     "description": "Tilt a rectangular block across a suspended grid to fall into the goal hole.",
     "gradient": "linear-gradient(135deg, #30cfd0 0%, #330867 100%)",
-    "source": "/games/huge/bloxors/index.html",
-    "direct": "/games/huge/bloxors/index.html",
+    "source": "bloxors/index.html",
+    "direct": "bloxors/index.html",
     "preferDirect": true,
     "platform": "web",
     "embed": false,
     "schoolRisk": "low",
-    "icon": "/games/huge/bloxors/favicon.ico"
+    "icon": "bloxors/favicon.ico",
+    "host": "games-huge"
   },
   {
     "id": "huge-breakingthebank",
@@ -2039,12 +2201,13 @@
     "category": "puzzle",
     "description": "A short choice-driven puzzle comedy with multiple outcomes and quick restarts.",
     "gradient": "linear-gradient(135deg, #64748b, #0f172a)",
-    "source": "/games/huge/breakingthebank/index.html",
-    "direct": "/games/huge/breakingthebank/index.html",
+    "source": "breakingthebank/index.html",
+    "direct": "breakingthebank/index.html",
     "platform": "local",
     "embed": "allowed",
     "schoolRisk": "low",
-    "icon": "/games/huge/breakingthebank/breakingthebank.png"
+    "icon": "breakingthebank/breakingthebank.png",
+    "host": "games-huge"
   },
   {
     "id": "huge-breaklock",
@@ -2052,12 +2215,13 @@
     "category": "puzzle",
     "description": "Solve lock-style pattern puzzles by reading clues and chaining precise moves.",
     "gradient": "linear-gradient(135deg, #14b8a6, #134e4a)",
-    "source": "/games/huge/breaklock/index.html",
-    "direct": "/games/huge/breaklock/index.html",
+    "source": "breaklock/index.html",
+    "direct": "breaklock/index.html",
     "platform": "local",
     "embed": "allowed",
     "schoolRisk": "low",
-    "icon": "/games/huge/breaklock/assets/icons/ios-180x180.png"
+    "icon": "breaklock/assets/icons/ios-180x180.png",
+    "host": "games-huge"
   },
   {
     "id": "huge-cell-machine",
@@ -2065,12 +2229,13 @@
     "category": "puzzle",
     "description": "Build chain-reaction machines with simple parts to satisfy increasingly clever goals.",
     "gradient": "linear-gradient(135deg, #8b5cf6, #312e81)",
-    "source": "/games/huge/cell-machine/index.html",
-    "direct": "/games/huge/cell-machine/index.html",
+    "source": "cell-machine/index.html",
+    "direct": "cell-machine/index.html",
     "platform": "local",
     "embed": "allowed",
     "schoolRisk": "low",
-    "icon": "/games/huge/cell-machine/img/icon.png"
+    "icon": "cell-machine/img/icon.png",
+    "host": "games-huge"
   },
   {
     "id": "huge-circlo",
@@ -2078,12 +2243,13 @@
     "category": "puzzle",
     "description": "Guide a rolling circle through minimalist physics puzzles and precise line routes.",
     "gradient": "linear-gradient(135deg, #22d3ee, #0c4a6e)",
-    "source": "/games/huge/circlo/index.html",
-    "direct": "/games/huge/circlo/index.html",
+    "source": "circlo/index.html",
+    "direct": "circlo/index.html",
     "platform": "local",
     "embed": "allowed",
     "schoolRisk": "low",
-    "icon": "/games/huge/circlo/img/icon.png"
+    "icon": "circlo/img/icon.png",
+    "host": "games-huge"
   },
   {
     "id": "huge-city-blocks-2",
@@ -2091,12 +2257,13 @@
     "category": "puzzle",
     "description": "Stack and align city blocks to build higher skylines without tipping your structure.",
     "gradient": "linear-gradient(135deg, #f59e0b, #78350f)",
-    "source": "/games/huge/city-blocks-2/index.html",
-    "direct": "/games/huge/city-blocks-2/index.html",
+    "source": "city-blocks-2/index.html",
+    "direct": "city-blocks-2/index.html",
     "platform": "local",
     "embed": "allowed",
     "schoolRisk": "low",
-    "icon": "/games/huge/city-blocks-2/TemplateData/favicon.ico"
+    "icon": "city-blocks-2/TemplateData/favicon.ico",
+    "host": "games-huge"
   },
   {
     "id": "huge-cuttherope",
@@ -2104,12 +2271,13 @@
     "category": "puzzle",
     "description": "HTML5 Cut the Rope levels built around rope physics, timing, and star collection.",
     "gradient": "linear-gradient(135deg, #22c55e, #14532d)",
-    "source": "/games/huge/cuttherope/index.html",
-    "direct": "/games/huge/cuttherope/index.html",
+    "source": "cuttherope/index.html",
+    "direct": "cuttherope/index.html",
     "platform": "local",
     "embed": "allowed",
     "schoolRisk": "low",
-    "icon": "/games/huge/cuttherope/ctr.png"
+    "icon": "cuttherope/ctr.png",
+    "host": "games-huge"
   },
   {
     "id": "ctr-holiday",
@@ -2117,13 +2285,14 @@
     "category": "racing",
     "description": "Crash Team Racing holiday-themed kart racing on festive tracks.",
     "gradient": "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
-    "source": "/games/huge/ctr-holiday/index.html",
-    "direct": "/games/huge/ctr-holiday/index.html",
+    "source": "ctr-holiday/index.html",
+    "direct": "ctr-holiday/index.html",
     "preferDirect": true,
     "platform": "web",
     "embed": false,
     "schoolRisk": "low",
-    "icon": "/games/huge/ctr-holiday/favicon.ico"
+    "icon": "ctr-holiday/favicon.ico",
+    "host": "games-huge"
   },
   {
     "id": "huge-cars-simulator",
@@ -2131,39 +2300,42 @@
     "category": "racing",
     "description": "Drive around and explore vehicle handling in a simple sandbox driving game.",
     "gradient": "linear-gradient(135deg, #38bdf8, #1d4ed8)",
-    "source": "/games/huge/cars-simulator/index.html",
-    "direct": "/games/huge/cars-simulator/index.html",
+    "source": "cars-simulator/index.html",
+    "direct": "cars-simulator/index.html",
     "platform": "local",
     "embed": "allowed",
     "schoolRisk": "low",
-    "icon": "/games/huge/cars-simulator/TemplateData/favicon.ico"
+    "icon": "cars-simulator/TemplateData/favicon.ico",
+    "host": "games-huge"
   },
   {
     "id": "ctr",
     "title": "Crash Tag Team Racing",
     "category": "racing",
-    "description": "Crash Team Racing ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â the beloved kart racer featuring Crash Bandicoot characters.",
+    "description": "Crash Team Racing ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â the beloved kart racer featuring Crash Bandicoot characters.",
     "gradient": "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-    "source": "/games/huge/ctr/index.html",
-    "direct": "/games/huge/ctr/index.html",
+    "source": "ctr/index.html",
+    "direct": "ctr/index.html",
     "preferDirect": true,
     "platform": "web",
     "embed": false,
     "schoolRisk": "low",
-    "icon": "/games/huge/ctr/images/favicon.ico"
+    "icon": "ctr/images/favicon.ico",
+    "host": "games-huge"
   },
   {
     "id": "huge-drive-mad",
     "title": "Drive Mad",
     "category": "racing",
-    "description": "Rage-inducing physics car game ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â navigate impossibly bumpy terrain.",
+    "description": "Rage-inducing physics car game ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â navigate impossibly bumpy terrain.",
     "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
-    "source": "/games/huge/drive-mad/index.html",
-    "direct": "/games/huge/drive-mad/index.html",
+    "source": "drive-mad/index.html",
+    "direct": "drive-mad/index.html",
     "platform": "local",
     "embed": "allowed",
     "schoolRisk": "low",
-    "icon": "/games/huge/drive-mad/favicon.ico"
+    "icon": "drive-mad/favicon.ico",
+    "host": "games-huge"
   },
   {
     "id": "snow-rider",
@@ -2176,7 +2348,8 @@
     "direct": "snow-rider.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "low"
+    "schoolRisk": "low",
+    "unavailable": true
   },
   {
     "id": "huge-adarkroom",
@@ -2184,12 +2357,13 @@
     "category": "rpg",
     "description": "Minimalist survival narrative that unfolds through choices, resource management, and discovery.",
     "gradient": "linear-gradient(135deg, #525252, #171717)",
-    "source": "/games/huge/adarkroom/index.html",
-    "direct": "/games/huge/adarkroom/index.html",
+    "source": "adarkroom/index.html",
+    "direct": "adarkroom/index.html",
     "platform": "local",
     "embed": "allowed",
     "schoolRisk": "low",
-    "icon": "/games/huge/adarkroom/img/adr.png"
+    "icon": "adarkroom/img/adr.png",
+    "host": "games-huge"
   },
   {
     "id": "fnaf-world",
@@ -2197,14 +2371,15 @@
     "category": "rpg",
     "description": "Local HTML5 port from hd_fnaf pack.",
     "gradient": "linear-gradient(135deg, #46a3c4, #1d4867)",
-    "pfp": "games/fnaf/w/resources/animatronic.png",
-    "source": "games/fnaf/w/index.html",
-    "direct": "games/fnaf/w/index.html",
+    "pfp": "w/resources/animatronic.png",
+    "source": "w/index.html",
+    "direct": "w/index.html",
     "platform": "local",
     "embed": "allowed",
     "schoolRisk": "medium",
     "preferDirect": true,
-    "icon": "/games/fnaf/w/favicon.ico"
+    "icon": "w/favicon.ico",
+    "host": "hd_fnaf"
   },
   {
     "id": "minecraft-eaglercraft",
@@ -2217,7 +2392,8 @@
     "preferDirect": true,
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "unavailable": true
   },
   {
     "id": "huge-bitlife",
@@ -2225,12 +2401,13 @@
     "category": "simulation",
     "description": "Life-sim decisions where each choice changes career, relationships, and outcomes.",
     "gradient": "linear-gradient(135deg, #ec4899, #be185d)",
-    "source": "/games/huge/bitlife/index.html",
-    "direct": "/games/huge/bitlife/index.html",
+    "source": "bitlife/index.html",
+    "direct": "bitlife/index.html",
     "platform": "local",
     "embed": "allowed",
     "schoolRisk": "low",
-    "icon": "/games/huge/bitlife/logo.png"
+    "icon": "bitlife/logo.png",
+    "host": "games-huge"
   },
   {
     "id": "fnaf-ps",
@@ -2238,14 +2415,15 @@
     "category": "simulation",
     "description": "Local HTML5 port from hd_fnaf pack.",
     "gradient": "linear-gradient(135deg, #cf7f44, #6f3415)",
-    "pfp": "games/fnaf/ps/resources/animatronic.png",
-    "source": "games/fnaf/ps/index.html",
-    "direct": "games/fnaf/ps/index.html",
+    "pfp": "ps/resources/animatronic.png",
+    "source": "ps/index.html",
+    "direct": "ps/index.html",
     "platform": "local",
     "embed": "allowed",
     "schoolRisk": "medium",
     "preferDirect": true,
-    "icon": "/games/fnaf/ps/favicon.ico"
+    "icon": "ps/favicon.ico",
+    "host": "hd_fnaf"
   },
   {
     "id": "huge-8ball-billards-classic",
@@ -2253,12 +2431,13 @@
     "category": "sports",
     "description": "Line up precision shots in a browser pool table with classic 8-ball rules.",
     "gradient": "linear-gradient(135deg, #0f766e, #0f172a)",
-    "source": "/games/huge/8ball-billards-classic/index.html",
-    "direct": "/games/huge/8ball-billards-classic/index.html",
+    "source": "8ball-billards-classic/index.html",
+    "direct": "8ball-billards-classic/index.html",
     "platform": "local",
     "embed": "allowed",
     "schoolRisk": "low",
-    "icon": "/games/huge/8ball-billards-classic/icon.png"
+    "icon": "8ball-billards-classic/icon.png",
+    "host": "games-huge"
   },
   {
     "id": "huge-backcountry",
@@ -2266,25 +2445,27 @@
     "category": "sports",
     "description": "Carve downhill runs, dodge obstacles, and maintain speed through snow-packed terrain.",
     "gradient": "linear-gradient(135deg, #38bdf8, #1d4ed8)",
-    "source": "/games/huge/backcountry/index.html",
-    "direct": "/games/huge/backcountry/index.html",
+    "source": "backcountry/index.html",
+    "direct": "backcountry/index.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "low"
+    "schoolRisk": "low",
+    "host": "games-huge"
   },
   {
     "id": "basket-bros-io",
     "title": "Basket Bros.io",
     "category": "sports",
-    "description": "Head-to-head basketball with comically large heads ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â dunk on your friends.",
+    "description": "Head-to-head basketball with comically large heads ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â dunk on your friends.",
     "gradient": "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-    "source": "/games/huge/basket-bros-io/index.html",
-    "direct": "/games/huge/basket-bros-io/index.html",
+    "source": "basket-bros-io/index.html",
+    "direct": "basket-bros-io/index.html",
     "preferDirect": true,
     "platform": "web",
     "embed": false,
     "schoolRisk": "low",
-    "icon": "/games/huge/basket-bros-io/favicon.png"
+    "icon": "basket-bros-io/favicon.png",
+    "host": "games-huge"
   },
   {
     "id": "huge-basketball-io",
@@ -2292,12 +2473,13 @@
     "category": "sports",
     "description": "Fast arcade basketball with IO-style pacing and quick scoring opportunities.",
     "gradient": "linear-gradient(135deg, #f97316, #b45309)",
-    "source": "/games/huge/basketball-io/index.html",
-    "direct": "/games/huge/basketball-io/index.html",
+    "source": "basketball-io/index.html",
+    "direct": "basketball-io/index.html",
     "platform": "local",
     "embed": "allowed",
     "schoolRisk": "low",
-    "icon": "/games/huge/basketball-io/TemplateData/favicon.ico"
+    "icon": "basketball-io/TemplateData/favicon.ico",
+    "host": "games-huge"
   },
   {
     "id": "huge-basketball-stars",
@@ -2305,11 +2487,12 @@
     "category": "sports",
     "description": "One-on-one basketball with timed blocks, dunks, and quick possession swings.",
     "gradient": "linear-gradient(135deg, #fb923c, #ea580c)",
-    "source": "/games/huge/basketball-stars/index.html",
-    "direct": "/games/huge/basketball-stars/index.html",
+    "source": "basketball-stars/index.html",
+    "direct": "basketball-stars/index.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "low"
+    "schoolRisk": "low",
+    "host": "games-huge"
   },
   {
     "id": "huge-cannon-basketball-4",
@@ -2317,12 +2500,13 @@
     "category": "sports",
     "description": "Launch shots, solve angles, and score baskets with puzzle-like cannon mechanics.",
     "gradient": "linear-gradient(135deg, #f59e0b, #b45309)",
-    "source": "/games/huge/cannon-basketball-4/index.html",
-    "direct": "/games/huge/cannon-basketball-4/index.html",
+    "source": "cannon-basketball-4/index.html",
+    "direct": "cannon-basketball-4/index.html",
     "platform": "local",
     "embed": "allowed",
     "schoolRisk": "low",
-    "icon": "/games/huge/cannon-basketball-4/img/splash.png"
+    "icon": "cannon-basketball-4/img/splash.png",
+    "host": "games-huge"
   },
   {
     "id": "retro-bowl-plus",
@@ -2335,7 +2519,8 @@
     "preferDirect": true,
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "medium"
+    "schoolRisk": "medium",
+    "unavailable": true
   },
   {
     "id": "huge-age-of-war",
@@ -2343,12 +2528,13 @@
     "category": "strategy",
     "description": "Deploy units across eras, defend your base, and time upgrades to overpower waves.",
     "gradient": "linear-gradient(135deg, #7c3aed, #1f2937)",
-    "source": "/games/huge/age-of-war/index.html",
-    "direct": "/games/huge/age-of-war/index.html",
+    "source": "age-of-war/index.html",
+    "direct": "age-of-war/index.html",
     "platform": "local",
     "embed": "allowed",
     "schoolRisk": "low",
-    "icon": "/games/huge/age-of-war/icon.jpg"
+    "icon": "age-of-war/icon.jpg",
+    "host": "games-huge"
   },
   {
     "id": "huge-among-us",
@@ -2356,12 +2542,13 @@
     "category": "strategy",
     "description": "Social deduction and quick deception in a familiar party-game format.",
     "gradient": "linear-gradient(135deg, #ef4444, #1e293b)",
-    "source": "/games/huge/among-us/index.html",
-    "direct": "/games/huge/among-us/index.html",
+    "source": "among-us/index.html",
+    "direct": "among-us/index.html",
     "platform": "local",
     "embed": "allowed",
     "schoolRisk": "medium",
-    "icon": "/games/huge/among-us/red.png"
+    "icon": "among-us/red.png",
+    "host": "games-huge"
   },
   {
     "id": "huge-battleforgondor",
@@ -2369,26 +2556,28 @@
     "category": "strategy",
     "description": "Defend key lanes with hero abilities and timed unit deployment in fantasy sieges.",
     "gradient": "linear-gradient(135deg, #a16207, #422006)",
-    "source": "/games/huge/battleforgondor/index.html",
-    "direct": "/games/huge/battleforgondor/index.html",
+    "source": "battleforgondor/index.html",
+    "direct": "battleforgondor/index.html",
     "platform": "local",
     "embed": "allowed",
     "schoolRisk": "low",
-    "icon": "/games/huge/battleforgondor/battleforgondor.jpg"
+    "icon": "battleforgondor/battleforgondor.jpg",
+    "host": "games-huge"
   },
   {
     "id": "bloonstd",
     "title": "Bloons TD",
     "category": "strategy",
-    "description": "Place towers to pop balloons before they reach the exit ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â classic Bloons TD.",
+    "description": "Place towers to pop balloons before they reach the exit ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â classic Bloons TD.",
     "gradient": "linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)",
-    "source": "/games/huge/bloonstd/index.html",
-    "direct": "/games/huge/bloonstd/index.html",
+    "source": "bloonstd/index.html",
+    "direct": "bloonstd/index.html",
     "preferDirect": true,
     "platform": "web",
     "embed": false,
     "schoolRisk": "low",
-    "icon": "/games/huge/bloonstd/bloonstd.jpg"
+    "icon": "bloonstd/bloonstd.jpg",
+    "host": "games-huge"
   },
   {
     "id": "bloonstd2",
@@ -2396,13 +2585,14 @@
     "category": "strategy",
     "description": "More balloon-popping strategy with new towers and track layouts.",
     "gradient": "linear-gradient(135deg, #fa709a 0%, #fee140 100%)",
-    "source": "/games/huge/bloonstd2/index.html",
-    "direct": "/games/huge/bloonstd2/index.html",
+    "source": "bloonstd2/index.html",
+    "direct": "bloonstd2/index.html",
     "preferDirect": true,
     "platform": "web",
     "embed": false,
     "schoolRisk": "low",
-    "icon": "/games/huge/bloonstd2/bloonstd2.png"
+    "icon": "bloonstd2/bloonstd2.png",
+    "host": "games-huge"
   },
   {
     "id": "huge-btd4",
@@ -2410,26 +2600,28 @@
     "category": "strategy",
     "description": "Larger maps, upgraded towers, and deeper wave planning in this TD entry.",
     "gradient": "linear-gradient(135deg, #65a30d, #3f6212)",
-    "source": "/games/huge/btd4/index.html",
-    "direct": "/games/huge/btd4/index.html",
+    "source": "btd4/index.html",
+    "direct": "btd4/index.html",
     "platform": "local",
     "embed": "allowed",
     "schoolRisk": "low",
-    "icon": "/games/huge/btd4/favicon.ico"
+    "icon": "btd4/favicon.ico",
+    "host": "games-huge"
   },
   {
     "id": "btts",
     "title": "Bloons TD Battles",
     "category": "strategy",
-    "description": "Bloons Tower Defense: Battles ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â PvP tower defense, send bloons to defeat opponents.",
+    "description": "Bloons Tower Defense: Battles ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â PvP tower defense, send bloons to defeat opponents.",
     "gradient": "linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)",
-    "source": "/games/huge/btts/index.html",
-    "direct": "/games/huge/btts/index.html",
+    "source": "btts/index.html",
+    "direct": "btts/index.html",
     "preferDirect": true,
     "platform": "web",
     "embed": false,
     "schoolRisk": "low",
-    "icon": "/games/huge/btts/icon-256.png"
+    "icon": "btts/icon-256.png",
+    "host": "games-huge"
   },
   {
     "id": "huge-canyondefense",
@@ -2437,25 +2629,27 @@
     "category": "strategy",
     "description": "Hold a canyon choke point with layered tower choices and wave adaptation.",
     "gradient": "linear-gradient(135deg, #f59e0b, #92400e)",
-    "source": "/games/huge/canyondefense/index.html",
-    "direct": "/games/huge/canyondefense/index.html",
+    "source": "canyondefense/index.html",
+    "direct": "canyondefense/index.html",
     "platform": "local",
     "embed": "allowed",
     "schoolRisk": "low",
-    "icon": "/games/huge/canyondefense/canyondefense.png"
+    "icon": "canyondefense/canyondefense.png",
+    "host": "games-huge"
   },
   {
     "id": "huge-deal-or-no-deal",
     "title": "Deal or No Deal",
     "category": "strategy",
-    "description": "The TV game show in browser form ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â open briefcases and beat the banker.",
+    "description": "The TV game show in browser form ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â open briefcases and beat the banker.",
     "gradient": "linear-gradient(135deg, #f59e0b, #92400e)",
-    "source": "/games/huge/deal-or-no-deal/index.html",
-    "direct": "/games/huge/deal-or-no-deal/index.html",
+    "source": "deal-or-no-deal/index.html",
+    "direct": "deal-or-no-deal/index.html",
     "platform": "local",
     "embed": "allowed",
     "schoolRisk": "low",
-    "icon": "/games/huge/deal-or-no-deal/index.jpg"
+    "icon": "deal-or-no-deal/index.jpg",
+    "host": "games-huge"
   },
   {
     "id": "tower-defense-2",
@@ -2467,7 +2661,8 @@
     "direct": "games/mini/tower-defense-2/build/xp_webtech_krf_index.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "low"
+    "schoolRisk": "low",
+    "unavailable": true
   },
   {
     "id": "huge-push-your-luck",
@@ -2475,11 +2670,12 @@
     "category": "arcade",
     "description": "Play push-your-luck",
     "gradient": "linear-gradient(135deg, #2563eb, #1e3a8a)",
-    "source": "/games-huge/push-your-luck/push-your-luck/index.html",
-    "direct": "/games-huge/push-your-luck/push-your-luck/index.html",
+    "source": "push-your-luck/index.html",
+    "direct": "push-your-luck/index.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "low"
+    "schoolRisk": "low",
+    "host": "games-huge"
   },
   {
     "id": "huge-pushback",
@@ -2487,11 +2683,12 @@
     "category": "arcade",
     "description": "Play pushback",
     "gradient": "linear-gradient(135deg, #2563eb, #1e3a8a)",
-    "source": "/games-huge/pushback/pushback/index.html",
-    "direct": "/games-huge/pushback/pushback/index.html",
+    "source": "pushback/index.html",
+    "direct": "pushback/index.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "low"
+    "schoolRisk": "low",
+    "host": "games-huge"
   },
   {
     "id": "huge-puzzle-ball",
@@ -2499,11 +2696,12 @@
     "category": "arcade",
     "description": "Play puzzle-ball",
     "gradient": "linear-gradient(135deg, #2563eb, #1e3a8a)",
-    "source": "/games-huge/puzzle-ball/puzzle-ball/index.html",
-    "direct": "/games-huge/puzzle-ball/puzzle-ball/index.html",
+    "source": "puzzle-ball/index.html",
+    "direct": "puzzle-ball/index.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "low"
+    "schoolRisk": "low",
+    "host": "games-huge"
   },
   {
     "id": "huge-q1k3",
@@ -2511,11 +2709,12 @@
     "category": "arcade",
     "description": "Play q1k3",
     "gradient": "linear-gradient(135deg, #2563eb, #1e3a8a)",
-    "source": "/games-huge/q1k3/q1k3/index.html",
-    "direct": "/games-huge/q1k3/q1k3/index.html",
+    "source": "q1k3/index.html",
+    "direct": "q1k3/index.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "low"
+    "schoolRisk": "low",
+    "host": "games-huge"
   },
   {
     "id": "huge-radiusraid",
@@ -2523,11 +2722,12 @@
     "category": "arcade",
     "description": "Play radiusraid",
     "gradient": "linear-gradient(135deg, #2563eb, #1e3a8a)",
-    "source": "/games-huge/radiusraid/radiusraid/index.html",
-    "direct": "/games-huge/radiusraid/radiusraid/index.html",
+    "source": "radiusraid/index.html",
+    "direct": "radiusraid/index.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "low"
+    "schoolRisk": "low",
+    "host": "games-huge"
   },
   {
     "id": "huge-retrohaunt",
@@ -2535,11 +2735,12 @@
     "category": "arcade",
     "description": "Play retrohaunt",
     "gradient": "linear-gradient(135deg, #2563eb, #1e3a8a)",
-    "source": "/games-huge/retrohaunt/retrohaunt/index.html",
-    "direct": "/games-huge/retrohaunt/retrohaunt/index.html",
+    "source": "retrohaunt/index.html",
+    "direct": "retrohaunt/index.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "low"
+    "schoolRisk": "low",
+    "host": "games-huge"
   },
   {
     "id": "huge-roadblocks",
@@ -2547,11 +2748,12 @@
     "category": "arcade",
     "description": "Play roadblocks",
     "gradient": "linear-gradient(135deg, #2563eb, #1e3a8a)",
-    "source": "/games-huge/roadblocks/roadblocks/index.html",
-    "direct": "/games-huge/roadblocks/roadblocks/index.html",
+    "source": "roadblocks/index.html",
+    "direct": "roadblocks/index.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "low"
+    "schoolRisk": "low",
+    "host": "games-huge"
   },
   {
     "id": "huge-rolling-forests",
@@ -2559,11 +2761,12 @@
     "category": "arcade",
     "description": "Play rolling-forests",
     "gradient": "linear-gradient(135deg, #2563eb, #1e3a8a)",
-    "source": "/games-huge/rolling-forests/rolling-forests/index.html",
-    "direct": "/games-huge/rolling-forests/rolling-forests/index.html",
+    "source": "rolling-forests/index.html",
+    "direct": "rolling-forests/index.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "low"
+    "schoolRisk": "low",
+    "host": "games-huge"
   },
   {
     "id": "huge-rolly-vortex",
@@ -2571,11 +2774,12 @@
     "category": "arcade",
     "description": "Play rolly-vortex",
     "gradient": "linear-gradient(135deg, #2563eb, #1e3a8a)",
-    "source": "/games-huge/rolly-vortex/rolly-vortex/index.html",
-    "direct": "/games-huge/rolly-vortex/rolly-vortex/index.html",
+    "source": "rolly-vortex/index.html",
+    "direct": "rolly-vortex/index.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "low"
+    "schoolRisk": "low",
+    "host": "games-huge"
   },
   {
     "id": "huge-sand-game",
@@ -2583,11 +2787,12 @@
     "category": "arcade",
     "description": "Play sand-game",
     "gradient": "linear-gradient(135deg, #2563eb, #1e3a8a)",
-    "source": "/games-huge/sand-game/sand-game/index.html",
-    "direct": "/games-huge/sand-game/sand-game/index.html",
+    "source": "sand-game/index.html",
+    "direct": "sand-game/index.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "low"
+    "schoolRisk": "low",
+    "host": "games-huge"
   },
   {
     "id": "huge-sandboxels",
@@ -2595,11 +2800,12 @@
     "category": "arcade",
     "description": "Play sandboxels",
     "gradient": "linear-gradient(135deg, #2563eb, #1e3a8a)",
-    "source": "/games-huge/sandboxels/sandboxels/index.html",
-    "direct": "/games-huge/sandboxels/sandboxels/index.html",
+    "source": "sandboxels/index.html",
+    "direct": "sandboxels/index.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "low"
+    "schoolRisk": "low",
+    "host": "games-huge"
   },
   {
     "id": "huge-shuttledeck",
@@ -2607,11 +2813,12 @@
     "category": "arcade",
     "description": "Play shuttledeck",
     "gradient": "linear-gradient(135deg, #2563eb, #1e3a8a)",
-    "source": "/games-huge/shuttledeck/shuttledeck/index.html",
-    "direct": "/games-huge/shuttledeck/shuttledeck/index.html",
+    "source": "shuttledeck/index.html",
+    "direct": "shuttledeck/index.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "low"
+    "schoolRisk": "low",
+    "host": "games-huge"
   },
   {
     "id": "huge-skyblock",
@@ -2619,11 +2826,12 @@
     "category": "arcade",
     "description": "Play skyblock",
     "gradient": "linear-gradient(135deg, #2563eb, #1e3a8a)",
-    "source": "/games-huge/skyblock/skyblock/index.html",
-    "direct": "/games-huge/skyblock/skyblock/index.html",
+    "source": "skyblock/index.html",
+    "direct": "skyblock/index.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "low"
+    "schoolRisk": "low",
+    "host": "games-huge"
   },
   {
     "id": "huge-sleepingbeauty",
@@ -2631,11 +2839,12 @@
     "category": "arcade",
     "description": "Play sleepingbeauty",
     "gradient": "linear-gradient(135deg, #2563eb, #1e3a8a)",
-    "source": "/games-huge/sleepingbeauty/sleepingbeauty/index.html",
-    "direct": "/games-huge/sleepingbeauty/sleepingbeauty/index.html",
+    "source": "sleepingbeauty/index.html",
+    "direct": "sleepingbeauty/index.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "low"
+    "schoolRisk": "low",
+    "host": "games-huge"
   },
   {
     "id": "huge-slice-of-sasha",
@@ -2643,11 +2852,12 @@
     "category": "arcade",
     "description": "Play slice-of-sasha",
     "gradient": "linear-gradient(135deg, #2563eb, #1e3a8a)",
-    "source": "/games-huge/slice-of-sasha/slice-of-sasha/index.html",
-    "direct": "/games-huge/slice-of-sasha/slice-of-sasha/index.html",
+    "source": "slice-of-sasha/index.html",
+    "direct": "slice-of-sasha/index.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "low"
+    "schoolRisk": "low",
+    "host": "games-huge"
   },
   {
     "id": "huge-slither",
@@ -2655,11 +2865,12 @@
     "category": "arcade",
     "description": "Play slither",
     "gradient": "linear-gradient(135deg, #2563eb, #1e3a8a)",
-    "source": "/games-huge/slither/slither/index.html",
-    "direct": "/games-huge/slither/slither/index.html",
+    "source": "slither/index.html",
+    "direct": "slither/index.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "low"
+    "schoolRisk": "low",
+    "host": "games-huge"
   },
   {
     "id": "huge-slope-ball",
@@ -2667,11 +2878,12 @@
     "category": "arcade",
     "description": "Play slope-ball",
     "gradient": "linear-gradient(135deg, #2563eb, #1e3a8a)",
-    "source": "/games-huge/slope-ball/slope-ball/index.html",
-    "direct": "/games-huge/slope-ball/slope-ball/index.html",
+    "source": "slope-ball/index.html",
+    "direct": "slope-ball/index.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "low"
+    "schoolRisk": "low",
+    "host": "games-huge"
   },
   {
     "id": "huge-smashkarts",
@@ -2679,11 +2891,12 @@
     "category": "arcade",
     "description": "Play smashkarts",
     "gradient": "linear-gradient(135deg, #2563eb, #1e3a8a)",
-    "source": "/games-huge/smashkarts/smashkarts/index.html",
-    "direct": "/games-huge/smashkarts/smashkarts/index.html",
+    "source": "smashkarts/index.html",
+    "direct": "smashkarts/index.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "low"
+    "schoolRisk": "low",
+    "host": "games-huge"
   },
   {
     "id": "huge-snake",
@@ -2691,10 +2904,11 @@
     "category": "arcade",
     "description": "Play snake",
     "gradient": "linear-gradient(135deg, #2563eb, #1e3a8a)",
-    "source": "/games-huge/snake/snake/index.html",
-    "direct": "/games-huge/snake/snake/index.html",
+    "source": "snake/index.html",
+    "direct": "snake/index.html",
     "platform": "local",
     "embed": "allowed",
-    "schoolRisk": "low"
+    "schoolRisk": "low",
+    "host": "games-huge"
   }
 ]
