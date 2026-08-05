@@ -126,7 +126,8 @@ by more than two games is dropped as a shared logo.
 
 ```
 index.html browse.html categories.html play.html library.html stats.html about.html 404.html
-login.html signup.html profile.html friends.html messages.html settings.html admin.html
+login.html signup.html profile.html friends.html messages.html notifications.html
+settings.html admin.html
 css/style.css              tokens, skins, every component
 js/config.js               name, gameBase, categories, skins  ← edit this
 js/theme-boot.js           applies the saved skin before first paint
