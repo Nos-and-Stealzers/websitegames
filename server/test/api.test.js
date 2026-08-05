@@ -26,6 +26,14 @@ function ok(label, cond, extra) {
 
 function group(name) { console.log("\n" + name); }
 
+/* Accept whatever pending request `username` has sent to this client. */
+async function acceptFrom(who, username) {
+  const d = (await who.get("/api/friends")).data;
+  const edge = d.incoming.find((u) => u.username === username);
+  if (edge) await who.post(`/api/friends/${edge.edgeId}/accept`);
+  return !!edge;
+}
+
 /* A tiny cookie-aware client, one instance per simulated browser. */
 function client() {
   const jar = new Map();
@@ -66,6 +74,7 @@ function client() {
   base = "http://127.0.0.1:" + server.address().port;
 
   const admin = client(), alice = client(), bob = client(), anon = client();
+  let carol, dave;   // created during the friend-code tests, reused for groups
 
   /* ------------------------------------------------------------- health */
   group("health & setup");
@@ -348,6 +357,179 @@ function client() {
     ok("closed report leaves the open list", r.data.reports.length === 0);
   }
 
+  /* ---------------------------------------------------------- friend codes */
+  group("friend codes");
+  {
+    let r = await alice.get("/api/auth/me");
+    const aliceCode = r.data.user.friendCode;
+    ok("account has a friend code", /^[A-Z0-9]{3}-[A-Z0-9]{3}$/.test(aliceCode || ""), aliceCode);
+    ok("code avoids ambiguous glyphs", !/[O0I1L]/.test(aliceCode), aliceCode);
+
+    r = await bob.get("/api/auth/me");
+    ok("codes are unique per account", r.data.user.friendCode !== aliceCode);
+    ok("code is private to its owner",
+       (await bob.get("/api/users/alice")).data.user.friendCode === undefined);
+
+    r = await bob.post("/api/friends/code", { code: aliceCode });
+    ok("lookup by code finds the account", r.status === 200 && r.data.user.username === "alice");
+
+    /* Typed by hand, so casing/spacing/dashes must not matter. */
+    r = await bob.post("/api/friends/code", { code: aliceCode.toLowerCase().replace("-", " ") });
+    ok("lookup tolerates messy input", r.status === 200 && r.data.user.username === "alice");
+
+    r = await bob.post("/api/friends/code", { code: "ZZZ-999" });
+    ok("unknown code 404s", r.status === 404);
+    r = await bob.post("/api/friends/code", { code: "nope" });
+    ok("malformed code rejected", r.status === 400);
+
+    r = await alice.post("/api/friends/code", { code: aliceCode });
+    ok("cannot look up your own code", r.status === 400);
+
+    /* Adding by code goes through the same request route as by username. */
+    carol = client();
+    await carol.post("/api/auth/signup", { username: "carol", password: "carolpass1" });
+    r = await carol.post("/api/friends/request", { code: aliceCode });
+    ok("friend request by code works", r.status === 201, JSON.stringify(r.data));
+
+    r = await carol.get("/api/friends");
+    ok("request shows as outgoing", r.data.outgoing.some((u) => u.username === "alice"));
+
+    /* A code pasted into the username box should still resolve. */
+    dave = client();
+    await dave.post("/api/auth/signup", { username: "dave", password: "davepass12" });
+    r = await dave.post("/api/friends/request", { username: aliceCode });
+    ok("code pasted into the username box resolves", r.status === 201, JSON.stringify(r.data));
+
+    r = await alice.post("/api/users/me/code");
+    const rotated = r.data.friendCode;
+    ok("code can be rotated", r.status === 200 && rotated && rotated !== aliceCode);
+    r = await bob.post("/api/friends/code", { code: aliceCode });
+    ok("old code stops working", r.status === 404);
+    r = await bob.post("/api/friends/code", { code: rotated });
+    ok("new code works", r.status === 200);
+  }
+
+  /* --------------------------------------------------------------- groups */
+  group("group threads");
+  {
+    /* alice and bob are already friends; carol is not yet. */
+    let r = await alice.post("/api/threads/group", { title: "Squad", usernames: ["bob"] });
+    ok("group created", r.status === 201 && r.data.thread.isGroup === true, JSON.stringify(r.data));
+    const gid = r.data.thread.id;
+    ok("owner flagged", r.data.thread.owner === true);
+    ok("member count includes you", r.data.thread.memberCount === 2);
+
+    r = await alice.post("/api/threads/group", { title: "Nope", usernames: ["carol"] });
+    ok("cannot group with a non-friend", r.status === 400, JSON.stringify(r.data));
+
+    r = await alice.post("/api/threads/group", { title: "Empty", usernames: [] });
+    ok("group needs someone in it", r.status === 400);
+
+    r = await bob.get("/api/messages/threads/" + gid);
+    ok("member can open the group", r.status === 200 && r.data.isGroup === true);
+    ok("non-owner not flagged as owner", r.data.owner === false);
+
+    r = await admin.get("/api/messages/threads/" + gid);
+    ok("outsider cannot read the group", r.status === 404);
+    r = await admin.post("/api/messages/threads/" + gid, { body: "hi" });
+    ok("outsider cannot post to the group", r.status === 404);
+
+    r = await alice.post("/api/messages/threads/" + gid, { body: "hello squad" });
+    ok("group message sent", r.status === 201);
+    r = await bob.get("/api/messages/threads/" + gid);
+    ok("other member sees it", r.data.messages.some((m) => m.body === "hello squad"));
+    ok("sender identified in group", r.data.messages[0].from.username === "alice");
+
+    r = await bob.patch("/api/threads/" + gid, { title: "Hijack" });
+    ok("non-owner cannot rename", r.status === 403);
+    r = await alice.patch("/api/threads/" + gid, { title: "The Squad" });
+    ok("owner can rename", r.status === 200 && r.data.thread.title === "The Squad");
+
+    r = await bob.post("/api/threads/" + gid + "/members", { username: "carol" });
+    ok("cannot add a non-friend to a group", r.status === 400);
+
+    /* carol already requested alice during the code tests — accept it. */
+    ok("pending request from carol accepted", await acceptFrom(alice, "carol"));
+    r = await alice.post("/api/threads/" + gid + "/members", { username: "carol" });
+    ok("owner adds a friend", r.status === 201 && r.data.thread.memberCount === 3);
+
+    r = await bob.del("/api/threads/" + gid + "/members/" + 99999);
+    ok("non-owner cannot remove others", r.status === 403);
+
+    const bobId = (await admin.get("/api/admin/users")).data.users
+      .find((u) => u.username === "bob").id;
+    r = await bob.del("/api/threads/" + gid + "/members/" + bobId);
+    ok("anyone can leave a group", r.status === 200);
+    r = await bob.get("/api/messages/threads/" + gid);
+    ok("leaving revokes access", r.status === 404);
+
+    r = await bob.del("/api/threads/" + gid + "/members/" + bobId);
+    ok("leaving twice is a 404, not a crash", r.status === 404);
+  }
+
+  /* ---------------------------------------------------------- attachments */
+  group("image attachments");
+  {
+    /* A real 1×1 PNG. */
+    const PNG =
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk" +
+      "YPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==";
+
+    let r = await alice.post("/api/messages/with/bob");
+    const t = r.data.threadId;
+
+    r = await alice.post("/api/messages/threads/" + t, {
+      body: "look at this", image: { kind: "screenshot", dataUrl: PNG, width: 1, height: 1 }
+    });
+    ok("image message accepted", r.status === 201, JSON.stringify(r.data).slice(0, 120));
+    ok("image metadata returned", r.data.message.image && r.data.message.image.mime === "image/png");
+    const imgId = r.data.message.image.id;
+
+    r = await alice.post("/api/messages/threads/" + t, {
+      image: { kind: "camera", dataUrl: PNG, width: 1, height: 1 }
+    });
+    ok("image with no caption allowed", r.status === 201);
+
+    r = await alice.post("/api/messages/threads/" + t, { body: "" });
+    ok("empty message with no image rejected", r.status === 400);
+
+    r = await alice.post("/api/messages/threads/" + t, {
+      image: { kind: "upload", dataUrl: "data:text/html;base64,PGgxPmhpPC9oMT4=" }
+    });
+    ok("non-image mime rejected", r.status === 400, JSON.stringify(r.data));
+
+    r = await alice.post("/api/messages/threads/" + t, {
+      image: { kind: "upload", dataUrl: "not-a-data-url" }
+    });
+    ok("malformed data url rejected", r.status === 400);
+
+    const huge = "data:image/png;base64," + "A".repeat(1200000);
+    r = await alice.post("/api/messages/threads/" + t, { image: { kind: "upload", dataUrl: huge } });
+    ok("oversized image rejected", r.status === 400 || r.status === 413, "status " + r.status);
+
+    /* Serving is scoped to the thread the image was posted in. */
+    let raw = await bob.raw("GET", "/api/attachments/" + imgId);
+    ok("thread member can fetch the image", raw.status === 200);
+    ok("served with the right content type",
+       (raw.headers.get("content-type") || "").startsWith("image/png"));
+    ok("not publicly cacheable",
+       /private/.test(raw.headers.get("cache-control") || ""));
+
+    raw = await admin.raw("GET", "/api/attachments/" + imgId);
+    ok("outsider cannot fetch the image", raw.status === 404);
+
+    raw = await anon.raw("GET", "/api/attachments/" + imgId);
+    ok("anonymous cannot fetch the image", raw.status === 401 || raw.status === 404);
+
+    /* Deleting the message must destroy the file, not orphan it. */
+    r = await bob.get("/api/messages/threads/" + t);
+    const withImage = r.data.messages.find((m) => m.image);
+    r = await alice.del("/api/messages/" + withImage.id);
+    ok("image message deleted", r.status === 200);
+    raw = await bob.raw("GET", "/api/attachments/" + withImage.image.id);
+    ok("attachment gone with the message", raw.status === 404);
+  }
+
   /* ----------------------------------------------------- notifications */
   group("notifications");
   {
@@ -425,12 +607,14 @@ function client() {
   group("admin");
   {
     let r = await admin.get("/api/admin/overview");
-    ok("overview counts users", r.data.users.total === 3);
-    ok("overview counts friendships", r.data.social.friendships === 1);
+    const accounts = r.data.users.total;
+    ok("overview counts users", accounts >= 3, "total=" + accounts);
+    ok("overview counts friendships", r.data.social.friendships >= 1);
     ok("overview counts messages", r.data.social.messages > 0);
 
     r = await admin.get("/api/admin/users");
-    ok("user list returned", r.data.users.length === 3);
+    ok("user list returned", r.data.users.length === accounts,
+       r.data.users.length + " rows vs " + accounts + " counted");
     ok("admin list still hides credentials", !JSON.stringify(r.data).match(/pass_hash|pass_salt/));
 
     const bobRow = r.data.users.find((u) => u.username === "bob");

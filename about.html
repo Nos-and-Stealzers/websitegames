@@ -103,13 +103,38 @@
 
       <h2>Friends and messages</h2>
       <ul>
+        <li>Add people by <b>@username</b> or by <b>friend code</b> — a six-character handle like
+            <code>ABC-123</code> you can share without giving out your username. One box takes
+            either. Rotate it any time from the Friends page and the old one stops working.</li>
         <li>Friend requests go one way until accepted; either side can remove the link later.</li>
+        <li><b>Groups</b> hold up to 25 people and are friends-only, so they can't be used to get
+            around someone's message settings. The owner can rename, add and remove; anyone can
+            leave, and ownership passes on rather than leaving a group headless.</li>
+        <li>The <b>chat dock</b> sits bottom-right on every page, including while a game is
+            running, so you can reply without leaving what you're doing.</li>
         <li>Blocking hides you from that person's search and profile view, and stops their messages.</li>
-        <li>You can restrict messages to friends only in <b>Account settings → Privacy</b>.</li>
+        <li>You can restrict messages to friends only in <b>Settings → Privacy</b>.</li>
         <li>Activity on your profile is opt-out and only ever visible to friends.</li>
         <li>Report anything from a profile or conversation; it lands in the moderation queue.</li>
         <li>Messages are stored in plain text on the hub's server. Moderators can remove them.
             Treat it as a school notice board, not a private channel.</li>
+      </ul>
+
+      <h2>Images in chat</h2>
+      <p>
+        You can share a <b>screenshot</b>, take a <b>photo</b> with your camera, or attach an
+        image from disk. Everything is downscaled and re-encoded in your browser before it is
+        sent, so a huge PNG becomes a reasonable JPEG rather than being rejected.
+      </p>
+      <ul>
+        <li>Images are private to the conversation they were posted in — the server checks
+            membership on every fetch, so a link alone is not enough.</li>
+        <li>Deleting the message destroys the image with it.</li>
+        <li>Screenshots go through the browser's own screen-share picker. A page cannot silently
+            screenshot itself, and a game running in a frame from another site can never be read
+            into a canvas — so you choose what to share, every time.</li>
+        <li>The camera needs HTTPS and your explicit permission. Nothing is captured until you
+            press the shutter, and the stream is stopped the moment the dialog closes.</li>
       </ul>
 
       <h2>Keys</h2>
@@ -169,6 +194,8 @@
   <script src="js/ui.js"></script>
   <script src="js/api.js"></script>
   <script src="js/session.js"></script>
+  <script src="js/capture.js"></script>
+  <script src="js/chat-dock.js"></script>
   <script src="js/shell.js"></script>
   <script src="js/page-about.js"></script>
 </body>

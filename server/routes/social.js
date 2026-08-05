@@ -2,7 +2,7 @@
 "use strict";
 
 const express = require("express");
-const { db } = require("../db");
+const { db, freshFriendCode } = require("../db");
 const A = require("../auth");
 const S = require("../shape");
 const notify = require("../notify");
@@ -154,11 +154,47 @@ router.get("/friends", A.requireUser, (req, res) => {
   res.json({ friends, incoming, outgoing, blocked });
 });
 
+/* Look someone up by @username or by friend code — the request route accepts
+   either, so the UI can offer one box instead of two. */
+function findTarget(body) {
+  if (body.code) {
+    const code = S.friendCode(body.code);
+    return db.prepare("SELECT * FROM users WHERE friend_code = ?").get(code);
+  }
+  const name = S.str(body.username, { field: "Username", max: 20 });
+  /* Tolerate a pasted "@name", and a code typed into the username box. */
+  const cleaned = name.replace(/^@/, "");
+  if (/^[A-Za-z0-9]{3}-?[A-Za-z0-9]{3}$/.test(cleaned) && !/^[A-Za-z]/.test(cleaned.slice(3, 4))) {
+    const byCode = db.prepare("SELECT * FROM users WHERE friend_code = ?")
+      .get(S.friendCode(cleaned));
+    if (byCode) return byCode;
+  }
+  return db.prepare("SELECT * FROM users WHERE username_lower = ?").get(cleaned.toLowerCase());
+}
+
+router.post("/friends/code", A.requireUser, (req, res, next) => {
+  try {
+    const code = S.friendCode(req.body.code);
+    if (code === req.user.friend_code) {
+      return res.status(400).json({ error: "That's your own code." });
+    }
+    const target = db.prepare("SELECT * FROM users WHERE friend_code = ?").get(code);
+    if (!target) return res.status(404).json({ error: "No account uses that code." });
+    res.json({ user: S.publicUser(target), relation: relation(req.user.id, target.id) });
+  } catch (err) { next(err); }
+});
+
+/* Burn the current code and issue a new one, for when it's been shared too
+   widely. Outstanding requests are unaffected. */
+router.post("/users/me/code", A.requireUser, (req, res) => {
+  const code = freshFriendCode();
+  db.prepare("UPDATE users SET friend_code = ? WHERE id = ?").run(code, req.user.id);
+  res.json({ friendCode: code });
+});
+
 router.post("/friends/request", A.requireUser, (req, res, next) => {
   try {
-    const name = S.str(req.body.username, { field: "Username", max: 20 });
-    const target = db.prepare("SELECT * FROM users WHERE username_lower = ?")
-      .get(name.toLowerCase());
+    const target = findTarget(req.body);
 
     if (!target) return res.status(404).json({ error: "No such user." });
     if (target.id === req.user.id) return res.status(400).json({ error: "That's you." });

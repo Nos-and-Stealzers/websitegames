@@ -1254,3 +1254,265 @@ kbd {
   margin: 0 0 0.8rem; font-size: 0.88rem; color: var(--ink-2);
   white-space: pre-wrap; overflow-wrap: anywhere;
 }
+
+/* --------------------------------------------------------------------------
+   22 · CHAT DOCK — bottom right, on every page, including during a game
+   -------------------------------------------------------------------------- */
+
+.dock {
+  position: fixed; right: 1rem; bottom: 1rem; z-index: 70;
+  display: flex; flex-direction: column; align-items: flex-end; gap: 0.5rem;
+}
+.dock[hidden] { display: none; }
+@media (max-width: 900px) { .dock { bottom: 4.6rem; right: 0.75rem; } }
+
+.dock-pill {
+  display: inline-flex; align-items: center; gap: 0.45rem;
+  padding: 0.55rem 0.9rem;
+  font: inherit; font-size: 0.84rem; font-weight: 650;
+  background: var(--accent); color: var(--accent-ink);
+  border: 1px solid var(--accent); border-radius: 999px;
+  cursor: pointer; order: 2;
+}
+.dock-pill:hover { background: var(--accent-2); border-color: var(--accent-2); }
+.dock-pill-icon { font-size: 0.95rem; }
+.dock-pill .badge { background: var(--paper); color: var(--accent); margin-left: 0.15rem; }
+.dock.is-open .dock-pill-text { display: none; }
+
+.dock.has-unread .dock-pill { animation: dock-nudge 1.6s ease-in-out 3; }
+@keyframes dock-nudge {
+  0%, 100% { transform: translateY(0); }
+  12% { transform: translateY(-4px); }
+  24% { transform: translateY(0); }
+}
+
+.dock-panel {
+  order: 1;
+  width: min(340px, calc(100vw - 2rem));
+  height: min(460px, calc(100dvh - 8rem));
+  display: flex; flex-direction: column;
+  background: var(--surface);
+  border: 1px solid var(--line-2);
+  border-radius: var(--r);
+  overflow: hidden;
+}
+.dock-panel[hidden] { display: none; }
+
+.dock-head {
+  display: flex; align-items: center; gap: 0.4rem;
+  padding: 0.45rem 0.5rem;
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--line);
+  flex: none;
+}
+.dock-title {
+  flex: 1; min-width: 0;
+  font-size: 0.85rem; font-weight: 650;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.dock-btn, .dock-back {
+  background: none; border: 0; cursor: pointer;
+  color: var(--ink-2); font: inherit; font-size: 0.95rem;
+  padding: 0.1rem 0.35rem; line-height: 1; text-decoration: none;
+}
+.dock-btn:hover, .dock-back:hover { color: var(--accent); }
+.dock-back { font-size: 1.2rem; }
+
+.dock-list { flex: 1; overflow-y: auto; }
+.dock-actions {
+  display: flex; gap: 0.35rem; padding: 0.5rem;
+  border-bottom: 1px solid var(--line);
+}
+.dock-actions .btn { flex: 1; }
+
+.dock-row {
+  display: flex; align-items: center; gap: 0.55rem; width: 100%;
+  padding: 0.5rem 0.6rem;
+  background: none; border: 0; border-bottom: 1px solid var(--line);
+  border-left: 2px solid transparent;
+  color: var(--ink); font: inherit; text-align: left; cursor: pointer;
+}
+.dock-row:hover { background: var(--surface-2); border-left-color: var(--accent); }
+.dock-avatar {
+  position: relative; width: 1.9rem; height: 1.9rem; flex: none;
+  border: 1px solid var(--line); overflow: hidden;
+  display: grid; place-items: center;
+}
+.dock-avatar svg { width: 100%; height: 100%; }
+.dock-avatar.is-group { color: var(--accent); font-size: 1rem; }
+.dock-avatar .dot {
+  position: absolute; right: -1px; bottom: -1px;
+  width: 0.5rem; height: 0.5rem; background: var(--good);
+  border: 2px solid var(--surface);
+}
+.dock-row-mid { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.dock-row-name {
+  font-size: 0.82rem; font-weight: 650;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.dock-row-prev {
+  font-size: 0.72rem; color: var(--ink-3);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.dock-row .badge { margin-left: 0; }
+
+.dock-empty { padding: 2rem 1rem; text-align: center; color: var(--ink-3); }
+.dock-empty strong { display: block; color: var(--ink); font-size: 0.9rem; margin-bottom: 0.2rem; }
+.dock-empty p { margin: 0; font-size: 0.78rem; }
+
+.dock-chat { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+.dock-log {
+  flex: 1; overflow-y: auto;
+  padding: 0.7rem 0.6rem;
+  display: flex; flex-direction: column; gap: 0.4rem;
+}
+.dock-bubble-row { display: flex; flex-direction: column; align-items: flex-start; max-width: 85%; }
+.dock-bubble-row.mine { align-self: flex-end; align-items: flex-end; }
+.dock-who {
+  font-family: var(--mono); font-size: 0.62rem; color: var(--ink-3);
+  margin-bottom: 0.1rem;
+}
+.dock-bubble {
+  padding: 0.4rem 0.6rem;
+  background: var(--surface-2); border: 1px solid var(--line);
+  font-size: 0.82rem; line-height: 1.4;
+  white-space: pre-wrap; overflow-wrap: anywhere;
+  max-width: 100%;
+}
+.dock-bubble-row.mine .dock-bubble { background: var(--sel); border-color: var(--accent); }
+.dock-bubble.gone { color: var(--ink-3); font-style: italic; }
+.dock-img {
+  display: block; max-width: 100%; border: 1px solid var(--line);
+  margin-bottom: 0.3rem; cursor: zoom-in;
+}
+.dock-img:only-child { margin-bottom: 0; }
+
+.dock-compose {
+  flex: none; display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: end; gap: 0.35rem;
+  padding: 0.45rem;
+  border-top: 1px solid var(--line);
+  background: var(--surface-2);
+}
+.dock-tools { display: flex; gap: 0.1rem; }
+.dock-tool {
+  background: none; border: 0; cursor: pointer;
+  color: var(--ink-3); font-size: 0.95rem; padding: 0.25rem;
+  line-height: 1;
+}
+.dock-tool:hover { color: var(--accent); }
+.dock-input {
+  font: inherit; font-size: 0.82rem; resize: none;
+  padding: 0.35rem 0.5rem; max-height: 6rem;
+  background: var(--paper); color: var(--ink);
+  border: 1px solid var(--line-2); border-radius: var(--r);
+}
+.dock-send {
+  background: var(--accent); color: var(--accent-ink);
+  border: 1px solid var(--accent); border-radius: var(--r);
+  cursor: pointer; padding: 0.35rem 0.6rem; font-size: 0.85rem;
+}
+.dock-send:hover { background: var(--accent-2); }
+
+.dock-pending {
+  position: relative; padding: 0.4rem 0.45rem 0;
+  border-top: 1px solid var(--line);
+}
+.dock-pending img {
+  max-height: 5rem; border: 1px solid var(--line-2);
+}
+.dock-pending-x {
+  position: absolute; top: 0.55rem; left: 0.6rem;
+  width: 1.3rem; height: 1.3rem;
+  background: var(--paper); color: var(--ink);
+  border: 1px solid var(--line-2); border-radius: 50%;
+  cursor: pointer; font-size: 0.7rem; line-height: 1; padding: 0;
+}
+
+/* Lightbox for tapping a chat image. */
+.shot-view {
+  position: fixed; inset: 0; z-index: 120;
+  background: rgba(0, 0, 0, 0.85);
+  display: grid; place-items: center; padding: 1.5rem;
+  cursor: zoom-out;
+}
+.shot-view img { max-width: 100%; max-height: 100%; border: 1px solid var(--line-2); }
+
+/* --------------------------------------------------------------------------
+   23 · CAMERA
+   -------------------------------------------------------------------------- */
+
+.cam-card { width: min(520px, 100%); }
+.cam-view {
+  display: block; width: 100%; max-height: 60vh;
+  background: #000; object-fit: contain;
+}
+.cam-bar {
+  display: flex; gap: 0.4rem; justify-content: center;
+  padding: 0.8rem; border-top: 1px solid var(--line);
+  background: var(--surface-2);
+}
+
+/* --------------------------------------------------------------------------
+   24 · FRIEND CODE + SOCIAL REWORK
+   -------------------------------------------------------------------------- */
+
+.code-card {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 1rem;
+  border: 1px solid var(--accent);
+  background: var(--sel);
+  padding: 1rem 1.1rem;
+}
+.code-card .what { flex: 1; min-width: 180px; }
+.code-card .what strong { display: block; font-size: 0.95rem; }
+.code-card .what span { font-size: 0.78rem; color: var(--ink-2); }
+.code-value {
+  font-family: var(--mono); font-size: 1.5rem; font-weight: 700;
+  letter-spacing: 0.18em; color: var(--accent);
+  user-select: all;
+}
+.code-acts { display: flex; gap: 0.35rem; flex-wrap: wrap; }
+
+.add-row { display: grid; grid-template-columns: 1fr auto; gap: 0.4rem; }
+@media (max-width: 520px) { .add-row { grid-template-columns: 1fr; } }
+
+.seg-tabs { display: flex; gap: 0; margin-bottom: 0.9rem; }
+.seg-tabs .btn { border-radius: 0; margin-left: -1px; }
+.seg-tabs .btn:first-child { border-radius: var(--r) 0 0 var(--r); margin-left: 0; }
+.seg-tabs .btn:last-child { border-radius: 0 var(--r) var(--r) 0; }
+
+.picker {
+  display: flex; flex-wrap: wrap; gap: 0.35rem;
+  padding: 0.6rem; border: 1px solid var(--line);
+  background: var(--paper); min-height: 3rem;
+  margin-bottom: 0.7rem;
+}
+.picker:empty::before {
+  content: "Nobody picked yet"; color: var(--ink-3); font-size: 0.8rem;
+}
+.chip-person {
+  display: inline-flex; align-items: center; gap: 0.35rem;
+  padding: 0.2rem 0.3rem 0.2rem 0.2rem;
+  border: 1px solid var(--line-2); background: var(--surface);
+  font-size: 0.78rem;
+}
+.chip-person .avatar { width: 1.3rem; height: 1.3rem; }
+.chip-person button {
+  background: none; border: 0; cursor: pointer; color: var(--ink-3);
+  font-size: 0.8rem; line-height: 1; padding: 0 0.1rem;
+}
+.chip-person button:hover { color: var(--bad); }
+
+.group-head { display: flex; align-items: center; gap: 0.6rem; }
+.group-glyph {
+  width: 2rem; height: 2rem; flex: none;
+  display: grid; place-items: center;
+  border: 1px solid var(--accent); color: var(--accent);
+}
+.member-strip {
+  display: flex; flex-wrap: wrap; gap: 0.3rem;
+  padding: 0.6rem 0.9rem;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface-2);
+}

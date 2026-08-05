@@ -97,6 +97,15 @@ device and deletion sections appear only once signed in.
   and the higher playtime, so it can never wipe the first device's progress.
 - Signing up **adopts whatever you already played** signed out.
 - Friends: search, requests, accept/decline, remove, block.
+- **Friend codes** — a six-character handle (`ABC-123`) you can share instead of your username.
+  One box on the Friends page takes either; rotate the code and the old one dies immediately.
+  Ambiguous glyphs (`O/0`, `I/1/L`) are left out so it survives being read aloud.
+- **Group chats** up to 25 people, friends-only so they can't route around DM privacy.
+  Rename, add, remove, leave — ownership passes on instead of orphaning the group.
+- **Floating chat dock**, bottom-right on every page **including during a game**. Collapsed
+  it's a pill with an unread count; open it's your conversations; it remembers where you were.
+- **Images in chat** — screenshot, camera photo, or a file. Downscaled and re-encoded in the
+  browser first, then served only to members of that conversation.
 - Direct messages with unread badges, presence dots and retractable messages.
 - Notifications for friend requests, acceptances, new messages, role changes,
   suspensions and closed reports — badged in the rail, toasted when they land

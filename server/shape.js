@@ -65,12 +65,22 @@ function publicUser(row) {
   };
 }
 
-/* Extra fields only the account owner gets. */
+/* Extra fields only the account owner gets. The friend code is deliberately
+   private — it's a share-with-who-you-choose handle, not a public one. */
 function privateUser(row) {
   return Object.assign(publicUser(row), {
     acceptsDms: !!row.accepts_dms,
-    showActivity: !!row.show_activity
+    showActivity: !!row.show_activity,
+    friendCode: row.friend_code || ""
   });
+}
+
+/* Friend codes are typed by hand, so accept any casing, spacing or missing
+   dash and normalise to the canonical ABC-123 form. */
+function friendCode(value) {
+  const raw = String(value || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+  if (raw.length !== 6) throw fail("Friend codes are six characters, like ABC-123.");
+  return raw.slice(0, 3) + "-" + raw.slice(3);
 }
 
 /* Admin listing adds moderation context; still no credential material. */
@@ -84,7 +94,7 @@ function adminUser(row) {
 }
 
 module.exports = {
-  fail, str, username, password,
+  fail, str, username, password, friendCode,
   online, publicUser, privateUser, adminUser,
   ONLINE_WINDOW
 };

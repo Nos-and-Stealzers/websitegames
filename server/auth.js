@@ -150,9 +150,12 @@ let limiterSeq = 0;
 /* Fixed-window counter per key. Enough for brute-force defence on one box.
    Each limiter gets its own namespace — without it, two limiters with no `key`
    would share a bucket and throttle each other from unrelated endpoints. */
-function rateLimit({ windowMs, max, key, name }) {
+function rateLimit({ windowMs, max, key, name, when }) {
   const scope = name || "rl" + (++limiterSeq);
   return (req, res, next) => {
+    /* `when` lets one route carry two limits — e.g. messages are cheap but
+       messages carrying an image are not. */
+    if (when && !when(req)) return next();
     const id = scope + "|" + (key ? key(req) : "") + "|" + (req.ip || "");
     const now = Date.now();
     let b = buckets.get(id);

@@ -2,7 +2,7 @@
 "use strict";
 
 const express = require("express");
-const { db, audit } = require("../db");
+const { db, audit, freshFriendCode } = require("../db");
 const A = require("../auth");
 const S = require("../shape");
 
@@ -46,9 +46,9 @@ router.post("/signup", signupLimit, (req, res, next) => {
 
     const info = db.prepare(
       `INSERT INTO users (username, username_lower, display_name, pass_hash, pass_salt,
-                          role, created_at, last_seen)
-       VALUES (?,?,?,?,?,?,?,?)`
-    ).run(name, name.toLowerCase(), display, hash, salt, role, now, now);
+                          role, created_at, last_seen, friend_code)
+       VALUES (?,?,?,?,?,?,?,?,?)`
+    ).run(name, name.toLowerCase(), display, hash, salt, role, now, now, freshFriendCode());
 
     const token = A.issueSession(info.lastInsertRowid, req.headers["user-agent"]);
     A.setCookie(res, token);

@@ -104,6 +104,9 @@
     /* --- friends --- */
     friends: function () { return request("GET", "/friends"); },
     addFriend: function (username) { return request("POST", "/friends/request", { username: username }); },
+    addFriendByCode: function (code) { return request("POST", "/friends/request", { code: code }); },
+    lookupCode: function (code) { return request("POST", "/friends/code", { code: code }); },
+    rotateCode: function () { return request("POST", "/users/me/code"); },
     acceptFriend: function (id) { return request("POST", "/friends/" + id + "/accept"); },
     removeFriend: function (id) { return request("DELETE", "/friends/" + id); },
     blockUser: function (username) { return request("POST", "/friends/block", { username: username }); },
@@ -113,9 +116,23 @@
     thread: function (id, after) {
       return request("GET", "/messages/threads/" + id + (after ? "?after=" + after : ""));
     },
-    send: function (id, body) { return request("POST", "/messages/threads/" + id, { body: body }); },
+    send: function (id, body, image) {
+      return request("POST", "/messages/threads/" + id, { body: body, image: image || undefined });
+    },
     openThread: function (username) {
       return request("POST", "/messages/with/" + encodeURIComponent(username));
+    },
+
+    /* --- groups --- */
+    createGroup: function (title, usernames) {
+      return request("POST", "/threads/group", { title: title, usernames: usernames });
+    },
+    renameGroup: function (id, title) { return request("PATCH", "/threads/" + id, { title: title }); },
+    addToGroup: function (id, username) {
+      return request("POST", "/threads/" + id + "/members", { username: username });
+    },
+    removeFromGroup: function (id, userId) {
+      return request("DELETE", "/threads/" + id + "/members/" + userId);
     },
     deleteMessage: function (id) { return request("DELETE", "/messages/" + id); },
     unread: function () { return request("GET", "/messages/unread"); },

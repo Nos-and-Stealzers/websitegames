@@ -234,6 +234,28 @@
     window.setTimeout(function () { node.remove(); }, ms || 2100);
   }
 
+  /* ---- image lightbox ---- */
+
+  function lightbox(src, alt) {
+    var view = el("div", "shot-view");
+    var img = el("img");
+    img.src = src;
+    img.alt = alt || "";
+    view.appendChild(img);
+    view.addEventListener("click", function () { view.remove(); });
+    document.addEventListener("keydown", function esc(event) {
+      if (event.key === "Escape") { view.remove(); document.removeEventListener("keydown", esc); }
+    });
+    document.body.appendChild(view);
+  }
+
+  /* Delegated once, so every chat image everywhere is zoomable without each
+     renderer having to remember to wire it. */
+  document.addEventListener("click", function (event) {
+    var img = event.target.closest && event.target.closest("img.dock-img, img.chat-img");
+    if (img) { event.preventDefault(); lightbox(img.src, img.alt); }
+  });
+
   /* ---- url helpers ---- */
 
   function params() { return new URLSearchParams(window.location.search); }
@@ -272,6 +294,7 @@
     launchLabel: launchLabel,
     coverInto: coverInto,
     playHref: playHref,
+    lightbox: lightbox,
     toast: toast,
     formatDuration: formatDuration,
     formatWhen: formatWhen,

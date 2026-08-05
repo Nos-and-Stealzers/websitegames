@@ -45,33 +45,98 @@
             return load();
           });
         },
+        /* Open it in the dock rather than navigating away — you can keep
+           browsing, or keep playing, with the conversation alongside. */
         message: function (u) {
+          if (window.ChatDock) return window.ChatDock.openWith(u.username);
           return API.openThread(u.username).then(function (res) {
             window.location.href = "messages.html?thread=" + res.threadId;
           });
         }
       };
 
-      /* ---- search ---- */
+      /* ---- your code ---- */
+      var codeEl = document.getElementById("my-code");
+
+      function showCode(code) { codeEl.textContent = code || "···-···"; }
+      showCode(window.Session.user.friendCode);
+
+      document.getElementById("copy-code").addEventListener("click", function () {
+        var code = codeEl.textContent;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(code).then(
+            function () { UI.toast("Code copied"); },
+            function () { window.prompt("Your friend code:", code); }
+          );
+        } else {
+          window.prompt("Your friend code:", code);
+        }
+      });
+
+      document.getElementById("new-code").addEventListener("click", function () {
+        if (!window.confirm("Get a new code? The old one stops working immediately.")) return;
+        API.rotateCode().then(function (res) {
+          showCode(res.friendCode);
+          UI.toast("New code issued");
+        }).catch(function (err) { UI.toast(err.message); });
+      });
+
+      /* ---- add someone: one box, username or code ---- */
       var findBox = document.getElementById("find");
       var results = document.getElementById("results");
       var hint = document.getElementById("find-hint");
 
+      function looksLikeCode(v) {
+        return /^[A-Za-z0-9]{3}[- ]?[A-Za-z0-9]{3}$/.test(v.trim());
+      }
+
+      function show(users) {
+        results.innerHTML = "";
+        users.forEach(function (u) {
+          results.appendChild(S.person(u, { actions: S.relationActions(u, handlers) }));
+        });
+      }
+
+      document.getElementById("add-form").addEventListener("submit", function (event) {
+        event.preventDefault();
+        var value = findBox.value.trim();
+        if (!value) return;
+
+        /* A code is exact, so resolve it and show who it belongs to before
+           firing off a request — you should see who you're adding. */
+        if (looksLikeCode(value)) {
+          API.lookupCode(value).then(function (res) {
+            hint.textContent = "Found @" + res.user.username + ".";
+            show([Object.assign(res.user, { relation: res.relation })]);
+          }).catch(function (err) {
+            hint.textContent = err.message;
+            results.innerHTML = "";
+          });
+          return;
+        }
+
+        handlers.add({ username: value.replace(/^@/, "") })
+          .then(function () { findBox.value = ""; results.innerHTML = ""; })
+          .catch(function (err) { hint.textContent = err.message; });
+      });
+
       findBox.addEventListener("input", UI.debounce(function () {
         var q = findBox.value.trim();
+        if (looksLikeCode(q)) {
+          hint.textContent = "Looks like a friend code — press enter to look it up.";
+          results.innerHTML = "";
+          return;
+        }
         if (q.length < 2) {
           results.innerHTML = "";
-          hint.textContent = "Type at least two characters.";
+          hint.textContent = "Start typing to search, or paste a code like ABC-123 and hit enter.";
           return;
         }
         API.searchUsers(q).then(function (res) {
           hint.textContent = res.users.length
             ? res.users.length + " match" + (res.users.length === 1 ? "" : "es")
-            : "Nobody by that name.";
-          results.innerHTML = "";
-          res.users.forEach(function (u) {
-            results.appendChild(S.person(u, { actions: S.relationActions(u, handlers) }));
-          });
+            : "Nobody by that name. If they gave you a code, paste it instead.";
+          show(res.users);
         }).catch(function (err) { hint.textContent = err.message; });
       }, 220));
 

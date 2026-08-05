@@ -69,7 +69,9 @@ app.use("/api", (req, res, next) => {
   next();
 });
 
-app.use(express.json({ limit: "1mb" }));
+/* Images arrive as base64 data URLs, which inflate ~4/3. The route caps the
+   decoded size at 600 KB, so this only has to leave room for that plus JSON. */
+app.use(express.json({ limit: "2mb" }));
 app.use(A.attachUser);
 
 /* ------------------------------------------------------------------ routes */
