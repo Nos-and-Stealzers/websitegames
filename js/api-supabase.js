@@ -21,6 +21,17 @@
   var URL_BASE = String(conf.url || "").replace(/\/+$/, "");
   var ANON = String(conf.anonKey || "");
 
+  /* No fetch means no backend, full stop. Bailing here keeps callers on their
+     normal error path instead of a ReferenceError that would leave
+     Session.ready pending forever and hang every gated page. */
+  if (typeof window.fetch !== "function") {
+    window.API = Object.assign({}, window.API, {
+      available: function () { return Promise.resolve(false); },
+      configError: "This browser can't reach the hub's server."
+    });
+    return;
+  }
+
   if (!URL_BASE || !ANON) {
     /* Misconfigured is not the same as absent: say so rather than silently
        falling back to a backend that isn't there. */

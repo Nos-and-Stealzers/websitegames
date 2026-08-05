@@ -49,11 +49,7 @@
                     for local development; on static hosting it finds
                     nothing and quietly settles on "none".
        --------------------------------------------------------------- */
-    /* Stays "auto" until the Supabase client adapter lands — the credentials
-       below are wired and supabase/schema.sql is ready, but flipping this to
-       "supabase" now would just switch accounts off, because nothing yet
-       speaks to Supabase. "auto" keeps the tested Node backend working. */
-    backend: "auto",
+    backend: "supabase",
 
     /* Used when backend === "supabase".
        The anon key is MEANT to be public — row-level security is what
