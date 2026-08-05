@@ -1,0 +1,58 @@
+# Serves the game files from home, with automatic HTTPS.
+#
+# This is the piece GitHub Pages cannot do: games-huge is 3.7 GB and hd_fnaf
+# is 4.2 GB, both well past the 1 GB per-site cap. Serving them yourself has
+# no such limit.
+#
+# Caddy gets a certificate from Let's Encrypt on its own — no certbot, no
+# renewal cron. It needs ports 80 and 443 reachable for that.
+#
+#   caddy run --config selfhost/Caddyfile
+#
+# Change the hostname below to whatever you point at this machine.
+
+games.arcadecampushub.online {
+
+	root * /srv/games
+	encode zstd gzip
+
+	# The hub embeds these in an iframe from another origin, so it must not
+	# be told to refuse framing. Deliberately no X-Frame-Options here.
+	header {
+		-Server
+		X-Content-Type-Options nosniff
+		Referrer-Policy no-referrer-when-downgrade
+	}
+
+	# Game assets are immutable in practice: a new build lands under a new
+	# path. Long cache, and the browser stops re-asking.
+	@assets {
+		path *.png *.jpg *.jpeg *.gif *.webp *.mp3 *.ogg *.wav *.woff2 *.data *.wasm *.unityweb
+	}
+	header @assets Cache-Control "public, max-age=31536000, immutable"
+
+	# HTML changes when you update a game, so let it revalidate.
+	@html path *.html
+	header @html Cache-Control "public, max-age=0, must-revalidate"
+
+	# Unity builds ship pre-compressed payloads that must be labelled, or the
+	# loader rejects them.
+	@br path *.br
+	header @br Content-Encoding br
+	@gz path *.unityweb *.gz
+	header @gz Content-Encoding gzip
+
+	file_server browse
+	log {
+		output file /var/log/caddy/games.log
+		format console
+	}
+}
+
+# Optional: the Node backend, if you'd rather run it than use Supabase.
+# Delete this block if Supabase is doing the job.
+#
+# api.arcadecampushub.online {
+# 	reverse_proxy 127.0.0.1:8787
+# 	header -Server
+# }
