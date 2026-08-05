@@ -112,17 +112,28 @@
     aside.appendChild(nav);
 
     var foot = el("div", "rail-foot");
+
     var row = el("div", "row");
     var dice = el("button", "btn", "⇢ Random");
     dice.type = "button";
+    dice.title = "Play something at random";
     dice.addEventListener("click", playRandom);
+
     var gear = el("button", "btn btn-sq", "⚙");
     gear.type = "button";
-    gear.setAttribute("aria-label", "Settings");
-    gear.addEventListener("click", openSettings);
+    gear.title = "Quick settings";
+    gear.setAttribute("aria-label", "Quick settings");
+    gear.setAttribute("aria-expanded", "false");
+    gear.addEventListener("click", function () { toggleQuick(gear); });
+
     row.appendChild(dice);
     row.appendChild(gear);
     foot.appendChild(row);
+
+    var quick = el("div", "quick");
+    quick.id = "rail-quick";
+    quick.hidden = true;
+    foot.appendChild(quick);
 
     var account = el("div");
     account.id = "rail-account";
@@ -339,6 +350,93 @@
     scrim.hidden = !open;
     var burger = document.querySelector(".topbar .btn");
     if (burger) burger.setAttribute("aria-expanded", open ? "true" : "false");
+  }
+
+  /* ------------------------------------------------------- quick settings */
+
+  /* The gear used to open the same modal as the full Settings page, which was
+     both redundant and slower than just going there. It is now an inline
+     panel with the three things people actually change often — skin, text
+     size, motion — and a link to the rest. */
+  function toggleQuick(gear) {
+    var panel = document.getElementById("rail-quick");
+    if (!panel) return;
+
+    var open = panel.hidden;
+    panel.hidden = !open;
+    gear.setAttribute("aria-expanded", open ? "true" : "false");
+    if (!open) return;
+
+    panel.innerHTML = "";
+    var s = window.Store.settings();
+
+    /* --- skins --- */
+    panel.appendChild(el("span", "label", "Skin"));
+    var swatches = el("div", "quick-skins");
+    SITE.skins.forEach(function (skin) {
+      var b = el("button", "quick-skin");
+      b.type = "button";
+      b.title = skin.label;
+      b.setAttribute("aria-label", skin.label);
+      b.setAttribute("aria-pressed", s.skin === skin.id ? "true" : "false");
+      b.style.background = "linear-gradient(135deg," + skin.chips[0] + " 55%," +
+                           skin.chips[1] + " 55%)";
+      b.addEventListener("click", function () {
+        window.Store.setSetting("skin", skin.id);
+        document.documentElement.setAttribute("data-skin", skin.id);
+        swatches.querySelectorAll(".quick-skin").forEach(function (n) {
+          n.setAttribute("aria-pressed", n === b ? "true" : "false");
+        });
+      });
+      swatches.appendChild(b);
+    });
+    panel.appendChild(swatches);
+
+    /* --- text size --- */
+    panel.appendChild(el("span", "label", "Text"));
+    var sizes = el("div", "quick-seg");
+    [["normal", "A"], ["large", "A"], ["huge", "A"]].forEach(function (pair, i) {
+      var b = el("button", "quick-size", pair[1]);
+      b.type = "button";
+      b.style.fontSize = [0.75, 0.9, 1.1][i] + "rem";
+      b.title = pair[0];
+      b.setAttribute("aria-label", "Text size " + pair[0]);
+      b.setAttribute("aria-pressed", s.textSize === pair[0] ? "true" : "false");
+      b.addEventListener("click", function () {
+        window.Store.setSetting("textSize", pair[0]);
+        document.documentElement.setAttribute("data-text", pair[0]);
+        sizes.querySelectorAll(".quick-size").forEach(function (n) {
+          n.setAttribute("aria-pressed", n === b ? "true" : "false");
+        });
+      });
+      sizes.appendChild(b);
+    });
+    panel.appendChild(sizes);
+
+    /* --- switches --- */
+    [
+      ["motion", "Animations", "data-motion"],
+      ["lite", "Lite mode", "data-lite"]
+    ].forEach(function (spec) {
+      var row = el("label", "quick-row");
+      row.appendChild(el("span", null, spec[1]));
+      var wrap = el("span", "toggle");
+      var input = el("input");
+      input.type = "checkbox";
+      input.checked = !!s[spec[0]];
+      input.addEventListener("change", function () {
+        window.Store.setSetting(spec[0], input.checked);
+        document.documentElement.setAttribute(spec[2], input.checked ? "on" : "off");
+      });
+      wrap.appendChild(input);
+      wrap.appendChild(el("i"));
+      row.appendChild(wrap);
+      panel.appendChild(row);
+    });
+
+    var more = el("a", "quick-more", "All settings →");
+    more.href = "settings.html";
+    panel.appendChild(more);
   }
 
   /* -------------------------------------------------------------- settings */
@@ -607,6 +705,21 @@
         closeFinder(); closeSettings(); toggleRail(false);
         return;
       }
+
+      /* Staff jump to the console with a modifier combo, so it works even
+         while a game is running — the single-key shortcuts deliberately do
+         not. Configurable, because Ctrl+P is the browser's print dialog and
+         some people would rather keep that. */
+      if ((event.ctrlKey || event.metaKey) && !event.altKey) {
+        var combo = (window.Store.settings().adminKey || "p").toLowerCase();
+        if (combo && event.key.toLowerCase() === combo &&
+            window.Session && window.Session.isStaff()) {
+          event.preventDefault();
+          window.location.href = "admin.html";
+        }
+        return;
+      }
+
       if (event.metaKey || event.ctrlKey || event.altKey) return;
       if (typing(event.target)) return;
       if (!window.Store.settings().shortcuts) return;

@@ -3,6 +3,10 @@
 (function () {
   "use strict";
 
+  /* Mirrors the server's ordering in db.js. The server is still the authority
+     — this only decides what the interface bothers to show. */
+  var RANK = { user: 0, mod: 1, admin: 2, owner: 3 };
+
   var user = null;
   var backend = false;
   var badges = { messages: 0, requests: 0, notifications: 0 };
@@ -91,8 +95,8 @@
     });
   }
 
-  function signup(username, password, displayName) {
-    return window.API.signup(username, password, displayName).then(function (res) {
+  function signup(username, password, displayName, acceptedTerms) {
+    return window.API.signup(username, password, displayName, acceptedTerms).then(function (res) {
       setUser(res.user);
       /* Everything played before signing up comes along. */
       return pushSave().then(function () {
@@ -128,8 +132,13 @@
     get user() { return user; },
     get backend() { return backend; },
     get badges() { return badges; },
-    isStaff: function () { return !!user && (user.role === "admin" || user.role === "mod"); },
-    isAdmin: function () { return !!user && user.role === "admin"; },
+    /* Ranked, not string-matched — adding a rank shouldn't mean hunting for
+       every `=== "admin"` in the client. */
+    rank: function () { return RANK[user && user.role] || 0; },
+    isStaff: function () { return Session.rank() >= RANK.mod; },
+    isAdmin: function () { return Session.rank() >= RANK.admin; },
+    isOwner: function () { return Session.rank() >= RANK.owner; },
+    outranks: function (role) { return Session.rank() > (RANK[role] || 0); },
     login: login,
     signup: signup,
     logout: logout,

@@ -66,9 +66,23 @@
         </div>
 
         <p class="carry tiny dimmer" id="carry"></p>
+
+        <label class="consent" for="accept">
+          <input type="checkbox" id="accept">
+          <span>
+            I've read and agree to the
+            <a href="terms.html" target="_blank" rel="noopener">Terms of Use</a> and the
+            <a href="privacy.html" target="_blank" rel="noopener">Privacy notice</a>.
+            <span class="tiny dimmer" style="display:block;margin-top:0.25rem">
+              Both are short and in plain language. The important one:
+              <b>there is no password reset</b>, because no email is collected.
+            </span>
+          </span>
+        </label>
+
         <p class="form-error" id="error" hidden></p>
 
-        <button class="btn btn-cta" type="submit" id="submit" style="width:100%">Create account</button>
+        <button class="btn btn-cta" type="submit" id="submit" style="width:100%" disabled>Create account</button>
 
         <p class="tiny dimmer" style="margin:1rem 0 0">
           Already have one? <a href="login.html">Sign in</a>.

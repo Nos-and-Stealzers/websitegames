@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en" data-skin="noir" data-lite="off">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Privacy — Arcade Campus Hub</title>
+  <meta name="description" content="Exactly what Arcade Campus Hub stores, where it goes, and how to get rid of it.">
+  <meta name="theme-color" content="#0c0d10">
+  <meta name="robots" content="index,follow">
+  <link rel="icon" type="image/svg+xml" href="assets/icon.svg">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/theme-boot.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div data-shell="chrome"></div>
+
+  <main class="main" id="main">
+    <header class="page-head">
+      <span class="label">Privacy</span>
+      <h1>What's stored, and where it goes</h1>
+      <div class="readout">
+        <span>version <b>2026-08-05</b></span>
+        <span>ad trackers <b>none</b></span>
+        <span>analytics <b>none</b></span>
+        <span>sold to anyone <b>never</b></span>
+      </div>
+    </header>
+
+    <div class="prose">
+      <h2>Without an account</h2>
+      <p>
+        Nothing leaves your browser and no cookie is set. Pins, history, ratings,
+        playtime and your skin sit in this browser's <code>localStorage</code>
+        under the <code>ach:</code> prefix. Clearing site data erases all of it.
+      </p>
+
+      <h2>With an account</h2>
+      <p>Stored on the hub's own server, nowhere else:</p>
+      <ul>
+        <li><b>Username, display name, bio</b> — what you typed.</li>
+        <li><b>Password</b> — as a salted scrypt hash. The original is never stored
+            and cannot be recovered, which is why there's no reset.</li>
+        <li><b>No email address.</b> None is asked for.</li>
+        <li><b>Your save</b> — pins, history, ratings, playtime, so it follows you
+            between devices.</li>
+        <li><b>Game progress</b> — a copy of what the games themselves save, if you
+            leave that switched on in <a href="settings.html">Settings</a>.</li>
+        <li><b>Friends, messages and images</b> — until you or the sender delete them.</li>
+        <li><b>Sign-in records</b> — time, IP address and browser string, so staff can
+            see an account being attacked. This is the one thing kept that you didn't
+            type. It is visible to staff only.</li>
+        <li><b>What you're playing</b> — the current title, shown to staff on the live
+            view, and to friends only if you leave activity sharing on. It clears when
+            you stop.</li>
+        <li><b>Terms agreement</b> — which version, and when.</li>
+      </ul>
+
+      <h2>Cookies</h2>
+      <p>
+        Exactly one, and only once signed in: a session token, <code>HttpOnly</code>
+        and <code>SameSite=Lax</code>. It identifies your session and nothing else.
+        There are no advertising or analytics cookies anywhere on the site.
+      </p>
+
+      <h2>Who can see what</h2>
+      <ul>
+        <li><b>Messages</b> — the people in the conversation, plus moderators if one is
+            reported. Treat it as a school notice board, not a private channel.</li>
+        <li><b>Your activity</b> — friends only, and only if you leave it on.</li>
+        <li><b>Your friend code</b> — nobody, until you share it.</li>
+        <li><b>Staff</b> — can see accounts, sign-in records, reports and what people
+            are playing. Staff actions are written to an audit log that other staff
+            can read.</li>
+      </ul>
+
+      <h2>Third parties</h2>
+      <ul>
+        <li><b>The games</b> load from their own hosts and may store their own data on
+            their own origins. What each game does is up to that game.</li>
+        <li>Nothing is sent to advertisers, analytics services or data brokers. There
+            are none.</li>
+      </ul>
+
+      <h2>Getting rid of it</h2>
+      <ul>
+        <li><b>Settings → Export</b> gives you a JSON copy of everything you've saved.</li>
+        <li><b>Settings → Wipe this device</b> clears the local half.</li>
+        <li><b>Settings → Delete my account</b> removes your profile, friendships,
+            messages, images and synced saves. It is immediate and cannot be undone.</li>
+      </ul>
+
+      <h2>Children</h2>
+      <p>
+        This is aimed at school-age players and collects no email, no real name and
+        no location. If you're a parent or teacher and want an account removed,
+        message through <a href="feedback.html">feedback</a> and it will be.
+      </p>
+
+      <h2>Being straight with you</h2>
+      <p>
+        This is a hobby project run by one person, not an audited company. It is
+        built carefully — passwords hashed, permissions enforced on the server, no
+        trackers — but it has not been security reviewed by anyone else. Don't put
+        anything here you'd be hurt by losing or having read.
+      </p>
+
+      <p style="margin-top:2rem">
+        <a class="btn btn-cta" href="terms.html">Read the terms</a>
+        <a class="btn" href="signup.html">Back to signing up</a>
+      </p>
+    </div>
+
+    <div data-shell="foot"></div>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="data/games.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/catalog.js"></script>
+  <script src="js/art.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/api-supabase.js"></script>
+  <script src="js/session.js"></script>
+  <script src="js/capture.js"></script>
+  <script src="js/chat-dock.js"></script>
+  <script src="js/game-saves.js"></script>
+  <script src="js/shell.js"></script>
+</body>
+</html>

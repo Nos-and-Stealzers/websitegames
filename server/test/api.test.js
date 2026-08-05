@@ -87,34 +87,34 @@ function client() {
   /* ------------------------------------------------------------ signup */
   group("signup & validation");
   {
-    let r = await admin.post("/api/auth/signup", { username: "owner", password: "hunter2pass" });
+    let r = await admin.post("/api/auth/signup", { username: "owner", password: "hunter2pass", acceptedTerms: true });
     ok("first account created", r.status === 201, "status " + r.status);
     ok("first account is admin", r.data.user.role === "admin");
     ok("no password material leaked", !JSON.stringify(r.data).match(/pass_hash|pass_salt/));
 
-    r = await alice.post("/api/auth/signup", { username: "alice", password: "wonderland1" });
+    r = await alice.post("/api/auth/signup", { username: "alice", password: "wonderland1", acceptedTerms: true });
     ok("second account created", r.status === 201);
     ok("second account is plain user", r.data.user.role === "user");
 
-    r = await bob.post("/api/auth/signup", { username: "bob", password: "builder123" });
+    r = await bob.post("/api/auth/signup", { username: "bob", password: "builder123", acceptedTerms: true });
     ok("third account created", r.status === 201);
 
-    r = await anon.post("/api/auth/signup", { username: "alice", password: "different1" });
+    r = await anon.post("/api/auth/signup", { username: "alice", password: "different1", acceptedTerms: true });
     ok("duplicate username rejected", r.status === 409);
 
-    r = await anon.post("/api/auth/signup", { username: "ok", password: "longenough1" });
+    r = await anon.post("/api/auth/signup", { username: "ok", password: "longenough1", acceptedTerms: true });
     ok("short username rejected", r.status === 400);
 
-    r = await anon.post("/api/auth/signup", { username: "9lives", password: "longenough1" });
+    r = await anon.post("/api/auth/signup", { username: "9lives", password: "longenough1", acceptedTerms: true });
     ok("username must start with a letter", r.status === 400);
 
-    r = await anon.post("/api/auth/signup", { username: "admin", password: "longenough1" });
+    r = await anon.post("/api/auth/signup", { username: "admin", password: "longenough1", acceptedTerms: true });
     ok("reserved username rejected", r.status === 400);
 
-    r = await anon.post("/api/auth/signup", { username: "shorty", password: "abc" });
+    r = await anon.post("/api/auth/signup", { username: "shorty", password: "abc", acceptedTerms: true });
     ok("short password rejected", r.status === 400);
 
-    r = await anon.post("/api/auth/signup", { username: "lettersonly", password: "abcdefghij" });
+    r = await anon.post("/api/auth/signup", { username: "lettersonly", password: "abcdefghij", acceptedTerms: true });
     ok("password needs a digit", r.status === 400);
   }
 
@@ -122,13 +122,13 @@ function client() {
   group("login & sessions");
   {
     const c = client();
-    let r = await c.post("/api/auth/login", { username: "alice", password: "nope" });
+    let r = await c.post("/api/auth/login", { username: "alice", password: "nope", acceptedTerms: true });
     ok("wrong password rejected", r.status === 401);
 
-    r = await c.post("/api/auth/login", { username: "ghost", password: "whatever1" });
+    r = await c.post("/api/auth/login", { username: "ghost", password: "whatever1", acceptedTerms: true });
     ok("unknown user gives same error", r.status === 401 && r.data.error === "Wrong username or password.");
 
-    r = await c.post("/api/auth/login", { username: "ALICE", password: "wonderland1" });
+    r = await c.post("/api/auth/login", { username: "ALICE", password: "wonderland1", acceptedTerms: true });
     ok("login is case-insensitive", r.status === 200);
 
     r = await c.get("/api/auth/me");
@@ -387,7 +387,7 @@ function client() {
 
     /* Adding by code goes through the same request route as by username. */
     carol = client();
-    await carol.post("/api/auth/signup", { username: "carol", password: "carolpass1" });
+    await carol.post("/api/auth/signup", { username: "carol", password: "carolpass1", acceptedTerms: true });
     r = await carol.post("/api/friends/request", { code: aliceCode });
     ok("friend request by code works", r.status === 201, JSON.stringify(r.data));
 
@@ -396,7 +396,7 @@ function client() {
 
     /* A code pasted into the username box should still resolve. */
     dave = client();
-    await dave.post("/api/auth/signup", { username: "dave", password: "davepass12" });
+    await dave.post("/api/auth/signup", { username: "dave", password: "davepass12", acceptedTerms: true });
     r = await dave.post("/api/friends/request", { username: aliceCode });
     ok("code pasted into the username box resolves", r.status === 201, JSON.stringify(r.data));
 
@@ -768,11 +768,11 @@ function client() {
     ok("bob suspended", r.status === 200);
     r = await bob.get("/api/friends");
     ok("suspension kills the live session", r.status === 401);
-    r = await bob.post("/api/auth/login", { username: "bob", password: "builder123" });
+    r = await bob.post("/api/auth/login", { username: "bob", password: "builder123", acceptedTerms: true });
     ok("suspended account cannot log back in", r.status === 403);
 
     await admin.patch(`/api/admin/users/${bobRow.id}`, { state: "active" });
-    r = await bob.post("/api/auth/login", { username: "bob", password: "builder123" });
+    r = await bob.post("/api/auth/login", { username: "bob", password: "builder123", acceptedTerms: true });
     ok("reinstated account can log in", r.status === 200);
 
     r = await admin.get("/api/admin/audit");
@@ -782,6 +782,113 @@ function client() {
     const feed = (await bob.get("/api/notifications")).data.notifications;
     ok("promotion notified the user", feed.some((n) => n.kind === "role"));
     ok("suspension notified the user", feed.some((n) => n.kind === "state"));
+  }
+
+  /* ----------------------------------------------------------- terms */
+  group("terms acceptance");
+  {
+    let r = await client().post("/api/auth/signup",
+      { username: "noterms", password: "validpass1" });
+    ok("signup without consent refused", r.status === 400, JSON.stringify(r.data));
+
+    r = await client().post("/api/auth/signup",
+      { username: "noterms", password: "validpass1", acceptedTerms: false });
+    ok("explicit false refused", r.status === 400);
+
+    r = await client().post("/api/auth/signup",
+      { username: "noterms", password: "validpass1", acceptedTerms: "yes" });
+    ok("a truthy non-true is refused", r.status === 400);
+
+    const c = client();
+    await c.post("/api/auth/signup",
+      { username: "agreed", password: "validpass1", acceptedTerms: true });
+    r = await c.get("/api/auth/me");
+    ok("accepted version recorded", !!r.data.user.termsVersion, r.data.user.termsVersion);
+    ok("acceptance timestamped", r.data.user.termsAt > 0);
+  }
+
+  /* ------------------------------------------------------------ owner */
+  group("owner rank");
+  {
+    /* The configured owner name claims the rank whenever it signs up, not
+       just when it is first. */
+    const own = client();
+    let r = await own.post("/api/auth/signup",
+      { username: "Stealzers", password: "ownerpass1", acceptedTerms: true });
+    ok("owner username gets owner rank", r.data.user.role === "owner",
+       r.data.user && r.data.user.role);
+    ok("owner reports as staff", r.data.user.isStaff === true);
+    ok("owner outranks admin", r.data.user.rank === 3);
+
+    const ownerId = (await admin.get("/api/admin/users")).data.users
+      .find((u) => u.username === "Stealzers").id;
+
+    /* This is the whole point of the rank: an admin cannot touch it. */
+    r = await admin.patch(`/api/admin/users/${ownerId}`, { role: "user" });
+    ok("admin cannot demote the owner", r.status === 403, JSON.stringify(r.data));
+    r = await admin.patch(`/api/admin/users/${ownerId}`, { state: "suspended" });
+    ok("admin cannot suspend the owner", r.status === 403);
+    r = await admin.del(`/api/admin/users/${ownerId}`);
+    ok("admin cannot delete the owner", r.status === 403);
+
+    r = await own.get("/api/auth/me");
+    ok("owner is still active after all that", r.data.user.state === "active");
+    ok("owner still owner", r.data.user.role === "owner");
+
+    /* Nobody can mint another owner. */
+    const bobId = (await admin.get("/api/admin/users")).data.users
+      .find((u) => u.username === "bob").id;
+    r = await admin.patch(`/api/admin/users/${bobId}`, { role: "owner" });
+    ok("owner cannot be granted through the API", r.status === 403);
+
+    /* And an admin cannot promote anyone to their own rank. */
+    r = await admin.patch(`/api/admin/users/${bobId}`, { role: "admin" });
+    ok("admin cannot promote to admin", r.status === 403, JSON.stringify(r.data));
+    r = await admin.patch(`/api/admin/users/${bobId}`, { role: "mod" });
+    ok("admin can promote below itself", r.status === 200);
+
+    /* A mod must not be able to act on peers or above. */
+    r = await bob.patch(`/api/admin/users/${bobId}`, { role: "user" });
+    ok("mod cannot change roles at all", r.status === 403);
+
+    /* The owner can do what admins cannot. */
+    r = await own.patch(`/api/admin/users/${bobId}`, { role: "admin" });
+    ok("owner can promote to admin", r.status === 200, JSON.stringify(r.data));
+    r = await own.patch(`/api/admin/users/${bobId}`, { role: "user" });
+    ok("owner can demote an admin", r.status === 200);
+  }
+
+  /* ---------------------------------------------------- presence & logins */
+  group("presence and login history");
+  {
+    let r = await alice.post("/api/users/me/playing", { gameId: "huge-bad-ice-cream" });
+    ok("playing recorded", r.status === 200);
+
+    r = await admin.get("/api/admin/live");
+    ok("live view lists online users", r.data.online > 0, r.data.online + " online");
+    const entry = r.data.users.find((u) => u.username === "alice");
+    ok("shows what alice is playing", entry && entry.game === "huge-bad-ice-cream",
+       entry && entry.game);
+    ok("aggregates by game", r.data.games.some((g) => g.id === "huge-bad-ice-cream"));
+
+    r = await alice.post("/api/users/me/playing", { gameId: "" });
+    r = await admin.get("/api/admin/live");
+    const cleared = r.data.users.find((u) => u.username === "alice");
+    ok("clears when you stop", cleared && cleared.game === null);
+
+    r = await alice.get("/api/admin/live");
+    ok("live view is staff only", r.status === 403);
+
+    r = await admin.get("/api/admin/logins");
+    ok("login history returned", r.data.logins.length > 0, r.data.logins.length + " rows");
+    ok("successful logins recorded", r.data.logins.some((l) => l.outcome === "ok"));
+    ok("failed attempts recorded too",
+       r.data.logins.some((l) => l.outcome === "failed"),
+       "matters for spotting an account being attacked");
+    ok("logins carry a browser string", r.data.logins.every((l) => typeof l.agent === "string"));
+
+    r = await alice.get("/api/admin/logins");
+    ok("login history is staff only", r.status === 403);
   }
 
   /* ---------------------------------------------------------- password */
@@ -795,7 +902,7 @@ function client() {
 
     /* A second signed-in device for alice, which must be cut loose on change. */
     const other = client();
-    await other.post("/api/auth/login", { username: "alice", password: "wonderland1" });
+    await other.post("/api/auth/login", { username: "alice", password: "wonderland1", acceptedTerms: true });
     ok("second device signed in", (await other.get("/api/auth/me")).data.user !== null);
 
     r = await alice.post("/api/auth/password", { current: "wonderland1", next: "newpass123" });
@@ -803,9 +910,9 @@ function client() {
     ok("other sessions revoked", (await other.get("/api/auth/me")).data.user === null);
     ok("current session survives", (await alice.get("/api/auth/me")).data.user !== null);
 
-    r = await client().post("/api/auth/login", { username: "alice", password: "wonderland1" });
+    r = await client().post("/api/auth/login", { username: "alice", password: "wonderland1", acceptedTerms: true });
     ok("old password no longer works", r.status === 401);
-    r = await client().post("/api/auth/login", { username: "alice", password: "newpass123" });
+    r = await client().post("/api/auth/login", { username: "alice", password: "newpass123", acceptedTerms: true });
     ok("new password works", r.status === 200);
   }
 
@@ -888,7 +995,7 @@ function client() {
     res = await fetch(base2 + "/api/auth/signup", {
       method: "POST",
       headers: { "Content-Type": "application/json", Origin: good },
-      body: JSON.stringify({ username: "corsuser", password: "crossorigin1" })
+      body: JSON.stringify({ username: "corsuser", password: "crossorigin1", acceptedTerms: true })
     });
     ok("cross-origin signup accepted", res.status === 201, "status " + res.status);
 
@@ -944,12 +1051,12 @@ function client() {
   group("account deletion");
   {
     const doomed = client();
-    await doomed.post("/api/auth/signup", { username: "tempuser", password: "temporary1" });
+    await doomed.post("/api/auth/signup", { username: "tempuser", password: "temporary1", acceptedTerms: true });
     let r = await doomed.del("/api/users/me", { confirm: "wrong" });
     ok("wrong confirmation rejected", r.status === 400);
     r = await doomed.del("/api/users/me", { confirm: "tempuser" });
     ok("account deleted", r.status === 200);
-    r = await client().post("/api/auth/login", { username: "tempuser", password: "temporary1" });
+    r = await client().post("/api/auth/login", { username: "tempuser", password: "temporary1", acceptedTerms: true });
     ok("deleted account cannot log in", r.status === 401);
   }
 

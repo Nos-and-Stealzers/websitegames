@@ -56,9 +56,16 @@
     function fail(message) {
       errorBox.textContent = message;
       errorBox.hidden = false;
-      submit.disabled = false;
+      submit.disabled = !document.getElementById("accept").checked;
       submit.textContent = "Create account";
     }
+
+    /* The submit button stays disabled until the box is ticked, so agreement
+       is a deliberate act rather than something buried under a button. */
+    var accept = document.getElementById("accept");
+    accept.addEventListener("change", function () {
+      submit.disabled = !accept.checked;
+    });
 
     form.addEventListener("submit", function (event) {
       event.preventDefault();
@@ -69,6 +76,7 @@
       var password = pass.value;
       var confirm = document.getElementById("confirm").value;
 
+      if (!accept.checked) return fail("You need to accept the terms to sign up.");
       if (password !== confirm) return fail("The two passwords don't match.");
       if (password.length < 8) return fail("Password must be at least 8 characters.");
       if (!/[a-z]/i.test(password) || !/[0-9]/.test(password)) {
@@ -78,7 +86,7 @@
       submit.disabled = true;
       submit.textContent = "Creating…";
 
-      window.Session.signup(username, password, display)
+      window.Session.signup(username, password, display, true)
         .then(function (res) {
           window.UI.toast(res.firstAccount ? "Admin account created" : "Welcome, " + username);
           window.location.href = res.firstAccount ? "admin.html" : "index.html";

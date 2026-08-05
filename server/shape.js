@@ -67,11 +67,17 @@ function publicUser(row) {
 
 /* Extra fields only the account owner gets. The friend code is deliberately
    private — it's a share-with-who-you-choose handle, not a public one. */
+const RANKS = { user: 0, mod: 1, admin: 2, owner: 3 };
+
 function privateUser(row) {
   return Object.assign(publicUser(row), {
     acceptsDms: !!row.accepts_dms,
     showActivity: !!row.show_activity,
-    friendCode: row.friend_code || ""
+    friendCode: row.friend_code || "",
+    rank: RANKS[row.role] || 0,
+    isStaff: (RANKS[row.role] || 0) >= RANKS.mod,
+    termsVersion: row.terms_version || "",
+    termsAt: row.terms_at || 0
   });
 }
 

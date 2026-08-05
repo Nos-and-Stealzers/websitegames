@@ -84,10 +84,20 @@
     login: function (username, password) {
       return request("POST", "/auth/login", { username: username, password: password });
     },
-    signup: function (username, password, displayName) {
-      return request("POST", "/auth/signup",
-        { username: username, password: password, displayName: displayName });
+    signup: function (username, password, displayName, acceptedTerms) {
+      return request("POST", "/auth/signup", {
+        username: username, password: password, displayName: displayName,
+        acceptedTerms: acceptedTerms === true
+      });
     },
+
+    /* Presence, for the staff live view. Failures are ignored by callers —
+       it is telemetry, not something to interrupt play over. */
+    setPlaying: function (gameId) {
+      return request("POST", "/users/me/playing", { gameId: gameId || "" });
+    },
+    adminLive: function () { return request("GET", "/admin/live"); },
+    adminLogins: function () { return request("GET", "/admin/logins"); },
     logout: function () { return request("POST", "/auth/logout"); },
     changePassword: function (current, next) {
       return request("POST", "/auth/password", { current: current, next: next });

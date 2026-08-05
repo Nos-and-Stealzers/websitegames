@@ -2,7 +2,7 @@
 "use strict";
 
 const express = require("express");
-const { db, audit, freshFriendCode } = require("../db");
+const { db, audit, freshFriendCode, OWNER_USERNAME } = require("../db");
 const A = require("../auth");
 const S = require("../shape");
 
@@ -22,11 +22,22 @@ const loginLimit = A.rateLimit({
   key: (req) => String((req.body && req.body.username) || "").toLowerCase()
 });
 
-/* The very first account created becomes the admin - otherwise a fresh install
-   has no way in. Every later account is a plain user. */
-function nextRole() {
+/* Rank on creation:
+   - the configured owner username always gets `owner`, whenever it signs up
+   - otherwise the very first account is admin, so a fresh install has a way in
+   - everyone else is a plain user */
+function nextRole(username) {
+  if (username.toLowerCase() === OWNER_USERNAME) return "owner";
   const { n } = db.prepare("SELECT COUNT(*) AS n FROM users").get();
   return n === 0 ? "admin" : "user";
+}
+
+const TERMS_VERSION = String(process.env.TERMS_VERSION || "2026-08-05");
+
+function recordLogin(userId, req, outcome) {
+  db.prepare("INSERT INTO logins (user_id, at, ip, agent, outcome) VALUES (?,?,?,?,?)")
+    .run(userId, Date.now(), String(req.ip || "").slice(0, 60),
+         String(req.headers["user-agent"] || "").slice(0, 200), outcome);
 }
 
 router.post("/signup", signupLimit, (req, res, next) => {
@@ -37,25 +48,37 @@ router.post("/signup", signupLimit, (req, res, next) => {
       ? S.str(req.body.displayName, { field: "Display name", max: 32 })
       : name;
 
+    /* Terms have to be agreed to, and which version is recorded — so a later
+       revision can ask again rather than assuming old consent carries. */
+    if (req.body.acceptedTerms !== true) {
+      throw S.fail("You need to accept the terms and privacy notice to sign up.");
+    }
+
     const taken = db.prepare("SELECT 1 FROM users WHERE username_lower = ?").get(name.toLowerCase());
     if (taken) return res.status(409).json({ error: "That username is taken." });
 
     const { salt, hash } = A.makePassword(pass);
-    const role = nextRole();
+    const role = nextRole(name);
     const now = Date.now();
 
     const info = db.prepare(
       `INSERT INTO users (username, username_lower, display_name, pass_hash, pass_salt,
-                          role, created_at, last_seen, friend_code)
-       VALUES (?,?,?,?,?,?,?,?,?)`
-    ).run(name, name.toLowerCase(), display, hash, salt, role, now, now, freshFriendCode());
+                          role, created_at, last_seen, friend_code,
+                          terms_version, terms_at)
+       VALUES (?,?,?,?,?,?,?,?,?,?,?)`
+    ).run(name, name.toLowerCase(), display, hash, salt, role, now, now,
+          freshFriendCode(), TERMS_VERSION, now);
 
     const token = A.issueSession(info.lastInsertRowid, req.headers["user-agent"]);
     A.setCookie(res, token);
     audit(info.lastInsertRowid, "signup", `${name} as ${role}`);
+    recordLogin(info.lastInsertRowid, req, "ok");
 
     const row = db.prepare("SELECT * FROM users WHERE id = ?").get(info.lastInsertRowid);
-    res.status(201).json({ user: S.privateUser(row), firstAccount: role === "admin" });
+    res.status(201).json({
+      user: S.privateUser(row),
+      firstAccount: role === "admin" || role === "owner"
+    });
   } catch (err) { next(err); }
 });
 
@@ -68,17 +91,22 @@ router.post("/login", loginLimit, (req, res, next) => {
 
     /* Same response either way so the endpoint can't be used to enumerate names. */
     if (!row || !A.checkPassword(pass, row)) {
+      /* A failed attempt against a real account is worth recording — that is
+         what makes the staff login view useful for spotting an attack. */
+      if (row) recordLogin(row.id, req, "failed");
       return res.status(401).json({ error: "Wrong username or password." });
     }
     if (row.state === "suspended") {
+      recordLogin(row.id, req, "suspended");
       return res.status(403).json({ error: "This account is suspended." });
     }
 
     const token = A.issueSession(row.id, req.headers["user-agent"]);
     A.setCookie(res, token);
     db.prepare("UPDATE users SET last_seen = ? WHERE id = ?").run(Date.now(), row.id);
+    recordLogin(row.id, req, "ok");
 
-    res.json({ user: S.privateUser(row) });
+    res.json({ user: S.privateUser(row), termsVersion: TERMS_VERSION });
   } catch (err) { next(err); }
 });
 

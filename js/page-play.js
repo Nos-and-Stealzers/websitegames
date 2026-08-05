@@ -59,6 +59,23 @@
 
     window.Session.ready.then(watchProgress);
     document.addEventListener("session:change", watchProgress);
+
+    /* Presence: tell the server what's being played, and clear it on the way
+       out so the staff live view doesn't show ghosts. Best-effort — a failure
+       here must never interrupt play. */
+    function announcePlaying(id) {
+      if (!window.Session.user) return;
+      window.API.setPlaying(id).catch(function () {});
+    }
+    window.Session.ready.then(function (state) {
+      if (state.user && frame) announcePlaying(game.id);
+    });
+    window.addEventListener("beforeunload", function () { announcePlaying(""); });
+    document.addEventListener("visibilitychange", function () {
+      if (document.hidden) announcePlaying("");
+      else if (frame) announcePlaying(game.id);
+    });
+    window.playAnnounce = announcePlaying;
   }
 
   /* --------------------------------------------------------------- details */
@@ -133,6 +150,7 @@
     /* Tells the shell to stand down its single-key shortcuts — R would
        navigate away from a game in progress, K would cover it. */
     document.body.dataset.gameActive = "1";
+    if (window.playAnnounce) window.playAnnounce(game.id);
 
     curtain().hidden = true;
     window.Store.recordPlay(game.id);

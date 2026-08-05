@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS users (
   bio            TEXT    NOT NULL DEFAULT '',
   pass_hash      TEXT    NOT NULL,
   pass_salt      TEXT    NOT NULL,
-  role           TEXT    NOT NULL DEFAULT 'user',      -- user | mod | admin
+  role           TEXT    NOT NULL DEFAULT 'user',      -- user | mod | admin | owner
   state          TEXT    NOT NULL DEFAULT 'active',    -- active | suspended
   accepts_dms    INTEGER NOT NULL DEFAULT 1,           -- 0 = friends only
   show_activity  INTEGER NOT NULL DEFAULT 1,
@@ -162,6 +162,41 @@ function freshFriendCode() {
 addColumn("users", "friend_code", "TEXT");
 db.exec("CREATE UNIQUE INDEX IF NOT EXISTS idx_users_code ON users(friend_code)");
 
+/* Terms acceptance, recorded per account with the version that was agreed to,
+   so a later revision can ask again rather than assuming consent carries. */
+addColumn("users", "terms_version", "TEXT NOT NULL DEFAULT ''");
+addColumn("users", "terms_at", "INTEGER NOT NULL DEFAULT 0");
+
+/* Presence: what someone is playing right now, for the staff live view. */
+addColumn("users", "current_game", "TEXT NOT NULL DEFAULT ''");
+addColumn("users", "current_since", "INTEGER NOT NULL DEFAULT 0");
+
+/* Sign-in history, so staff can see logins rather than guess from last_seen. */
+db.exec(`
+CREATE TABLE IF NOT EXISTS logins (
+  id         INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id    INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  at         INTEGER NOT NULL,
+  ip         TEXT NOT NULL DEFAULT '',
+  agent      TEXT NOT NULL DEFAULT '',
+  outcome    TEXT NOT NULL DEFAULT 'ok'      -- ok | failed
+);
+CREATE INDEX IF NOT EXISTS idx_logins_user ON logins(user_id, id DESC);
+`);
+
+/* The owner rank sits above admin and is deliberately untouchable: it exists
+   so there is always one account that cannot be locked out by a compromised
+   or careless admin. Set ARCADE_OWNER to claim it on signup. */
+const OWNER_USERNAME = String(process.env.ARCADE_OWNER || "Stealzers").toLowerCase();
+
+/* If that account already exists as something else, promote it once. */
+(function claimOwner() {
+  const row = db.prepare("SELECT id, role FROM users WHERE username_lower = ?").get(OWNER_USERNAME);
+  if (row && row.role !== "owner") {
+    db.prepare("UPDATE users SET role = 'owner' WHERE id = ?").run(row.id);
+  }
+})();
+
 /* Groups. Membership lives in thread_members for every thread, group or
    not, so there is exactly one membership check in the codebase. a_id/b_id
    stay on threads purely to keep the one-DM-per-pair unique index working. */
@@ -298,4 +333,16 @@ function audit(actorId, action, detail) {
     .run(actorId || null, action, detail || "", Date.now());
 }
 
-module.exports = { db, audit, FILE, freshFriendCode };
+/* Rank order. Anything comparing authority should go through these rather
+   than testing role strings, so adding a rank doesn't mean hunting for
+   every `=== "admin"` in the codebase. */
+const RANK = { user: 0, mod: 1, admin: 2, owner: 3 };
+
+function rankOf(role) { return RANK[role] || 0; }
+function outranks(a, b) { return rankOf(a) > rankOf(b); }
+function isStaff(role) { return rankOf(role) >= RANK.mod; }
+
+module.exports = {
+  db, audit, FILE, freshFriendCode,
+  OWNER_USERNAME, RANK, rankOf, outranks, isStaff
+};

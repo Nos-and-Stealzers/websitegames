@@ -4,15 +4,15 @@
 "use strict";
 
 const express = require("express");
-const { db, audit } = require("../db");
+const { db, audit, rankOf, outranks } = require("../db");
 const A = require("../auth");
 const S = require("../shape");
 const notify = require("../notify");
 
 const router = express.Router();
 
-const staff = A.requireRole("admin", "mod");
-const adminOnly = A.requireRole("admin");
+const staff = A.requireRole("owner", "admin", "mod");
+const adminOnly = A.requireRole("owner", "admin");
 
 router.get("/overview", staff, (req, res) => {
   const one = (sql, ...args) => Object.values(db.prepare(sql).get(...args))[0];
@@ -71,18 +71,39 @@ router.patch("/users/:id", adminOnly, (req, res, next) => {
     const target = db.prepare("SELECT * FROM users WHERE id = ?").get(Number(req.params.id));
     if (!target) return res.status(404).json({ error: "No such user." });
 
+    /* The rule that makes ranks mean anything: you can only act on someone
+       you outrank. Without it an admin could demote another admin, or a
+       compromised admin account could lock the owner out. */
+    if (target.id !== req.user.id && !outranks(req.user.role, target.role)) {
+      return res.status(403).json({
+        error: target.role === "owner"
+          ? "The owner can't be changed by anyone."
+          : "You can only manage accounts below your own rank."
+      });
+    }
+
     const changes = [];
 
     if (req.body.role !== undefined) {
       const role = String(req.body.role);
-      if (!["user", "mod", "admin"].includes(role)) throw S.fail("Unknown role.");
-      if (target.id === req.user.id && role !== "admin") {
-        return res.status(400).json({ error: "You can't demote yourself." });
+      if (!["user", "mod", "admin", "owner"].includes(role)) throw S.fail("Unknown role.");
+
+      /* Owner is claimed by configuration, not handed out — otherwise the
+         one untouchable account becomes something an admin can mint. */
+      if (role === "owner") {
+        return res.status(403).json({ error: "Owner is set by the server, not granted here." });
       }
-      if (target.role === "admin" && role !== "admin") {
-        const { n } = db.prepare("SELECT COUNT(*) AS n FROM users WHERE role = 'admin'").get();
-        if (n <= 1) return res.status(400).json({ error: "That's the last admin." });
+      if (target.role === "owner") {
+        return res.status(403).json({ error: "The owner's rank can't be changed." });
       }
+      /* Nobody may promote someone to their own rank or above. */
+      if (rankOf(role) >= rankOf(req.user.role)) {
+        return res.status(403).json({ error: "You can't promote anyone to your own rank." });
+      }
+      if (target.id === req.user.id) {
+        return res.status(400).json({ error: "You can't change your own rank." });
+      }
+
       db.prepare("UPDATE users SET role = ? WHERE id = ?").run(role, target.id);
       if (role !== target.role) notify.on.roleChanged(target.id, role, req.user.id);
       changes.push("role=" + role);
@@ -93,6 +114,9 @@ router.patch("/users/:id", adminOnly, (req, res, next) => {
       if (!["active", "suspended"].includes(state)) throw S.fail("Unknown state.");
       if (target.id === req.user.id) {
         return res.status(400).json({ error: "You can't suspend yourself." });
+      }
+      if (target.role === "owner") {
+        return res.status(403).json({ error: "The owner can't be suspended." });
       }
       db.prepare("UPDATE users SET state = ? WHERE id = ?").run(state, target.id);
       if (state !== target.state) notify.on.stateChanged(target.id, state, req.user.id);
@@ -113,11 +137,69 @@ router.delete("/users/:id", adminOnly, (req, res) => {
   const target = db.prepare("SELECT * FROM users WHERE id = ?").get(Number(req.params.id));
   if (!target) return res.status(404).json({ error: "No such user." });
   if (target.id === req.user.id) return res.status(400).json({ error: "You can't delete yourself." });
-  if (target.role === "admin") return res.status(400).json({ error: "Demote them first." });
+  if (target.role === "owner") return res.status(403).json({ error: "The owner can't be deleted." });
+  if (!outranks(req.user.role, target.role)) {
+    return res.status(403).json({ error: "You can only delete accounts below your own rank." });
+  }
 
   db.prepare("DELETE FROM users WHERE id = ?").run(target.id);
   audit(req.user.id, "user-delete", target.username);
   res.json({ ok: true });
+});
+
+/* ---------------------------------------------------------------- live view */
+
+/* Who is here right now and what they are doing. Presence is derived from
+   last_seen rather than a socket, so it survives a refresh and needs no
+   persistent connection. */
+router.get("/live", staff, (req, res) => {
+  const cutoff = Date.now() - S.ONLINE_WINDOW;
+  const rows = db.prepare(
+    `SELECT id, username, display_name, role, state, last_seen, current_game, current_since
+       FROM users WHERE last_seen > ? ORDER BY last_seen DESC LIMIT 200`
+  ).all(cutoff);
+
+  const playing = rows.filter((r) => r.current_game);
+
+  res.json({
+    online: rows.length,
+    playing: playing.length,
+    users: rows.map((r) => ({
+      id: r.id,
+      username: r.username,
+      displayName: r.display_name || r.username,
+      role: r.role,
+      state: r.state,
+      lastSeen: r.last_seen,
+      game: r.current_game || null,
+      since: r.current_since || 0
+    })),
+    /* What is being played, most popular first. */
+    games: Object.entries(
+      playing.reduce((acc, r) => {
+        acc[r.current_game] = (acc[r.current_game] || 0) + 1;
+        return acc;
+      }, {})
+    ).map(([id, n]) => ({ id, players: n })).sort((a, b) => b.players - a.players)
+  });
+});
+
+router.get("/logins", staff, (req, res) => {
+  const rows = db.prepare(
+    `SELECT l.*, u.username FROM logins l
+       LEFT JOIN users u ON u.id = l.user_id
+      ORDER BY l.id DESC LIMIT 200`
+  ).all();
+  res.json({
+    logins: rows.map((r) => ({
+      id: r.id,
+      username: r.username || "(deleted)",
+      at: r.at,
+      ip: r.ip,
+      agent: r.agent,
+      outcome: r.outcome
+    }))
+  });
 });
 
 router.get("/reports", staff, (req, res) => {

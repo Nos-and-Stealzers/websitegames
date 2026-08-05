@@ -82,6 +82,18 @@ router.delete("/users/me", A.requireUser, (req, res, next) => {
   } catch (err) { next(err); }
 });
 
+/* What the signed-in account is playing right now. Called by the player page
+   on start and stop; presence itself is derived from last_seen, which
+   attachUser already keeps fresh. */
+router.post("/users/me/playing", A.requireUser, (req, res, next) => {
+  try {
+    var id = req.body.gameId ? S.str(req.body.gameId, { field: "Game", max: 120 }) : "";
+    db.prepare("UPDATE users SET current_game = ?, current_since = ? WHERE id = ?")
+      .run(id, id ? Date.now() : 0, req.user.id);
+    res.json({ ok: true });
+  } catch (err) { next(err); }
+});
+
 router.get("/users/search", A.requireUser, (req, res) => {
   const q = String(req.query.q || "").trim().toLowerCase();
   if (q.length < 2) return res.json({ users: [] });
