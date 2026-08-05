@@ -34,12 +34,12 @@
         <span class="more dimmer">this device only</span></div>
 
       <div class="panel">
-        <div class="opt">
-          <div>
+        <div class="opt" style="display:block">
+          <div style="margin-bottom:0.8rem">
             <div class="k">Skin</div>
-            <div class="d">Five palettes. Applied instantly, remembered here.</div>
+            <div class="d">Applied the moment you pick one. Saved on this device.</div>
           </div>
-          <div class="skins" id="skins"></div>
+          <div class="skin-gallery" id="skins"></div>
         </div>
 
         <div class="opt">
@@ -91,6 +91,26 @@
           <button class="btn btn-sm btn-flat" type="button" id="wipe-local">Wipe this device</button>
         </div>
         <p class="tiny dimmer" id="sync-state" style="margin:0.8rem 0 0"></p>
+      </div>
+    </section>
+
+    <!-- ============ game progress ============ -->
+    <section class="block" id="game-progress" hidden>
+      <div class="block-head"><h2>Game progress</h2><span class="fill"></span>
+        <span class="more dimmer">every game, not just the hub</span></div>
+      <div class="panel">
+        <p class="tiny dimmer" style="margin:0 0 0.9rem">
+          Games keep their own saves in the browser, on the site that serves them —
+          so they normally stay on one device. Back them up here and they follow
+          your account. Restoring never overwrites newer progress unless you ask it to.
+        </p>
+        <div class="btn-row">
+          <button class="btn btn-sm btn-cta" type="button" id="gs-backup">Back up now</button>
+          <button class="btn btn-sm" type="button" id="gs-restore">Restore here</button>
+          <button class="btn btn-sm btn-flat" type="button" id="gs-force">Restore &amp; overwrite</button>
+        </div>
+        <div class="rows" id="gs-list" style="border:0;margin-top:0.9rem"></div>
+        <p class="tiny dimmer" id="gs-state" style="margin:0.8rem 0 0"></p>
       </div>
     </section>
 
@@ -211,6 +231,7 @@
   <script src="js/social-ui.js"></script>
   <script src="js/capture.js"></script>
   <script src="js/chat-dock.js"></script>
+  <script src="js/game-saves.js"></script>
   <script src="js/shell.js"></script>
   <script src="js/page-settings.js"></script>
 </body>

@@ -226,6 +226,34 @@ CREATE TABLE IF NOT EXISTS thread_members (
 );
 CREATE INDEX IF NOT EXISTS idx_tm_user ON thread_members(user_id);
 
+CREATE TABLE IF NOT EXISTS feedback (
+  id         INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id    INTEGER REFERENCES users(id) ON DELETE SET NULL,
+  kind       TEXT    NOT NULL,          -- bug | idea | game | other
+  subject    TEXT    NOT NULL,
+  body       TEXT    NOT NULL,
+  page       TEXT    NOT NULL DEFAULT '',
+  game_id    TEXT    NOT NULL DEFAULT '',
+  agent      TEXT    NOT NULL DEFAULT '',
+  state      TEXT    NOT NULL DEFAULT 'new',   -- new | triaged | done | declined
+  reply      TEXT    NOT NULL DEFAULT '',
+  created_at INTEGER NOT NULL,
+  updated_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_feedback_state ON feedback(state, id DESC);
+
+-- One row per (account, game host). Holds a snapshot of that origin's
+-- localStorage, which is where third-party games keep their progress.
+CREATE TABLE IF NOT EXISTS game_saves (
+  user_id    INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  host       TEXT    NOT NULL,
+  payload    TEXT    NOT NULL,
+  keys       INTEGER NOT NULL DEFAULT 0,
+  bytes      INTEGER NOT NULL DEFAULT 0,
+  updated_at INTEGER NOT NULL,
+  PRIMARY KEY (user_id, host)
+);
+
 CREATE TABLE IF NOT EXISTS attachments (
   id          INTEGER PRIMARY KEY AUTOINCREMENT,
   uploader_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,

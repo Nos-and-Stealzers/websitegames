@@ -778,6 +778,116 @@
       }).then(function () { return { ok: true }; });
     },
 
+    /* --- feedback --- */
+
+    sendFeedback: function (payload) {
+      var row = {
+        user_id: session ? session.user.id : null,
+        kind: payload.kind,
+        subject: payload.subject,
+        body: payload.body,
+        page: String(payload.page || "").slice(0, 200),
+        game_id: String(payload.gameId || "").slice(0, 120),
+        agent: String(navigator.userAgent || "").slice(0, 200)
+      };
+      return rest("/feedback", { method: "POST", body: row })
+        .then(function () { return { ok: true }; });
+    },
+
+    myFeedback: function () {
+      if (!session) return Promise.resolve({ feedback: [] });
+      return rest("/feedback?select=id,kind,subject,body,state,reply,created_at" +
+                  "&user_id=eq." + session.user.id + "&order=id.desc&limit=50")
+        .then(function (rows) {
+          return {
+            feedback: (rows || []).map(function (f) {
+              return {
+                id: f.id, kind: f.kind, subject: f.subject, body: f.body,
+                state: f.state, reply: f.reply, at: ms(f.created_at)
+              };
+            })
+          };
+        });
+    },
+
+    adminFeedback: function (state) {
+      var want = state || "new";
+      return Promise.all([
+        rest("/feedback?select=*,profiles:user_id(username)&state=eq." + want +
+             "&order=id.desc&limit=200"),
+        /* PostgREST returns the count in a header, so ask per state rather
+           than pulling every row just to length them. */
+        Promise.all(["new", "triaged", "done", "declined"].map(function (s) {
+          return call("/rest/v1/feedback?select=id&state=eq." + s + "&limit=1000")
+            .then(function (rows) { return [s, (rows || []).length]; })
+            .catch(function () { return [s, 0]; });
+        }))
+      ]).then(function (out) {
+        var counts = {};
+        out[1].forEach(function (pair) { counts[pair[0]] = pair[1]; });
+        return {
+          counts: counts,
+          feedback: (out[0] || []).map(function (f) {
+            return {
+              id: f.id, kind: f.kind, subject: f.subject, body: f.body,
+              page: f.page, gameId: f.game_id, agent: f.agent,
+              state: f.state, reply: f.reply,
+              from: f.profiles ? f.profiles.username : "(anonymous)",
+              at: ms(f.created_at)
+            };
+          })
+        };
+      });
+    },
+
+    adminUpdateFeedback: function (id, patch) {
+      var row = {};
+      if (patch.state !== undefined) row.state = patch.state;
+      if (patch.reply !== undefined) row.reply = String(patch.reply).slice(0, 1000);
+      row.updated_at = new Date().toISOString();
+      return rest("/feedback?id=eq." + id, { method: "PATCH", body: row })
+        .then(function () { return { ok: true }; });
+    },
+
+    /* --- third-party game progress --- */
+
+    putGameSave: function (host, payload) {
+      return rpc("put_game_save", { host: host, payload: payload })
+        .then(function (keys) { return { ok: true, keys: keys }; });
+    },
+
+    getGameSave: function (host) {
+      if (!session) return Promise.reject(fail("Signed out.", 401));
+      return rest("/game_saves?select=payload,keys,updated_at&user_id=eq." +
+                  session.user.id + "&host=eq." + encodeURIComponent(host))
+        .then(one)
+        .then(function (row) {
+          return row
+            ? { payload: row.payload || {}, keys: row.keys, updatedAt: ms(row.updated_at) }
+            : { payload: {}, keys: 0, updatedAt: 0 };
+        });
+    },
+
+    listGameSaves: function () {
+      if (!session) return Promise.reject(fail("Signed out.", 401));
+      return rest("/game_saves?select=host,keys,updated_at&user_id=eq." + session.user.id +
+                  "&order=host")
+        .then(function (rows) {
+          return {
+            hosts: (rows || []).map(function (r) {
+              return { host: r.host, keys: r.keys, bytes: 0, updatedAt: ms(r.updated_at) };
+            })
+          };
+        });
+    },
+
+    dropGameSave: function (host) {
+      if (!session) return Promise.reject(fail("Signed out.", 401));
+      return rest("/game_saves?user_id=eq." + session.user.id +
+                  "&host=eq." + encodeURIComponent(host), { method: "DELETE" })
+        .then(function () { return { ok: true }; });
+    },
+
     /* --- admin --- */
 
     /* Both go through RPCs that check is_staff() server-side. Assembling these

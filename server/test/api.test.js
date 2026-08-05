@@ -603,6 +603,116 @@ function client() {
        (await alice.get("/api/notifications")).data.notifications.length === 0);
   }
 
+  /* ---------------------------------------------------------- feedback */
+  group("feedback");
+  {
+    /* Anonymous must work — a broken sign-up is the thing people need to
+       report, and they can't sign in to do it. */
+    let r = await anon.post("/api/feedback", {
+      kind: "bug", subject: "Cannot sign up", body: "The button does nothing at all."
+    });
+    ok("anonymous feedback accepted", r.status === 201, JSON.stringify(r.data));
+
+    r = await bob.post("/api/feedback", {
+      kind: "game", subject: "Add Slope", body: "Please add Slope, everyone plays it.",
+      gameId: "slope", page: "browse.html"
+    });
+    ok("signed-in feedback accepted", r.status === 201);
+
+    r = await bob.post("/api/feedback", { kind: "nonsense", subject: "hi", body: "some detail here" });
+    ok("unknown kind rejected", r.status === 400);
+    r = await bob.post("/api/feedback", { kind: "bug", subject: "x", body: "some detail here" });
+    ok("too-short summary rejected", r.status === 400);
+    r = await bob.post("/api/feedback", { kind: "bug", subject: "Real summary", body: "short" });
+    ok("too-short details rejected", r.status === 400);
+
+    r = await bob.get("/api/feedback/mine");
+    ok("own feedback listed", r.data.feedback.length === 1);
+    ok("anonymous entry not attributed to anyone",
+       !r.data.feedback.some((f) => /Cannot sign up/.test(f.subject)));
+
+    r = await alice.get("/api/admin/feedback");
+    ok("plain user cannot read the queue", r.status === 403);
+    r = await anon.get("/api/admin/feedback");
+    ok("anon cannot read the queue", r.status === 401);
+
+    r = await admin.get("/api/admin/feedback");
+    ok("staff sees the queue", r.status === 200 && r.data.feedback.length === 2);
+    ok("queue reports per-state counts", r.data.counts && r.data.counts.new === 2);
+    ok("anonymous shows as anonymous",
+       r.data.feedback.some((f) => f.from === "(anonymous)"));
+    ok("browser recorded for triage",
+       r.data.feedback.every((f) => typeof f.agent === "string"));
+
+    const mine = r.data.feedback.find((f) => f.from === "bob");
+    r = await admin.patch(`/api/admin/feedback/${mine.id}`, { state: "triaged" });
+    ok("staff can change state", r.status === 200);
+
+    r = await admin.patch(`/api/admin/feedback/${mine.id}`, { reply: "Good idea, queued it." });
+    ok("staff can reply", r.status === 200);
+
+    r = await bob.get("/api/feedback/mine");
+    ok("reporter sees the reply", r.data.feedback[0].reply === "Good idea, queued it.");
+    ok("reporter sees the new state", r.data.feedback[0].state === "triaged");
+
+    r = await bob.get("/api/notifications");
+    ok("reporter was notified", r.data.notifications.some((n) => n.kind === "feedback"));
+
+    r = await alice.patch(`/api/admin/feedback/${mine.id}`, { state: "done" });
+    ok("plain user cannot triage", r.status === 403);
+
+    r = await admin.get("/api/admin/feedback?state=triaged");
+    ok("filtering by state works", r.data.feedback.length === 1);
+  }
+
+  /* ------------------------------------------------- game progress sync */
+  group("game save sync");
+  {
+    const host = "lucasgrimm389.github.io";
+    let r = await bob.get(`/api/game-saves/${host}`);
+    ok("empty to start", r.status === 200 && Object.keys(r.data.payload).length === 0);
+
+    r = await bob.put(`/api/game-saves/${host}`, {
+      payload: { "snowrider_best": "42", "bitlife_save": "{\"age\":19}" }
+    });
+    ok("snapshot stored", r.status === 200 && r.data.keys === 2);
+
+    r = await bob.get(`/api/game-saves/${host}`);
+    ok("snapshot returned verbatim", r.data.payload.snowrider_best === "42");
+    ok("second key intact", r.data.payload.bitlife_save === '{"age":19}');
+
+    r = await bob.get("/api/game-saves");
+    ok("host listed", r.data.hosts.length === 1 && r.data.hosts[0].host === host);
+    ok("key count reported", r.data.hosts[0].keys === 2);
+
+    /* One account's game progress must never be visible to another. */
+    r = await alice.get(`/api/game-saves/${host}`);
+    ok("another account sees nothing", Object.keys(r.data.payload).length === 0);
+
+    r = await anon.get(`/api/game-saves/${host}`);
+    ok("anonymous refused", r.status === 401);
+    r = await anon.put(`/api/game-saves/${host}`, { payload: {} });
+    ok("anonymous cannot write", r.status === 401);
+
+    r = await bob.put("/api/game-saves/not a host!", { payload: {} });
+    ok("bad host rejected", r.status === 400);
+    r = await bob.put(`/api/game-saves/${host}`, { payload: null });
+    ok("missing payload rejected", r.status === 400);
+
+    const huge = {};
+    for (let i = 0; i < 4000; i++) huge["k" + i] = "x".repeat(400);
+    r = await bob.put(`/api/game-saves/${host}`, { payload: huge });
+    ok("oversized snapshot rejected", r.status === 400 || r.status === 413, "status " + r.status);
+
+    r = await bob.get(`/api/game-saves/${host}`);
+    ok("rejected write left the old snapshot alone", r.data.payload.snowrider_best === "42");
+
+    r = await bob.del(`/api/game-saves/${host}`);
+    ok("snapshot deleted", r.status === 200);
+    r = await bob.get(`/api/game-saves/${host}`);
+    ok("gone after delete", Object.keys(r.data.payload).length === 0);
+  }
+
   /* ------------------------------------------------------------- admin */
   group("admin");
   {

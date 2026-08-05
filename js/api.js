@@ -160,6 +160,28 @@
       return request("POST", "/reports", { kind: kind, target: target, reason: reason });
     },
 
+    /* --- feedback --- */
+    sendFeedback: function (payload) { return request("POST", "/feedback", payload); },
+    myFeedback: function () { return request("GET", "/feedback/mine"); },
+    adminFeedback: function (state) {
+      return request("GET", "/admin/feedback?state=" + (state || "new"));
+    },
+    adminUpdateFeedback: function (id, patch) {
+      return request("PATCH", "/admin/feedback/" + id, patch);
+    },
+
+    /* --- third-party game progress --- */
+    putGameSave: function (host, payload) {
+      return request("PUT", "/game-saves/" + encodeURIComponent(host), { payload: payload });
+    },
+    getGameSave: function (host) {
+      return request("GET", "/game-saves/" + encodeURIComponent(host));
+    },
+    listGameSaves: function () { return request("GET", "/game-saves"); },
+    dropGameSave: function (host) {
+      return request("DELETE", "/game-saves/" + encodeURIComponent(host));
+    },
+
     /* --- admin --- */
     adminOverview: function () { return request("GET", "/admin/overview"); },
     adminUsers: function (q) { return request("GET", "/admin/users" + (q ? "?q=" + encodeURIComponent(q) : "")); },

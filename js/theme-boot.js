@@ -8,7 +8,10 @@
     light: "paper", gray: "slate", black: "noir",
     midnight: "blueprint", arcade: "terminal"
   };
-  var VALID = { noir: 1, paper: 1, slate: 1, terminal: 1, blueprint: 1 };
+  var VALID = {
+    noir: 1, paper: 1, slate: 1, terminal: 1, blueprint: 1,
+    grape: 1, ember: 1, linen: 1
+  };
 
   var skin = "noir";
   var lite = false;

@@ -96,11 +96,14 @@
 
     /* Skin picker. `chips` are the two swatch bands in the settings sheet. */
     skins: [
-      { id: "noir",      label: "Noir",      chips: ["#0c0d10", "#ff5c33"] },
-      { id: "paper",     label: "Paper",     chips: ["#f7f5f1", "#d13a12"] },
-      { id: "slate",     label: "Slate",     chips: ["#1a1e24", "#ffa03d"] },
-      { id: "terminal",  label: "Terminal",  chips: ["#060a07", "#38e07b"] },
-      { id: "blueprint", label: "Blueprint", chips: ["#071021", "#4dd9ff"] }
+      { id: "noir",      label: "Noir",      dark: true,  chips: ["#0c0d10", "#ff5c33"] },
+      { id: "slate",     label: "Slate",     dark: true,  chips: ["#1a1e24", "#ffa03d"] },
+      { id: "blueprint", label: "Blueprint", dark: true,  chips: ["#071021", "#4dd9ff"] },
+      { id: "terminal",  label: "Terminal",  dark: true,  chips: ["#060a07", "#38e07b"] },
+      { id: "grape",     label: "Grape",     dark: true,  chips: ["#140a1f", "#b06cff"] },
+      { id: "ember",     label: "Ember",     dark: true,  chips: ["#160d0a", "#ff8a3d"] },
+      { id: "paper",     label: "Paper",     dark: false, chips: ["#f7f5f1", "#d13a12"] },
+      { id: "linen",     label: "Linen",     dark: false, chips: ["#f4f6f8", "#0f6fd1"] }
     ],
 
     /* Old v1 theme ids → v2 skins, so saved settings survive the redesign. */

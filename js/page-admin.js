@@ -32,6 +32,7 @@
         });
         if (tab.dataset.tab === "users") loadUsers();
         if (tab.dataset.tab === "reports") loadReports();
+        if (tab.dataset.tab === "feedback") loadFeedback();
         if (tab.dataset.tab === "audit") loadAudit();
       });
 
@@ -204,6 +205,115 @@
                 .catch(function (err) { UI.toast(err.message); });
             });
             card.appendChild(act);
+            host.appendChild(card);
+          });
+        }).catch(function (err) { UI.toast(err.message); });
+      }
+
+      /* ------------------------------------------------------- feedback */
+      var fbState = "new";
+      document.querySelectorAll("[data-fb]").forEach(function (pill) {
+        pill.addEventListener("click", function () {
+          document.querySelectorAll("[data-fb]").forEach(function (p) {
+            p.classList.toggle("on", p === pill);
+          });
+          fbState = pill.dataset.fb;
+          loadFeedback();
+        });
+      });
+
+      var KIND_GLYPH = { bug: "🐞", game: "🎮", idea: "💡", other: "💬" };
+
+      function loadFeedback() {
+        return API.adminFeedback(fbState).then(function (res) {
+          /* Put the queue depth on the tabs so nothing rots unnoticed. */
+          document.querySelectorAll("[data-fb]").forEach(function (p) {
+            var n = res.counts[p.dataset.fb] || 0;
+            p.textContent = p.textContent.replace(/\s*\(\d+\)$/, "") + (n ? " (" + n + ")" : "");
+          });
+
+          var host = document.getElementById("fb-list");
+          host.innerHTML = "";
+          if (!res.feedback.length) {
+            var v = UI.el("div", "void");
+            v.appendChild(UI.el("strong", null, "Nothing here"));
+            v.appendChild(UI.el("p", null, "No feedback in this state."));
+            host.appendChild(v);
+            return;
+          }
+
+          res.feedback.forEach(function (f) {
+            var card = UI.el("div", "report");
+
+            var top = UI.el("div", "report-top");
+            top.appendChild(UI.el("span", "pill on", (KIND_GLYPH[f.kind] || "") + " " + f.kind));
+            var subj = UI.el("span", "report-target");
+            subj.textContent = f.subject;
+            top.appendChild(subj);
+            var when = UI.el("span", "tiny dimmer");
+            when.textContent = UI.formatWhen(f.at) + " · " + f.from;
+            when.style.marginLeft = "auto";
+            top.appendChild(when);
+            card.appendChild(top);
+
+            var text = UI.el("p", "report-reason");
+            text.textContent = f.body;          // untrusted
+            card.appendChild(text);
+
+            if (f.gameId) {
+              var g = window.Catalog.byId(f.gameId);
+              var link = UI.el("p", "tiny dimmer");
+              link.style.margin = "0 0 0.6rem";
+              link.textContent = "Game: ";
+              if (g) {
+                var a = UI.el("a", null, g.title);
+                a.href = UI.playHref(g);
+                link.appendChild(a);
+              } else {
+                link.appendChild(document.createTextNode(f.gameId));
+              }
+              card.appendChild(link);
+            }
+
+            if (f.agent) {
+              var ua = UI.el("p", "tiny dimmer");
+              ua.style.margin = "0 0 0.6rem";
+              ua.textContent = f.agent.slice(0, 110);
+              card.appendChild(ua);
+            }
+
+            if (f.reply) {
+              var reply = UI.el("p", "note-reply");
+              reply.textContent = f.reply;
+              card.appendChild(reply);
+            }
+
+            var acts = UI.el("div", "btn-row");
+            [["Looking into it", "triaged"], ["Done", "done"], ["Won't do", "declined"]]
+              .filter(function (pair) { return pair[1] !== f.state; })
+              .forEach(function (pair) {
+                var b = UI.el("button", "btn btn-sm", pair[0]);
+                b.type = "button";
+                b.addEventListener("click", function () {
+                  API.adminUpdateFeedback(f.id, { state: pair[1] })
+                    .then(function () { UI.toast("Marked " + pair[1]); loadFeedback(); loadOverview(); })
+                    .catch(function (err) { UI.toast(err.message); });
+                });
+                acts.appendChild(b);
+              });
+
+            var replyBtn = UI.el("button", "btn btn-sm btn-cta", f.reply ? "Edit reply" : "Reply");
+            replyBtn.type = "button";
+            replyBtn.addEventListener("click", function () {
+              var text2 = window.prompt("Reply to “" + f.subject + "”", f.reply || "");
+              if (text2 === null) return;
+              API.adminUpdateFeedback(f.id, { reply: text2.trim() })
+                .then(function () { UI.toast("Reply sent"); loadFeedback(); })
+                .catch(function (err) { UI.toast(err.message); });
+            });
+            acts.appendChild(replyBtn);
+
+            card.appendChild(acts);
             host.appendChild(card);
           });
         }).catch(function (err) { UI.toast(err.message); });

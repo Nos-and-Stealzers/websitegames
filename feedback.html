@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" data-skin="noir" data-lite="off">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Feedback — Arcade Campus Hub</title>
+  <meta name="description" content="Report a bug, suggest a game, or tell us what's broken. No account needed.">
+  <meta name="theme-color" content="#0c0d10">
+  <meta name="robots" content="index,follow">
+  <link rel="icon" type="image/svg+xml" href="assets/icon.svg">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/theme-boot.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div data-shell="chrome"></div>
+
+  <main class="main" id="main">
+
+    <header class="page-head">
+      <span class="label">Feedback</span>
+      <h1>Tell us what's wrong</h1>
+      <p>Bugs, broken games, games you want added, anything. You don't need an
+         account — but with one you'll see replies.</p>
+    </header>
+
+    <div class="panel" id="offline" hidden>
+      <p class="dim" style="margin:0">
+        Feedback needs the hub's server. The arcade itself works without it.
+      </p>
+    </div>
+
+    <form class="panel form" id="form" hidden style="max-width:640px">
+      <div class="field">
+        <label>What kind?</label>
+        <div class="pills" id="kinds" style="margin:0">
+          <button class="pill on" type="button" data-kind="bug">🐞 Something's broken</button>
+          <button class="pill" type="button" data-kind="game">🎮 Add a game</button>
+          <button class="pill" type="button" data-kind="idea">💡 Idea</button>
+          <button class="pill" type="button" data-kind="other">💬 Other</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="subject">Summary</label>
+        <input type="text" id="subject" maxlength="120" required
+               placeholder="One line — what happened?">
+      </div>
+
+      <div class="field" id="game-field" hidden>
+        <label for="game">Which game? <span class="dimmer">(optional)</span></label>
+        <input type="text" id="game" maxlength="120" list="game-list"
+               placeholder="Start typing a title…">
+        <datalist id="game-list"></datalist>
+      </div>
+
+      <div class="field">
+        <label for="body">Details</label>
+        <textarea id="body" rows="6" maxlength="4000" required
+                  placeholder="What did you do, what did you expect, what happened instead?"></textarea>
+        <p class="hint"><span id="body-count">0</span>/4000</p>
+      </div>
+
+      <p class="tiny dimmer" id="context"></p>
+      <p class="form-error" id="error" hidden></p>
+
+      <button class="btn btn-cta" type="submit" id="submit">Send feedback</button>
+      <p class="tiny dimmer" style="margin:0.9rem 0 0" id="anon-note"></p>
+    </form>
+
+    <div class="panel" id="thanks" hidden style="max-width:640px">
+      <strong style="display:block;font-size:1.05rem;margin-bottom:0.3rem">Sent — thank you</strong>
+      <p class="dim tiny" style="margin:0 0 1rem" id="thanks-note"></p>
+      <div class="btn-row">
+        <button class="btn" type="button" id="again">Send another</button>
+        <a class="btn btn-flat" href="browse.html">Back to the games</a>
+      </div>
+    </div>
+
+    <section class="block" id="mine-block" hidden>
+      <div class="block-head"><h2>What you've sent</h2><span class="fill"></span></div>
+      <div class="feed" id="mine"></div>
+    </section>
+
+    <div data-shell="foot"></div>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="data/games.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/catalog.js"></script>
+  <script src="js/art.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/api-supabase.js"></script>
+  <script src="js/session.js"></script>
+  <script src="js/social-ui.js"></script>
+  <script src="js/capture.js"></script>
+  <script src="js/chat-dock.js"></script>
+  <script src="js/game-saves.js"></script>
+  <script src="js/shell.js"></script>
+  <script src="js/page-feedback.js"></script>
+</body>
+</html>

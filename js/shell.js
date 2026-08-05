@@ -13,6 +13,7 @@
     { href: "categories.html", icon: "◫", label: "Categories", count: function () { return window.Catalog.categories.length; } },
     { href: "library.html", icon: "★", label: "Pinned", count: function () { return window.Store.favorites().length; } },
     { href: "stats.html", icon: "◔", label: "Activity" },
+    { href: "feedback.html", icon: "✎", label: "Feedback" },
     { href: "about.html", icon: "?", label: "Manual" }
   ];
 

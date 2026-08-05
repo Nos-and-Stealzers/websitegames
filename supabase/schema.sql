@@ -996,6 +996,102 @@ create trigger messages_touch
   after insert on public.messages
   for each row execute function public.on_message_touch();
 
+-- =====================================================================
+-- 10 · FEEDBACK AND GAME PROGRESS
+-- =====================================================================
+
+create table if not exists public.feedback (
+  id         bigint generated always as identity primary key,
+  user_id    uuid references public.profiles(id) on delete set null,
+  kind       text not null check (kind in ('bug','idea','game','other')),
+  subject    text not null check (length(subject) between 3 and 120),
+  body       text not null check (length(body) between 10 and 4000),
+  page       text not null default '',
+  game_id    text not null default '',
+  agent      text not null default '',
+  state      text not null default 'new' check (state in ('new','triaged','done','declined')),
+  reply      text not null default '',
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+create index if not exists feedback_state on public.feedback (state, id desc);
+
+-- One row per (account, game host): a snapshot of that origin's localStorage,
+-- which is where third-party games keep progress. Never interpreted here.
+create table if not exists public.game_saves (
+  user_id    uuid not null references public.profiles(id) on delete cascade,
+  host       text not null,
+  payload    jsonb not null default '{}'::jsonb,
+  keys       int not null default 0,
+  updated_at timestamptz not null default now(),
+  primary key (user_id, host)
+);
+
+alter table public.feedback   enable row level security;
+alter table public.game_saves enable row level security;
+
+-- Anonymous feedback is allowed on purpose: a broken sign-up is exactly the
+-- thing someone needs to be able to report.
+drop policy if exists feedback_insert on public.feedback;
+create policy feedback_insert on public.feedback for insert
+  to anon, authenticated
+  with check (user_id is null or user_id = auth.uid());
+
+drop policy if exists feedback_read on public.feedback;
+create policy feedback_read on public.feedback for select
+  to authenticated using (user_id = auth.uid() or public.is_staff());
+
+drop policy if exists feedback_staff_update on public.feedback;
+create policy feedback_staff_update on public.feedback for update
+  to authenticated using (public.is_staff()) with check (public.is_staff());
+
+drop policy if exists game_saves_own on public.game_saves;
+create policy game_saves_own on public.game_saves for all
+  to authenticated using (user_id = auth.uid()) with check (user_id = auth.uid());
+
+-- Tell the reporter when staff act on their feedback.
+create or replace function public.on_feedback_touched()
+returns trigger language plpgsql security definer set search_path = public as $$
+begin
+  if new.user_id is null then return new; end if;
+  if new.state is distinct from old.state or new.reply is distinct from old.reply then
+    perform public.notify(new.user_id, 'feedback', auth.uid(),
+      case when new.reply is distinct from old.reply and new.reply <> ''
+           then 'A moderator replied to your feedback: ' || new.subject
+           else 'Your feedback was marked ' || new.state || ': ' || new.subject end,
+      'feedback.html');
+  end if;
+  return new;
+end;
+$$;
+
+drop trigger if exists feedback_notify on public.feedback;
+create trigger feedback_notify
+  after update on public.feedback
+  for each row execute function public.on_feedback_touched();
+
+create or replace function public.put_game_save(host text, payload jsonb)
+returns int language plpgsql security definer set search_path = public as $$
+declare n int;
+begin
+  if auth.uid() is null then raise exception 'Not signed in.'; end if;
+  if host !~ '^[A-Za-z0-9._-]{1,64}$' then raise exception 'Unknown game host.'; end if;
+  if pg_column_size(payload) > 1048576 then raise exception 'That host''s saves are too large.'; end if;
+
+  n := (select count(*) from jsonb_object_keys(coalesce(payload, '{}'::jsonb)));
+
+  insert into public.game_saves (user_id, host, payload, keys, updated_at)
+  values (auth.uid(), put_game_save.host, coalesce(payload, '{}'::jsonb), n, now())
+  on conflict (user_id, host) do update
+    set payload = excluded.payload, keys = excluded.keys, updated_at = now();
+
+  return n;
+end;
+$$;
+
+revoke all on function public.put_game_save(text, jsonb) from public, anon;
+grant execute on function public.put_game_save(text, jsonb) to authenticated;
+
 -- ---- admin ----
 --
 -- The admin console cannot be assembled from plain table reads. `profiles` is

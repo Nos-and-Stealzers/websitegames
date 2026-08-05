@@ -10,27 +10,62 @@
     var Store = window.Store;
     var s = Store.settings();
 
+    /* A gallery of real previews rather than two colour chips — each card is
+       painted with that skin's own tokens, so you see what you're choosing. */
     var skins = document.getElementById("skins");
     window.SITE.skins.forEach(function (skin) {
-      var b = UI.el("button", "skin");
-      b.type = "button";
-      b.title = skin.label;
-      b.setAttribute("aria-label", skin.label + " skin");
-      b.setAttribute("aria-pressed", s.skin === skin.id ? "true" : "false");
-      skin.chips.forEach(function (c) {
-        var i = UI.el("i");
-        i.style.background = c;
-        b.appendChild(i);
+      var card = UI.el("button", "skin-card");
+      card.type = "button";
+      card.dataset.skin = skin.id;
+      card.setAttribute("aria-pressed", s.skin === skin.id ? "true" : "false");
+      card.setAttribute("aria-label", skin.label + " skin");
+
+      var preview = UI.el("span", "skin-preview");
+      preview.style.background = skin.chips[0];
+      var bar = UI.el("span", "skin-bar");
+      bar.style.background = skin.chips[1];
+      preview.appendChild(bar);
+      ["68%", "45%", "80%"].forEach(function (w) {
+        var line = UI.el("span", "skin-line");
+        line.style.width = w;
+        line.style.background = skin.chips[1];
+        line.style.opacity = "0.35";
+        preview.appendChild(line);
       });
-      b.addEventListener("click", function () {
+      card.appendChild(preview);
+
+      var foot = UI.el("span", "skin-foot");
+      foot.appendChild(UI.el("span", "skin-name", skin.label));
+      foot.appendChild(UI.el("span", "skin-mode", skin.dark ? "dark" : "light"));
+      card.appendChild(foot);
+
+      function apply() {
         Store.setSetting("skin", skin.id);
         document.documentElement.setAttribute("data-skin", skin.id);
-        skins.querySelectorAll(".skin").forEach(function (n) {
-          n.setAttribute("aria-pressed", n === b ? "true" : "false");
+        skins.querySelectorAll(".skin-card").forEach(function (n) {
+          n.setAttribute("aria-pressed", n === card ? "true" : "false");
         });
+      }
+
+      /* Hovering previews it live; leaving puts your real choice back. */
+      card.addEventListener("mouseenter", function () {
+        document.documentElement.setAttribute("data-skin", skin.id);
+      });
+      card.addEventListener("mouseleave", function () {
+        document.documentElement.setAttribute("data-skin", Store.settings().skin);
+      });
+      card.addEventListener("focus", function () {
+        document.documentElement.setAttribute("data-skin", skin.id);
+      });
+      card.addEventListener("blur", function () {
+        document.documentElement.setAttribute("data-skin", Store.settings().skin);
+      });
+      card.addEventListener("click", function () {
+        apply();
         UI.toast("Skin · " + skin.label);
       });
-      skins.appendChild(b);
+
+      skins.appendChild(card);
     });
 
     function bindToggle(id, key, onChange) {
@@ -280,6 +315,94 @@
     });
   }
 
+  /* -------------------------------------------------- third-party saves */
+
+  function gameProgressSection() {
+    if (!window.GameSaves) return;
+    var UI = window.UI;
+    var section = document.getElementById("game-progress");
+    var state = document.getElementById("gs-state");
+    var list = document.getElementById("gs-list");
+    section.hidden = false;
+
+    function say(text) { state.textContent = text; }
+
+    function draw() {
+      window.API.listGameSaves().then(function (res) {
+        list.innerHTML = "";
+        if (!res.hosts.length) {
+          say("Nothing backed up yet.");
+          return;
+        }
+        res.hosts.forEach(function (h, i) {
+          var row = UI.el("div", "row");
+          row.style.gridTemplateColumns = "3rem 1fr auto auto";
+          row.appendChild(UI.el("span", "idx", UI.pad(i + 1)));
+
+          var name = UI.el("span", "name");
+          name.textContent = h.host;
+          row.appendChild(name);
+
+          row.appendChild(UI.el("span", "plays",
+            h.keys + " keys · " + Math.max(1, Math.round(h.bytes / 1024)) + " KB"));
+
+          var drop = UI.el("button", "btn btn-sm btn-flat", "Forget");
+          drop.type = "button";
+          drop.addEventListener("click", function () {
+            if (!window.confirm("Delete the backed-up progress for " + h.host + "?")) return;
+            window.API.dropGameSave(h.host)
+              .then(function () { UI.toast("Removed"); draw(); })
+              .catch(function (err) { UI.toast(err.message); });
+          });
+          row.appendChild(drop);
+          list.appendChild(row);
+        });
+        say("Last backed up " + UI.formatWhen(
+          Math.max.apply(null, res.hosts.map(function (h) { return h.updatedAt; }))) + ".");
+      }).catch(function () { say("Could not read your backups."); });
+    }
+
+    function report(results) {
+      var ok = results.filter(function (r) { return !r.error; });
+      var bad = results.filter(function (r) { return r.error; });
+      var parts = [];
+      ok.forEach(function (r) {
+        if (r.keys !== undefined) parts.push(r.host + ": " + r.keys + " keys");
+        else if (r.written !== undefined) parts.push(r.host + ": " + r.written + " restored" +
+          (r.kept ? ", " + r.kept + " kept" : ""));
+      });
+      bad.forEach(function (r) { parts.push(r.host + ": " + r.error); });
+      say(parts.join(" · ") || "Nothing to do.");
+    }
+
+    function run(label, fn) {
+      say(label + "…");
+      return fn().then(function (results) {
+        report(results);
+        draw();
+      }).catch(function (err) { say(err.message); });
+    }
+
+    document.getElementById("gs-backup").addEventListener("click", function () {
+      run("Reading game storage", function () {
+        return window.GameSaves.backup(function (host, phase) { say(phase + " " + host + "…"); });
+      });
+    });
+
+    document.getElementById("gs-restore").addEventListener("click", function () {
+      run("Restoring", function () { return window.GameSaves.restore(false); });
+    });
+
+    document.getElementById("gs-force").addEventListener("click", function () {
+      if (!window.confirm(
+        "Overwrite this device's game progress with the backed-up copy? " +
+        "Anything newer here is lost.")) return;
+      run("Overwriting", function () { return window.GameSaves.restore(true); });
+    });
+
+    draw();
+  }
+
   /* ---------------------------------------------------------------- boot */
 
   function init() {
@@ -299,6 +422,7 @@
       }
       dataSection(state.user);
       accountSection(state.user);
+      gameProgressSection();
     });
   }
 

@@ -128,6 +128,69 @@ html[data-skin="blueprint"] {
   --grid-line: rgba(77, 217, 255, 0.05);
 }
 
+/* ---- GRAPE ---- */
+html[data-skin="grape"] {
+  color-scheme: dark;
+  --paper: #140a1f;
+  --surface: #1c1029;
+  --surface-2: #241634;
+  --surface-3: #301f45;
+  --line: #2f1f44;
+  --line-2: #45305e;
+  --ink: #f3ecff;
+  --ink-2: #b9a6d4;
+  --ink-3: #86749f;
+  --accent: #b06cff;
+  --accent-2: #cb9bff;
+  --accent-ink: #150522;
+  --good: #59e0b0;
+  --warn: #ffc861;
+  --bad: #ff6f96;
+  --sel: rgba(176, 108, 255, 0.16);
+}
+
+/* ---- EMBER ---- */
+html[data-skin="ember"] {
+  color-scheme: dark;
+  --paper: #160d0a;
+  --surface: #1f1310;
+  --surface-2: #2a1a15;
+  --surface-3: #38241d;
+  --line: #37231c;
+  --line-2: #513329;
+  --ink: #fdeee6;
+  --ink-2: #cfab99;
+  --ink-3: #9b7a6b;
+  --accent: #ff8a3d;
+  --accent-2: #ffb072;
+  --accent-ink: #1c0c03;
+  --good: #6fd88f;
+  --warn: #ffcc5c;
+  --bad: #ff6b6b;
+  --sel: rgba(255, 138, 61, 0.15);
+}
+
+/* ---- LINEN (light) ---- */
+html[data-skin="linen"] {
+  color-scheme: light;
+  --paper: #f4f6f8;
+  --surface: #ffffff;
+  --surface-2: #eef1f5;
+  --surface-3: #e2e7ee;
+  --line: #dde3ea;
+  --line-2: #c0c9d4;
+  --ink: #10151b;
+  --ink-2: #4d5a68;
+  --ink-3: #7c8794;
+  --accent: #0f6fd1;
+  --accent-2: #0a559f;
+  --accent-ink: #ffffff;
+  --good: #0f8a5f;
+  --warn: #96650a;
+  --bad: #c02a3f;
+  --sel: rgba(15, 111, 209, 0.1);
+}
+
 /* Reduced-effort mode for slow machines and locked-down GPUs. */
 html[data-lite="on"] * {
   animation: none !important;
@@ -1253,6 +1316,69 @@ kbd {
 .report-reason {
   margin: 0 0 0.8rem; font-size: 0.88rem; color: var(--ink-2);
   white-space: pre-wrap; overflow-wrap: anywhere;
+}
+
+/* A staff reply, quoted back to whoever sent the feedback. */
+.note-reply {
+  margin: 0.5rem 0 0;
+  padding: 0.5rem 0.7rem;
+  border-left: 2px solid var(--accent);
+  background: var(--sel);
+  font-size: 0.84rem; color: var(--ink);
+  white-space: pre-wrap; overflow-wrap: anywhere;
+}
+
+/* --------------------------------------------------------------------------
+   25 · SKIN GALLERY
+   -------------------------------------------------------------------------- */
+
+.skin-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(116px, 1fr));
+  gap: 0.6rem;
+  width: 100%;
+}
+
+.skin-card {
+  display: flex; flex-direction: column;
+  padding: 0; cursor: pointer;
+  background: var(--surface-2);
+  border: 1px solid var(--line-2);
+  border-radius: var(--r);
+  overflow: hidden;
+  font: inherit; color: inherit;
+  transition: border-color 0.12s, transform 0.12s;
+}
+.skin-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+.skin-card[aria-pressed="true"] {
+  border-color: var(--accent);
+  outline: 2px solid var(--accent);
+  outline-offset: -1px;
+}
+
+/* A miniature of the interface, painted in that skin's own colours. */
+.skin-preview {
+  position: relative; display: block;
+  height: 62px; padding: 0.4rem;
+  border-bottom: 1px solid var(--line);
+}
+.skin-bar {
+  display: block; height: 7px; width: 40%;
+  border-radius: 2px; margin-bottom: 0.35rem;
+}
+.skin-line {
+  display: block; height: 4px;
+  border-radius: 2px; margin-bottom: 0.25rem;
+}
+
+.skin-foot {
+  display: flex; align-items: baseline; justify-content: space-between;
+  gap: 0.3rem; padding: 0.4rem 0.5rem;
+}
+.skin-name { font-size: 0.8rem; font-weight: 650; }
+.skin-mode {
+  font-family: var(--mono); font-size: 0.6rem;
+  letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3);
 }
 
 /* --------------------------------------------------------------------------

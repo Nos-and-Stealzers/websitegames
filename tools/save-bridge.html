@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex,nofollow">
+<title>Save bridge</title>
+</head>
+<body>
+<!--
+  Arcade Campus Hub — game save bridge.
+
+  Third-party games keep their progress in localStorage, which belongs to the
+  origin serving them, not to the hub. The hub therefore cannot read it: that
+  is the same-origin policy doing its job, and there is no way around it from
+  the outside.
+
+  This page IS that origin. The hub loads it in a hidden iframe and asks, over
+  postMessage, for a snapshot of the origin's localStorage — or to put one back.
+  That is what lets a save follow an account to another device.
+
+  Two rules keep it honest:
+    * only the origins in ALLOWED may talk to it,
+    * it does nothing except read and write localStorage on this origin.
+
+  Copy this file to the ROOT of each repo that serves games.
+-->
+<script>
+(function () {
+  "use strict";
+
+  /* Only the hub may drive this. Anything else is ignored, so a random page
+     cannot embed this file and harvest saves. */
+  var ALLOWED = [
+    "https://arcadecampushub.online",
+    "https://www.arcadecampushub.online",
+    "http://localhost:8787",
+    "http://127.0.0.1:8787"
+  ];
+
+  /* Vercel gives every deployment its own hostname, so match the project
+     rather than listing them. */
+  var ALLOWED_PATTERNS = [
+    /^https:\/\/[a-z0-9-]+\.vercel\.app$/i,
+    /^https:\/\/[a-z0-9-]*arcadecampushub[a-z0-9-]*\.[a-z.]+$/i
+  ];
+
+  function permitted(origin) {
+    if (ALLOWED.indexOf(origin) !== -1) return true;
+    for (var i = 0; i < ALLOWED_PATTERNS.length; i++) {
+      if (ALLOWED_PATTERNS[i].test(origin)) return true;
+    }
+    return false;
+  }
+
+  var MAX_VALUE = 512 * 1024;     // skip anything absurd, per key
+
+  function snapshot() {
+    var out = {}, skipped = 0;
+    try {
+      for (var i = 0; i < localStorage.length; i++) {
+        var key = localStorage.key(i);
+        if (key === null) continue;
+        var value = localStorage.getItem(key);
+        if (value === null) continue;
+        if (value.length > MAX_VALUE) { skipped++; continue; }
+        out[key] = value;
+      }
+    } catch (err) { /* storage disabled */ }
+    return { data: out, skipped: skipped };
+  }
+
+  /* Merge, never wipe: a key already present here wins unless `overwrite` is
+     set, so restoring on a device that has newer progress can't destroy it. */
+  function restore(data, overwrite) {
+    var written = 0, kept = 0;
+    try {
+      Object.keys(data || {}).forEach(function (key) {
+        var existing = localStorage.getItem(key);
+        if (existing !== null && !overwrite) { kept++; return; }
+        try { localStorage.setItem(key, String(data[key])); written++; }
+        catch (err) { /* quota */ }
+      });
+    } catch (err) { /* storage disabled */ }
+    return { written: written, kept: kept };
+  }
+
+  window.addEventListener("message", function (event) {
+    if (!permitted(event.origin)) return;
+
+    var msg = event.data;
+    if (!msg || msg.channel !== "ach-save-bridge") return;
+
+    var reply = { channel: "ach-save-bridge", id: msg.id, ok: true };
+
+    try {
+      if (msg.action === "ping") {
+        reply.host = location.host;
+      } else if (msg.action === "read") {
+        var shot = snapshot();
+        reply.data = shot.data;
+        reply.keys = Object.keys(shot.data).length;
+        reply.skipped = shot.skipped;
+      } else if (msg.action === "write") {
+        var res = restore(msg.data, !!msg.overwrite);
+        reply.written = res.written;
+        reply.kept = res.kept;
+      } else if (msg.action === "clear") {
+        try { localStorage.clear(); } catch (err) {}
+        reply.cleared = true;
+      } else {
+        reply.ok = false;
+        reply.error = "Unknown action";
+      }
+    } catch (err) {
+      reply.ok = false;
+      reply.error = String(err && err.message || err);
+    }
+
+    event.source.postMessage(reply, event.origin);
+  });
+
+  /* Announce readiness so the hub doesn't have to poll. */
+  if (window.parent !== window) {
+    window.parent.postMessage(
+      { channel: "ach-save-bridge", action: "ready", host: location.host }, "*"
+    );
+  }
+})();
+</script>
+<p style="font:14px system-ui;color:#666">
+  Save bridge for Arcade Campus Hub. Nothing to see here.
+</p>
+</body>
+</html>

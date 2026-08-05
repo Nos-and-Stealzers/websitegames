@@ -81,6 +81,7 @@ app.use("/api", require("./routes/social"));
 app.use("/api", require("./routes/messages"));
 app.use("/api", require("./routes/notifications"));
 app.use("/api", require("./routes/sync"));
+app.use("/api", require("./routes/feedback"));
 app.use("/api/admin", require("./routes/admin"));
 
 app.get("/api/health", (req, res) => {
