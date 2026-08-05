@@ -52,12 +52,19 @@
 
   var probe = null;
 
-  /* Resolves true/false once, then caches. */
+  /* Resolves true/false once, then caches.
+     `backend: "none"` skips the probe entirely, so a static deploy does not
+     fire a doomed /api/health request on every page load. */
   function available() {
     if (!probe) {
-      probe = request("GET", "/health")
-        .then(function (info) { API.health = info; return true; })
-        .catch(function () { return false; });
+      var mode = (window.SITE && window.SITE.backend) || "auto";
+      if (mode === "none" || mode === "supabase") {
+        probe = Promise.resolve(false);
+      } else {
+        probe = request("GET", "/health")
+          .then(function (info) { API.health = info; return true; })
+          .catch(function () { return false; });
+      }
     }
     return probe;
   }

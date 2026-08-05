@@ -18,13 +18,39 @@
        Root-relative sources in the catalog ("/games/...") get this prefix. */
     gameBase: "https://arcadecampushub.online",
 
-    /* Where the accounts backend lives.
-       - ""  ................. same origin (running `node server/app.js`)
-       - "https://host" ...... backend hosted separately, e.g. the static site
-                               is on Vercel and the API is on Render/Railway.
-       Leave empty and the account features simply won't appear — the arcade
-       still works. When you do set it, add this site's origin to the server's
-       ALLOWED_ORIGINS so its cookies survive the cross-origin trip. */
+    /* ---------------------------------------------------------------
+       Accounts backend. Pick ONE, or neither.
+
+       "supabase" — hosted Postgres + Auth. Talks straight from the
+                    browser, so the whole thing runs on Vercel with no
+                    second server. Fill in `supabase` below and run
+                    supabase/schema.sql once in the SQL editor.
+
+       "node"     — the Express + SQLite server in server/. Needs a host
+                    that runs a real process with a persistent disk.
+                    Set `apiBase` to its URL (or leave empty when the
+                    same server is also serving this site).
+
+       "none"     — no accounts at all. Every account feature hides
+                    itself and the arcade works exactly as it does now.
+
+       "auto"     — (default) probe this origin for a node backend. Right
+                    for local development; on static hosting it finds
+                    nothing and quietly settles on "none".
+       --------------------------------------------------------------- */
+    backend: "auto",
+
+    /* Used when backend === "supabase".
+       The anon key is MEANT to be public — row-level security is what
+       protects the data. NEVER put a `sb_secret_…` / service-role key
+       here; it bypasses RLS and would hand every visitor full database
+       access. If one has ever been pasted anywhere public, rotate it. */
+    supabase: {
+      url: "",          // https://xxxxxxxxxxxx.supabase.co
+      anonKey: ""       // sb_publishable_…  or  eyJhbGciOi…
+    },
+
+    /* Used when backend === "node". Empty means same origin. */
     apiBase: "",
 
     defaults: {
