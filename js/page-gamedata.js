@@ -284,7 +284,9 @@
       head.appendChild(size);
       box.appendChild(head);
 
-      if (looksJson(raw)) box.appendChild(jsonEditor(key, raw));
+      var kind = window.SaveFormats ? window.SaveFormats.detect(raw) : (looksJson(raw) ? "json" : "raw");
+      if (kind === "json") box.appendChild(jsonEditor(key, raw));
+      else if (kind === "clickteam-ini") box.appendChild(iniEditor(key, raw));
       else box.appendChild(rawEditor(key, raw));
 
       return box;
@@ -356,6 +358,76 @@
 
       wrap.appendChild(acts);
       return wrap;
+    }
+
+    /* Clickteam Fusion keeps its INI object in one localStorage value, lines
+       joined by a literal "{@24}". Every FNAF title here is built with it, so
+       without this their whole save is a single unreadable line in a
+       textarea. Split into sections and fields it is an actual mod menu.
+
+       Writes go through SaveFormats.set and stringify, which rebuild the
+       exact original shape — separator or newlines — so a game that expects
+       one is not handed the other. */
+    function iniEditor(key, raw) {
+      var SF = window.SaveFormats;
+      var model = SF.parse(raw);
+      var wrap = el("div", "gd-ini");
+
+      var head = el("p", "tiny dimmer");
+      head.style.margin = "0 0 0.7rem";
+      head.textContent = "Clickteam save · " + SF.countValues(model) + " value" +
+        (SF.countValues(model) === 1 ? "" : "s") + " across " + model.length +
+        " section" + (model.length === 1 ? "" : "s") +
+        ". Editing one writes the whole file back unchanged apart from that value.";
+      wrap.appendChild(head);
+
+      model.forEach(function (group) {
+        if (group.section !== "") {
+          wrap.appendChild(el("div", "gd-ini-section", "[" + group.section + "]"));
+        }
+        group.entries.forEach(function (entry) {
+          if ("raw" in entry) return;          // comment; shown by the raw view
+          wrap.appendChild(iniField(key, raw, model, group.section, entry));
+        });
+      });
+
+      var showRaw = el("button", "btn btn-sm btn-flat", "Edit the whole file");
+      showRaw.type = "button";
+      showRaw.addEventListener("click", function () {
+        showRaw.remove();
+        wrap.appendChild(rawEditor(key, raw));
+      });
+      wrap.appendChild(showRaw);
+
+      return wrap;
+    }
+
+    function iniField(key, raw, model, section, entry) {
+      var row = el("div", "gd-field");
+      row.appendChild(el("label", "gd-field-key", entry.key));
+
+      var input = document.createElement("input");
+      input.type = "text";
+      input.className = "gd-field-input";
+      input.value = entry.value;
+      /* Numbers are what people come here to change, so make them steppable
+         without forcing a number input on values that are not numbers. */
+      if (/^-?\d+$/.test(entry.value)) input.inputMode = "numeric";
+      row.appendChild(input);
+
+      var save = el("button", "btn btn-sm", "Set");
+      save.type = "button";
+      save.addEventListener("click", function () {
+        if (!window.SaveFormats.set(model, section, entry.key, input.value)) {
+          window.UI.toast("Could not find that field any more — reload and retry.");
+          return;
+        }
+        entry.value = input.value;
+        writeKey(key, window.SaveFormats.stringify(model, raw));
+      });
+      row.appendChild(save);
+
+      return row;
     }
 
     function rawEditor(key, raw) {

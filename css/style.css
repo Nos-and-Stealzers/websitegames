@@ -2110,3 +2110,26 @@ kbd {
 /* How a key was attributed to a game: watched, or guessed from its name. */
 .gd-from[data-how="watched"] { color: var(--good, var(--accent)); border-color: currentColor; }
 .gd-from[data-how="guessed"] { color: var(--ink-3); border-style: dashed; }
+
+/* Clickteam INI saves — every FNAF title, and a good share of the other
+   compiled games — get a field per value instead of one long line. */
+.gd-ini-section {
+  font-family: var(--mono); font-size: 0.78rem; color: var(--accent);
+  margin: 0.9rem 0 0.4rem; padding-bottom: 0.2rem;
+  border-bottom: 1px solid var(--line);
+}
+.gd-ini-section:first-of-type { margin-top: 0; }
+
+.gd-field {
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr) auto;
+  gap: 0.4rem; align-items: center; margin-bottom: 0.35rem;
+}
+.gd-field-key {
+  font-size: 0.8rem; color: var(--ink-2);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.gd-field-input { font-family: var(--mono); font-size: 0.8rem; }
+@media (max-width: 560px) {
+  .gd-field { grid-template-columns: minmax(0, 1fr) auto; }
+  .gd-field-key { grid-column: 1 / -1; }
+}

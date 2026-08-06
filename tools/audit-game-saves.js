@@ -142,7 +142,13 @@ async function pool(items, worker, size) {
          : "Unity writes into localStorage under IDBFS — backs up, not field-editable"));
     });
 
-  const perHost = {};
+  /* A caveat the numbers do not carry on their own: this reads what a page
+   loads, so a game whose save code lives inside a large compiled runtime
+   reads as "stateless" when it is not. Every FNAF title did — their runtime
+   stores a Clickteam INI in localStorage, which only shows up if you read
+   Runtime.js itself. Treat "stateless" as "nothing visible from here". */
+
+const perHost = {};
   by.saves.forEach((r) => { perHost[r.host] = (perHost[r.host] || 0) + 1; });
   console.log("\n=== saving titles per host ===");
   Object.entries(perHost).forEach(([h, n]) => console.log(`  ${h.padEnd(12)} ${n}`));
