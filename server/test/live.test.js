@@ -392,6 +392,46 @@ async function run() {
   r = await carol.post("/api/calls", { userId: aliceMe.id, kind: "audio" });
   ok("someone who blocked you cannot call you either", r.status === 400, "status " + r.status);
 
+  /* ------------------------------------------------------- deploy headers */
+  group("headers, both deployments");
+
+  /* The site ships from two places — this Express app, and Vercel in
+     production — and each sets its own security headers. They drifted once
+     already: Permissions-Policy was fixed here to allow the microphone and
+     camera for calling, and vercel.json kept the empty allowlist, so calling
+     was blocked on the live site only, silently. Assert they agree. */
+  {
+    const vercel = JSON.parse(
+      fs.readFileSync(path.join(__dirname, "..", "..", "vercel.json"), "utf8"));
+
+    const catchAll = vercel.headers.find((h) => h.source === "/(.*)");
+    ok("vercel.json has a catch-all header block", !!catchAll);
+
+    const pp = catchAll && catchAll.headers.find((h) => h.key === "Permissions-Policy");
+    ok("it sets Permissions-Policy", !!pp);
+
+    const res = await fetch(base + "/index.html");
+    const here = res.headers.get("permissions-policy") || "";
+
+    ok("the two deployments send the same Permissions-Policy",
+       !!pp && pp.value === here, "vercel=" + (pp && pp.value) + "  node=" + here);
+
+    /* The specific thing that broke: an empty allowlist blocks getUserMedia
+       before the permission prompt can appear, so calling cannot work at all. */
+    const value = (pp && pp.value) || "";
+    ok("the microphone is not switched off outright", !/microphone=\(\)/.test(value), value);
+    ok("the camera is not switched off outright", !/camera=\(\)/.test(value), value);
+    ok("screen sharing is allowed", /display-capture=\(self\)/.test(value));
+
+    /* Script URLs carry no content hash, so a long max-age ships new HTML
+       against stale JS — which reads as a broken feature, not a cache. */
+    const scripts = vercel.headers.find((h) => h.source === "/(css|js)/(.*)");
+    ok("css and js have their own cache rule", !!scripts);
+    const cc = scripts && scripts.headers.find((h) => h.key === "Cache-Control");
+    ok("un-hashed scripts revalidate every time",
+       !!cc && /max-age=0/.test(cc.value), cc && cc.value);
+  }
+
   /* --------------------------------------------------------------------- */
   console.log("\n" + "=".repeat(56));
   if (failures.length) {
