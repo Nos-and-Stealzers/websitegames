@@ -594,8 +594,9 @@
          reach don't appear at all. */
       function loadHelp() {
         var mac = /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent || "");
-        var mod = mac ? "⌘" : "Ctrl";
-        var adminKey = (window.Store.settings().adminKey || "p").toUpperCase();
+        var mod = (mac ? "⌘" : "Ctrl") + " + Shift";
+        var fallback = (window.SITE.defaults && window.SITE.defaults.adminKey) || "k";
+        var adminKey = (window.Store.settings().adminKey || fallback).toUpperCase();
 
         var TABS = [
           ["Overview", "Counts for the whole site and the most-played titles across every " +
@@ -685,9 +686,9 @@
         var NOTES = [
           "Every permission here is checked again on the server. A hidden button is " +
             "a convenience, not a lock.",
-          "The admin shortcut is configurable in Settings — it defaults to " + mod +
-            " + P, which is also the browser's print dialog, so change it if you'd rather " +
-            "keep that.",
+          "Admins and owners can change the console shortcut in Settings — the letter " +
+            "only; " + mod + " is fixed, because a plain modifier and one letter collides " +
+            "with far more of what the browser already uses.",
           "Suspending someone drops their sessions immediately; they are signed out on " +
             "their next request, not whenever they next close the tab.",
           "Support tickets and feedback are different things on purpose. Feedback is a " +

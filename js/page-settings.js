@@ -462,23 +462,24 @@
     document.getElementById("staff-role").textContent = user.role;
 
     var mac = /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent || "");
-    document.getElementById("combo-mod").textContent = mac ? "⌘" : "Ctrl";
+    document.getElementById("combo-mod").textContent = (mac ? "⌘" : "Ctrl") + " + Shift";
 
-    /* Keys the browser itself claims. Offering them isn't wrong — the page
-       calls preventDefault — but people should know what they're taking. */
+    /* Keys the browser claims for itself *with Shift held* — a different set
+       from plain Ctrl. Some of these the page can take over, some it cannot:
+       anything the browser handles as window chrome (a new private window,
+       reopening a tab) never reaches the page at all, so preventDefault has
+       nothing to prevent. Worth saying which is which. */
     var TAKEN = {
-      p: "your browser's print dialog",
-      s: "save page",
-      f: "find on page",
-      d: "bookmark this page",
-      n: "new window",
-      t: "new tab",
-      w: "close tab",
-      r: "reload",
-      l: "focus the address bar",
-      a: "select all",
-      j: "downloads",
-      o: "open a file"
+      n: "opens a private window — the browser takes this before the page sees it",
+      p: "opens a private window in Firefox — not interceptable there",
+      t: "reopens the last closed tab — the browser takes this first",
+      w: "closes the window — the browser takes this first",
+      q: "quits the browser on some platforms",
+      i: "developer tools",
+      j: "the developer console",
+      c: "inspect element",
+      k: "the web console in Firefox, when developer tools are open",
+      delete: "clear browsing data"
     };
 
     var select = document.getElementById("admin-key");
@@ -492,19 +493,23 @@
       select.appendChild(o);
     });
 
+    var DEFAULT_KEY = (window.SITE.defaults && window.SITE.defaults.adminKey) || "k";
     var saved = Store.settings().adminKey;
     var enabled = !!saved;
-    select.value = (saved || "p").toLowerCase();
+    select.value = (saved || DEFAULT_KEY).toLowerCase();
     toggle.checked = enabled;
     select.disabled = !enabled;
+
+    function comboLabel() {
+      return (mac ? "⌘" : "Ctrl") + " + Shift + " + select.value.toUpperCase();
+    }
 
     function paintWarning() {
       var clash = TAKEN[select.value];
       if (clash && !select.disabled) {
-        warnText.textContent = "That combo is normally " + clash +
-          ". The hub takes it over on its own pages, which works, but it will " +
-          "not reach the console from inside a game that has grabbed the key " +
-          "for itself. Pick something less contested if that bites.";
+        warnText.textContent = comboLabel() + " normally " + clash +
+          ". Where the browser handles it as window chrome the page never sees " +
+          "the key at all, so this would simply not work. Pick something else.";
         warn.hidden = false;
       } else {
         warn.hidden = true;
@@ -514,7 +519,7 @@
     select.addEventListener("change", function () {
       Store.setSetting("adminKey", select.value);
       paintWarning();
-      UI.toast("Console shortcut · " + (mac ? "⌘" : "Ctrl") + " + " + select.value.toUpperCase());
+      UI.toast("Console shortcut · " + comboLabel());
     });
 
     toggle.addEventListener("change", function () {

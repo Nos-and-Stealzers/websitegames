@@ -707,12 +707,16 @@
         return;
       }
 
-      /* Staff jump to the console with a modifier combo, so it works even
-         while a game is running — the single-key shortcuts deliberately do
-         not. Configurable, because Ctrl+P is the browser's print dialog and
-         some people would rather keep that. */
-      if ((event.ctrlKey || event.metaKey) && !event.altKey) {
-        var combo = (window.Store.settings().adminKey || "p").toLowerCase();
+      /* Staff jump to the console with Ctrl/Cmd + Shift + a key, so it works
+         even while a game is running — the single-key shortcuts deliberately
+         do not. Shift is in the combo because plain Ctrl + a letter collides
+         with far more of the browser's own shortcuts. The letter is
+         configurable in Settings, for admins and above.
+
+         event.key already carries the shifted form, so lowercasing it is what
+         makes "K" match a stored "k". */
+      if ((event.ctrlKey || event.metaKey) && event.shiftKey && !event.altKey) {
+        var combo = (window.Store.settings().adminKey || "k").toLowerCase();
         if (combo && event.key.toLowerCase() === combo &&
             window.Session && window.Session.isStaff()) {
           event.preventDefault();
