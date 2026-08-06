@@ -157,6 +157,61 @@ console.log("\nround trip");
      Object.keys(DEFAULTS).every((k) => s[k] !== undefined));
 }
 
+console.log("\nonly deviations are stored");
+{
+  // setSetting used to write the whole resolved blob, defaults and all. That
+  // froze every other setting at whatever the default was that day, so a
+  // later change to a default could never reach anyone who had touched the
+  // page — which is how the console shortcut stayed on its first default
+  // long after it had moved.
+  const box = withSaved({});
+  box.Store.setSetting("skin", "grape");
+
+  const raw = JSON.parse(box.localStorage.getItem("ach:settings"));
+  ok("the changed key is stored", raw.skin === "grape");
+  ok("untouched keys are not written", raw.textSize === undefined && raw.sort === undefined);
+  ok("the moving default is not frozen in", raw.adminKey === undefined,
+     JSON.stringify(raw.adminKey));
+
+  // And the point of all that: a default that moves still reaches them.
+  const after = box.Store.settings();
+  ok("an untouched setting still tracks the default",
+     after.adminKey === DEFAULTS.adminKey, after.adminKey);
+
+  // Choosing the default again should un-pin, not pin.
+  box.Store.setSetting("skin", DEFAULTS.skin);
+  const raw2 = JSON.parse(box.localStorage.getItem("ach:settings"));
+  ok("setting a value back to the default removes it", raw2.skin === undefined,
+     JSON.stringify(raw2.skin));
+  ok("and it reads back as the default", box.Store.settings().skin === DEFAULTS.skin);
+}
+
+console.log("\npruning defaults baked in by the old writer");
+{
+  // Until the picker shipped there was no way to choose adminKey at all, so a
+  // stored "p" or "k" was written by the old whole-blob setSetting, not by a
+  // person. Drop those once so the current default applies.
+  let box = withSaved({ adminKey: "p", skin: "grape" });
+  let s = box.Store.settings();
+  ok("a superseded default is dropped", s.adminKey === DEFAULTS.adminKey, s.adminKey);
+  ok("a real choice beside it survives", s.skin === "grape");
+
+  box = withSaved({ adminKey: "k" });
+  ok("the other old default is dropped too",
+     box.Store.settings().adminKey === DEFAULTS.adminKey);
+
+  // A deliberate choice made after the prune must stick, even if it happens
+  // to be one of the old defaults.
+  box = withSaved({});
+  box.Store.settings();                 // prune runs, marks itself done
+  box.Store.setSetting("adminKey", "p");
+  ok("choosing an old default on purpose is respected",
+     box.Store.settings().adminKey === "p", box.Store.settings().adminKey);
+
+  const raw = JSON.parse(box.localStorage.getItem("ach:settings"));
+  ok("the prune marks itself so it runs once", raw._pruned >= 1, JSON.stringify(raw._pruned));
+}
+
 console.log("\nno drift between the boot script and config");
 {
   /* theme-boot runs in <head>, before config.js exists, so it has to carry

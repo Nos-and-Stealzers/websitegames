@@ -58,6 +58,34 @@
     adminKey: [""].concat("abcdefghijklmnopqrstuvwxyz0123456789".split(""))
   };
 
+  /* Defaults that have moved, per key, oldest first.
+   *
+   * A saved value matching one of these was almost certainly not chosen by
+   * anyone: until the picker shipped there was no way to set adminKey at all,
+   * and the old setSetting wrote every default into storage the moment you
+   * changed anything else. Dropping those lets the current default apply.
+   *
+   * Runs once, marked by `_pruned`, so a deliberate choice made afterwards is
+   * never second-guessed — someone who really wants Ctrl+P can have it. */
+  var PRUNE_VERSION = 1;
+  var SUPERSEDED = { adminKey: ["p", "k"] };
+
+  function prune(saved) {
+    if (!saved || saved._pruned >= PRUNE_VERSION) return saved;
+
+    var changed = false;
+    Object.keys(SUPERSEDED).forEach(function (key) {
+      if (SUPERSEDED[key].indexOf(saved[key]) !== -1) {
+        delete saved[key];
+        changed = true;
+      }
+    });
+
+    saved._pruned = PRUNE_VERSION;
+    if (changed || hasLS) write("settings", saved);
+    return saved;
+  }
+
   var Store = {
     available: hasLS,
 
@@ -77,7 +105,7 @@
      * no rules for. */
     settings: function () {
       var d = window.SITE.defaults;
-      var saved = read("settings", {}) || {};
+      var saved = prune(read("settings", {}) || {});
       var out = {};
 
       Object.keys(d).forEach(function (key) {
@@ -108,10 +136,27 @@
        one place instead of restating them. */
     allowed: function () { return ALLOWED; },
 
+    /* Stores only what you actually changed.
+     *
+     * This used to write the whole resolved blob — every key, defaults
+     * included. Changing one setting therefore froze all the others at
+     * whatever the defaults happened to be that day, and a later change to a
+     * default could never reach anyone who had ever touched the page. That is
+     * exactly how the console shortcut stayed on its first default long after
+     * it had moved twice.
+     *
+     * Setting something back to its default removes the key rather than
+     * pinning it, so it starts tracking the default again. */
     setSetting: function (key, value) {
-      var s = Store.settings();
-      s[key] = value;
-      return write("settings", s);
+      var d = window.SITE.defaults;
+      var saved = read("settings", {}) || {};
+
+      if (Object.prototype.hasOwnProperty.call(d, key) && value === d[key]) {
+        delete saved[key];
+      } else {
+        saved[key] = value;
+      }
+      return write("settings", saved);
     },
 
     /* ---------------- favorites ---------------- */
