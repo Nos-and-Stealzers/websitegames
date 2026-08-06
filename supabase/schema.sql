@@ -1251,9 +1251,106 @@ returns boolean language sql stable security definer set search_path = public as
   );
 $$;
 
--- Claim the owner rank for one named account. Change the name here if the
--- owner is someone else; it matches the Node backend's ARCADE_OWNER.
-update public.profiles set role = 'owner' where username = 'Stealzers';
+-- ---- claiming the owner rank ----
+--
+-- One place to change who the owner is. Matches the Node backend's
+-- ARCADE_OWNER environment variable.
+create or replace function public.owner_username()
+returns text language sql immutable as $$ select 'Stealzers'::text $$;
+
+-- The owner is untouchable, at the database level and not just in the API:
+-- nobody may change that account's rank or state, including another admin
+-- and including an owner acting on themselves. The whole point of the rank
+-- is that a compromised admin account cannot lock the real owner out.
+--
+-- Note the ordering — this runs before the is_admin() branch, so it wins.
+create or replace function public.guard_profile_update()
+returns trigger language plpgsql security definer set search_path = public as $$
+begin
+  if old.role = 'owner' then
+    new.role  := old.role;
+    new.state := old.state;
+  elsif not public.is_admin() then
+    new.role  := old.role;    -- silently ignore attempts to change these
+    new.state := old.state;
+  end if;
+  new.id         := old.id;
+  new.username   := old.username;   -- handles are permanent
+  new.created_at := old.created_at;
+  return new;
+end;
+$$;
+
+-- An owner is an administrator and then some, so it has to count towards the
+-- lockout guard. Without this, promoting the only admin to owner is refused
+-- as "that is the last administrator" — which is exactly the promotion this
+-- file performs on a fresh project.
+create or replace function public.guard_last_admin()
+returns trigger language plpgsql security definer set search_path = public as $$
+begin
+  if old.role in ('admin','owner') and new.role not in ('admin','owner') then
+    if (select count(*) from public.profiles where role in ('admin','owner')) <= 1 then
+      raise exception 'That is the last administrator.';
+    end if;
+  end if;
+  return new;
+end;
+$$;
+
+-- A future sign-up under the owner's name gets the rank at creation, so it
+-- never depends on anyone remembering to re-run this file.
+create or replace function public.handle_new_user()
+returns trigger language plpgsql security definer set search_path = public as $$
+declare
+  wanted text;
+  is_first boolean;
+  rank text;
+begin
+  wanted := coalesce(new.raw_user_meta_data->>'username', 'user' || left(new.id::text, 8));
+  select count(*) = 0 into is_first from public.profiles;
+
+  if lower(wanted) = lower(public.owner_username()) then
+    rank := 'owner';
+  elsif is_first then
+    rank := 'admin';
+  else
+    rank := 'user';
+  end if;
+
+  insert into public.profiles (id, username, display_name, role, friend_code)
+  values (
+    new.id,
+    wanted,
+    coalesce(nullif(new.raw_user_meta_data->>'display_name',''), wanted),
+    rank,
+    public.make_friend_code()
+  );
+  return new;
+end;
+$$;
+
+-- Promote the account if it already exists.
+--
+-- The guards have to come off to do it, and that is not a workaround —
+-- it is the only correct way. guard_profile_update reverts any role change
+-- made by someone who is not an admin, and "who" is auth.uid(), which is
+-- NULL when you run SQL from the dashboard. So this statement on its own is
+-- silently a no-op: it reports "UPDATE 1" and changes nothing. That is the
+-- worst kind of failure, because it looks like it worked.
+--
+-- Disabling the triggers for the length of one statement is safe here: this
+-- runs as the table owner in a migration, not through the API, and both
+-- guards go straight back on.
+alter table public.profiles disable trigger profiles_guard;
+alter table public.profiles disable trigger profiles_last_admin;
+
+update public.profiles
+   set role = 'owner'
+ where lower(username) = lower(public.owner_username())
+   and role <> 'owner';
+
+alter table public.profiles enable trigger profiles_guard;
+alter table public.profiles enable trigger profiles_last_admin;
 
 -- ---------------------------------------------------------------------
 -- CATALOGUE OVERLAY
@@ -1922,9 +2019,33 @@ grant execute on function public.record_login(text)  to authenticated;
 grant execute on function public.admin_logins()      to authenticated;
 
 -- =====================================================================
--- Done. Next:
+-- Done.
+--
+-- Setup, once per project:
 --   1. Authentication → Providers → Email: turn OFF "Confirm email"
 --      (the hub signs up with username-derived addresses, so there is
 --       no inbox to confirm from).
---   2. Create your account in the app — the FIRST one becomes admin.
+--   2. Create your account in the app. Signing up under the name in
+--      owner_username() above gets the owner rank automatically; any
+--      other first account becomes an admin.
+--
+-- The query below runs last and prints who holds what. If the owner row
+-- is missing, the account does not exist yet — make it in the app, then
+-- run this file again. It is idempotent.
 -- =====================================================================
+
+select
+  username,
+  role,
+  case role
+    when 'owner' then 'full access, cannot be demoted or suspended by anyone'
+    when 'admin' then 'moderation, plus ranks up to mod'
+    when 'mod'   then 'reports, feedback, support, live view'
+    else '—'
+  end as can_do,
+  created_at
+from public.profiles
+where role <> 'user'
+order by
+  case role when 'owner' then 0 when 'admin' then 1 else 2 end,
+  username;
