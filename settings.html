@@ -161,6 +161,58 @@
       </div>
     </section>
 
+    <!-- ============ staff: admin and above only ============ -->
+    <!-- Hidden by default and only revealed by js/page-settings.js once the
+         signed-in account is admin or owner. Nothing here is secret — the
+         console itself is guarded on the server — but there is no reason to
+         show a control that would do nothing for everyone else. -->
+    <section class="block" id="staff-block" hidden>
+      <div class="block-head"><h2>Staff</h2><span class="fill"></span>
+        <span class="more dimmer" id="staff-role">admin</span></div>
+      <div class="panel">
+
+        <div class="opt">
+          <div>
+            <div class="k">Open the admin console with</div>
+            <div class="d">
+              A modifier combo, not a single key, so it still works while a
+              game has the keyboard — the single-key shortcuts stand down
+              there deliberately. Pick something your browser doesn't already
+              use: <kbd>P</kbd> is the print dialog, <kbd>S</kbd> is save.
+            </div>
+          </div>
+          <div class="combo-picker">
+            <span class="combo-mod" id="combo-mod">Ctrl</span>
+            <span class="combo-plus">+</span>
+            <select id="admin-key" aria-label="Admin console shortcut key"></select>
+          </div>
+        </div>
+
+        <div class="opt" id="admin-key-warn" hidden>
+          <div>
+            <div class="k">Heads up</div>
+            <div class="d" id="admin-key-warn-text"></div>
+          </div>
+        </div>
+
+        <div class="opt">
+          <div>
+            <div class="k">Enable that shortcut</div>
+            <div class="d">Off means the console is reachable only from the
+              sidebar or by opening <code>admin.html</code> yourself. Your rank
+              is unchanged either way.</div>
+          </div>
+          <label class="toggle"><input type="checkbox" id="admin-key-on"><i></i></label>
+        </div>
+
+        <p class="tiny dimmer" style="margin:0.9rem 0 0">
+          Kept on this device, like every other setting here. It changes how
+          <em>you</em> open the console, not who may.
+          <a href="admin.html">Open the console →</a>
+        </p>
+      </div>
+    </section>
+
     <!-- ============ local data: always available ============ -->
     <section class="block">
       <div class="block-head"><h2>Your data</h2><span class="fill"></span></div>

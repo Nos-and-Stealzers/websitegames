@@ -51,7 +51,11 @@
     skin: (window.SITE.skins || []).map(function (s) { return s.id; }),
     textSize: ["normal", "large", "huge"],
     view: ["grid", "list"],
-    sort: ["relevance", "title", "title-desc", "category", "played", "recent", "random"]
+    sort: ["relevance", "title", "title-desc", "category", "played", "recent", "random"],
+    /* One character, or "" for no shortcut at all. Listed so a hand-edited
+       or stale value falls back to the default like every other setting,
+       instead of binding the console to something unreachable. */
+    adminKey: [""].concat("abcdefghijklmnopqrstuvwxyz0123456789".split(""))
   };
 
   var Store = {

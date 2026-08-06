@@ -99,6 +99,32 @@ console.log("\nrejecting nonsense");
   ok("null rejected", s.motion === DEFAULTS.motion);
 }
 
+console.log("\nadmin console shortcut");
+{
+  // The shortcut key is one character, or "" meaning no shortcut at all.
+  // Anything else would bind the console to something unreachable.
+  let s = withSaved({ adminKey: "j" }).Store.settings();
+  ok("a single letter is kept", s.adminKey === "j", s.adminKey);
+
+  s = withSaved({ adminKey: "7" }).Store.settings();
+  ok("a digit is kept", s.adminKey === "7", s.adminKey);
+
+  s = withSaved({ adminKey: "" }).Store.settings();
+  ok("empty means the shortcut is off", s.adminKey === "", JSON.stringify(s.adminKey));
+
+  s = withSaved({ adminKey: "ctrl+shift+q" }).Store.settings();
+  ok("a multi-character value is rejected", s.adminKey === DEFAULTS.adminKey, s.adminKey);
+
+  s = withSaved({ adminKey: "!" }).Store.settings();
+  ok("punctuation is rejected", s.adminKey === DEFAULTS.adminKey, s.adminKey);
+
+  s = withSaved({ adminKey: 5 }).Store.settings();
+  ok("a number is rejected", s.adminKey === DEFAULTS.adminKey, String(s.adminKey));
+
+  s = withSaved({}).Store.settings();
+  ok("absent falls back to the default", s.adminKey === DEFAULTS.adminKey, s.adminKey);
+}
+
 console.log("\nlegacy migration");
 {
   let s = withSaved({ theme: "light" }).Store.settings();

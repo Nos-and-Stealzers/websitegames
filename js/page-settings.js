@@ -443,6 +443,92 @@
 
   /* ---------------------------------------------------------------- boot */
 
+  /* ------------------------------------------------------------- staff */
+
+  /* Admin and above only. A moderator can reach the console, but changing how
+     it opens is an owner/admin concern and there is no point showing everyone
+     else a control that would do nothing for them.
+
+     This is presentation, not protection — the console checks rank on the
+     server. All this setting decides is which key *you* press. */
+  function staffSection(user) {
+    var Store = window.Store;
+    var UI = window.UI;
+    if (!window.Session.isAdmin()) return;
+
+    var block = document.getElementById("staff-block");
+    if (!block) return;
+    block.hidden = false;
+    document.getElementById("staff-role").textContent = user.role;
+
+    var mac = /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent || "");
+    document.getElementById("combo-mod").textContent = mac ? "⌘" : "Ctrl";
+
+    /* Keys the browser itself claims. Offering them isn't wrong — the page
+       calls preventDefault — but people should know what they're taking. */
+    var TAKEN = {
+      p: "your browser's print dialog",
+      s: "save page",
+      f: "find on page",
+      d: "bookmark this page",
+      n: "new window",
+      t: "new tab",
+      w: "close tab",
+      r: "reload",
+      l: "focus the address bar",
+      a: "select all",
+      j: "downloads",
+      o: "open a file"
+    };
+
+    var select = document.getElementById("admin-key");
+    var warn = document.getElementById("admin-key-warn");
+    var warnText = document.getElementById("admin-key-warn-text");
+    var toggle = document.getElementById("admin-key-on");
+
+    "abcdefghijklmnopqrstuvwxyz0123456789".split("").forEach(function (ch) {
+      var o = UI.el("option", null, ch.toUpperCase() + (TAKEN[ch] ? "  ·  taken" : ""));
+      o.value = ch;
+      select.appendChild(o);
+    });
+
+    var saved = Store.settings().adminKey;
+    var enabled = !!saved;
+    select.value = (saved || "p").toLowerCase();
+    toggle.checked = enabled;
+    select.disabled = !enabled;
+
+    function paintWarning() {
+      var clash = TAKEN[select.value];
+      if (clash && !select.disabled) {
+        warnText.textContent = "That combo is normally " + clash +
+          ". The hub takes it over on its own pages, which works, but it will " +
+          "not reach the console from inside a game that has grabbed the key " +
+          "for itself. Pick something less contested if that bites.";
+        warn.hidden = false;
+      } else {
+        warn.hidden = true;
+      }
+    }
+
+    select.addEventListener("change", function () {
+      Store.setSetting("adminKey", select.value);
+      paintWarning();
+      UI.toast("Console shortcut · " + (mac ? "⌘" : "Ctrl") + " + " + select.value.toUpperCase());
+    });
+
+    toggle.addEventListener("change", function () {
+      /* An empty string is the off state — shell.js treats a falsy adminKey
+         as "no shortcut", so there is no second flag to keep in step. */
+      Store.setSetting("adminKey", toggle.checked ? select.value : "");
+      select.disabled = !toggle.checked;
+      paintWarning();
+      UI.toast(toggle.checked ? "Shortcut on" : "Shortcut off — use the sidebar");
+    });
+
+    paintWarning();
+  }
+
   function init() {
     /* Display preferences must not wait on — or require — the backend. */
     displaySection();
@@ -461,6 +547,7 @@
       dataSection(state.user);
       accountSection(state.user);
       gameProgressSection();
+      staffSection(state.user);
     });
   }
 
