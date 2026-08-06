@@ -840,8 +840,21 @@
         }).then(function () { catField("cg-save").disabled = false; });
       }
 
+      /* The catalogue manager.
+       *
+       * The first version listed only what had been added here, which on any
+       * real install is nothing — so the tab read as broken. This lists the
+       * whole catalogue, marks where each title comes from, and puts the
+       * actions on the row. Adding is one button among several rather than
+       * the entire screen. */
+
+      var overlay = { added: [], removed: [] };
+      var LIST_CAP = 60;
+      var filtersReady = false;
+
       function loadCatalog() {
         fillCatalogForm();
+        fillFilters();
         preview();
 
         /* Drop the cached overlay so the owner's own next page view shows the
@@ -849,93 +862,213 @@
         if (window.CatalogOverlay) window.CatalogOverlay.invalidate();
 
         return API.customCatalog().then(function (res) {
-          drawAdded(res.added || []);
-          drawHidden(res.removed || []);
-        }).catch(function (err) { UI.toast(err.message); });
+          overlay = { added: res.added || [], removed: res.removed || [] };
+          drawCatalog();
+        }).catch(function (err) {
+          UI.toast(err.message);
+          drawCatalog();            // still show the shipped list
+        });
       }
 
-      function drawAdded(added) {
-        var host = document.getElementById("cg-rows");
-        host.innerHTML = "";
+      function fillFilters() {
+        if (filtersReady) return;
+        filtersReady = true;
 
-        var cols = "1fr 7rem 1fr 9rem";
-        var head = UI.el("div", "rows-head");
-        head.style.gridTemplateColumns = cols;
-        ["Title", "Category", "Points at", ""].forEach(function (h) {
-          head.appendChild(UI.el("span", null, h));
+        var box = document.getElementById("cg-filter-cat");
+        var any = UI.el("option", null, "All categories");
+        any.value = "";
+        box.appendChild(any);
+        window.Catalog.categories.forEach(function (c) {
+          var o = UI.el("option", null, c.label + " (" + c.count + ")");
+          o.value = c.id;
+          box.appendChild(o);
         });
-        host.appendChild(head);
 
-        if (!added.length) {
-          host.appendChild(UI.el("p", "dim", "Nothing added here yet — the catalogue is all from the shipped list."));
-          return;
+        var redraw = UI.debounce(drawCatalog, 160);
+        document.getElementById("cg-q").addEventListener("input", redraw);
+        box.addEventListener("change", drawCatalog);
+        document.getElementById("cg-filter-state").addEventListener("change", drawCatalog);
+        document.getElementById("cg-new").addEventListener("click", function () { showForm(null); });
+        document.getElementById("cg-close").addEventListener("click", hideForm);
+      }
+
+      /* Where a title comes from, and whether it is currently showing. */
+      function statusOf(game) {
+        if (overlay.removed.indexOf(game.id) !== -1) return "hidden";
+        if (overlay.added.some(function (g) { return g.id === game.id; })) return "added";
+        if (game.unavailable) return "gone";
+        return "shipped";
+      }
+
+      var STATUS_LABEL = {
+        hidden: "hidden", added: "added here", gone: "no host", shipped: "shipped"
+      };
+
+      function drawCatalog() {
+        var host = document.getElementById("cg-list");
+        var q = document.getElementById("cg-q").value.trim().toLowerCase();
+        var cat = document.getElementById("cg-filter-cat").value;
+        var want = document.getElementById("cg-filter-state").value;
+
+        /* Catalog.all already has the overlay folded in, so a title added
+           here appears exactly as a shipped one does. */
+        var all = window.Catalog.all;
+        var added = 0, gone = 0;
+        all.forEach(function (g) {
+          var st = statusOf(g);
+          if (st === "added") added++;
+          if (st === "gone") gone++;
+        });
+
+        document.getElementById("cg-k-total").textContent = all.length;
+        document.getElementById("cg-k-added").textContent = added;
+        document.getElementById("cg-k-hidden").textContent = overlay.removed.length;
+        document.getElementById("cg-k-gone").textContent = gone;
+
+        var matches = all.filter(function (g) {
+          if (cat && g.category !== cat) return false;
+          if (want !== "all" && statusOf(g) !== want) return false;
+          if (q && g.titleLower.indexOf(q) === -1 && g.id.indexOf(q) === -1) return false;
+          return true;
+        });
+
+        /* A hidden title is not in Catalog.all — the overlay drops it before
+           the page ever indexes it — so list those separately or they would
+           be unrecoverable from this screen. */
+        var ghosts = [];
+        if (want === "all" || want === "hidden") {
+          overlay.removed.forEach(function (id) {
+            if (all.some(function (g) { return g.id === id; })) return;
+            if (q && id.indexOf(q) === -1) return;
+            ghosts.push({ id: id, title: id, category: "—", ghost: true });
+          });
         }
 
-        added.forEach(function (g) {
-          var row = UI.el("div", "row");
-          row.style.gridTemplateColumns = cols;
+        var total = matches.length + ghosts.length;
+        var shown = Math.min(matches.length, LIST_CAP) + ghosts.length;
 
-          var link = UI.el("a", "name", g.title);
-          link.href = UI.playHref(g);
-          row.appendChild(link);
+        document.getElementById("cg-count").textContent = total === 0
+          ? "Nothing matches that."
+          : "Showing " + shown + " of " + total +
+            (total > shown ? " — narrow the search to see the rest." : "");
 
-          row.appendChild(UI.el("span", "cat", g.category));
+        host.innerHTML = "";
+        ghosts.forEach(function (g) { host.appendChild(gameRow(g, "hidden")); });
+        matches.slice(0, LIST_CAP).forEach(function (g) {
+          host.appendChild(gameRow(g, statusOf(g)));
+        });
 
-          var where = UI.el("span", "cat");
-          where.textContent = (g.host ? g.host + " / " : "") + g.source;
-          where.title = where.textContent;
-          row.appendChild(where);
+        if (!total) {
+          var v = UI.el("div", "void");
+          v.appendChild(UI.el("strong", null, "Nothing matches"));
+          v.appendChild(UI.el("p", null, "Try a different search, or clear the filters."));
+          host.appendChild(v);
+        }
+      }
 
-          var acts = UI.el("span", "admin-acts");
+      function gameRow(game, status) {
+        var row = UI.el("div", "game-row");
+        row.dataset.status = status;
+
+        var shot = UI.el("div", "game-row-shot");
+        if (!game.ghost) shot.appendChild(window.Art.cover(game));
+        row.appendChild(shot);
+
+        var mid = UI.el("div", "game-row-mid");
+        var name = UI.el("span", "game-row-title");
+        name.textContent = game.title;
+        mid.appendChild(name);
+
+        var where = UI.el("span", "game-row-where");
+        where.textContent = game.ghost
+          ? "hidden — id " + game.id
+          : (game.host ? game.host + " / " : "") + (game.source || "—");
+        where.title = where.textContent;
+        mid.appendChild(where);
+        row.appendChild(mid);
+
+        row.appendChild(UI.el("span", "game-row-cat", game.categoryLabel || game.category));
+
+        var tag = UI.el("span", "game-row-tag", STATUS_LABEL[status] || status);
+        tag.dataset.s = status;
+        row.appendChild(tag);
+
+        var acts = UI.el("span", "game-row-acts");
+
+        if (status === "hidden") {
+          var back = UI.el("button", "btn btn-sm btn-cta", "Show");
+          back.type = "button";
+          back.addEventListener("click", function () {
+            API.restoreCatalogEntry(game.id)
+              .then(function () { UI.toast("Back in the catalogue"); reloadCatalog(); })
+              .catch(function (e) { UI.toast(e.message); });
+          });
+          acts.appendChild(back);
+        } else {
+          var play = UI.el("a", "btn btn-sm btn-flat", "Open");
+          play.href = UI.playHref(game);
+          acts.appendChild(play);
 
           var edit = UI.el("button", "btn btn-sm", "Edit");
           edit.type = "button";
-          edit.addEventListener("click", function () { intoForm(g); });
+          edit.addEventListener("click", function () { showForm(game); });
           acts.appendChild(edit);
 
-          var drop = UI.el("button", "btn btn-sm btn-flat", "Delete");
-          drop.type = "button";
-          drop.addEventListener("click", function () {
-            if (!window.confirm("Remove “" + g.title + "” from the catalogue?")) return;
-            API.removeCatalogEntry(g.id, true)
-              .then(function () { UI.toast("Removed"); loadCatalog(); })
+          var hide = UI.el("button", "btn btn-sm btn-flat", "Hide");
+          hide.type = "button";
+          hide.title = status === "added"
+            ? "Removes it — it was added here, so there is nothing underneath"
+            : "Hides it from everyone; you can put it back";
+          hide.addEventListener("click", function () {
+            var hard = status === "added";
+            if (!window.confirm(hard
+              ? "Remove " + game.title + "? It was added here, so this deletes it."
+              : "Hide " + game.title + " from the catalogue? You can put it back.")) return;
+            API.removeCatalogEntry(game.id, hard)
+              .then(function () { UI.toast(hard ? "Removed" : "Hidden"); reloadCatalog(); })
               .catch(function (e) { UI.toast(e.message); });
           });
-          acts.appendChild(drop);
-
-          row.appendChild(acts);
-          host.appendChild(row);
-        });
-      }
-
-      function drawHidden(removed) {
-        var host = document.getElementById("cg-hidden");
-        host.innerHTML = "";
-
-        if (!removed.length) {
-          host.appendChild(UI.el("p", "dim", "Nothing hidden. Every shipped title is showing."));
-          return;
+          acts.appendChild(hide);
         }
 
-        removed.forEach(function (id) {
-          var row = UI.el("div", "row");
-          row.style.gridTemplateColumns = "1fr 9rem";
+        row.appendChild(acts);
+        return row;
+      }
 
-          var game = window.Catalog.byId(id);
-          var name = UI.el("span", "name");
-          name.textContent = game ? game.title : id;
-          row.appendChild(name);
+      /* A change to the overlay changes what Catalog.all should hold, and that
+         is built once at page load. Re-reading the overlay keeps the counts
+         and badges here honest; the catalogue itself picks it up on the next
+         navigation. */
+      function reloadCatalog() {
+        return API.customCatalog().then(function (res) {
+          overlay = { added: res.added || [], removed: res.removed || [] };
+          if (window.CatalogOverlay) window.CatalogOverlay.invalidate();
+          drawCatalog();
+        }).catch(function (err) { UI.toast(err.message); });
+      }
 
-          var back = UI.el("button", "btn btn-sm", "Show again");
-          back.type = "button";
-          back.addEventListener("click", function () {
-            API.restoreCatalogEntry(id)
-              .then(function () { UI.toast("Back in the catalogue"); loadCatalog(); })
-              .catch(function (e) { UI.toast(e.message); });
-          });
-          row.appendChild(back);
-          host.appendChild(row);
-        });
+      function showForm(game) {
+        document.getElementById("cg-form-head").hidden = false;
+        document.getElementById("cg-form-note").hidden = false;
+        document.getElementById("cat-form").hidden = false;
+        document.getElementById("cg-form-title").textContent =
+          game ? "Edit " + game.title : "Add a game";
+        document.getElementById("cg-save").textContent =
+          game ? "Save changes" : "Add to the catalogue";
+
+        if (game) intoForm(game);
+        else { document.getElementById("cat-form").reset(); preview(); }
+
+        /* Nice-to-have, and not worth throwing over — older browsers and
+           non-browser DOMs do not all implement it. */
+        var head = document.getElementById("cg-form-head");
+        if (head.scrollIntoView) head.scrollIntoView({ block: "start" });
+      }
+
+      function hideForm() {
+        document.getElementById("cg-form-head").hidden = true;
+        document.getElementById("cg-form-note").hidden = true;
+        document.getElementById("cat-form").hidden = true;
       }
 
       function intoForm(g) {
@@ -946,10 +1079,10 @@
         catField("cg-source").value = g.source || "";
         catField("cg-desc").value = g.description || "";
         catField("cg-notice").value = g.notice || "";
-        catField("cg-risk").value = g.schoolRisk || "unknown";
-        catField("cg-embed").value = g.embed === false ? "direct" : "allowed";
+        catField("cg-risk").value = g.risk || g.schoolRisk || "unknown";
+        catField("cg-embed").value = (g.embeddable === false || g.embed === false)
+          ? "direct" : "allowed";
         preview();
-        catField("cg-title").scrollIntoView({ block: "center" });
       }
 
       loadOverview().catch(function (err) { UI.toast(err.message); });

@@ -158,16 +158,53 @@
 
       <!-- games (owner only) -->
       <section class="tab-panel" data-panel="games" hidden>
+
+        <div class="metrics" style="margin-bottom:1rem">
+          <div class="metric"><b id="cg-k-total">0</b><span>In the catalogue</span></div>
+          <div class="metric"><b id="cg-k-added">0</b><span>Added here</span></div>
+          <div class="metric"><b id="cg-k-hidden">0</b><span>Hidden</span></div>
+          <div class="metric"><b id="cg-k-gone">0</b><span>No host</span></div>
+        </div>
+
         <div class="panel" style="margin-bottom:1rem">
+          <div class="toolbar" style="position:static;margin:0;border:0;padding:0;background:none">
+            <div class="search">
+              <label for="cg-q" class="sr-only">Search the catalogue</label>
+              <input type="search" id="cg-q" placeholder="Search all titles…" autocomplete="off">
+            </div>
+            <label for="cg-filter-cat" class="label">Category</label>
+            <select id="cg-filter-cat" style="width:auto"></select>
+            <label for="cg-filter-state" class="label">Show</label>
+            <select id="cg-filter-state" style="width:auto">
+              <option value="all">Everything</option>
+              <option value="added">Added here</option>
+              <option value="hidden">Hidden</option>
+              <option value="gone">No host</option>
+              <option value="shipped">Shipped only</option>
+            </select>
+            <span class="fill"></span>
+            <button class="btn btn-sm btn-cta" type="button" id="cg-new">＋ Add a game</button>
+          </div>
+          <p class="tiny dimmer" id="cg-count" style="margin:0.8rem 0 0"></p>
+        </div>
+
+        <div class="game-rows" id="cg-list"></div>
+
+        <!-- add / edit, revealed by the button above -->
+        <div class="block-head" id="cg-form-head" hidden style="margin-top:1.6rem">
+          <h2 id="cg-form-title">Add a game</h2><span class="fill"></span>
+          <button class="btn btn-sm btn-flat" type="button" id="cg-close">Close</button>
+        </div>
+
+        <div class="panel" id="cg-form-note" hidden style="margin-bottom:1rem">
           <p class="tiny dimmer" style="margin:0">
-            Adds a game to the live catalogue without a deploy. The game's files
-            still have to be hosted somewhere — this points at them; it doesn't
-            store them. Pick one of the known hosts and give the path inside it,
-            or paste a full <code>https://</code> URL to anywhere.
+            This points at files hosted somewhere else; it does not store them.
+            Pick one of the known hosts and give the path inside it, or paste a
+            full <code>https://</code> URL to anywhere.
           </p>
         </div>
 
-        <form class="panel cat-form" id="cat-form" style="margin-bottom:1rem">
+        <form class="panel cat-form" id="cat-form" hidden style="margin-bottom:1rem">
           <div class="field">
             <label for="cg-title">Title</label>
             <input type="text" id="cg-title" maxlength="120" required placeholder="Super Something">
@@ -229,12 +266,6 @@
             <button class="btn btn-flat" type="button" id="cg-reset">Clear</button>
           </div>
         </form>
-
-        <div class="block-head"><h2>Added here</h2><span class="fill"></span></div>
-        <div class="rows" id="cg-rows"></div>
-
-        <div class="block-head" style="margin-top:1.4rem"><h2>Hidden from the catalogue</h2><span class="fill"></span></div>
-        <div class="rows" id="cg-hidden"></div>
       </section>
 
       <!-- audit -->
