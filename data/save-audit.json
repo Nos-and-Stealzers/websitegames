@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-05T20:55:04.494Z",
+  "generatedAt": "2026-08-06T19:53:45.938Z",
   "rows": [
     {
       "id": "huge-10-minutes-till-dawn",
@@ -1665,6 +1665,29 @@
       "opaque": false,
       "storage": [],
       "status": "stateless"
+    },
+    {
+      "id": "eaglercraft-1-8-8",
+      "host": "eaglercraft",
+      "opaque": false,
+      "storage": [],
+      "status": "stateless"
+    },
+    {
+      "id": "eaglercraft-1-12-2",
+      "host": "eaglercraft",
+      "opaque": false,
+      "storage": [],
+      "status": "stateless"
+    },
+    {
+      "id": "eaglercraft-26-1-2",
+      "host": "eaglercraft",
+      "opaque": false,
+      "storage": [
+        "localStorage"
+      ],
+      "status": "saves"
     }
   ]
 }

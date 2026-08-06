@@ -134,14 +134,12 @@ async function pool(items, worker, size) {
   console.log("\n=== storage used ===");
   Object.entries(kinds).sort((a, b) => b[1] - a[1])
     .forEach(([k, n]) => {
-      const covered = k === "localStorage" || k === "unity-fs";
       console.log(`  ${k.padEnd(16)} ${String(n).padStart(4)}   ` +
         (k === "localStorage" ? "bridge reads and writes this"
          : k === "sessionStorage" ? "dies with the tab; nothing to back up"
-         : k === "indexedDB" ? "NOT covered by the bridge"
-         : k === "cookie" ? "not covered; usually preferences, not saves"
-         : "Unity writes into localStorage under IDBFS"));
-      void covered;
+         : k === "indexedDB" ? "bridge reads and writes this, binary included"
+         : k === "cookie" ? "bridge reads path=/ cookies; folder-scoped ones stay out of reach"
+         : "Unity writes into localStorage under IDBFS — backs up, not field-editable"));
     });
 
   const perHost = {};

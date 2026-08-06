@@ -38,10 +38,16 @@
   ];
 
   /* Vercel gives every deployment its own hostname, so match the project
-     rather than listing them. */
+     rather than listing them.
+   *
+   * Both patterns are anchored and neither allows a dot inside the wildcard
+   * part. An earlier version ended in [a-z.]+ to mean "any TLD", which also
+   * matched dots — so arcadecampushub.online.evil.com satisfied it, and any
+   * attacker who registered that could read every save on this origin.
+   * A wildcard that spans a dot spans a domain boundary; it must never. */
   var ALLOWED_PATTERNS = [
     /^https:\/\/[a-z0-9-]+\.vercel\.app$/i,
-    /^https:\/\/[a-z0-9-]*arcadecampushub[a-z0-9-]*\.[a-z.]+$/i
+    /^https:\/\/([a-z0-9-]+\.)?arcadecampushub\.online$/i
   ];
 
   function permitted(origin) {
@@ -67,6 +73,54 @@
       }
     } catch (err) { /* storage disabled */ }
     return { data: out, skipped: skipped };
+  }
+
+  /* Cookies.
+   *
+   * The largest single group of saving titles here keeps progress in a cookie,
+   * not localStorage — mostly older Flash-era ports that were written that
+   * way. Without this they are simply invisible to the hub.
+   *
+   * The honest limitation: document.cookie only exposes cookies whose path is
+   * a prefix of the current page's. This file sits at the origin root, so it
+   * sees path=/ cookies. A game that sets one with no explicit path scopes it
+   * to its own folder, and that one stays out of reach from here — hence
+   * `cookiePath` in the reply, so the hub can say so rather than silently
+   * showing nothing. HttpOnly cookies are never visible to script at all, but
+   * a static game host does not set those.
+   */
+  function readCookies() {
+    var out = {};
+    try {
+      String(document.cookie || "").split(";").forEach(function (part) {
+        var at = part.indexOf("=");
+        if (at < 1) return;
+        var name = part.slice(0, at).trim();
+        var value = part.slice(at + 1).trim();
+        if (!name || value.length > MAX_VALUE) return;
+        try { out[name] = decodeURIComponent(value); }
+        catch (e) { out[name] = value; }        // not percent-encoded
+      });
+    } catch (err) { /* cookies disabled */ }
+    return out;
+  }
+
+  function writeCookies(data, overwrite) {
+    var written = 0;
+    var existing = readCookies();
+    /* Two years: long enough to behave like a save, short enough to expire. */
+    var expires = new Date(Date.now() + 730 * 864e5).toUTCString();
+
+    Object.keys(data || {}).forEach(function (name) {
+      if (!overwrite && Object.prototype.hasOwnProperty.call(existing, name)) return;
+      try {
+        document.cookie = encodeURIComponent(name) + "=" +
+          encodeURIComponent(String(data[name])) +
+          "; path=/; expires=" + expires + "; SameSite=Lax";
+        written++;
+      } catch (err) { /* one bad name shouldn't sink the batch */ }
+    });
+    return written;
   }
 
   /* Merge, never wipe: a key already present here wins unless `overwrite` is
@@ -284,6 +338,8 @@
       reply.data = shot.data;
       reply.keys = Object.keys(shot.data).length;
       reply.skipped = shot.skipped;
+      reply.cookies = readCookies();
+      reply.cookiePath = location.pathname;
       readIdb().then(function (idb) {
         reply.idb = idb.data;
         reply.idbUnsupported = idb.unsupported;
@@ -297,6 +353,7 @@
       var res = restore(msg.data, !!msg.overwrite);
       reply.written = res.written;
       reply.kept = res.kept;
+      reply.cookiesWritten = writeCookies(msg.cookies, !!msg.overwrite);
       writeIdb(msg.idb, !!msg.overwrite).then(function (out) {
         reply.idbWritten = out.written;
         send(event, reply);
@@ -308,6 +365,8 @@
       if (msg.action === "ping") {
         reply.host = location.host;
         reply.idbSupported = !!(indexedDB && typeof indexedDB.databases === "function");
+        reply.cookiesSupported = navigator.cookieEnabled !== false;
+        reply.cookiePath = location.pathname;
       } else if (msg.action === "remove") {
         var gone = 0;
         (msg.keys || []).forEach(function (key) {
@@ -316,6 +375,14 @@
         reply.removed = gone;
       } else if (msg.action === "clear") {
         try { localStorage.clear(); } catch (err) {}
+        /* Expire every cookie we can see, rather than leaving progress behind
+           after someone asked for a clean slate. */
+        try {
+          Object.keys(readCookies()).forEach(function (name) {
+            document.cookie = encodeURIComponent(name) +
+              "=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+          });
+        } catch (err) {}
         reply.cleared = true;
       } else {
         reply.ok = false;

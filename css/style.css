@@ -2098,3 +2098,11 @@ kbd {
   .game-row-tag { grid-column: 2; justify-self: start; }
   .game-row-acts { grid-column: 1 / -1; justify-content: flex-start; }
 }
+
+/* Where a save entry lives, since that decides how it is written back. */
+.gd-from {
+  font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em;
+  padding: 0.05rem 0.3rem; border: 1px solid var(--line-2); color: var(--ink-3);
+}
+.gd-from[data-from="cookie"] { color: var(--accent); border-color: var(--accent); }
+.gd-card[data-from="cookie"] { border-left: 2px solid var(--accent); }

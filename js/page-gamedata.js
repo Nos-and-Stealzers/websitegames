@@ -61,6 +61,20 @@
 
     function say(text) { state.textContent = text; }
 
+    /* Entries are { value, from, name }. Older call sites handed round a bare
+       string, so tolerate both rather than crash on a stale shape. */
+    function entryOf(key) {
+      var e = current.data[key];
+      if (e && typeof e === "object" && "value" in e) return e;
+      return { value: e, from: "localStorage" };
+    }
+
+    function kv(key, value) {
+      var out = {};
+      out[key] = value;
+      return out;
+    }
+
     /* ---------------------------------------------------------- loading */
 
     function load() {
@@ -72,12 +86,33 @@
       return loadPresets()
         .then(function () { return window.GameSaves.readAll(host); })
         .then(function (res) {
-          current = { host: res.host, data: res.data };
-          var n = Object.keys(res.data).length;
-          say(n
-            ? n + " key" + (n === 1 ? "" : "s") + " on " + res.host +
+          /* Cookies are the single largest place these games keep progress —
+             more titles than localStorage — so they are shown as first-class
+             entries here, tagged by where they came from. */
+          var merged = {};
+          Object.keys(res.data || {}).forEach(function (k) {
+            merged[k] = { value: res.data[k], from: "localStorage" };
+          });
+          Object.keys(res.cookies || {}).forEach(function (k) {
+            /* A cookie and a localStorage key can share a name. */
+            var id = merged[k] ? k + " (cookie)" : k;
+            merged[id] = { value: res.cookies[k], from: "cookie", name: k };
+          });
+
+          current = { host: res.host, data: merged, info: res };
+
+          var local = Object.keys(res.data || {}).length;
+          var cookies = Object.keys(res.cookies || {}).length;
+          var dbs = Object.keys(res.idb || {}).length;
+          var bits = [];
+          if (local) bits.push(local + " localStorage");
+          if (cookies) bits.push(cookies + " cookie" + (cookies === 1 ? "" : "s"));
+          if (dbs) bits.push(dbs + " database" + (dbs === 1 ? "" : "s"));
+
+          say(bits.length
+            ? bits.join(" · ") + " on " + res.host +
               (res.skipped ? " (" + res.skipped + " too large to show)" : "")
-            : "Nothing saved on " + res.host + " in this browser yet — play something first.");
+            : "Nothing readable on " + res.host + " in this browser yet.");
           draw();
         })
         .catch(function (err) {
@@ -95,16 +130,42 @@
       if (q) {
         keys = keys.filter(function (k) {
           return k.toLowerCase().indexOf(q) !== -1 ||
-                 String(current.data[k]).toLowerCase().indexOf(q) !== -1;
+                 String(entryOf(k).value).toLowerCase().indexOf(q) !== -1;
         });
       }
 
       if (!keys.length) {
         var v = el("div", "void");
-        v.appendChild(el("strong", null, q ? "No keys match" : "Nothing stored"));
-        v.appendChild(el("p", null, q
-          ? "Try a shorter filter."
-          : "Play a game on this host, then load again."));
+        v.appendChild(el("strong", null, q ? "No keys match" : "Nothing readable here"));
+
+        if (q) {
+          v.appendChild(el("p", null, "Try a shorter filter."));
+        } else {
+          /* An empty list has several very different causes, and saying which
+             is the difference between a tool that looks broken and one that
+             is being honest. */
+          v.appendChild(el("p", null,
+            "Play a game on this host in this browser, then load again. " +
+            "If you have played one and it is still empty, it is one of these:"));
+
+          var why = el("ul");
+          why.style.textAlign = "left";
+          why.style.margin = "0.8rem auto 0";
+          why.style.maxWidth = "34rem";
+          [
+            "The game keeps its save in a cookie scoped to its own folder. " +
+              "The bridge runs at " + ((current.info && current.info.cookiePath) || "/") +
+              ", and a browser only hands a page the cookies whose path it sits under — " +
+              "so those stay out of reach from here.",
+            "It is a compiled build (Unity, Flash, Clickteam) that keeps its save " +
+              "as one opaque blob. It backs up and restores fine; there is nothing " +
+              "meaningful to edit field by field.",
+            "It genuinely saves nothing — about a quarter of the catalogue is " +
+              "score-attack or arcade with no progress to keep."
+          ].forEach(function (line) { why.appendChild(el("li", null, line)); });
+          v.appendChild(why);
+        }
+
         keysHost.appendChild(v);
         return;
       }
@@ -113,13 +174,21 @@
     }
 
     function card(key) {
-      var raw = current.data[key];
+      var entry = entryOf(key);
+      var raw = entry.value;
       var box = el("div", "gd-card");
+      box.dataset.from = entry.from;
 
       var head = el("div", "gd-head");
       var name = el("span", "gd-key");
       name.textContent = key;
       head.appendChild(name);
+
+      /* Which store this came from decides how it is written back, so it is
+         worth showing rather than leaving the two indistinguishable. */
+      var where = el("span", "gd-from", entry.from === "cookie" ? "cookie" : "local");
+      where.dataset.from = entry.from;
+      head.appendChild(where);
 
       var nice = labelFor(current.host, key);
       if (nice) head.appendChild(el("span", "pill on", nice));
@@ -237,7 +306,11 @@
       b.type = "button";
       b.addEventListener("click", function () {
         if (!window.confirm("Delete “" + key + "” from " + current.host + "?")) return;
-        window.GameSaves.removeKeys(current.host, [key]).then(function () {
+        var entry = entryOf(key);
+        var job = entry.from === "cookie"
+          ? window.GameSaves.writeCookies(current.host, kv(entry.name || key, ""))
+          : window.GameSaves.removeKeys(current.host, [key]);
+        job.then(function () {
           window.UI.toast("Deleted");
           load();
         }).catch(function (err) { window.UI.toast(err.message); });
@@ -246,10 +319,13 @@
     }
 
     function writeKey(key, value) {
-      var patch = {};
-      patch[key] = value;
-      window.GameSaves.writeKeys(current.host, patch, true).then(function () {
-        current.data[key] = value;
+      var entry = entryOf(key);
+      var job = entry.from === "cookie"
+        ? window.GameSaves.writeCookies(current.host, kv(entry.name || key, value))
+        : window.GameSaves.writeKeys(current.host, kv(key, value), true);
+
+      job.then(function () {
+        current.data[key] = { value: value, from: entry.from, name: entry.name };
         window.UI.toast("Saved · " + key);
         say("Wrote " + key + " to " + current.host + ".");
       }).catch(function (err) { window.UI.toast(err.message); });
@@ -266,8 +342,8 @@
       if (!key || !key.trim()) return;
       var value = window.prompt("Value for “" + key.trim() + "”", "0");
       if (value === null) return;
+      current.data[key.trim()] = { value: value, from: "localStorage" };
       writeKey(key.trim(), value);
-      current.data[key.trim()] = value;
       draw();
     });
 

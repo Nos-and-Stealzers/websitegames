@@ -136,7 +136,8 @@
                save in IndexedDB rather than localStorage, so a snapshot with
                no localStorage keys is not necessarily an empty one. */
             var idbNames = Object.keys(res.idb || {});
-            if (!res.keys && !idbNames.length) {
+            var cookieNames = Object.keys(res.cookies || {});
+            if (!res.keys && !idbNames.length && !cookieNames.length) {
               done.push({
                 host: keyFor(origin), keys: 0, skipped: true,
                 note: res.idbUnsupported ? "this browser can't list IndexedDB" : null
@@ -144,12 +145,15 @@
               return;
             }
 
-            var payload = { local: res.data || {}, idb: res.idb || {} };
+            var payload = {
+              local: res.data || {}, idb: res.idb || {}, cookies: res.cookies || {}
+            };
             return window.API.putGameSave(keyFor(origin), payload).then(function (out) {
               done.push({
                 host: keyFor(origin),
                 keys: res.keys,
                 databases: idbNames.length,
+                cookies: cookieNames.length,
                 bytes: out && out.bytes
               });
             });
@@ -180,20 +184,24 @@
             /* Snapshots taken before IndexedDB support were a flat map of
                localStorage keys. Read both shapes so older backups still
                restore. */
-            var local = stored.local || (stored.idb ? {} : stored);
+            var local = stored.local || (stored.idb || stored.cookies ? {} : stored);
             var idb = stored.idb || {};
+            var cookies = stored.cookies || {};
 
-            if (!Object.keys(local).length && !Object.keys(idb).length) {
+            if (!Object.keys(local).length && !Object.keys(idb).length &&
+                !Object.keys(cookies).length) {
               done.push({ host: host, written: 0, empty: true });
               return;
             }
 
             return ask(origin, {
-              action: "write", data: local, idb: idb, overwrite: !!overwrite
+              action: "write", data: local, idb: idb, cookies: cookies,
+              overwrite: !!overwrite
             }).then(function (out) {
               done.push({
                 host: host,
-                written: (out.written || 0) + (out.idbWritten || 0),
+                written: (out.written || 0) + (out.idbWritten || 0) +
+                         (out.cookiesWritten || 0),
                 kept: out.kept
               });
             });
@@ -228,7 +236,19 @@
     var origin = originFor(hostOrOrigin);
     if (!origin) return Promise.reject(new Error("Unknown game host."));
     return ask(origin, { action: "read" }).then(function (res) {
-      return { host: keyFor(origin), data: res.data || {}, skipped: res.skipped || 0 };
+      return {
+        host: keyFor(origin),
+        data: res.data || {},
+        cookies: res.cookies || {},
+        idb: res.idb || {},
+        /* The bridge sits at the origin root, so it only sees path=/ cookies.
+           A game that sets one with no path scopes it to its own folder, out
+           of reach from there — the editor says so rather than showing an
+           empty list and letting it read as broken. */
+        cookiePath: res.cookiePath || "/",
+        idbUnsupported: !!res.idbUnsupported,
+        skipped: res.skipped || 0
+      };
     });
   }
 
@@ -240,6 +260,14 @@
     return ask(origin, {
       action: "write", data: data, overwrite: overwrite !== false
     });
+  }
+
+  /* Cookies are written on their own path, so they get their own call rather
+     than a flag smuggled through the localStorage payload. */
+  function writeCookies(hostOrOrigin, data) {
+    var origin = originFor(hostOrOrigin);
+    if (!origin) return Promise.reject(new Error("Unknown game host."));
+    return ask(origin, { action: "write", data: {}, cookies: data, overwrite: true });
   }
 
   function removeKeys(hostOrOrigin, keys) {
@@ -256,6 +284,7 @@
     probe: probe,
     readAll: readAll,
     writeKeys: writeKeys,
+    writeCookies: writeCookies,
     removeKeys: removeKeys
   };
 })();
