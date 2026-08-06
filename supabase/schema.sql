@@ -1213,7 +1213,7 @@ end;
 $$;
 
 -- =====================================================================
--- 10 · OWNER RANK, CATALOGUE, SUPPORT, CALLING
+-- 11 · OWNER RANK, CATALOGUE, SUPPORT, CALLING
 --
 -- Parity with the Node backend. Additive and idempotent like the rest.
 -- =====================================================================
@@ -1802,7 +1802,7 @@ $$;
 grant execute on function public.admin_tickets(text) to authenticated;
 
 -- =====================================================================
--- 11 · PRESENCE AND SIGN-IN HISTORY
+-- 12 · PRESENCE AND SIGN-IN HISTORY
 --
 -- The staff "Live" and "Logins" views. Parity with the Node backend,
 -- with one honest gap called out below.

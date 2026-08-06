@@ -67,19 +67,21 @@
     if (mode === "none" || typeof window.fetch !== "function") return;
 
     var base = String((window.SITE && window.SITE.apiBase) || "").replace(/\/+$/, "");
+    var conf = (window.SITE && window.SITE.supabase) || {};
 
     /* Supabase serves the same overlay from a view; the Node API from a
        route. Either way it's a plain GET with no credentials needed. */
     var url = mode === "supabase"
-      ? (window.SITE.supabaseUrl || "").replace(/\/+$/, "") + "/rest/v1/custom_games_public?select=game_id,payload,removed"
+      ? String(conf.url || "").replace(/\/+$/, "") +
+        "/rest/v1/custom_games_public?select=game_id,payload,removed"
       : base + "/api/catalog/custom";
 
     var opts = {};
     if (mode === "supabase") {
-      if (!window.SITE.supabaseKey) return;
+      if (!conf.url || !conf.anonKey) return;
       opts.headers = {
-        apikey: window.SITE.supabaseKey,
-        Authorization: "Bearer " + window.SITE.supabaseKey
+        apikey: conf.anonKey,
+        Authorization: "Bearer " + conf.anonKey
       };
     }
 

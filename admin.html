@@ -49,6 +49,7 @@
         <button class="tab" type="button" role="tab" data-tab="games" aria-selected="false" data-owner hidden>Games</button>
         <button class="tab" type="button" role="tab" data-tab="gamedata" aria-selected="false">Game data</button>
         <button class="tab" type="button" role="tab" data-tab="audit" aria-selected="false">Audit</button>
+        <button class="tab" type="button" role="tab" data-tab="help" aria-selected="false">Help</button>
       </div>
 
       <!-- overview -->
@@ -239,6 +240,49 @@
       <!-- audit -->
       <section class="tab-panel" data-panel="audit" hidden>
         <div class="rows" id="audit-rows"></div>
+      </section>
+
+      <!-- help -->
+      <section class="tab-panel" data-panel="help" hidden>
+        <div class="help-grid">
+
+          <section class="panel">
+            <h2 class="help-h">What each tab does</h2>
+            <dl class="help-list" id="help-tabs"></dl>
+          </section>
+
+          <section class="panel">
+            <h2 class="help-h">Keyboard shortcuts</h2>
+            <p class="tiny dimmer" style="margin:0 0 0.9rem">
+              Single-key shortcuts are ignored while you're typing, and while a
+              game is running — a stray keypress after an iframe loses focus
+              would otherwise navigate you out of the game. The admin combo
+              uses a modifier precisely so it still works mid-game.
+              All of them can be switched off in <a href="settings.html">Settings</a>.
+            </p>
+            <table class="keys-table">
+              <thead><tr><th>Key</th><th>Does</th><th>Where</th></tr></thead>
+              <tbody id="help-keys"></tbody>
+            </table>
+          </section>
+
+          <section class="panel">
+            <h2 class="help-h">Ranks</h2>
+            <p class="tiny dimmer" style="margin:0 0 0.9rem">
+              Ranks are ordered, not a list of flags. The rule everywhere is the
+              same: <b>you can only act on someone below you</b>, and you can
+              never promote anyone to your own rank. The server enforces this —
+              hiding a button here is convenience, not security.
+            </p>
+            <dl class="help-list" id="help-ranks"></dl>
+          </section>
+
+          <section class="panel">
+            <h2 class="help-h">Things worth knowing</h2>
+            <ul class="help-notes" id="help-notes"></ul>
+          </section>
+
+        </div>
       </section>
     </div>
 

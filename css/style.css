@@ -1969,3 +1969,58 @@ kbd {
 
 /* A panel whose children own their own padding (lists, threads). */
 .panel-flush { padding: 0; overflow: hidden; }
+
+/* --------------------------------------------------------------------------
+   28 · ADMIN HELP
+   -------------------------------------------------------------------------- */
+
+.help-grid {
+  display: grid; gap: 1.2rem;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  align-items: start;
+}
+.help-h {
+  font-size: 0.95rem; margin: 0 0 0.8rem;
+  padding-bottom: 0.5rem; border-bottom: 1px solid var(--line);
+}
+
+.help-list { margin: 0; }
+.help-list dt {
+  font-weight: 650; font-size: 0.85rem; color: var(--accent);
+  margin-top: 0.9rem;
+}
+.help-list dt:first-child { margin-top: 0; }
+.help-list dd {
+  margin: 0.2rem 0 0; font-size: 0.83rem; line-height: 1.55; color: var(--ink-2);
+}
+
+.keys-table { width: 100%; border-collapse: collapse; font-size: 0.83rem; }
+.keys-table th {
+  text-align: left; font-size: 0.72rem; text-transform: uppercase;
+  letter-spacing: 0.06em; color: var(--ink-3); font-weight: 600;
+  padding: 0 0.5rem 0.4rem 0; border-bottom: 1px solid var(--line);
+}
+.keys-table td {
+  padding: 0.45rem 0.5rem 0.45rem 0;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+.keys-table td:first-child { white-space: nowrap; }
+.keys-table td:last-child { color: var(--ink-3); white-space: nowrap; }
+.keys-table kbd {
+  display: inline-block; font-family: var(--mono); font-size: 0.78rem;
+  padding: 0.12rem 0.4rem; border: 1px solid var(--line-2);
+  border-bottom-width: 2px; border-radius: 4px;
+  background: var(--paper); color: var(--ink);
+}
+
+.help-notes { margin: 0; padding-left: 1.1rem; }
+.help-notes li {
+  font-size: 0.83rem; line-height: 1.6; color: var(--ink-2);
+  margin-bottom: 0.6rem;
+}
+.help-notes li:last-child { margin-bottom: 0; }
+
+@media (max-width: 620px) {
+  .keys-table td:last-child, .keys-table th:last-child { display: none; }
+}

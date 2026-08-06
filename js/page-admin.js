@@ -39,6 +39,7 @@
         if (tab.dataset.tab === "feedback") loadFeedback();
         if (tab.dataset.tab === "gamedata" && window.initGameData) window.initGameData();
         if (tab.dataset.tab === "audit") loadAudit();
+        if (tab.dataset.tab === "help") loadHelp();
       });
 
       var isOwner = window.Session.isOwner();
@@ -584,6 +585,122 @@
 
         card.appendChild(acts);
         return card;
+      }
+
+      /* ----------------------------------------------------------- help */
+
+      /* Written out here rather than in the HTML so the admin combo shows the
+         key that is actually configured, and so rows for things you can't
+         reach don't appear at all. */
+      function loadHelp() {
+        var mac = /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent || "");
+        var mod = mac ? "⌘" : "Ctrl";
+        var adminKey = (window.Store.settings().adminKey || "p").toUpperCase();
+
+        var TABS = [
+          ["Overview", "Counts for the whole site and the most-played titles across every " +
+            "account. Refreshes itself every 30 seconds."],
+          ["Live", "Who is signed in right now and what they have open. Presence comes from " +
+            "the player page, so it lags by up to a minute and stops when someone closes the tab. " +
+            "It is not a location log — it only knows the game, not the person."],
+          ["Users", "Search accounts, change someone's rank, suspend or restore them. " +
+            "Suspending signs that person out immediately and blocks them from signing back in."],
+          ["Support", "The ticket queue. “Needs a reply” is waiting on staff; " +
+            "“waiting on them” means you have replied and it is with the user. " +
+            "Replying moves it between those two by itself, so the queue stays honest without " +
+            "anyone filing it."],
+          ["Reports", "What people have reported — users, messages or games. Marking one " +
+            "handled tells the reporter it was looked at."],
+          ["Feedback", "One-way notes: bugs, ideas, game requests. Unlike a ticket, there is " +
+            "no back-and-forth — you set a state and can leave one reply."],
+          ["Logins", "Every sign-in attempt. A run of failures against one account is what a " +
+            "break-in attempt looks like."],
+          ["Games", "Owner only. Adds a title to the live catalogue without a commit and a " +
+            "deploy, repoints one whose host moved, or hides one. It stores a pointer, not the " +
+            "game files — those still have to be hosted somewhere."],
+          ["Game data", "A save editor for whatever a game has stored in <b>your own browser</b>. " +
+            "It edits your copy only; nothing here touches anyone else's progress."],
+          ["Audit", "Every staff action, with who did it and when. It is append-only, and it " +
+            "records your actions too."]
+        ];
+
+        var host = document.getElementById("help-tabs");
+        host.innerHTML = "";
+        TABS.forEach(function (pair) {
+          /* Don't document a tab this account can't open. */
+          if (pair[0] === "Games" && !isOwner) return;
+          var dt = UI.el("dt", null, pair[0]);
+          var dd = UI.el("dd");
+          dd.innerHTML = pair[1];        // fixed copy above, not user input
+          host.appendChild(dt);
+          host.appendChild(dd);
+        });
+
+        var KEYS = [
+          [mod + " + " + adminKey, "Jump straight to this console", "anywhere, even mid-game", true],
+          ["Esc", "Close the finder, the settings sheet or the sidebar", "anywhere"],
+          ["/", "Jump to the search box", "anywhere"],
+          ["K", "Open the finder — search every game by name", "anywhere"],
+          ["R", "Play something at random", "anywhere"],
+          ["?", "Open quick settings", "anywhere"],
+          ["P", "Play, or reload the game", "a game page"],
+          ["F", "Pin the title you're on", "a game page"]
+        ];
+
+        var body = document.getElementById("help-keys");
+        body.innerHTML = "";
+        KEYS.forEach(function (row) {
+          var tr = UI.el("tr");
+          var kb = UI.el("td");
+          var key = UI.el("kbd", null, row[0]);
+          kb.appendChild(key);
+          if (row[3]) kb.appendChild(UI.el("span", "tiny dimmer", " staff only"));
+          tr.appendChild(kb);
+          tr.appendChild(UI.el("td", null, row[1]));
+          tr.appendChild(UI.el("td", "dimmer", row[2]));
+          body.appendChild(tr);
+        });
+
+        var RANKS = [
+          ["user", "The default. No console."],
+          ["mod", "Reports, feedback, support, the live view and the login history. " +
+            "Cannot change anyone's rank or suspend anyone."],
+          ["admin", "Everything a mod has, plus promoting people to mod and suspending " +
+            "accounts. Cannot promote anyone to admin — that is the rank rule, not an oversight."],
+          ["owner", "Everything, plus the catalogue editor. Set by the server from the " +
+            "configured owner name, never granted through this panel. The owner cannot be " +
+            "demoted, suspended or deleted by anyone, including another owner — it exists so " +
+            "there is always one account that a compromised admin cannot lock out."]
+        ];
+
+        var rankHost = document.getElementById("help-ranks");
+        rankHost.innerHTML = "";
+        RANKS.forEach(function (pair) {
+          var dt = UI.el("dt", null, pair[0]);
+          if (pair[0] === me.role) dt.appendChild(UI.el("span", "tiny dimmer", " ← you"));
+          rankHost.appendChild(dt);
+          rankHost.appendChild(UI.el("dd", null, pair[1]));
+        });
+
+        var NOTES = [
+          "Every permission here is checked again on the server. A hidden button is " +
+            "a convenience, not a lock.",
+          "The admin shortcut is configurable in Settings — it defaults to " + mod +
+            " + P, which is also the browser's print dialog, so change it if you'd rather " +
+            "keep that.",
+          "Suspending someone drops their sessions immediately; they are signed out on " +
+            "their next request, not whenever they next close the tab.",
+          "Support tickets and feedback are different things on purpose. Feedback is a " +
+            "note you file; a ticket is a conversation that stays open until someone closes it.",
+          "Adding a game through the Games tab points at files hosted elsewhere. If that " +
+            "host goes away, so does the game — the catalogue entry is a link, not a copy.",
+          "Messages are stored in plain text and moderators can read and remove them. " +
+            "That is worth saying out loud to anyone who asks."
+        ];
+
+        var notes = document.getElementById("help-notes");
+        notes.innerHTML = "";
+        NOTES.forEach(function (text) { notes.appendChild(UI.el("li", null, text)); });
       }
 
       /* ---------------------------------------------------------- audit */
