@@ -294,6 +294,37 @@
     badge.className = "save-state" + (tone ? " " + tone : "");
   }
 
+  /* What the host's storage looked like when this game opened. Anything that
+     moves between here and a backup is this game's doing, which is the only
+     reliable way to tell one game's keys from the 144 others sharing the
+     origin. Names and values, because a save that changes in place is just as
+     much a signal as a new key. */
+  var baseline = null;
+
+  function takeBaseline() {
+    if (!window.GameSaves || !game || !game.host) return;
+    var origin = (window.SITE.gameHosts || {})[game.host];
+    if (!origin) return;
+
+    window.GameSaves.readAll(window.GameSaves.hostKey(origin))
+      .then(function (res) { baseline = flatten(res); })
+      .catch(function () { /* no bridge on that host; attribution just waits */ });
+  }
+
+  /* One flat name → value map across all three stores, so a diff does not
+     have to care which one a game happens to use. */
+  function flatten(res) {
+    var out = {};
+    Object.keys(res.data || {}).forEach(function (k) { out[k] = res.data[k]; });
+    Object.keys(res.cookies || {}).forEach(function (k) {
+      out["cookie:" + k] = res.cookies[k];
+    });
+    Object.keys(res.idb || {}).forEach(function (db) {
+      out["idb:" + db] = JSON.stringify(res.idb[db]).length;   // size, not contents
+    });
+    return out;
+  }
+
   function backupProgress(reason) {
     if (!canBackup()) return Promise.resolve();
     if (Date.now() - lastBackup < 20000) return Promise.resolve();
@@ -304,11 +335,30 @@
 
     return window.GameSaves.readAll(window.GameSaves.hostKey(origin))
       .then(function (res) {
-        var keys = Object.keys(res.data || {});
-        if (!keys.length) return null;
-        return window.API.putGameSave(res.host, res.data).then(function () {
+        /* Attribute whatever moved while this game was open. */
+        if (window.GameKeys && baseline) {
+          var now = flatten(res);
+          window.GameKeys.learnFromSnapshots(game, res.host, baseline, now);
+          baseline = now;
+        }
+
+        /* Send all three stores. This used to push res.data alone, which is
+           localStorage only — so every game that saves to IndexedDB or a
+           cookie, which is most of the ones that save at all, was backed up
+           as an empty record. */
+        var payload = {
+          local: res.data || {},
+          idb: res.idb || {},
+          cookies: res.cookies || {}
+        };
+        var count = Object.keys(payload.local).length +
+                    Object.keys(payload.idb).length +
+                    Object.keys(payload.cookies).length;
+        if (!count) return null;
+
+        return window.API.putGameSave(res.host, payload).then(function () {
           markSaved("progress saved", "ok");
-          return keys.length;
+          return count;
         });
       })
       .catch(function () {
@@ -321,6 +371,7 @@
   function watchProgress() {
     if (!canBackup()) return;
     markSaved("progress syncs to your account", "");
+    takeBaseline();
     window.clearInterval(backupTimer);
     backupTimer = window.setInterval(function () {
       if (!document.hidden && frame) backupProgress("interval");

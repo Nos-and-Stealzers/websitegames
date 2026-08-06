@@ -119,6 +119,8 @@
             server cheat, so nothing here affects anyone else.
           </p>
           <div class="toolbar" style="position:static;margin:0;border:0;padding:0;background:none">
+            <label for="gd-game" class="label">Game</label>
+            <select id="gd-game" style="max-width:16rem"></select>
             <label for="gd-host" class="label">Host</label>
             <select id="gd-host"></select>
             <div class="search">
@@ -131,6 +133,7 @@
           <p class="tiny dimmer" id="gd-state" style="margin:0.8rem 0 0"></p>
         </div>
 
+        <p class="tiny dimmer" id="gd-scope" style="margin:0 0 1rem"></p>
         <div id="gd-presets" hidden style="margin-bottom:1rem"></div>
         <div id="gd-keys"></div>
       </section>
@@ -334,6 +337,7 @@
   <script src="js/capture.js"></script>
   <script src="js/chat-dock.js"></script>
   <script src="js/call.js"></script>
+  <script src="js/game-keys.js"></script>
   <script src="js/game-saves.js"></script>
   <script src="js/shell.js"></script>
   <script src="js/page-gamedata.js"></script>

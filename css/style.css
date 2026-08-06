@@ -2106,3 +2106,7 @@ kbd {
 }
 .gd-from[data-from="cookie"] { color: var(--accent); border-color: var(--accent); }
 .gd-card[data-from="cookie"] { border-left: 2px solid var(--accent); }
+
+/* How a key was attributed to a game: watched, or guessed from its name. */
+.gd-from[data-how="watched"] { color: var(--good, var(--accent)); border-color: currentColor; }
+.gd-from[data-how="guessed"] { color: var(--ink-3); border-style: dashed; }

@@ -45,6 +45,8 @@
     if (!window.GameSaves) return;
 
     var hostSel = document.getElementById("gd-host");
+    var gameSel = document.getElementById("gd-game");
+    var scopeNote = document.getElementById("gd-scope");
     var filter = document.getElementById("gd-filter");
     var state = document.getElementById("gd-state");
     var keysHost = document.getElementById("gd-keys");
@@ -58,6 +60,45 @@
       opt.value = window.GameSaves.hostKey(origin);
       hostSel.appendChild(opt);
     });
+
+    /* The per-game view. A host's storage is shared by every game it serves —
+       up to 145 of them — so "all keys on games-huge" is not a mod menu for
+       anything. Picking a game narrows it to what that game actually wrote,
+       which js/game-keys.js learns by watching the storage change while you
+       play, and guesses from key names in the meantime. */
+    buildGameList();
+
+    function buildGameList() {
+      var any = el("option", null, "Everything on this host");
+      any.value = "";
+      gameSel.appendChild(any);
+
+      var host = hostSel.value;
+      var games = window.Catalog.all.filter(function (g) { return g.host === host; });
+      var learned = {};
+      (window.GameKeys ? window.GameKeys.known() : []).forEach(function (k) {
+        learned[k.id] = k.keys;
+      });
+
+      /* Games this device has already learned about float to the top, since
+         those are the ones with something to show. */
+      games.sort(function (a, b) {
+        var d = (learned[b.id] || 0) - (learned[a.id] || 0);
+        return d || a.title.localeCompare(b.title);
+      });
+
+      games.forEach(function (g) {
+        var opt = el("option", null,
+          g.title + (learned[g.id] ? "  ·  " + learned[g.id] + " keys seen" : ""));
+        opt.value = g.id;
+        gameSel.appendChild(opt);
+      });
+    }
+
+    function rebuildGameList() {
+      gameSel.innerHTML = "";
+      buildGameList();
+    }
 
     function say(text) { state.textContent = text; }
 
@@ -127,6 +168,7 @@
       keysHost.innerHTML = "";
 
       var keys = Object.keys(current.data).sort();
+      keys = narrowToGame(keys);
       if (q) {
         keys = keys.filter(function (k) {
           return k.toLowerCase().indexOf(q) !== -1 ||
@@ -173,6 +215,41 @@
       keys.forEach(function (key) { keysHost.appendChild(card(key)); });
     }
 
+    /* Keys this game is known to have written, plus ones whose name looks
+       like it. The guess is labelled as a guess. */
+    function narrowToGame(keys) {
+      scopeNote.textContent = "";
+      var id = gameSel.value;
+      if (!id || !window.GameKeys) return keys;
+
+      var game = window.Catalog.byId(id);
+      if (!game) return keys;
+
+      var owned = window.GameKeys.forGame(game, current.data);
+      var seen = {};
+      owned.watched.forEach(function (k) { seen[k] = "watched"; });
+      owned.guessed.forEach(function (k) { seen[k] = "guessed"; });
+      scopeOf = seen;
+
+      var narrowed = keys.filter(function (k) { return seen[k]; });
+
+      if (!narrowed.length) {
+        scopeNote.textContent = "Nothing attributed to " + game.title + " yet. " +
+          "Play it for a minute and come back — the player watches what changes " +
+          "while a game is open and files those keys against it. Until then, " +
+          "switch to “Everything on this host” to see the shared list.";
+      } else {
+        var w = owned.watched.length, g = owned.guessed.length;
+        scopeNote.textContent = narrowed.length + " key" +
+          (narrowed.length === 1 ? "" : "s") + " for " + game.title + " — " +
+          w + " seen change while you played" +
+          (g ? ", " + g + " matched by name (a guess)" : "") + ".";
+      }
+      return narrowed;
+    }
+
+    var scopeOf = {};
+
     function card(key) {
       var entry = entryOf(key);
       var raw = entry.value;
@@ -189,6 +266,14 @@
       var where = el("span", "gd-from", entry.from === "cookie" ? "cookie" : "local");
       where.dataset.from = entry.from;
       head.appendChild(where);
+
+      /* A guessed key can belong to a different game entirely, so say which
+         kind of claim this is rather than presenting both as fact. */
+      if (gameSel.value && scopeOf[key]) {
+        var how = el("span", "gd-from", scopeOf[key] === "watched" ? "seen" : "guess");
+        how.dataset.how = scopeOf[key];
+        head.appendChild(how);
+      }
 
       var nice = labelFor(current.host, key);
       if (nice) head.appendChild(el("span", "pill on", nice));
@@ -334,7 +419,8 @@
     /* ------------------------------------------------------------ wiring */
 
     document.getElementById("gd-load").addEventListener("click", load);
-    hostSel.addEventListener("change", load);
+    hostSel.addEventListener("change", function () { rebuildGameList(); load(); });
+    gameSel.addEventListener("change", draw);
     filter.addEventListener("input", UI.debounce(draw, 150));
 
     document.getElementById("gd-new").addEventListener("click", function () {
