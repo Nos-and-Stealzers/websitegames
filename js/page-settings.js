@@ -462,25 +462,32 @@
     document.getElementById("staff-role").textContent = user.role;
 
     var mac = /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent || "");
-    document.getElementById("combo-mod").textContent = (mac ? "⌘" : "Ctrl") + " + Shift";
+    document.getElementById("combo-mod").textContent = mac ? "⌘" : "Ctrl";
 
-    /* Keys the browser claims for itself *with Shift held* — a different set
-       from plain Ctrl. Some of these the page can take over, some it cannot:
-       anything the browser handles as window chrome (a new private window,
-       reopening a tab) never reaches the page at all, so preventDefault has
-       nothing to prevent. Worth saying which is which. */
-    var TAKEN = {
-      n: "opens a private window — the browser takes this before the page sees it",
-      p: "opens a private window in Firefox — not interceptable there",
-      t: "reopens the last closed tab — the browser takes this first",
-      w: "closes the window — the browser takes this first",
-      q: "quits the browser on some platforms",
-      i: "developer tools",
-      j: "the developer console",
-      c: "inspect element",
-      k: "the web console in Firefox, when developer tools are open",
-      delete: "clear browsing data"
+    /* Keys the browser wants for itself. The split that matters is not "is it
+       used" but "can a page take it": most of these the hub overrides fine,
+       but a few are browser chrome and never reach the page at all, so there
+       is nothing for preventDefault to stop. Those say so plainly rather than
+       letting someone pick a combo that silently does nothing. */
+    var UNAVAILABLE = {
+      l: "focuses the address bar, and browsers do not let a page take that",
+      n: "opens a new window",
+      t: "opens a new tab",
+      w: "closes the tab",
+      q: "quits the browser on some platforms"
     };
+    var CONTESTED = {
+      p: "the print dialog",
+      s: "save page",
+      f: "find on page",
+      d: "bookmark this page",
+      r: "reload",
+      a: "select all",
+      j: "downloads",
+      o: "open a file",
+      k: "the search bar in Firefox"
+    };
+    function claimedBy(ch) { return UNAVAILABLE[ch] || CONTESTED[ch]; }
 
     var select = document.getElementById("admin-key");
     var warn = document.getElementById("admin-key-warn");
@@ -488,7 +495,10 @@
     var toggle = document.getElementById("admin-key-on");
 
     "abcdefghijklmnopqrstuvwxyz0123456789".split("").forEach(function (ch) {
-      var o = UI.el("option", null, ch.toUpperCase() + (TAKEN[ch] ? "  ·  taken" : ""));
+      var tag = UNAVAILABLE[ch] ? "  ·  won't work"
+              : CONTESTED[ch]   ? "  ·  taken"
+              : "";
+      var o = UI.el("option", null, ch.toUpperCase() + tag);
       o.value = ch;
       select.appendChild(o);
     });
@@ -501,19 +511,21 @@
     select.disabled = !enabled;
 
     function comboLabel() {
-      return (mac ? "⌘" : "Ctrl") + " + Shift + " + select.value.toUpperCase();
+      return (mac ? "⌘" : "Ctrl") + " + " + select.value.toUpperCase();
     }
 
     function paintWarning() {
-      var clash = TAKEN[select.value];
-      if (clash && !select.disabled) {
-        warnText.textContent = comboLabel() + " normally " + clash +
-          ". Where the browser handles it as window chrome the page never sees " +
-          "the key at all, so this would simply not work. Pick something else.";
-        warn.hidden = false;
-      } else {
-        warn.hidden = true;
-      }
+      var key = select.value;
+      if (select.disabled || !claimedBy(key)) { warn.hidden = true; return; }
+
+      warnText.textContent = UNAVAILABLE[key]
+        ? comboLabel() + " " + UNAVAILABLE[key] + ". The key never reaches this " +
+          "page, so the shortcut will not fire at all. The sidebar still works — " +
+          "but pick another letter if you want the shortcut."
+        : comboLabel() + " is normally " + CONTESTED[key] + ". The hub takes it over " +
+          "on its own pages, which works, though a game that has grabbed the key " +
+          "for itself may get there first.";
+      warn.hidden = false;
     }
 
     select.addEventListener("change", function () {
@@ -549,11 +561,30 @@
         dataSection(null);
         return;
       }
-      dataSection(state.user);
-      accountSection(state.user);
-      gameProgressSection();
-      staffSection(state.user);
+      /* Each section is built independently, so one throwing cannot take the
+         rest of the page down with it. They used to run as four bare calls in
+         a row: anything that threw — and the two backends do not fail
+         identically — silently skipped everything after it, as an unhandled
+         rejection with nothing shown on screen. The staff section was last,
+         so it was the one that vanished.
+
+         Staff goes first now: it is local, cheap, and cannot fail on a
+         backend quirk the way the others can. */
+      section("staff", function () { staffSection(state.user); });
+      section("data", function () { dataSection(state.user); });
+      section("account", function () { accountSection(state.user); });
+      section("game progress", gameProgressSection);
     });
+  }
+
+  function section(name, build) {
+    try {
+      build();
+    } catch (err) {
+      /* Loud in the console, quiet on the page — a broken panel should not
+         look like a broken site. */
+      if (window.console) console.error("settings: " + name + " section failed", err);
+    }
   }
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);

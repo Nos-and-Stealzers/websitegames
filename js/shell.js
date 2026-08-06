@@ -707,16 +707,16 @@
         return;
       }
 
-      /* Staff jump to the console with Ctrl/Cmd + Shift + a key, so it works
-         even while a game is running — the single-key shortcuts deliberately
-         do not. Shift is in the combo because plain Ctrl + a letter collides
-         with far more of the browser's own shortcuts. The letter is
-         configurable in Settings, for admins and above.
+      /* Staff jump to the console with Ctrl/Cmd + a key, so it works even
+         while a game is running — the single-key shortcuts deliberately do
+         not. The letter is configurable in Settings, for admins and above.
+         Shift is accepted but not required, so a stored letter still matches
+         whether or not it was typed shifted.
 
-         event.key already carries the shifted form, so lowercasing it is what
-         makes "K" match a stored "k". */
-      if ((event.ctrlKey || event.metaKey) && event.shiftKey && !event.altKey) {
-        var combo = (window.Store.settings().adminKey || "k").toLowerCase();
+         event.key carries the shifted form, so lowercasing it is what makes
+         "L" match a stored "l". */
+      if ((event.ctrlKey || event.metaKey) && !event.altKey) {
+        var combo = (window.Store.settings().adminKey || "l").toLowerCase();
         if (combo && event.key.toLowerCase() === combo &&
             window.Session && window.Session.isStaff()) {
           event.preventDefault();

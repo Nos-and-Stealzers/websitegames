@@ -594,7 +594,7 @@
          reach don't appear at all. */
       function loadHelp() {
         var mac = /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent || "");
-        var mod = (mac ? "⌘" : "Ctrl") + " + Shift";
+        var mod = mac ? "⌘" : "Ctrl";
         var fallback = (window.SITE.defaults && window.SITE.defaults.adminKey) || "k";
         var adminKey = (window.Store.settings().adminKey || fallback).toUpperCase();
 
@@ -686,9 +686,9 @@
         var NOTES = [
           "Every permission here is checked again on the server. A hidden button is " +
             "a convenience, not a lock.",
-          "Admins and owners can change the console shortcut in Settings — the letter " +
-            "only; " + mod + " is fixed, because a plain modifier and one letter collides " +
-            "with far more of what the browser already uses.",
+          "Admins and owners can change the console shortcut in Settings — the " +
+            "letter only, " + mod + " is fixed. The picker marks which letters the " +
+            "browser already wants, and which of those it will not give up at all.",
           "Suspending someone drops their sessions immediately; they are signed out on " +
             "their next request, not whenever they next close the tab.",
           "Support tickets and feedback are different things on purpose. Feedback is a " +

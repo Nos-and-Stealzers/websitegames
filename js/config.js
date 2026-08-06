@@ -81,7 +81,7 @@
       dock: true,              // floating chat, bottom right
       autoBackup: true,        // push game progress to the account as you play
       hideUnavailable: false,  // drop unhosted titles from the index entirely
-      adminKey: "k"            // Ctrl/Cmd + Shift + this opens the console (staff only)
+      adminKey: "l"            // Ctrl/Cmd + this opens the console (staff only)
     },
 
     /* Category presentation: label, glyph, accent used by the index tiles. */
