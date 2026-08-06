@@ -174,6 +174,27 @@
 
   function ms(value) { return value ? Date.parse(value) : 0; }
 
+  /* PostgREST returns an embedded count as [{ count: n }]. */
+  function embeddedCount(value) {
+    if (Array.isArray(value)) return (value[0] && value[0].count) || 0;
+    return Number(value) || 0;
+  }
+
+  function shapeTicket(t, from) {
+    return {
+      id: t.id,
+      subject: t.subject,
+      category: t.category,
+      priority: t.priority,
+      state: t.state,
+      at: ms(t.created_at),
+      updatedAt: ms(t.updated_at),
+      from: from || "(deleted account)",
+      userId: t.user_id,
+      replies: embeddedCount(t.support_messages)
+    };
+  }
+
   var PROFILE_COLS = "id,username,display_name,bio,role,state,accepts_dms,show_activity," +
                      "friend_code,created_at,last_seen";
 
@@ -269,6 +290,10 @@
         if (!body || !body.access_token) throw fail("Wrong username or password.", 401);
         keepSession(body);
         edgesCache = null;
+        /* Record the sign-in for the staff log. Best-effort — a failure here
+           must never turn a good login into a bad one. */
+        rpc("record_login", { agent: String(navigator.userAgent || "").slice(0, 200) })
+          .catch(function () {});
         return me().then(function (row) { return { user: shapeSelf(row) }; });
       }).catch(function (err) {
         /* Never leak whether the account exists. */
@@ -846,6 +871,195 @@
       if (patch.reply !== undefined) row.reply = String(patch.reply).slice(0, 1000);
       row.updated_at = new Date().toISOString();
       return rest("/feedback?id=eq." + id, { method: "PATCH", body: row })
+        .then(function () { return { ok: true }; });
+    },
+
+    /* --- presence and sign-in history --- */
+
+    setPlaying: function (gameId) {
+      if (!session) return Promise.resolve({ ok: true });
+      return rpc("set_playing", { game: gameId || null })
+        .then(function () { return { ok: true }; });
+    },
+
+    adminLive: function () {
+      return rpc("admin_live");
+    },
+
+    /* On this backend the password check happens inside Supabase Auth, in a
+       schema the anon key cannot read — so only successful sign-ins appear
+       here. Failed attempts are in the Supabase dashboard under
+       Authentication → Logs. The Node backend records both. */
+    adminLogins: function () {
+      return rpc("admin_logins").then(function (rows) {
+        return { logins: rows || [], failuresVisible: false };
+      });
+    },
+
+    /* --- support tickets --- */
+
+    /* Reads go straight to the tables — RLS already limits them to your own
+       tickets, or everything if you're staff. Writes go through RPCs, because
+       RLS grants rows and not columns: an update policy would let anyone set
+       their own ticket to high priority, or flip from_staff on their own
+       messages and impersonate support. */
+
+    openTicket: function (payload) {
+      return rpc("open_ticket", {
+        subject: payload.subject, body: payload.body, category: payload.category || "other"
+      }).then(function (id) { return { id: id }; });
+    },
+
+    myTickets: function () {
+      if (!session) return Promise.resolve({ tickets: [] });
+      return rest("/support_tickets?select=*,support_messages(count)" +
+                  "&user_id=eq." + session.user.id + "&order=updated_at.desc&limit=50")
+        .then(function (rows) {
+          return {
+            tickets: (rows || []).map(function (t) {
+              return shapeTicket(t, session.user.username);
+            })
+          };
+        });
+    },
+
+    ticket: function (id) {
+      return Promise.all([
+        rest("/support_tickets?select=*,profiles:user_id(username)&id=eq." + Number(id)),
+        rest("/support_messages?select=*,profiles:sender_id(username,display_name)" +
+             "&ticket_id=eq." + Number(id) + "&order=id.asc")
+      ]).then(function (out) {
+        var t = one(out[0]);
+        if (!t) throw fail("No such ticket.", 404);
+        return {
+          ticket: shapeTicket(t, t.profiles && t.profiles.username),
+          messages: (out[1] || []).map(function (m) {
+            var who = m.profiles;
+            return {
+              id: m.id,
+              body: m.body,
+              staff: !!m.from_staff,
+              author: who ? (who.display_name || who.username)
+                          : (m.from_staff ? "Support" : "(deleted account)"),
+              at: ms(m.created_at)
+            };
+          })
+        };
+      });
+    },
+
+    replyTicket: function (id, body) {
+      return rpc("reply_ticket", { t: Number(id), body: body })
+        .then(function () { return { ok: true }; });
+    },
+
+    updateTicket: function (id, patch) {
+      var jobs = [];
+      if (patch.state !== undefined) {
+        jobs.push(rpc("set_ticket_state", { t: Number(id), next_state: patch.state }));
+      }
+      if (patch.priority !== undefined) {
+        jobs.push(rpc("set_ticket_priority", { t: Number(id), next_priority: patch.priority }));
+      }
+      if (!jobs.length) return Promise.reject(fail("Nothing to change.", 400));
+      return Promise.all(jobs).then(function () { return { ok: true }; });
+    },
+
+    adminTickets: function (state) {
+      return rpc("admin_tickets", { want_state: state || "open" });
+    },
+
+    /* --- calling --- */
+
+    /* Signalling only; the media is peer-to-peer and never reaches Supabase.
+       STUN is Google's free public service, so there is nothing to pay for
+       and nothing to configure. */
+    iceServers: function () {
+      return Promise.resolve({
+        iceServers: [
+          { urls: ["stun:stun.l.google.com:19302", "stun:stun1.l.google.com:19302"] }
+        ],
+        maxPeers: 4
+      });
+    },
+
+    startCall: function (payload) {
+      return rpc("start_call", {
+        target: payload.userId || null,
+        t: payload.threadId ? Number(payload.threadId) : null,
+        call_kind: payload.kind || "audio"
+      }).then(function (id) {
+        return API.pollSignals(id).then(function (res) {
+          return { call: res.call, iceServers: [
+            { urls: ["stun:stun.l.google.com:19302", "stun:stun1.l.google.com:19302"] }
+          ] };
+        });
+      });
+    },
+
+    pendingCalls: function () {
+      if (!session) return Promise.resolve({ calls: [] });
+      return rpc("pending_calls").then(function (calls) {
+        return { calls: calls || [] };
+      });
+    },
+
+    joinCall: function (id) {
+      return rpc("join_call", { c: Number(id) }).then(function () {
+        return API.pollSignals(id).then(function (res) {
+          return {
+            call: res.call,
+            self: session ? session.user.id : null,
+            iceServers: [
+              { urls: ["stun:stun.l.google.com:19302", "stun:stun1.l.google.com:19302"] }
+            ]
+          };
+        });
+      });
+    },
+
+    leaveCall: function (id) {
+      return rpc("leave_call", { c: Number(id) }).then(function () { return { ok: true }; });
+    },
+
+    sendSignal: function (id, to, kind, payload) {
+      return rpc("send_signal", {
+        c: Number(id), target: to, signal_kind: kind, body: payload || {}
+      }).then(function () { return { ok: true }; });
+    },
+
+    pollSignals: function (id) {
+      return rpc("take_signals", { c: Number(id) }).then(function (res) {
+        return { call: (res && res.call) || null, signals: (res && res.signals) || [] };
+      });
+    },
+
+    /* --- catalogue (owner) --- */
+
+    customCatalog: function () {
+      return rest("/custom_games_public?select=game_id,payload,removed").then(function (rows) {
+        var added = [], removed = [];
+        (rows || []).forEach(function (r) {
+          if (r.removed) removed.push(r.game_id);
+          else if (r.payload) added.push(Object.assign({}, r.payload, { id: r.game_id }));
+        });
+        return { added: added, removed: removed };
+      });
+    },
+
+    saveCatalogEntry: function (entry) {
+      return rpc("save_custom_game", { entry: entry }).then(function (game) {
+        return { game: game };
+      });
+    },
+
+    removeCatalogEntry: function (id, hard) {
+      return rpc("remove_custom_game", { slug: id, hard: !!hard })
+        .then(function () { return { ok: true }; });
+    },
+
+    restoreCatalogEntry: function (id) {
+      return rpc("restore_custom_game", { slug: id })
         .then(function () { return { ok: true }; });
     },
 

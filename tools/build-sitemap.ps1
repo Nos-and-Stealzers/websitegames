@@ -13,7 +13,11 @@ function Write-Utf8([string]$path, [string]$text) {
   [System.IO.File]::WriteAllText($path, $text, $script:utf8)
 }
 
-$json = (Get-Content (Join-Path $root "data\games.json") -Raw).TrimStart([char]0xFEFF)
+# Read through .NET as UTF-8. Get-Content -Raw defaults to the system ANSI
+# codepage in Windows PowerShell, which decoded every non-ASCII byte wrongly
+# and then wrote the damage back — so each run mangled the catalogue further.
+$json = [System.IO.File]::ReadAllText((Join-Path $root "data\games.json"),
+                                      [System.Text.Encoding]::UTF8).TrimStart([char]0xFEFF)
 $games = $json | ConvertFrom-Json
 
 # --- data/games.js (lets the catalog load over file:// with no fetch) ---
@@ -42,6 +46,7 @@ Add-Url "$origin/" "1.0" "daily"
 Add-Url "$origin/browse.html" "0.9" "daily"
 Add-Url "$origin/categories.html" "0.8" "weekly"
 Add-Url "$origin/about.html" "0.4" "monthly"
+Add-Url "$origin/support.html" "0.3" "monthly"
 # login/signup are indexable entry points; the rest of the account area is not.
 Add-Url "$origin/login.html" "0.3" "monthly"
 Add-Url "$origin/signup.html" "0.3" "monthly"

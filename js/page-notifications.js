@@ -36,7 +36,7 @@
       });
 
       document.getElementById("mark-all").addEventListener("click", function () {
-        API.post("/notifications/read", { all: true })
+        API.markRead("all")
           .then(function () {
             UI.toast("All marked read");
             window.Session.refreshBadges();
@@ -47,7 +47,7 @@
 
       document.getElementById("clear-all").addEventListener("click", function () {
         if (!window.confirm("Clear every notification? This can't be undone.")) return;
-        API.del("/notifications")
+        API.clearNotifications()
           .then(function () {
             UI.toast("Cleared");
             window.Session.refreshBadges();
@@ -80,7 +80,7 @@
           go.href = n.link;
           go.addEventListener("click", function () {
             /* Reading it is the point of clicking through. */
-            if (!n.read) API.post("/notifications/read", { ids: [n.id] }).catch(function () {});
+            if (!n.read) API.markRead([n.id]).catch(function () {});
           });
           acts.appendChild(go);
         }
@@ -89,7 +89,7 @@
         drop.title = "Dismiss";
         drop.setAttribute("aria-label", "Dismiss this notification");
         drop.addEventListener("click", function () {
-          API.del("/notifications/" + n.id)
+          API.dismissNotification(n.id)
             .then(function () { window.Session.refreshBadges(); load(); })
             .catch(function (err) { UI.toast(err.message); });
         });
@@ -100,7 +100,7 @@
       }
 
       function load() {
-        return API.get("/notifications?limit=60" + (filter === "unread" ? "&unread=1" : ""))
+        return API.notifications({ limit: 60, unreadOnly: filter === "unread" })
           .then(function (res) {
             document.getElementById("r-unread").textContent = res.unread;
             document.getElementById("r-total").textContent = res.notifications.length;

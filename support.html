@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en" data-skin="noir" data-lite="off">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Support — Arcade Campus Hub</title>
+  <meta name="description" content="Open a support ticket and talk to a person. Account trouble, lost saves, safety reports.">
+  <meta name="theme-color" content="#0c0d10">
+  <meta name="robots" content="index,follow">
+  <link rel="icon" type="image/svg+xml" href="assets/icon.svg">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/theme-boot.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div data-shell="chrome"></div>
+
+  <main class="main" id="main">
+
+    <header class="page-head">
+      <span class="label">Support</span>
+      <h1>Get help from a person</h1>
+      <p>A ticket is a conversation that stays open until it's sorted — unlike
+         feedback, which is a one-way note. Use this for account trouble, lost
+         saves, or anything that needs a back-and-forth.</p>
+    </header>
+
+    <div class="panel" id="gate" hidden>
+      <p class="dim" style="margin:0 0 0.9rem">
+        Support tickets need an account, so we can reply to you. If you just
+        want to report something broken, feedback works without one.
+      </p>
+      <div class="btn-row">
+        <a class="btn btn-cta" href="login.html?next=support.html">Sign in</a>
+        <a class="btn" href="signup.html">Create an account</a>
+        <a class="btn btn-flat" href="feedback.html">Send feedback instead</a>
+      </div>
+    </div>
+
+    <div class="panel" id="offline" hidden>
+      <p class="dim" style="margin:0">
+        Support needs the hub's server. The arcade itself works without it.
+      </p>
+    </div>
+
+    <div class="two-col" id="app" hidden>
+
+      <section class="block">
+        <div class="block-head">
+          <h2>Your tickets</h2>
+          <span class="fill"></span>
+          <button class="btn btn-sm" type="button" id="new-ticket">＋ New ticket</button>
+        </div>
+        <div class="panel panel-flush" id="list"></div>
+      </section>
+
+      <section class="block">
+        <div class="block-head"><h2 id="detail-head">Open a ticket</h2><span class="fill"></span></div>
+
+        <form class="panel form" id="form">
+          <div class="field">
+            <label for="category">What's this about?</label>
+            <select id="category">
+              <option value="account">My account</option>
+              <option value="saves">Lost or missing save</option>
+              <option value="game">A game is broken</option>
+              <option value="safety">Someone's behaviour</option>
+              <option value="other" selected>Something else</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="subject">Subject</label>
+            <input type="text" id="subject" maxlength="140" required
+                   placeholder="One line — what do you need?">
+          </div>
+
+          <div class="field">
+            <label for="body">Details</label>
+            <textarea id="body" rows="7" maxlength="4000" required
+                      placeholder="What happened, when, and what you've already tried."></textarea>
+            <p class="hint"><span id="count">0</span>/4000</p>
+          </div>
+
+          <p class="form-error" id="error" hidden></p>
+          <button class="btn btn-cta" type="submit" id="submit">Open ticket</button>
+        </form>
+
+        <div class="panel panel-flush" id="detail" hidden>
+          <div class="ticket-thread" id="thread"></div>
+          <form class="form" id="reply-form" style="padding:0.9rem;border-top:1px solid var(--line)">
+            <div class="field">
+              <label for="reply" class="sr-only">Reply</label>
+              <textarea id="reply" rows="3" maxlength="4000" placeholder="Reply…"></textarea>
+            </div>
+            <div class="btn-row">
+              <button class="btn btn-cta btn-sm" type="submit">Send reply</button>
+              <button class="btn btn-sm btn-flat" type="button" id="close-ticket">Close ticket</button>
+            </div>
+          </form>
+        </div>
+      </section>
+    </div>
+
+    <div data-shell="foot"></div>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="data/games.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/catalog-overlay.js"></script>
+  <script src="js/catalog.js"></script>
+  <script src="js/art.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/api-supabase.js"></script>
+  <script src="js/session.js"></script>
+  <script src="js/capture.js"></script>
+  <script src="js/chat-dock.js"></script>
+  <script src="js/call.js"></script>
+  <script src="js/game-saves.js"></script>
+  <script src="js/shell.js"></script>
+  <script src="js/page-support.js"></script>
+</body>
+</html>

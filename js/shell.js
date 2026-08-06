@@ -14,6 +14,7 @@
     { href: "library.html", icon: "★", label: "Pinned", count: function () { return window.Store.favorites().length; } },
     { href: "stats.html", icon: "◔", label: "Activity" },
     { href: "feedback.html", icon: "✎", label: "Feedback" },
+    { href: "support.html", icon: "☂", label: "Support" },
     { href: "about.html", icon: "?", label: "Manual" }
   ];
 

@@ -27,7 +27,11 @@ app.use((req, res, next) => {
   res.setHeader("X-Content-Type-Options", "nosniff");
   res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
   res.setHeader("X-Frame-Options", "SAMEORIGIN");
-  res.setHeader("Permissions-Policy", "geolocation=(), microphone=(), camera=()");
+  /* self, not () — calling needs getUserMedia and getDisplayMedia, and an
+     empty allowlist here blocks them before the permission prompt appears.
+     Games run in an iframe and are not granted any of it. */
+  res.setHeader("Permissions-Policy",
+    "geolocation=(), microphone=(self), camera=(self), display-capture=(self)");
   next();
 });
 
@@ -83,6 +87,9 @@ app.use("/api", require("./routes/messages"));
 app.use("/api", require("./routes/notifications"));
 app.use("/api", require("./routes/sync"));
 app.use("/api", require("./routes/feedback"));
+app.use("/api", require("./routes/support"));
+app.use("/api", require("./routes/calls"));
+app.use("/api", require("./routes/catalog"));
 app.use("/api/admin", require("./routes/admin"));
 
 app.get("/api/health", (req, res) => {

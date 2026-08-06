@@ -40,9 +40,13 @@
 
       <div class="tabs" role="tablist" id="tabs">
         <button class="tab on" type="button" role="tab" data-tab="overview" aria-selected="true">Overview</button>
+        <button class="tab" type="button" role="tab" data-tab="live" aria-selected="false">Live</button>
         <button class="tab" type="button" role="tab" data-tab="users" aria-selected="false">Users</button>
+        <button class="tab" type="button" role="tab" data-tab="support" aria-selected="false">Support</button>
         <button class="tab" type="button" role="tab" data-tab="reports" aria-selected="false">Reports</button>
         <button class="tab" type="button" role="tab" data-tab="feedback" aria-selected="false">Feedback</button>
+        <button class="tab" type="button" role="tab" data-tab="logins" aria-selected="false">Logins</button>
+        <button class="tab" type="button" role="tab" data-tab="games" aria-selected="false" data-owner hidden>Games</button>
         <button class="tab" type="button" role="tab" data-tab="gamedata" aria-selected="false">Game data</button>
         <button class="tab" type="button" role="tab" data-tab="audit" aria-selected="false">Audit</button>
       </div>
@@ -62,6 +66,18 @@
 
         <div class="block-head"><h2>Most played, everyone</h2><span class="fill"></span></div>
         <div class="panel"><div class="meters" id="top-games"></div></div>
+      </section>
+
+      <!-- live -->
+      <section class="tab-panel" data-panel="live" hidden>
+        <div class="panel" style="margin-bottom:1rem">
+          <p class="tiny dimmer" style="margin:0">
+            Who is signed in right now and what they have open. Presence is
+            reported by the player page, so it lags by up to a minute and stops
+            when someone closes the tab.
+          </p>
+        </div>
+        <div class="rows" id="live-rows"></div>
       </section>
 
       <!-- users -->
@@ -118,6 +134,108 @@
         <div id="gd-keys"></div>
       </section>
 
+      <!-- support -->
+      <section class="tab-panel" data-panel="support" hidden>
+        <div class="pills" style="margin-bottom:1rem" id="sup-filters">
+          <button class="pill on" type="button" data-sup="open">Needs a reply</button>
+          <button class="pill" type="button" data-sup="waiting">Waiting on them</button>
+          <button class="pill" type="button" data-sup="closed">Closed</button>
+        </div>
+        <div id="sup-list"></div>
+      </section>
+
+      <!-- logins -->
+      <section class="tab-panel" data-panel="logins" hidden>
+        <div class="panel" style="margin-bottom:1rem">
+          <p class="tiny dimmer" style="margin:0">
+            Every sign-in attempt, successful or not. A run of failures against
+            one account is what a break-in attempt looks like.
+          </p>
+        </div>
+        <div class="rows" id="login-rows"></div>
+      </section>
+
+      <!-- games (owner only) -->
+      <section class="tab-panel" data-panel="games" hidden>
+        <div class="panel" style="margin-bottom:1rem">
+          <p class="tiny dimmer" style="margin:0">
+            Adds a game to the live catalogue without a deploy. The game's files
+            still have to be hosted somewhere — this points at them; it doesn't
+            store them. Pick one of the known hosts and give the path inside it,
+            or paste a full <code>https://</code> URL to anywhere.
+          </p>
+        </div>
+
+        <form class="panel cat-form" id="cat-form" style="margin-bottom:1rem">
+          <div class="field">
+            <label for="cg-title">Title</label>
+            <input type="text" id="cg-title" maxlength="120" required placeholder="Super Something">
+          </div>
+          <div class="field">
+            <label for="cg-id">Id <span class="dimmer">(the URL slug)</span></label>
+            <input type="text" id="cg-id" maxlength="80" required placeholder="super-something">
+          </div>
+          <div class="field">
+            <label for="cg-host">Host</label>
+            <select id="cg-host"></select>
+          </div>
+          <div class="field">
+            <label for="cg-category">Category</label>
+            <select id="cg-category"></select>
+          </div>
+          <div class="field wide">
+            <label for="cg-source">Path or full URL</label>
+            <input type="text" id="cg-source" maxlength="400" required
+                   placeholder="games/super-something/index.html">
+          </div>
+          <div class="field wide">
+            <label for="cg-desc">Description <span class="dimmer">(optional)</span></label>
+            <input type="text" id="cg-desc" maxlength="400" placeholder="One line about it.">
+          </div>
+          <div class="field wide">
+            <label for="cg-notice">Warning shown before play <span class="dimmer">(optional)</span></label>
+            <input type="text" id="cg-notice" maxlength="600"
+                   placeholder="e.g. saves don't carry between versions">
+          </div>
+          <div class="field">
+            <label for="cg-risk">Blocked-network risk</label>
+            <select id="cg-risk">
+              <option value="low">Low — usually loads</option>
+              <option value="medium">Medium</option>
+              <option value="high">High — often blocked</option>
+              <option value="unknown" selected>Unknown</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="cg-embed">Framing</label>
+            <select id="cg-embed">
+              <option value="allowed" selected>Plays in the page</option>
+              <option value="direct">New tab only</option>
+            </select>
+          </div>
+
+          <div class="cat-preview wide" id="cg-preview">
+            <div class="shot" id="cg-shot"></div>
+            <div>
+              <strong id="cg-pv-title">Preview</strong>
+              <p class="tiny dimmer" style="margin:0" id="cg-pv-url">Fill in a title and a path.</p>
+            </div>
+          </div>
+
+          <p class="form-error wide" id="cg-error" hidden></p>
+          <div class="btn-row wide">
+            <button class="btn btn-cta" type="submit" id="cg-save">Add to the catalogue</button>
+            <button class="btn btn-flat" type="button" id="cg-reset">Clear</button>
+          </div>
+        </form>
+
+        <div class="block-head"><h2>Added here</h2><span class="fill"></span></div>
+        <div class="rows" id="cg-rows"></div>
+
+        <div class="block-head" style="margin-top:1.4rem"><h2>Hidden from the catalogue</h2><span class="fill"></span></div>
+        <div class="rows" id="cg-hidden"></div>
+      </section>
+
       <!-- audit -->
       <section class="tab-panel" data-panel="audit" hidden>
         <div class="rows" id="audit-rows"></div>
@@ -130,6 +248,7 @@
   <script src="js/config.js"></script>
   <script src="data/games.js"></script>
   <script src="js/store.js"></script>
+  <script src="js/catalog-overlay.js"></script>
   <script src="js/catalog.js"></script>
   <script src="js/art.js"></script>
   <script src="js/ui.js"></script>
@@ -139,6 +258,7 @@
   <script src="js/social-ui.js"></script>
   <script src="js/capture.js"></script>
   <script src="js/chat-dock.js"></script>
+  <script src="js/call.js"></script>
   <script src="js/game-saves.js"></script>
   <script src="js/shell.js"></script>
   <script src="js/page-gamedata.js"></script>

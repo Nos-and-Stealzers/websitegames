@@ -1213,6 +1213,715 @@ end;
 $$;
 
 -- =====================================================================
+-- 10 · OWNER RANK, CATALOGUE, SUPPORT, CALLING
+--
+-- Parity with the Node backend. Additive and idempotent like the rest.
+-- =====================================================================
+
+-- ---- owner rank ----
+--
+-- The original check constraint stopped at 'admin', so an owner row could
+-- not exist at all. Widen it first, or every statement below that mentions
+-- 'owner' fails.
+
+alter table public.profiles drop constraint if exists profiles_role_check;
+alter table public.profiles add constraint profiles_role_check
+  check (role in ('user','mod','admin','owner'));
+
+create or replace function public.is_owner()
+returns boolean language sql stable security definer set search_path = public as $$
+  select exists (select 1 from public.profiles where id = auth.uid() and role = 'owner');
+$$;
+
+-- Owner outranks admin everywhere, so the existing staff/admin predicates
+-- have to include it or the owner would have *less* access than an admin.
+create or replace function public.is_staff()
+returns boolean language sql stable security definer set search_path = public as $$
+  select exists (
+    select 1 from public.profiles
+     where id = auth.uid() and role in ('mod','admin','owner')
+  );
+$$;
+
+create or replace function public.is_admin()
+returns boolean language sql stable security definer set search_path = public as $$
+  select exists (
+    select 1 from public.profiles
+     where id = auth.uid() and role in ('admin','owner')
+  );
+$$;
+
+-- Claim the owner rank for one named account. Change the name here if the
+-- owner is someone else; it matches the Node backend's ARCADE_OWNER.
+update public.profiles set role = 'owner' where username = 'Stealzers';
+
+-- ---------------------------------------------------------------------
+-- CATALOGUE OVERLAY
+-- ---------------------------------------------------------------------
+
+create table if not exists public.custom_games (
+  id         bigint generated always as identity primary key,
+  game_id    text not null unique,
+  payload    jsonb not null default '{}'::jsonb,
+  removed    boolean not null default false,
+  added_by   uuid references public.profiles(id) on delete set null,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+alter table public.custom_games enable row level security;
+
+-- The catalogue has to be readable before you sign in — that is the whole
+-- point of the site — so this one is deliberately public.
+drop policy if exists custom_games_read on public.custom_games;
+create policy custom_games_read on public.custom_games for select
+  using (true);
+
+-- No insert/update/delete policy at all: writes go through the RPCs below,
+-- which check is_owner() themselves. RLS denies anything not named here.
+
+-- A stable name for the anonymous read, so the client does not depend on
+-- the table's column layout.
+create or replace view public.custom_games_public as
+  select game_id, payload, removed from public.custom_games;
+
+grant select on public.custom_games_public to anon, authenticated;
+
+create or replace function public.save_custom_game(entry jsonb)
+returns jsonb language plpgsql security definer set search_path = public as $$
+declare
+  slug text;
+begin
+  if not public.is_owner() then
+    raise exception 'Only the owner can change the catalogue.';
+  end if;
+
+  slug := regexp_replace(lower(coalesce(entry->>'id','')), '[^a-z0-9-]+', '-', 'g');
+  slug := regexp_replace(slug, '-+', '-', 'g');
+  slug := trim(both '-' from slug);
+  if slug = '' then raise exception 'That id has no usable characters.'; end if;
+
+  if coalesce(entry->>'title','') = '' then
+    raise exception 'A game needs a title.';
+  end if;
+
+  -- Same rule as the Node side: a bare path with no host would resolve
+  -- against the hub itself and quietly 404.
+  if coalesce(entry->>'host','') = ''
+     and coalesce(entry->>'source','') !~* '^https?://' then
+    raise exception 'Pick a host, or give a full https:// URL.';
+  end if;
+
+  insert into public.custom_games (game_id, payload, removed, added_by, updated_at)
+  values (slug, entry - 'id', false, auth.uid(), now())
+  on conflict (game_id) do update
+    set payload = excluded.payload, removed = false, updated_at = now();
+
+  return entry || jsonb_build_object('id', slug);
+end;
+$$;
+
+create or replace function public.remove_custom_game(slug text, hard boolean default false)
+returns void language plpgsql security definer set search_path = public as $$
+begin
+  if not public.is_owner() then
+    raise exception 'Only the owner can change the catalogue.';
+  end if;
+
+  if hard then
+    delete from public.custom_games where game_id = slug and removed = false;
+  else
+    -- A tombstone, so a title shipped in games.json can be hidden without
+    -- editing the file.
+    insert into public.custom_games (game_id, payload, removed, added_by, updated_at)
+    values (slug, '{}'::jsonb, true, auth.uid(), now())
+    on conflict (game_id) do update set removed = true, updated_at = now();
+  end if;
+end;
+$$;
+
+create or replace function public.restore_custom_game(slug text)
+returns void language plpgsql security definer set search_path = public as $$
+begin
+  if not public.is_owner() then
+    raise exception 'Only the owner can change the catalogue.';
+  end if;
+  delete from public.custom_games where game_id = slug and removed = true;
+end;
+$$;
+
+grant execute on function public.save_custom_game(jsonb)           to authenticated;
+grant execute on function public.remove_custom_game(text, boolean) to authenticated;
+grant execute on function public.restore_custom_game(text)         to authenticated;
+
+-- ---------------------------------------------------------------------
+-- SUPPORT TICKETS
+-- ---------------------------------------------------------------------
+
+create table if not exists public.support_tickets (
+  id         bigint generated always as identity primary key,
+  user_id    uuid references public.profiles(id) on delete set null,
+  subject    text not null,
+  category   text not null default 'other'
+             check (category in ('account','saves','game','safety','billing','other')),
+  priority   text not null default 'normal' check (priority in ('low','normal','high')),
+  state      text not null default 'open'   check (state in ('open','waiting','closed')),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+create index if not exists tickets_state_idx on public.support_tickets (state, updated_at desc);
+
+create table if not exists public.support_messages (
+  id         bigint generated always as identity primary key,
+  ticket_id  bigint not null references public.support_tickets(id) on delete cascade,
+  sender_id  uuid references public.profiles(id) on delete set null,
+  body       text not null,
+  from_staff boolean not null default false,
+  created_at timestamptz not null default now()
+);
+create index if not exists ticket_messages_idx on public.support_messages (ticket_id, id);
+
+alter table public.support_tickets  enable row level security;
+alter table public.support_messages enable row level security;
+
+drop policy if exists tickets_read on public.support_tickets;
+create policy tickets_read on public.support_tickets for select
+  using (user_id = auth.uid() or public.is_staff());
+
+drop policy if exists ticket_messages_read on public.support_messages;
+create policy ticket_messages_read on public.support_messages for select
+  using (
+    public.is_staff()
+    or exists (
+      select 1 from public.support_tickets t
+       where t.id = support_messages.ticket_id and t.user_id = auth.uid()
+    )
+  );
+
+-- Writes are RPC-only for the same reason as everywhere else: RLS grants
+-- rows, not columns, so a direct update policy would let a user set their
+-- own ticket to priority 'high' or flip from_staff on their own messages.
+
+create or replace function public.open_ticket(
+  subject text, body text, category text default 'other'
+) returns bigint language plpgsql security definer set search_path = public as $$
+declare
+  new_id bigint;
+  open_count int;
+  cat text;
+begin
+  if auth.uid() is null then raise exception 'Sign in to do that.'; end if;
+  if length(coalesce(trim(subject),'')) < 3 then raise exception 'Subject is too short.'; end if;
+  if length(coalesce(trim(body),'')) < 10 then raise exception 'Tell us a bit more.'; end if;
+
+  cat := case when category in ('account','saves','game','safety','billing','other')
+              then category else 'other' end;
+
+  select count(*) into open_count from public.support_tickets
+   where user_id = auth.uid() and state <> 'closed';
+  if open_count >= 5 then
+    raise exception 'You already have five open tickets. Close one first.';
+  end if;
+
+  insert into public.support_tickets (user_id, subject, category)
+  values (auth.uid(), trim(subject), cat)
+  returning id into new_id;
+
+  insert into public.support_messages (ticket_id, sender_id, body, from_staff)
+  values (new_id, auth.uid(), trim(body), false);
+
+  return new_id;
+end;
+$$;
+
+create or replace function public.reply_ticket(t bigint, body text)
+returns void language plpgsql security definer set search_path = public as $$
+declare
+  tk  public.support_tickets;
+  staff boolean := public.is_staff();
+begin
+  select * into tk from public.support_tickets where id = t;
+  if tk is null then raise exception 'No such ticket.'; end if;
+  if tk.user_id <> auth.uid() and not staff then
+    raise exception 'That is not your ticket.';
+  end if;
+  if tk.state = 'closed' and not staff then
+    raise exception 'This ticket is closed. Open a new one.';
+  end if;
+  if length(coalesce(trim(body),'')) = 0 then raise exception 'Say something.'; end if;
+
+  insert into public.support_messages (ticket_id, sender_id, body, from_staff)
+  values (t, auth.uid(), trim(body), staff);
+
+  -- A staff reply parks it on the user; a user reply hands it back to staff.
+  update public.support_tickets
+     set state = case when staff then 'waiting' else 'open' end, updated_at = now()
+   where id = t;
+
+  if staff and tk.user_id is not null and tk.user_id <> auth.uid() then
+    perform public.notify(tk.user_id, 'support', auth.uid(),
+      'Support replied to: ' || tk.subject, 'support.html#t' || t);
+  end if;
+end;
+$$;
+
+create or replace function public.set_ticket_state(t bigint, next_state text)
+returns void language plpgsql security definer set search_path = public as $$
+declare
+  tk  public.support_tickets;
+  staff boolean := public.is_staff();
+begin
+  select * into tk from public.support_tickets where id = t;
+  if tk is null then raise exception 'No such ticket.'; end if;
+  if tk.user_id <> auth.uid() and not staff then
+    raise exception 'That is not your ticket.';
+  end if;
+  if next_state not in ('open','waiting','closed') then
+    raise exception 'Unknown state.';
+  end if;
+  if not staff and next_state <> 'closed' then
+    raise exception 'You can close your ticket; only staff can reopen it.';
+  end if;
+
+  update public.support_tickets set state = next_state, updated_at = now() where id = t;
+end;
+$$;
+
+create or replace function public.set_ticket_priority(t bigint, next_priority text)
+returns void language plpgsql security definer set search_path = public as $$
+begin
+  if not public.is_staff() then raise exception 'Only staff set priority.'; end if;
+  if next_priority not in ('low','normal','high') then raise exception 'Unknown priority.'; end if;
+  update public.support_tickets set priority = next_priority, updated_at = now() where id = t;
+end;
+$$;
+
+grant execute on function public.open_ticket(text, text, text)     to authenticated;
+grant execute on function public.reply_ticket(bigint, text)        to authenticated;
+grant execute on function public.set_ticket_state(bigint, text)    to authenticated;
+grant execute on function public.set_ticket_priority(bigint, text) to authenticated;
+
+-- ---------------------------------------------------------------------
+-- CALLING
+--
+-- Signalling only. The audio and video go browser-to-browser over WebRTC
+-- and never touch this database.
+-- ---------------------------------------------------------------------
+
+create table if not exists public.calls (
+  id         bigint generated always as identity primary key,
+  thread_id  bigint references public.threads(id) on delete cascade,
+  started_by uuid not null references public.profiles(id) on delete cascade,
+  kind       text not null default 'audio' check (kind in ('audio','video','screen')),
+  state      text not null default 'ringing' check (state in ('ringing','live','ended')),
+  created_at timestamptz not null default now(),
+  ended_at   timestamptz
+);
+
+create table if not exists public.call_peers (
+  call_id   bigint not null references public.calls(id) on delete cascade,
+  user_id   uuid   not null references public.profiles(id) on delete cascade,
+  state     text   not null default 'invited' check (state in ('invited','joined','left')),
+  joined_at timestamptz,
+  primary key (call_id, user_id)
+);
+
+create table if not exists public.call_signals (
+  id         bigint generated always as identity primary key,
+  call_id    bigint not null references public.calls(id) on delete cascade,
+  from_id    uuid not null references public.profiles(id) on delete cascade,
+  to_id      uuid not null references public.profiles(id) on delete cascade,
+  kind       text not null check (kind in ('offer','answer','ice','bye')),
+  payload    jsonb not null default '{}'::jsonb,
+  created_at timestamptz not null default now()
+);
+create index if not exists call_signals_to_idx on public.call_signals (to_id, call_id, id);
+
+alter table public.calls        enable row level security;
+alter table public.call_peers   enable row level security;
+alter table public.call_signals enable row level security;
+
+create or replace function public.in_call(c bigint)
+returns boolean language sql stable security definer set search_path = public as $$
+  select exists (
+    select 1 from public.call_peers where call_id = c and user_id = auth.uid()
+  );
+$$;
+
+drop policy if exists calls_read on public.calls;
+create policy calls_read on public.calls for select using (public.in_call(id));
+
+drop policy if exists call_peers_read on public.call_peers;
+create policy call_peers_read on public.call_peers for select using (public.in_call(call_id));
+
+-- You only ever see signals addressed to you. Without the to_id check this
+-- would hand every participant everyone else's handshake.
+drop policy if exists call_signals_read on public.call_signals;
+create policy call_signals_read on public.call_signals for select
+  using (to_id = auth.uid());
+
+create or replace function public.start_call(
+  target uuid default null, t bigint default null, call_kind text default 'audio'
+) returns bigint language plpgsql security definer set search_path = public as $$
+declare
+  new_id bigint;
+  invitee uuid;
+  invited uuid[];
+  me uuid := auth.uid();
+  max_peers constant int := 4;
+begin
+  if me is null then raise exception 'Sign in to do that.'; end if;
+  if call_kind not in ('audio','video','screen') then call_kind := 'audio'; end if;
+
+  if t is not null then
+    -- Membership of the thread is the permission. Requiring pairwise
+    -- friendship as well would break most group calls.
+    if not exists (select 1 from public.thread_members where thread_id = t and user_id = me) then
+      raise exception 'You are not in that conversation.';
+    end if;
+    select array_agg(user_id) into invited
+      from public.thread_members where thread_id = t and user_id <> me;
+  else
+    if target is null then raise exception 'Say who you are calling.'; end if;
+    if not exists (
+      select 1 from public.friendships
+       where state = 'accepted'
+         and ((requester = me and addressee = target) or (requester = target and addressee = me))
+    ) then
+      raise exception 'You can only call friends.';
+    end if;
+    invited := array[target];
+  end if;
+
+  if invited is null or array_length(invited, 1) is null then
+    raise exception 'There is nobody to call.';
+  end if;
+  if array_length(invited, 1) + 1 > max_peers then
+    raise exception 'Calls hold % people. Bigger groups need a relay server we do not run.', max_peers;
+  end if;
+
+  insert into public.calls (thread_id, started_by, kind)
+  values (t, me, call_kind)
+  returning id into new_id;
+
+  insert into public.call_peers (call_id, user_id, state, joined_at)
+  values (new_id, me, 'joined', now());
+
+  foreach invitee in array invited loop
+    insert into public.call_peers (call_id, user_id) values (new_id, invitee);
+    perform public.notify(invitee, 'call', me,
+      coalesce(nullif((select display_name from public.profiles where id = me), ''),
+               (select username from public.profiles where id = me)) || ' is calling you.',
+      'messages.html');
+  end loop;
+
+  return new_id;
+end;
+$$;
+
+create or replace function public.join_call(c bigint)
+returns void language plpgsql security definer set search_path = public as $$
+begin
+  if not public.in_call(c) then raise exception 'You were not invited.'; end if;
+  if (select state from public.calls where id = c) = 'ended' then
+    raise exception 'That call already ended.';
+  end if;
+
+  update public.call_peers set state = 'joined', joined_at = now()
+   where call_id = c and user_id = auth.uid();
+  update public.calls set state = 'live' where id = c and state = 'ringing';
+end;
+$$;
+
+create or replace function public.leave_call(c bigint)
+returns void language plpgsql security definer set search_path = public as $$
+declare
+  still_here int;
+begin
+  if not public.in_call(c) then return; end if;
+
+  update public.call_peers set state = 'left'
+   where call_id = c and user_id = auth.uid();
+
+  -- Tell the others straight away rather than making them wait for a poll.
+  insert into public.call_signals (call_id, from_id, to_id, kind)
+  select c, auth.uid(), user_id, 'bye'
+    from public.call_peers
+   where call_id = c and user_id <> auth.uid() and state = 'joined';
+
+  select count(*) into still_here
+    from public.call_peers where call_id = c and state = 'joined';
+
+  -- The call ends when the last person drops, so a three-way does not
+  -- collapse because one person hung up.
+  if still_here <= 1 then
+    update public.calls set state = 'ended', ended_at = now() where id = c;
+  end if;
+end;
+$$;
+
+create or replace function public.send_signal(
+  c bigint, target uuid, signal_kind text, body jsonb
+) returns void language plpgsql security definer set search_path = public as $$
+begin
+  if not public.in_call(c) then raise exception 'You are not in that call.'; end if;
+  if (select state from public.calls where id = c) = 'ended' then
+    raise exception 'That call already ended.';
+  end if;
+  if signal_kind not in ('offer','answer','ice','bye') then
+    raise exception 'Unknown signal.';
+  end if;
+  if not exists (select 1 from public.call_peers where call_id = c and user_id = target) then
+    raise exception 'That person is not in this call.';
+  end if;
+  if length(body::text) > 16000 then raise exception 'That signal is too large.'; end if;
+
+  insert into public.call_signals (call_id, from_id, to_id, kind, payload)
+  values (c, auth.uid(), target, signal_kind, coalesce(body, '{}'::jsonb));
+end;
+$$;
+
+-- Read-and-consume, in one statement so two polls cannot both take the
+-- same signal.
+create or replace function public.take_signals(c bigint)
+returns jsonb language plpgsql security definer set search_path = public as $$
+declare
+  taken jsonb;
+begin
+  if not public.in_call(c) then raise exception 'You are not in that call.'; end if;
+
+  -- Sweep stale rows and stop unanswered calls ringing forever.
+  delete from public.call_signals where created_at < now() - interval '60 seconds';
+  update public.calls set state = 'ended', ended_at = now()
+   where state = 'ringing' and created_at < now() - interval '45 seconds';
+
+  with mine as (
+    delete from public.call_signals
+     where id in (
+       select id from public.call_signals
+        where call_id = c and to_id = auth.uid()
+        order by id limit 40
+     )
+    returning id, from_id, kind, payload
+  )
+  select coalesce(jsonb_agg(jsonb_build_object(
+    'id', id, 'from', from_id, 'kind', kind, 'payload', payload
+  ) order by id), '[]'::jsonb) into taken from mine;
+
+  return jsonb_build_object(
+    'signals', taken,
+    'call', (
+      select jsonb_build_object(
+        'id', k.id, 'state', k.state, 'kind', k.kind, 'startedBy', k.started_by,
+        'peers', (
+          select coalesce(jsonb_agg(jsonb_build_object(
+            'id', p.user_id, 'state', p.state,
+            'username', pr.username,
+            'displayName', coalesce(nullif(pr.display_name,''), pr.username)
+          )), '[]'::jsonb)
+            from public.call_peers p
+            join public.profiles pr on pr.id = p.user_id
+           where p.call_id = k.id
+        )
+      ) from public.calls k where k.id = c
+    )
+  );
+end;
+$$;
+
+create or replace function public.pending_calls()
+returns jsonb language plpgsql security definer set search_path = public as $$
+begin
+  update public.calls set state = 'ended', ended_at = now()
+   where state = 'ringing' and created_at < now() - interval '45 seconds';
+
+  return (
+    select coalesce(jsonb_agg(jsonb_build_object(
+      'id', k.id, 'state', k.state, 'kind', k.kind, 'startedBy', k.started_by,
+      'peers', (
+        select coalesce(jsonb_agg(jsonb_build_object(
+          'id', p2.user_id, 'state', p2.state,
+          'username', pr.username,
+          'displayName', coalesce(nullif(pr.display_name,''), pr.username)
+        )), '[]'::jsonb)
+          from public.call_peers p2
+          join public.profiles pr on pr.id = p2.user_id
+         where p2.call_id = k.id
+      )
+    ) order by k.id desc), '[]'::jsonb)
+    from public.calls k
+    join public.call_peers p on p.call_id = k.id and p.user_id = auth.uid()
+   where k.state <> 'ended' and p.state <> 'left'
+  );
+end;
+$$;
+
+grant execute on function public.start_call(uuid, bigint, text)         to authenticated;
+grant execute on function public.join_call(bigint)                      to authenticated;
+grant execute on function public.leave_call(bigint)                     to authenticated;
+grant execute on function public.send_signal(bigint, uuid, text, jsonb) to authenticated;
+grant execute on function public.take_signals(bigint)                   to authenticated;
+grant execute on function public.pending_calls()                        to authenticated;
+
+-- ---------------------------------------------------------------------
+-- STAFF QUEUE
+-- ---------------------------------------------------------------------
+
+create or replace function public.admin_tickets(want_state text default 'open')
+returns jsonb language plpgsql security definer set search_path = public as $$
+begin
+  if not public.is_staff() then raise exception 'Staff only.'; end if;
+
+  return jsonb_build_object(
+    'counts', (
+      select coalesce(jsonb_object_agg(state, n), '{}'::jsonb)
+        from (select state, count(*) as n from public.support_tickets group by state) s
+    ),
+    'tickets', (
+      select coalesce(jsonb_agg(jsonb_build_object(
+        'id', t.id, 'subject', t.subject, 'category', t.category,
+        'priority', t.priority, 'state', t.state,
+        'at', extract(epoch from t.created_at) * 1000,
+        'updatedAt', extract(epoch from t.updated_at) * 1000,
+        'from', coalesce(pr.username::text, '(deleted account)'),
+        'replies', (select count(*) from public.support_messages m where m.ticket_id = t.id),
+        'opening', (select m.body from public.support_messages m
+                     where m.ticket_id = t.id order by m.id limit 1)
+      ) order by
+        case t.priority when 'high' then 0 when 'normal' then 1 else 2 end,
+        t.updated_at desc
+      ), '[]'::jsonb)
+      from public.support_tickets t
+      left join public.profiles pr on pr.id = t.user_id
+     where t.state = want_state
+    )
+  );
+end;
+$$;
+
+grant execute on function public.admin_tickets(text) to authenticated;
+
+-- =====================================================================
+-- 11 · PRESENCE AND SIGN-IN HISTORY
+--
+-- The staff "Live" and "Logins" views. Parity with the Node backend,
+-- with one honest gap called out below.
+-- =====================================================================
+
+alter table public.profiles add column if not exists current_game  text;
+alter table public.profiles add column if not exists current_since timestamptz;
+
+-- Presence goes through an RPC rather than a direct update, because the
+-- profile update policy grants the row and the guard trigger polices the
+-- columns — adding two more writable columns to that path is a bigger
+-- change than adding one narrow function.
+create or replace function public.set_playing(game text default null)
+returns void language plpgsql security definer set search_path = public as $$
+begin
+  if auth.uid() is null then return; end if;
+
+  update public.profiles
+     set current_game  = nullif(left(coalesce(game, ''), 120), ''),
+         current_since = case
+           when nullif(coalesce(game,''), '') is distinct from current_game then now()
+           else current_since
+         end,
+         last_seen = now()
+   where id = auth.uid();
+end;
+$$;
+
+create or replace function public.admin_live()
+returns jsonb language plpgsql security definer set search_path = public as $$
+begin
+  if not public.is_staff() then raise exception 'Staff only.'; end if;
+
+  return (
+    select jsonb_build_object(
+      'online', count(*),
+      'playing', count(*) filter (where current_game is not null),
+      'users', coalesce(jsonb_agg(jsonb_build_object(
+        'id', id, 'username', username,
+        'displayName', coalesce(nullif(display_name,''), username::text),
+        'role', role, 'state', state,
+        'lastSeen', extract(epoch from last_seen) * 1000,
+        'game', current_game,
+        'since', coalesce(extract(epoch from current_since) * 1000, 0)
+      ) order by last_seen desc), '[]'::jsonb)
+    )
+    from public.profiles
+   where last_seen > now() - interval '150 seconds'
+  );
+end;
+$$;
+
+-- ---- sign-in history ----
+--
+-- A real limitation, stated rather than papered over: on this backend the
+-- password check happens inside Supabase Auth, in a schema the anon key
+-- cannot read. So FAILED attempts are not visible to us here — only
+-- successful sign-ins, which the app records itself once it has a session.
+-- The Node backend sees both. If you need failed-attempt monitoring on
+-- Supabase, it is in the dashboard under Authentication → Logs.
+
+create table if not exists public.logins (
+  id      bigint generated always as identity primary key,
+  user_id uuid not null references public.profiles(id) on delete cascade,
+  at      timestamptz not null default now(),
+  agent   text not null default '',
+  outcome text not null default 'ok' check (outcome in ('ok','failed'))
+);
+create index if not exists logins_user_idx on public.logins (user_id, id desc);
+
+alter table public.logins enable row level security;
+
+drop policy if exists logins_staff_read on public.logins;
+create policy logins_staff_read on public.logins for select using (public.is_staff());
+
+-- You may only ever record a sign-in as yourself, and only a successful
+-- one — otherwise this is a way to plant false evidence against someone.
+create or replace function public.record_login(agent text default '')
+returns void language plpgsql security definer set search_path = public as $$
+begin
+  if auth.uid() is null then return; end if;
+  insert into public.logins (user_id, agent, outcome)
+  values (auth.uid(), left(coalesce(agent, ''), 200), 'ok');
+
+  -- Keep the tail bounded; this is a moderation aid, not an archive.
+  delete from public.logins
+   where user_id = auth.uid()
+     and id not in (
+       select id from public.logins where user_id = auth.uid() order by id desc limit 50
+     );
+end;
+$$;
+
+create or replace function public.admin_logins()
+returns jsonb language plpgsql security definer set search_path = public as $$
+begin
+  if not public.is_staff() then raise exception 'Staff only.'; end if;
+
+  return (
+    select coalesce(jsonb_agg(jsonb_build_object(
+      'id', l.id,
+      'username', coalesce(pr.username::text, '(deleted)'),
+      'at', extract(epoch from l.at) * 1000,
+      'ip', '',                       -- not available to us on this backend
+      'agent', l.agent,
+      'outcome', l.outcome
+    ) order by l.id desc), '[]'::jsonb)
+    from (select * from public.logins order by id desc limit 200) l
+    left join public.profiles pr on pr.id = l.user_id
+  );
+end;
+$$;
+
+grant execute on function public.set_playing(text)   to authenticated;
+grant execute on function public.admin_live()        to authenticated;
+grant execute on function public.record_login(text)  to authenticated;
+grant execute on function public.admin_logins()      to authenticated;
+
+-- =====================================================================
 -- Done. Next:
 --   1. Authentication → Providers → Email: turn OFF "Confirm email"
 --      (the hub signs up with username-derived addresses, so there is

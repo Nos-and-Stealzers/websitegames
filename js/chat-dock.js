@@ -11,7 +11,7 @@
   var POLL_LIVE = 5000;      // a conversation is open
   var KEY = "dock";
 
-  var el, root, listPane, chatPane, badge, titleEl, logEl, inputEl;
+  var el, root, listPane, chatPane, badge, titleEl, logEl, inputEl, callBtns;
   var open = false;
   var current = null;        // { id, title, isGroup }
   var lastId = 0;
@@ -69,6 +69,25 @@
 
     titleEl = el("span", "dock-title", "Chat");
     head.appendChild(titleEl);
+
+    /* Calling lives here so you can ring someone without leaving the game
+       you're in. Hidden until a conversation is open — there's nobody to
+       call from the list view. */
+    callBtns = [];
+    [["☎", "Start a voice call", "audio"], ["🎥", "Start a video call", "video"]]
+      .forEach(function (spec) {
+        var b = el("button", "dock-btn", spec[0]);
+        b.type = "button";
+        b.hidden = true;
+        b.title = spec[1];
+        b.setAttribute("aria-label", spec[1]);
+        b.addEventListener("click", function () {
+          if (!current) return;
+          window.Calls.start({ threadId: current.id, kind: spec[2] });
+        });
+        head.appendChild(b);
+        callBtns.push(b);
+      });
 
     var expand = el("a", "dock-btn", "⤢");
     expand.title = "Open full messages page";
@@ -162,9 +181,17 @@
     listPane.hidden = false;
     root._back.hidden = true;
     titleEl.textContent = "Chat";
+    showCallButtons(false);
     remember({ thread: null });
     retime();
     loadList();
+  }
+
+  /* Only offer calling where it can actually work: a browser with WebRTC,
+     and a backend to carry the handshake. */
+  function showCallButtons(on) {
+    var usable = on && window.Calls && window.Calls.supported();
+    (callBtns || []).forEach(function (b) { b.hidden = !usable; });
   }
 
   function retime() {
@@ -254,6 +281,7 @@
     chatPane.hidden = false;
     root._back.hidden = false;
     titleEl.textContent = t.title;
+    showCallButtons(true);
     remember({ thread: t.id, open: true });
     retime();
     return tick(true);

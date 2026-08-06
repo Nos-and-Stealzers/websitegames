@@ -289,6 +289,75 @@ CREATE TABLE IF NOT EXISTS game_saves (
   PRIMARY KEY (user_id, host)
 );
 
+-- Catalogue entries added through the admin UI. data/games.json stays the
+-- bulk, version-controlled list; these are merged over it at runtime so the
+-- owner can add a game without a commit and a deploy.
+CREATE TABLE IF NOT EXISTS custom_games (
+  id         INTEGER PRIMARY KEY AUTOINCREMENT,
+  game_id    TEXT NOT NULL UNIQUE,
+  payload    TEXT NOT NULL,
+  removed    INTEGER NOT NULL DEFAULT 0,   -- tombstone: hides a games.json entry
+  added_by   INTEGER REFERENCES users(id) ON DELETE SET NULL,
+  created_at INTEGER NOT NULL,
+  updated_at INTEGER NOT NULL
+);
+
+-- Support threads. Feedback is fire-and-forget; this is a conversation that
+-- stays open until someone closes it.
+CREATE TABLE IF NOT EXISTS support_tickets (
+  id         INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id    INTEGER REFERENCES users(id) ON DELETE SET NULL,
+  subject    TEXT    NOT NULL,
+  category   TEXT    NOT NULL DEFAULT 'other',
+  priority   TEXT    NOT NULL DEFAULT 'normal',  -- low | normal | high
+  state      TEXT    NOT NULL DEFAULT 'open',    -- open | waiting | closed
+  created_at INTEGER NOT NULL,
+  updated_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_tickets_state ON support_tickets(state, updated_at DESC);
+
+CREATE TABLE IF NOT EXISTS support_messages (
+  id         INTEGER PRIMARY KEY AUTOINCREMENT,
+  ticket_id  INTEGER NOT NULL REFERENCES support_tickets(id) ON DELETE CASCADE,
+  sender_id  INTEGER REFERENCES users(id) ON DELETE SET NULL,
+  body       TEXT    NOT NULL,
+  from_staff INTEGER NOT NULL DEFAULT 0,
+  created_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_ticketmsg ON support_messages(ticket_id, id);
+
+-- WebRTC signalling. Rows are short-lived: peers poll for anything addressed
+-- to them, consume it, and the sweeper clears the rest. No socket server, so
+-- this works on any host that can run the API at all.
+CREATE TABLE IF NOT EXISTS calls (
+  id         INTEGER PRIMARY KEY AUTOINCREMENT,
+  thread_id  INTEGER REFERENCES threads(id) ON DELETE CASCADE,
+  started_by INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  kind       TEXT    NOT NULL DEFAULT 'audio',  -- audio | video | screen
+  state      TEXT    NOT NULL DEFAULT 'ringing',-- ringing | live | ended
+  created_at INTEGER NOT NULL,
+  ended_at   INTEGER NOT NULL DEFAULT 0
+);
+
+CREATE TABLE IF NOT EXISTS call_peers (
+  call_id  INTEGER NOT NULL REFERENCES calls(id) ON DELETE CASCADE,
+  user_id  INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  state    TEXT    NOT NULL DEFAULT 'invited',  -- invited | joined | left
+  joined_at INTEGER NOT NULL DEFAULT 0,
+  PRIMARY KEY (call_id, user_id)
+);
+
+CREATE TABLE IF NOT EXISTS call_signals (
+  id        INTEGER PRIMARY KEY AUTOINCREMENT,
+  call_id   INTEGER NOT NULL REFERENCES calls(id) ON DELETE CASCADE,
+  from_id   INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  to_id     INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  kind      TEXT    NOT NULL,        -- offer | answer | ice | bye
+  payload   TEXT    NOT NULL,
+  created_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_signals_to ON call_signals(to_id, call_id, id);
+
 CREATE TABLE IF NOT EXISTS attachments (
   id          INTEGER PRIMARY KEY AUTOINCREMENT,
   uploader_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,

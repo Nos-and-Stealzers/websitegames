@@ -105,6 +105,17 @@
             });
           });
 
+          /* Calling is friends-only, and the server says so too — no point
+             offering a button that will come back 400. */
+          if (user.relation === "friends" && window.Calls && window.Calls.supported()) {
+            button("☎ Call", "", function () {
+              return window.Calls.start({ userId: user.id, kind: "audio" });
+            });
+            button("🎥 Video", "", function () {
+              return window.Calls.start({ userId: user.id, kind: "video" });
+            });
+          }
+
           if (user.relation !== "blocked") {
             button("Block", "btn-flat", function () {
               if (!window.confirm("Block " + user.username + "?")) return Promise.resolve();

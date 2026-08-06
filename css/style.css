@@ -1798,3 +1798,174 @@ kbd {
   border-bottom: 1px solid var(--line);
   background: var(--surface-2);
 }
+
+/* --------------------------------------------------------------------------
+   25 · CALLING — floating, sits above the chat dock, survives a game
+   -------------------------------------------------------------------------- */
+
+.callroot {
+  position: fixed; right: 1rem; bottom: 1rem; z-index: 80;
+  display: flex; flex-direction: column; align-items: flex-end; gap: 0.5rem;
+}
+.callroot[hidden] { display: none; }
+/* The dock lives at the same corner; shift it up so both are reachable. */
+.callroot:not([hidden]) ~ .dock { bottom: 1rem; right: 21rem; }
+@media (max-width: 900px) {
+  .callroot { bottom: 4.6rem; right: 0.75rem; left: 0.75rem; align-items: stretch; }
+  .callroot:not([hidden]) ~ .dock { right: 0.75rem; bottom: 4.6rem; }
+}
+
+/* ---- incoming ---- */
+.ring {
+  width: min(300px, calc(100vw - 1.5rem));
+  background: var(--surface); border: 1px solid var(--accent);
+  border-radius: var(--r); padding: 0.8rem;
+  animation: ring-in 0.25s ease-out;
+}
+.ring[hidden] { display: none; }
+@keyframes ring-in { from { opacity: 0; transform: translateY(8px); } }
+.ring-who { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.7rem; }
+.ring-who .avatar { width: 2.4rem; height: 2.4rem; flex: none; animation: ring-pulse 1.4s ease-in-out infinite; }
+@keyframes ring-pulse { 50% { transform: scale(1.07); } }
+.ring-text { min-width: 0; }
+.ring-text strong { display: block; font-size: 0.92rem; }
+.ring-kind { font-size: 0.75rem; color: var(--ink-2); }
+.ring-acts { display: flex; gap: 0.35rem; flex-wrap: wrap; }
+.ring-acts .btn { flex: 1; }
+
+/* ---- live call ---- */
+.callbar {
+  width: min(320px, calc(100vw - 1.5rem));
+  background: var(--surface); border: 1px solid var(--line-2);
+  border-radius: var(--r); overflow: hidden;
+  display: flex; flex-direction: column;
+}
+.callbar[hidden] { display: none; }
+.callroot.is-big .callbar {
+  position: fixed; inset: 3vh 3vw auto; width: auto;
+  height: 94vh; max-height: 94vh;
+}
+
+.callbar-head {
+  display: flex; align-items: center; gap: 0.5rem;
+  padding: 0.45rem 0.6rem;
+  background: var(--surface-2); border-bottom: 1px solid var(--line);
+  flex: none;
+}
+.callbar-status { flex: 1; min-width: 0; font-size: 0.8rem; font-weight: 650;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.callbar-timer { font-family: var(--mono); font-size: 0.78rem; color: var(--ink-2); }
+.callbar-btn {
+  background: none; border: 0; cursor: pointer; color: var(--ink-2);
+  font: inherit; font-size: 1rem; line-height: 1; padding: 0.1rem 0.3rem;
+}
+.callbar-btn:hover { color: var(--accent); }
+
+.calltiles {
+  flex: 1; display: grid; gap: 2px; padding: 2px;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  background: var(--line); min-height: 96px;
+}
+.callbar.is-min .calltiles, .callbar.is-min .callbar-deck { display: none; }
+
+.calltile {
+  position: relative; aspect-ratio: 4 / 3;
+  background: var(--paper); overflow: hidden;
+  display: grid; place-items: center;
+}
+.calltile video { display: none; width: 100%; height: 100%; object-fit: cover; }
+.calltile.has-video video { display: block; }
+.calltile.has-video .calltile-face { display: none; }
+/* A shared screen is letterboxed, never cropped — cropping hides the thing
+   the other person is trying to point at. */
+.calltile.is-screen video { object-fit: contain; background: #000; }
+.calltile-face .avatar { width: 2.6rem; height: 2.6rem; }
+.calltile-name {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  padding: 0.15rem 0.4rem;
+  font-size: 0.7rem; color: #fff;
+  background: linear-gradient(transparent, rgba(0,0,0,0.72));
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.calltile[data-state="connecting"], .calltile[data-state="new"] { opacity: 0.55; }
+.calltile.is-failed::after {
+  content: "can't connect"; position: absolute; inset: auto 0 1.2rem;
+  text-align: center; font-size: 0.68rem; color: var(--bad);
+}
+
+.callbar-deck {
+  display: flex; gap: 0.3rem; padding: 0.5rem; flex: none;
+  border-top: 1px solid var(--line); background: var(--surface-2);
+}
+.callbtn {
+  flex: 1; padding: 0.4rem; cursor: pointer;
+  font: inherit; font-size: 0.95rem; line-height: 1.2;
+  background: var(--surface); color: var(--ink);
+  border: 1px solid var(--line-2); border-radius: var(--r);
+}
+.callbtn:hover { border-color: var(--accent); }
+.callbtn.is-on { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.callbtn.is-end { background: var(--bad); border-color: var(--bad); color: #fff; flex: 0 0 3rem; }
+
+/* --------------------------------------------------------------------------
+   26 · SUPPORT TICKETS
+   -------------------------------------------------------------------------- */
+
+.ticket-row {
+  display: flex; align-items: center; gap: 0.7rem; width: 100%;
+  padding: 0.7rem 0.9rem; text-align: left;
+  background: none; border: 0; border-bottom: 1px solid var(--line);
+  border-left: 2px solid transparent;
+  color: var(--ink); font: inherit; cursor: pointer;
+}
+.ticket-row:hover, .ticket-row.is-on { background: var(--surface-2); border-left-color: var(--accent); }
+.ticket-row .mid { flex: 1; min-width: 0; }
+.ticket-row .subject {
+  display: block; font-weight: 650; font-size: 0.88rem;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.ticket-row .meta { display: block; font-size: 0.74rem; color: var(--ink-2); }
+
+.pri { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em;
+  padding: 0.1rem 0.35rem; border: 1px solid var(--line-2); flex: none; }
+.pri[data-p="high"] { color: var(--bad); border-color: var(--bad); }
+.pri[data-p="low"] { color: var(--ink-3); }
+.state-tag { font-size: 0.7rem; padding: 0.1rem 0.4rem; border: 1px solid var(--line-2); flex: none; }
+.state-tag[data-s="open"] { color: var(--accent); border-color: var(--accent); }
+.state-tag[data-s="waiting"] { color: var(--warn, var(--ink-2)); }
+.state-tag[data-s="closed"] { color: var(--ink-3); }
+
+.ticket-thread { display: flex; flex-direction: column; gap: 0.6rem; padding: 0.9rem;
+  max-height: 52vh; overflow-y: auto; }
+.tmsg { max-width: 88%; padding: 0.55rem 0.7rem; border: 1px solid var(--line-2);
+  background: var(--surface-2); border-radius: var(--r); }
+.tmsg.is-staff { align-self: flex-end; background: var(--sel); border-color: var(--accent); }
+.tmsg .who { display: block; font-size: 0.72rem; color: var(--ink-2); margin-bottom: 0.2rem; }
+.tmsg .body { font-size: 0.86rem; white-space: pre-wrap; word-break: break-word; }
+
+/* --------------------------------------------------------------------------
+   27 · CATALOG EDITOR (owner)
+   -------------------------------------------------------------------------- */
+
+.cat-form { display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem; }
+.cat-form .wide { grid-column: 1 / -1; }
+@media (max-width: 700px) { .cat-form { grid-template-columns: 1fr; } }
+.cat-preview {
+  display: flex; align-items: center; gap: 0.8rem;
+  padding: 0.7rem; border: 1px dashed var(--line-2); background: var(--paper);
+}
+.cat-preview .shot { width: 5rem; aspect-ratio: 4/3; flex: none; overflow: hidden; }
+.cat-preview .shot > * { width: 100%; height: 100%; }
+
+/* A list beside a detail pane. Collapses to stacked on narrow screens, where
+   side-by-side would leave both halves unusable. */
+.two-col {
+  display: grid; gap: 1.4rem;
+  grid-template-columns: minmax(240px, 340px) minmax(0, 1fr);
+  align-items: start;
+}
+.two-col > .block { margin: 0; }
+@media (max-width: 860px) { .two-col { grid-template-columns: 1fr; } }
+
+/* A panel whose children own their own padding (lists, threads). */
+.panel-flush { padding: 0; overflow: hidden; }

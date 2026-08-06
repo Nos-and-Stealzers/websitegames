@@ -137,6 +137,39 @@
             press the shutter, and the stream is stopped the moment the dialog closes.</li>
       </ul>
 
+      <h2>Calling</h2>
+      <p>
+        You can ring a friend for <b>voice</b>, <b>video</b> or a <b>shared screen</b> from their
+        profile, or from the chat dock while a game is running. The audio and video go straight
+        from one browser to the other; the hub's server only passes the few setup messages needed
+        to introduce you. Nothing is recorded and nothing is relayed through us.
+      </p>
+      <ul>
+        <li>One-to-one calls are friends-only. Calling a <b>group</b> rings everyone in that
+            conversation — being in the group is the permission there, so it works even between
+            people who haven't added each other.</li>
+        <li>Calls hold <b>four people</b>. Everyone connects to everyone else, so each extra
+            person costs all the others another upload stream. Past four you'd need a relay
+            server that forwards video, and that is the part that costs real money — so the
+            limit is honest rather than arbitrary.</li>
+        <li>Screen sharing goes through the browser's own picker, exactly like screenshots. You
+            choose the window or tab, every time, and the browser shows its own "stop sharing"
+            control that always works.</li>
+        <li>A call belongs to the page that started it, so <b>navigating away ends it</b>.
+            Playing a game doesn't — the game runs in a frame inside the same page, which is the
+            case that matters.</li>
+        <li>Some networks block direct browser-to-browser connections outright. Where that
+            happens the tile says it can't connect rather than sitting there silently.</li>
+      </ul>
+
+      <h2>Support</h2>
+      <p>
+        <b>Feedback</b> is a one-way note — send it and someone reads it. A <b>support ticket</b>
+        is a conversation that stays open until it's sorted, which is what you want for a lost
+        save or a problem with another person. Tickets need an account so there's somewhere to
+        reply to; you can have five open at once, and you can close your own any time.
+      </p>
+
       <h2>Keys</h2>
       <ul>
         <li><kbd>/</kbd> jump to the search box</li>
@@ -149,7 +182,16 @@
       </ul>
 
       <h2>Adding a title</h2>
-      <p>Append an object to <code>data/games.json</code>, then regenerate the derived files:</p>
+      <p>
+        The owner can add one from the browser: <b>Admin → Games</b> takes a title, a host and a
+        path, and it is live for everyone on their next page load. That layers over the shipped
+        list rather than editing it, so it also lets you repoint a game whose host moved, or hide
+        one, without touching a file. The same screen puts a hidden title back.
+      </p>
+      <p>
+        For a bulk change, or anything you want in version control, append an object to
+        <code>data/games.json</code> and regenerate the derived files:
+      </p>
       <pre><code>{
   "id": "my-game",
   "title": "My Game",
@@ -189,6 +231,7 @@
   <script src="js/config.js"></script>
   <script src="data/games.js"></script>
   <script src="js/store.js"></script>
+  <script src="js/catalog-overlay.js"></script>
   <script src="js/catalog.js"></script>
   <script src="js/art.js"></script>
   <script src="js/ui.js"></script>
@@ -197,6 +240,7 @@
   <script src="js/session.js"></script>
   <script src="js/capture.js"></script>
   <script src="js/chat-dock.js"></script>
+  <script src="js/call.js"></script>
   <script src="js/game-saves.js"></script>
   <script src="js/shell.js"></script>
   <script src="js/page-about.js"></script>

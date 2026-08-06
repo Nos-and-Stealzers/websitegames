@@ -192,6 +192,37 @@
       return request("DELETE", "/game-saves/" + encodeURIComponent(host));
     },
 
+    /* --- support tickets --- */
+    openTicket: function (payload) { return request("POST", "/support", payload); },
+    myTickets: function () { return request("GET", "/support"); },
+    ticket: function (id) { return request("GET", "/support/" + id); },
+    replyTicket: function (id, body) { return request("POST", "/support/" + id + "/reply", { body: body }); },
+    updateTicket: function (id, patch) { return request("PATCH", "/support/" + id, patch); },
+    adminTickets: function (state) {
+      return request("GET", "/admin/support?state=" + (state || "open"));
+    },
+
+    /* --- calling --- */
+    iceServers: function () { return request("GET", "/calls/ice"); },
+    startCall: function (payload) { return request("POST", "/calls", payload); },
+    pendingCalls: function () { return request("GET", "/calls/pending"); },
+    joinCall: function (id) { return request("POST", "/calls/" + id + "/join"); },
+    leaveCall: function (id) { return request("POST", "/calls/" + id + "/leave"); },
+    sendSignal: function (id, to, kind, payload) {
+      return request("POST", "/calls/" + id + "/signal", { to: to, kind: kind, payload: payload });
+    },
+    pollSignals: function (id) { return request("GET", "/calls/" + id + "/signal"); },
+
+    /* --- catalog (owner) --- */
+    customCatalog: function () { return request("GET", "/catalog/custom"); },
+    saveCatalogEntry: function (entry) { return request("POST", "/catalog/custom", entry); },
+    removeCatalogEntry: function (id, hard) {
+      return request("DELETE", "/catalog/custom/" + encodeURIComponent(id) + (hard ? "?hard=1" : ""));
+    },
+    restoreCatalogEntry: function (id) {
+      return request("POST", "/catalog/custom/" + encodeURIComponent(id) + "/restore");
+    },
+
     /* --- admin --- */
     adminOverview: function () { return request("GET", "/admin/overview"); },
     adminUsers: function (q) { return request("GET", "/admin/users" + (q ? "?q=" + encodeURIComponent(q) : "")); },
