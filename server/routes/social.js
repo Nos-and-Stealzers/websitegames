@@ -30,6 +30,18 @@ function relation(viewerId, otherId) {
   return row.requester_id === viewerId ? "pending-out" : "pending-in";
 }
 
+/* The relation plus the row it came from. The friends page builds its
+   Accept / Cancel / Remove / Unblock buttons out of `relation`, and those
+   buttons address the edge by id — so a person sent without one produced a
+   button whose only possible outcome was a request for /friends/undefined. */
+function withRelation(viewerId, row) {
+  const link = viewerId === row.id ? null : edge(viewerId, row.id);
+  return Object.assign(S.publicUser(row), {
+    relation: relation(viewerId, row.id),
+    edgeId: link ? link.id : null
+  });
+}
+
 function areFriends(a, b) {
   const row = edge(a, b);
   return !!row && row.state === "accepted";
@@ -107,7 +119,7 @@ router.get("/users/search", A.requireUser, (req, res) => {
   res.json({
     users: rows
       .filter((r) => relation(req.user.id, r.id) !== "blocked-by")
-      .map((r) => Object.assign(S.publicUser(r), { relation: relation(req.user.id, r.id) }))
+      .map((r) => withRelation(req.user.id, r))
   });
 });
 
@@ -119,7 +131,7 @@ router.get("/users/:username", A.requireUser, (req, res) => {
   const rel = relation(req.user.id, row.id);
   if (rel === "blocked-by") return res.status(404).json({ error: "No such user." });
 
-  const out = Object.assign(S.publicUser(row), { relation: rel });
+  const out = withRelation(req.user.id, row);
 
   /* Activity is opt-out, and only ever shared with friends. */
   if (row.show_activity && (rel === "friends" || rel === "self")) {
@@ -192,7 +204,12 @@ router.post("/friends/code", A.requireUser, (req, res, next) => {
     }
     const target = db.prepare("SELECT * FROM users WHERE friend_code = ?").get(code);
     if (!target) return res.status(404).json({ error: "No account uses that code." });
-    res.json({ user: S.publicUser(target), relation: relation(req.user.id, target.id) });
+    if (relation(req.user.id, target.id) === "blocked-by") {
+      /* Someone who blocked you should not be findable by code either. */
+      return res.status(404).json({ error: "No account uses that code." });
+    }
+    const user = withRelation(req.user.id, target);
+    res.json({ user, relation: user.relation });
   } catch (err) { next(err); }
 });
 

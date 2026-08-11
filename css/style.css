@@ -1445,6 +1445,31 @@ kbd {
   white-space: pre-wrap; overflow-wrap: anywhere;
 }
 
+/* Queue depth on the tab itself. A moderation console whose whole purpose is
+   showing what is waiting should not make you open each tab to find out. */
+.tab { position: relative; display: inline-flex; align-items: center; gap: 0.4rem; }
+.tab-n {
+  font-family: var(--mono); font-size: 0.66rem; line-height: 1;
+  padding: 0.15rem 0.3rem; border: 1px solid var(--accent);
+  color: var(--accent); border-radius: var(--r);
+}
+.tab-n[hidden] { display: none; }
+
+/* The queue tiles are buttons, because they take you to the work. */
+.queue-metrics .metric {
+  border: 0; font: inherit; text-align: left; cursor: pointer;
+  width: 100%; color: inherit;
+}
+.queue-metrics .metric:hover { background: var(--surface-2); }
+.queue-metrics .metric:hover b { color: var(--accent); }
+
+/* Separates the three escalating things the manage sheet offers, so a rank
+   change and a deletion never read as one block of buttons. */
+.sheet-rule { border: 0; border-top: 1px solid var(--line); margin: 1.2rem 0 1rem; }
+
+.btn.is-danger { color: var(--bad); border-color: var(--bad); }
+.btn.is-danger:hover { background: var(--bad); color: var(--paper); }
+
 /* --------------------------------------------------------------------------
    25 · SKIN GALLERY
    -------------------------------------------------------------------------- */

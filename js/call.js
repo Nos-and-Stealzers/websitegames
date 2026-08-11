@@ -147,12 +147,69 @@
   }
 
   /* A tile shows the video element only when a live video track exists;
-     otherwise it falls back to the avatar. */
+     otherwise it falls back to the avatar.
+
+     A remote track arrives `muted` and stays that way until the first frame
+     decodes, which is well after the `track` event. Checking once meant every
+     remote camera showed an avatar over a perfectly good video element, so
+     the track is watched as well as read. */
   function refreshTile(tile, stream) {
-    var live = stream && stream.getVideoTracks().some(function (t) {
+    if (!tile) return;
+    var tracks = stream ? stream.getVideoTracks() : [];
+    var live = tracks.some(function (t) {
       return t.readyState === "live" && !t.muted;
     });
     tile.classList.toggle("has-video", !!live);
+
+    tracks.forEach(function (t) {
+      if (t._watched) return;
+      t._watched = true;
+      ["unmute", "mute", "ended"].forEach(function (name) {
+        t.addEventListener(name, function () { refreshTile(tile, stream); });
+      });
+    });
+  }
+
+  /* ------------------------------------------------------------ ringtone */
+
+  /* Synthesised rather than a file: the site ships no audio assets and a
+     silent card in the corner is easy to miss, especially mid-game. Two
+     short tones, repeating, at a volume that does not make you jump. */
+  var ring = { ctx: null, timer: null };
+
+  function startRinging() {
+    if (ring.timer) return;
+
+    function blip() {
+      try {
+        var Ctx = window.AudioContext || window.webkitAudioContext;
+        if (!Ctx) return;
+        if (!ring.ctx) ring.ctx = new Ctx();
+        if (ring.ctx.state === "suspended") ring.ctx.resume();
+
+        [0, 0.42].forEach(function (offset) {
+          var at = ring.ctx.currentTime + offset;
+          var osc = ring.ctx.createOscillator();
+          var gain = ring.ctx.createGain();
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(offset ? 660 : 880, at);
+          gain.gain.setValueAtTime(0, at);
+          gain.gain.linearRampToValueAtTime(0.06, at + 0.02);
+          gain.gain.exponentialRampToValueAtTime(0.0001, at + 0.32);
+          osc.connect(gain).connect(ring.ctx.destination);
+          osc.start(at);
+          osc.stop(at + 0.34);
+        });
+      } catch (err) { stopRinging(); }
+    }
+
+    blip();
+    ring.timer = window.setInterval(blip, 2600);
+  }
+
+  function stopRinging() {
+    window.clearInterval(ring.timer);
+    ring.timer = null;
   }
 
   function nameOf(id) {
@@ -323,14 +380,24 @@
 
     pc.addEventListener("connectionstatechange", function () {
       entry.el.dataset.state = pc.connectionState;
-      if (pc.connectionState === "connected" && !state.startedAt) {
-        state.startedAt = Date.now();
-        status("In a call");
+      if (pc.connectionState === "connected") {
+        entry.el.classList.remove("is-failed");
+        if (!state.startedAt) {
+          state.startedAt = Date.now();
+          status("In a call");
+        }
       }
       if (pc.connectionState === "failed") {
-        /* Usually a network that blocks direct connections. Say so plainly
-           rather than leaving a silent dead tile. */
+        /* Usually a network that blocks direct connections. There is no TURN
+           relay to fall back to, so say what happened instead of leaving a
+           silent dead tile that looks like the other person went quiet. */
         entry.el.classList.add("is-failed");
+        status("Couldn't connect to " + nameOf(userId));
+        if (!entry.warned) {
+          entry.warned = true;
+          window.UI.toast("This network is blocking the direct connection to " +
+                          nameOf(userId) + ".", 4200);
+        }
       }
     });
 
@@ -406,10 +473,13 @@
     if (entry.el) entry.el.remove();
     delete state.peers[userId];
 
-    var others = Object.keys(state.peers).filter(function (k) {
-      return Number(k) !== state.self;
+    /* Someone still ringing is not "everyone left" — hanging up on them the
+       moment the one person who answered drops would kill a group call that
+       the third member is about to join. */
+    var stillComing = ((state.call && state.call.peers) || []).some(function (p) {
+      return p.id !== state.self && p.state === "invited";
     });
-    if (!others.length && state.call) {
+    if (!Object.keys(state.peers).length && !stillComing && state.call) {
       status("Everyone left");
       window.setTimeout(function () { if (state.call) hangUp(); }, 1500);
     }
@@ -422,17 +492,34 @@
 
     window.API.pollSignals(state.call.id).then(function (res) {
       if (!state.call) return;
-      if (res.call) state.call = res.call;
 
-      if (res.call && res.call.state === "ended") return teardown("Call ended");
+      /* A missing call row means it is gone, not that nothing changed.
+         Treating null as "no news" left the loop polling a dead call for as
+         long as the tab stayed open. */
+      if (!res.call) return teardown("Call ended");
+      state.call = res.call;
+      if (res.call.state === "ended") return teardown("Call ended");
+
+      /* Still ringing on the other end — say so rather than sitting on
+         "Connecting…" for however long they take to pick up. */
+      if (res.call.state === "ringing" && !state.startedAt) status("Ringing…");
 
       /* Anyone joined and not yet connected gets an offer from whichever
          side owns the offer for that pair. */
-      (res.call ? res.call.peers : []).forEach(function (p) {
+      res.call.peers.forEach(function (p) {
         if (p.id === state.self || p.state !== "joined") return;
         if (state.peers[p.id] && state.peers[p.id].pc) return;
         if (shouldOffer(p.id)) offerTo(p.id);
         else connect(p.id);        // stand ready to answer
+      });
+
+      /* A peer that left while we were connected: tear its tile down even if
+         the bye signal never arrived. */
+      Object.keys(state.peers).forEach(function (id) {
+        var still = res.call.peers.some(function (p) {
+          return String(p.id) === String(id) && p.state !== "left";
+        });
+        if (!still) dropPeer(id);
       });
 
       return res.signals.reduce(function (chain, sig) {
@@ -458,13 +545,18 @@
     state.ice = ice;
     state.startedAt = 0;
 
+    stopRinging();
+    state.ringing = null;
     root.hidden = false;
     bar.hidden = false;
     ringEl.hidden = true;
-    status("Connecting…");
-    mark("cam", !!wantVideo);
+    status(call && call.state === "ringing" ? "Ringing…" : "Connecting…");
 
     return getLocal(wantVideo).then(function () {
+      /* Only after the media actually arrives — getLocal falls back to audio
+         when there is no camera, and marking the button on beforehand claimed
+         a camera that isn't running. */
+      mark("cam", !state.camOff);
       runLoop();
     }).catch(function (err) {
       window.UI.toast(err.message || "Could not start the call.");
@@ -487,8 +579,7 @@
     return window.API.startCall({
       userId: opts.userId, threadId: opts.threadId, kind: opts.kind || "audio"
     }).then(function (res) {
-      state.self = res.call.startedBy;
-      status("Ringing…");
+      state.self = whoAmI() || res.call.startedBy;
       return begin(res.call, res.iceServers, opts.kind === "video");
     }).catch(function (err) {
       window.UI.toast(err.message || "Could not start the call.");
@@ -498,13 +589,20 @@
 
   function answer(callId, wantVideo) {
     if (!root) build();
+    stopRinging();
     return window.API.joinCall(callId).then(function (res) {
-      state.self = res.self;
+      /* The Node backend hands `self` back; Supabase does not always, and a
+         null id would break the "lower id offers" rule for every pair. */
+      state.self = res.self || whoAmI() || state.self;
       return begin(res.call, res.iceServers, !!wantVideo);
     }).catch(function (err) {
       window.UI.toast(err.message || "Could not join that call.");
       dismissRing();
     });
+  }
+
+  function whoAmI() {
+    return (window.Session && window.Session.user && window.Session.user.id) || null;
   }
 
   function hangUp() {
@@ -516,6 +614,7 @@
   function teardown(message) {
     window.clearInterval(state.timer);
     state.timer = null;
+    stopRinging();
 
     Object.keys(state.peers).forEach(function (k) {
       if (state.peers[k].pc) state.peers[k].pc.close();
@@ -594,10 +693,12 @@
     ringEl.appendChild(acts);
     ringEl.hidden = false;
     root.hidden = false;
+    startRinging();
   }
 
   function dismissRing() {
     state.ringing = null;
+    stopRinging();
     if (ringEl) ringEl.hidden = true;
     if (root && bar && bar.hidden) root.hidden = true;
   }
@@ -618,7 +719,12 @@
 
       if (!mine) { if (state.ringing) dismissRing(); return; }
       if (state.call) return;                       // already busy
-      if (state.ringing && state.ringing.id === mine.id) return;
+      if (state.ringing && state.ringing.id === mine.id) {
+        /* Keep the card current — the caller may have hung up between polls,
+           and the peer list is what tells us who is still there. */
+        state.ringing = mine;
+        return;
+      }
       drawRing(mine);
     }).catch(function () { /* offline; try again next tick */ });
   }
@@ -637,12 +743,30 @@
       watch();
 
       /* Closing the tab mid-call should free the other side immediately
-         rather than leaving them staring at a frozen tile. */
+         rather than leaving them staring at a frozen tile.
+
+         This used to POST a beacon at a hardcoded /api/calls/…/leave, which
+         only exists on the Node backend — on Supabase it hit the static host
+         and 404'd, so nobody ever left a call by closing the tab. The beacon
+         is now used only where that route is real, and every other backend
+         gets the ordinary call, which browsers still allow to fly on
+         pagehide. */
       window.addEventListener("pagehide", function () {
+        if (state.ringing) {
+          window.API.leaveCall(state.ringing.id).catch(function () {});
+        }
         if (!state.call) return;
-        var url = (window.SITE.apiBase || "") + "/api/calls/" + state.call.id + "/leave";
-        if (navigator.sendBeacon) navigator.sendBeacon(url, new Blob([], { type: "text/plain" }));
-        else window.API.leaveCall(state.call.id).catch(function () {});
+
+        var id = state.call.id;
+        var node = (window.API.backend || "node") === "node";
+        if (node && navigator.sendBeacon) {
+          var url = String(window.SITE.apiBase || "").replace(/\/+$/, "") +
+                    "/api/calls/" + id + "/leave";
+          navigator.sendBeacon(url, new Blob([], { type: "text/plain" }));
+        } else {
+          window.API.leaveCall(id).catch(function () {});
+        }
+        teardown("");
       });
     });
   }

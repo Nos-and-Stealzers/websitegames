@@ -89,6 +89,11 @@
 
       function drawHead(data) {
         head.innerHTML = "";
+        /* The strip lives outside `head`, so clearing head doesn't take it
+           with it — and switching conversations quickly used to stack one
+           group's members under the next one's title. */
+        var stale = head.parentNode.querySelector(".member-strip");
+        if (stale) stale.remove();
 
         if (data.isGroup) {
           var block = UI.el("div", "group-head");
@@ -115,6 +120,22 @@
         var spacer = UI.el("span");
         spacer.style.flex = "1";
         head.appendChild(spacer);
+
+        /* Calling was reachable from the floating dock and from a profile,
+           but not from the page whose entire job is this conversation. */
+        if (window.Calls && window.Calls.supported()) {
+          [["☎", "Start a voice call", "audio"], ["🎥", "Start a video call", "video"]]
+            .forEach(function (spec) {
+              var b = UI.el("button", "btn btn-sm btn-flat", spec[0]);
+              b.type = "button";
+              b.title = spec[1];
+              b.setAttribute("aria-label", spec[1]);
+              b.addEventListener("click", function () {
+                window.Calls.start({ threadId: data.id, kind: spec[2] });
+              });
+              head.appendChild(b);
+            });
+        }
 
         if (data.isGroup) {
           if (data.owner) {
@@ -263,7 +284,13 @@
 
           locked.hidden = res.canSend;
           compose.hidden = !res.canSend;
-          if (!res.canSend) locked.textContent = "You can't send messages in this conversation.";
+          /* The backend says *why* — a block, a suspension and a friends-only
+             setting are three different problems with three different fixes,
+             and one generic line told you which of them applied: none. */
+          if (!res.canSend) {
+            locked.textContent = res.lockedReason ||
+              "You can't send messages in this conversation.";
+          }
 
           UI.setParams({ thread: res.threadId }, true);
           loadList();

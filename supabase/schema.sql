@@ -2019,6 +2019,1122 @@ grant execute on function public.record_login(text)  to authenticated;
 grant execute on function public.admin_logins()      to authenticated;
 
 -- =====================================================================
+-- 13 · CORRECTIONS
+--
+-- Everything below fixes something the sections above got wrong. It is
+-- additive and idempotent like the rest of the file, and it runs last so
+-- it wins: where it redefines a function or a policy from an earlier
+-- section, this is the version that ends up live.
+-- =====================================================================
+
+-- ---------------------------------------------------------------------
+-- 13.1 · SUSPENSION ACTUALLY SUSPENDS
+--
+-- Nothing checked `state` anywhere. A suspended account kept a valid JWT
+-- and every RLS policy said yes to it, so suspending someone hid a button
+-- in the console and changed nothing else. These two predicates are the
+-- gate; the write paths below all consult them.
+-- ---------------------------------------------------------------------
+
+create or replace function public.is_active()
+returns boolean language sql stable security definer set search_path = public as $$
+  select exists (
+    select 1 from public.profiles where id = auth.uid() and state = 'active'
+  );
+$$;
+
+create or replace function public.require_active()
+returns void language plpgsql stable security definer set search_path = public as $$
+begin
+  if auth.uid() is null then raise exception 'Sign in to do that.'; end if;
+  if not public.is_active() then
+    raise exception 'Your account is suspended.';
+  end if;
+end;
+$$;
+
+-- ---------------------------------------------------------------------
+-- 13.2 · NOTIFICATIONS
+-- ---------------------------------------------------------------------
+
+-- The coalescing branch refreshed the body but left the old `link` in
+-- place: a friend who messaged you in a DM and then in a group produced
+-- one bell still pointing at the DM. The link has to move with the body,
+-- or the notification sends you to the wrong conversation.
+create or replace function public.notify(
+  target uuid, kind text, actor uuid, body text, link text,
+  quiet_minutes int default 0
+) returns void language plpgsql security definer set search_path = public as $$
+declare recent bigint;
+begin
+  if target is null or target = actor then return; end if;
+
+  -- Don't ring someone who has blocked the actor, or whom the actor has
+  -- blocked. A block that still lets notifications through isn't a block.
+  --
+  -- Social kinds only. A moderation notice must still arrive even when the
+  -- moderator and the account happen to have blocked each other — "your
+  -- account was suspended" is not a message from a person.
+  if actor is not null
+     and notify.kind in ('message','friend-request','friend-accept','group','call')
+     and public.blocked_between(target, actor) then
+    return;
+  end if;
+
+  if quiet_minutes > 0 then
+    select id into recent from public.notifications
+     where user_id = target and notifications.kind = notify.kind
+       and coalesce(actor_id, '00000000-0000-0000-0000-000000000000'::uuid)
+           = coalesce(actor,  '00000000-0000-0000-0000-000000000000'::uuid)
+       and created_at > now() - make_interval(mins => quiet_minutes)
+     order by id desc limit 1;
+
+    if recent is not null then
+      update public.notifications
+         set created_at = now(), read_at = null,
+             body = left(notify.body, 300), link = left(notify.link, 200)
+       where id = recent;
+      return;
+    end if;
+  end if;
+
+  insert into public.notifications (user_id, kind, actor_id, body, link)
+  values (target, notify.kind, actor, left(notify.body, 300), left(notify.link, 200));
+end;
+$$;
+
+-- ---------------------------------------------------------------------
+-- 13.3 · MESSAGES
+-- ---------------------------------------------------------------------
+
+-- Why a message can't be posted, or NULL if it can. Mirrors the Node
+-- backend's canPost(): membership is not the whole story for a DM, where
+-- a block or a friends-only setting also has to hold.
+create or replace function public.post_block_reason(t bigint)
+returns text language plpgsql stable security definer set search_path = public as $$
+declare
+  grp public.threads%rowtype;
+  other uuid;
+  ok_dm boolean;
+  other_state text;
+begin
+  if auth.uid() is null then return 'Sign in to do that.'; end if;
+  if not public.is_active() then return 'Your account is suspended.'; end if;
+  if not public.in_thread(t) then return 'You are not in this conversation.'; end if;
+
+  select * into grp from public.threads where id = t;
+  if grp.id is null then return 'No such thread.'; end if;
+  if grp.is_group then return null; end if;
+
+  select tm.user_id into other from public.thread_members tm
+   where tm.thread_id = t and tm.user_id <> auth.uid() limit 1;
+  if other is null then return 'There is nobody else in this conversation.'; end if;
+
+  select accepts_dms, state into ok_dm, other_state
+    from public.profiles where id = other;
+
+  if public.blocked_between(auth.uid(), other) then
+    return 'You cannot message this person.';
+  end if;
+  if other_state = 'suspended' then return 'That account is suspended.'; end if;
+  if not ok_dm and not public.are_friends(auth.uid(), other) then
+    return 'This person only accepts messages from friends.';
+  end if;
+  return null;
+end;
+$$;
+
+-- send_message only ever checked membership, so a block did not stop
+-- either party carrying on in a thread that already existed — you could
+-- block someone and still be messaged by them. It also let a suspended
+-- account keep talking.
+create or replace function public.send_message(t bigint, body text, image jsonb default null)
+returns bigint language plpgsql security definer set search_path = public as $$
+declare
+  att bigint;
+  mid bigint;
+  clean text;
+  raw text;
+  denied text;
+  member record;
+  sender_name text;
+begin
+  denied := public.post_block_reason(t);
+  if denied is not null then raise exception '%', denied; end if;
+
+  clean := btrim(coalesce(body, ''));
+  if clean = '' and image is null then raise exception 'Say something or attach an image.'; end if;
+  if length(clean) > 2000 then raise exception 'Message must be 2000 characters or fewer.'; end if;
+
+  if image is not null then
+    raw := image->>'dataUrl';
+    if raw is null or raw !~ '^data:image/(jpeg|png|webp|gif);base64,' then
+      raise exception 'Only JPEG, PNG, WebP and GIF images are allowed.';
+    end if;
+    raw := split_part(raw, ',', 2);
+    -- base64 inflates 4/3, so this is roughly a 600 KB decoded ceiling.
+    if length(raw) > 820000 then raise exception 'That image is too large.'; end if;
+
+    insert into public.attachments (thread_id, uploader, kind, mime, width, height, bytes, data)
+    values (t, auth.uid(),
+            case when coalesce(image->>'kind','upload') in ('screenshot','camera','upload')
+                 then image->>'kind' else 'upload' end,
+            split_part(split_part(image->>'dataUrl', ';', 1), ':', 2),
+            coalesce((image->>'width')::int, 0),
+            coalesce((image->>'height')::int, 0),
+            (length(raw) * 3) / 4,
+            raw)
+    returning id into att;
+  end if;
+
+  insert into public.messages (thread_id, sender, body, attachment_id)
+  values (t, auth.uid(), clean, att)
+  returning id into mid;
+
+  update public.threads set last_at = now() where id = t;
+
+  select coalesce(nullif(display_name, ''), username) into sender_name
+    from public.profiles where id = auth.uid();
+
+  for member in select user_id from public.thread_members
+                 where thread_id = t and user_id <> auth.uid() loop
+    perform public.notify(member.user_id, 'message', auth.uid(),
+      'New message from ' || sender_name, 'messages.html?thread=' || t, 5);
+  end loop;
+
+  return mid;
+end;
+$$;
+
+-- Reading a conversation used to mark it read with a direct UPDATE, which
+-- meant the update policy had to allow any member to write any message in
+-- the thread — and that also let any member retract, or silently rewrite,
+-- somebody else's message. These two RPCs are the only writes that remain,
+-- so the policy can close (13.4).
+create or replace function public.mark_thread_read(t bigint)
+returns bigint language plpgsql security definer set search_path = public as $$
+begin
+  if not public.in_thread(t) then raise exception 'No such thread.'; end if;
+
+  update public.messages set read_at = now()
+   where thread_id = t and sender <> auth.uid() and read_at is null;
+
+  return (select count(*) from public.messages m
+            join public.thread_members tm
+              on tm.thread_id = m.thread_id and tm.user_id = auth.uid()
+           where m.sender <> auth.uid() and m.read_at is null and not m.deleted);
+end;
+$$;
+
+-- Retracting drops the attachment as well. Leaving the row behind kept the
+-- image readable by everyone still in the thread, which is not what
+-- "message removed" says on the screen.
+create or replace function public.retract_message(m bigint)
+returns void language plpgsql security definer set search_path = public as $$
+declare msg public.messages%rowtype;
+begin
+  select * into msg from public.messages where id = m;
+  if msg.id is null then raise exception 'No such message.'; end if;
+  if msg.sender <> auth.uid() and not public.is_staff() then
+    raise exception 'That is not yours to remove.';
+  end if;
+
+  update public.messages set deleted = true, body = '', attachment_id = null where id = m;
+  if msg.attachment_id is not null then
+    delete from public.attachments where id = msg.attachment_id;
+  end if;
+
+  -- Removing someone else's words is a moderation action, so it is recorded
+  -- as one. Retracting your own is not.
+  if msg.sender <> auth.uid() then
+    perform public.log_audit('message-remove', 'message ' || m || ' in thread ' || msg.thread_id);
+  end if;
+end;
+$$;
+
+-- A DM with no messages in it had a NULL last_at and the thread list
+-- filtered those out, so a conversation you had just opened did not appear
+-- until somebody said something. Stamp it at creation instead.
+create or replace function public.open_thread(with_username text)
+returns bigint language plpgsql security definer set search_path = public as $$
+declare other uuid; lo uuid; hi uuid; tid bigint; ok_dm boolean; other_state text;
+begin
+  perform public.require_active();
+
+  select id, accepts_dms, state into other, ok_dm, other_state
+    from public.profiles where username = with_username;
+
+  if other is null then raise exception 'No such user.'; end if;
+  if other = auth.uid() then raise exception 'You cannot message yourself.'; end if;
+  if other_state = 'suspended' then raise exception 'That account is suspended.'; end if;
+  if public.blocked_between(auth.uid(), other) then raise exception 'You cannot message this person.'; end if;
+  if not ok_dm and not public.are_friends(auth.uid(), other) then
+    raise exception 'This person only accepts messages from friends.';
+  end if;
+
+  lo := least(auth.uid(), other);
+  hi := greatest(auth.uid(), other);
+
+  select id into tid from public.threads where a = lo and b = hi and is_group = false;
+  if tid is null then
+    insert into public.threads (a, b, last_at) values (lo, hi, now()) returning id into tid;
+  end if;
+
+  -- Back-fill: threads minted before thread_members existed, and the DM
+  -- rows the earlier revision of this function created without membership.
+  insert into public.thread_members (thread_id, user_id) values (tid, lo), (tid, hi)
+    on conflict do nothing;
+
+  return tid;
+end;
+$$;
+
+-- The conversation list was assembled in the browser from the last 400
+-- messages across every thread at once, so on a busy account the older
+-- threads came back with no preview and an unread count of zero. One
+-- query per thread, in the database, where the indexes are.
+create or replace function public.thread_list()
+returns jsonb language plpgsql stable security definer set search_path = public as $$
+declare me uuid := auth.uid();
+begin
+  if me is null then raise exception 'Sign in to do that.'; end if;
+
+  return coalesce((
+    select jsonb_agg(x order by (x->>'lastAt')::bigint desc nulls last)
+      from (
+        select jsonb_build_object(
+          'id', t.id,
+          'isGroup', t.is_group,
+          'rawTitle', t.title,
+          'owner', t.owner_id = me,
+          'lastAt', (coalesce(extract(epoch from t.last_at),
+                              extract(epoch from t.created_at)) * 1000)::bigint,
+          'unread', (
+            select count(*) from public.messages m
+             where m.thread_id = t.id and m.sender <> me
+               and m.read_at is null and not m.deleted
+          ),
+          'members', coalesce((
+            select jsonb_agg(jsonb_build_object(
+              'id', p.id, 'username', p.username,
+              'displayName', coalesce(nullif(p.display_name,''), p.username::text),
+              'role', p.role, 'state', p.state,
+              'lastSeen', (extract(epoch from p.last_seen) * 1000)::bigint
+            ) order by p.username)
+              from public.thread_members tm2
+              join public.profiles p on p.id = tm2.user_id
+             where tm2.thread_id = t.id and tm2.user_id <> me
+          ), '[]'::jsonb),
+          'preview', (
+            select jsonb_build_object(
+              'body', case when m.deleted then 'message removed'
+                           when coalesce(m.body,'') <> '' then m.body
+                           when m.attachment_id is not null then 'sent an image'
+                           else '' end,
+              'mine', m.sender = me,
+              'who', coalesce(nullif(p.display_name,''), p.username::text),
+              'at', (extract(epoch from m.created_at) * 1000)::bigint
+            )
+              from public.messages m
+              join public.profiles p on p.id = m.sender
+             where m.thread_id = t.id
+             order by m.id desc limit 1
+          )
+        ) as x
+          from public.threads t
+          join public.thread_members tm on tm.thread_id = t.id and tm.user_id = me
+      ) s
+  ), '[]'::jsonb);
+end;
+$$;
+
+-- Group messages were invisible to the rail. The badge query joined
+-- threads on a/b, which are NULL for a group, so a group could be shouting
+-- at you and the envelope stayed at zero.
+create or replace function public.badge_counts()
+returns jsonb language sql stable security definer set search_path = public as $$
+  select jsonb_build_object(
+    'messages', (
+      select count(*) from public.messages m
+       join public.thread_members tm
+         on tm.thread_id = m.thread_id and tm.user_id = auth.uid()
+       where m.sender <> auth.uid() and m.read_at is null and not m.deleted
+    ),
+    'requests', (
+      select count(*) from public.friendships
+       where addressee = auth.uid() and state = 'pending'
+    ),
+    'notifications', (
+      select count(*) from public.notifications
+       where user_id = auth.uid() and read_at is null
+    )
+  );
+$$;
+
+-- ---------------------------------------------------------------------
+-- 13.4 · MESSAGE WRITE POLICY
+--
+-- With mark_thread_read and retract_message carrying the two legitimate
+-- writes, the blanket in_thread() grant can go. Anyone in a thread could
+-- use it to edit or retract anyone else's message.
+-- ---------------------------------------------------------------------
+
+drop policy if exists messages_update on public.messages;
+create policy messages_update on public.messages for update
+  to authenticated
+  using (sender = auth.uid() or public.is_staff())
+  with check (sender = auth.uid() or public.is_staff());
+
+-- ---------------------------------------------------------------------
+-- 13.5 · FRIENDSHIPS
+--
+-- The update policy let either side of an edge write it, so the person who
+-- SENT a request could accept it themselves by PATCHing state, and either
+-- party could delete a block — including the one it was aimed at, which
+-- made blocking decorative.
+-- ---------------------------------------------------------------------
+
+create or replace function public.guard_friendship_update()
+returns trigger language plpgsql security definer set search_path = public as $$
+begin
+  -- The pair never changes; only the state does.
+  new.requester := old.requester;
+  new.addressee := old.addressee;
+  new.created_at := old.created_at;
+  new.updated_at := now();
+
+  if new.state = old.state and new.blocked_by is not distinct from old.blocked_by then
+    return new;
+  end if;
+
+  if new.state = 'accepted' then
+    if old.state <> 'pending' then
+      raise exception 'There is no request to accept.';
+    end if;
+    if auth.uid() <> old.addressee then
+      raise exception 'Only the person who was asked can accept.';
+    end if;
+
+  elsif new.state = 'blocked' then
+    if auth.uid() not in (old.requester, old.addressee) then
+      raise exception 'That is not yours to change.';
+    end if;
+    new.blocked_by := auth.uid();
+
+  elsif new.state = 'pending' then
+    if old.state = 'blocked' and old.blocked_by <> auth.uid() then
+      raise exception 'That isn''t possible.';
+    end if;
+    if auth.uid() <> old.requester then
+      raise exception 'That is not yours to change.';
+    end if;
+  end if;
+
+  return new;
+end;
+$$;
+
+drop trigger if exists friendships_guard on public.friendships;
+create trigger friendships_guard
+  before update on public.friendships
+  for each row execute function public.guard_friendship_update();
+
+-- Deleting is how you decline, cancel, unfriend and unblock. Only the
+-- person who raised a block may lift it.
+drop policy if exists friendships_delete on public.friendships;
+create policy friendships_delete on public.friendships for delete
+  to authenticated
+  using (
+    (requester = auth.uid() or addressee = auth.uid())
+    and (state <> 'blocked' or blocked_by = auth.uid())
+  );
+
+-- A suspended account should not be able to open new relationships, and a
+-- request to a suspended account should not go through either.
+drop policy if exists friendships_insert on public.friendships;
+create policy friendships_insert on public.friendships for insert
+  to authenticated
+  with check (
+    requester = auth.uid()
+    and addressee <> auth.uid()
+    and public.is_active()
+    and not public.blocked_between(auth.uid(), addressee)
+    and (
+      state = 'blocked'
+      or exists (select 1 from public.profiles p
+                  where p.id = addressee and p.state = 'active')
+    )
+  );
+
+-- Blocking someone should also close whatever is already open between you.
+-- Leaving the accepted edge alongside a block was how a "blocked" person
+-- kept showing up in the other one's friend list.
+create or replace function public.block_user(target uuid)
+returns void language plpgsql security definer set search_path = public as $$
+declare existing public.friendships%rowtype;
+begin
+  perform public.require_active();
+  if target = auth.uid() then raise exception 'That is you.'; end if;
+  if not exists (select 1 from public.profiles where id = target) then
+    raise exception 'No such user.';
+  end if;
+
+  select * into existing from public.friendships
+   where (requester = auth.uid() and addressee = target)
+      or (requester = target and addressee = auth.uid());
+
+  if existing.id is null then
+    insert into public.friendships (requester, addressee, state, blocked_by)
+    values (auth.uid(), target, 'blocked', auth.uid());
+  else
+    update public.friendships
+       set state = 'blocked', blocked_by = auth.uid(), updated_at = now()
+     where id = existing.id;
+  end if;
+
+  -- Drop any pending call between the two of you as well.
+  update public.calls set state = 'ended', ended_at = now()
+   where state <> 'ended' and id in (
+     select p1.call_id from public.call_peers p1
+      join public.call_peers p2 on p2.call_id = p1.call_id
+     where p1.user_id = auth.uid() and p2.user_id = target
+   );
+end;
+$$;
+
+-- Accepting is a one-liner that the guard above already polices, but going
+-- through a function means the client gets a real error instead of a
+-- silent zero-row PATCH when it aims at the wrong edge.
+create or replace function public.accept_request(edge bigint)
+returns void language plpgsql security definer set search_path = public as $$
+declare req public.friendships%rowtype;
+begin
+  perform public.require_active();
+  select * into req from public.friendships where id = edge;
+  if req.id is null then raise exception 'No such request.'; end if;
+  if req.addressee <> auth.uid() then raise exception 'That request is not yours to accept.'; end if;
+  if req.state <> 'pending' then raise exception 'There is no request to accept.'; end if;
+
+  update public.friendships set state = 'accepted', updated_at = now() where id = edge;
+end;
+$$;
+
+-- find_by_code returned four fields, so the friends page drew the result
+-- with no presence and no relation-aware buttons. Hand back the same shape
+-- a search result has, including the edge id the accept/cancel buttons
+-- need to address.
+create or replace function public.find_by_code(code text)
+returns jsonb language plpgsql security definer set search_path = public as $$
+declare tidy text; hit public.profiles%rowtype; edge public.friendships%rowtype;
+begin
+  if auth.uid() is null then raise exception 'Sign in to do that.'; end if;
+  tidy := upper(regexp_replace(coalesce(code, ''), '[^A-Za-z0-9]', '', 'g'));
+  if length(tidy) <> 6 then raise exception 'Friend codes are six characters, like ABC-123.'; end if;
+  tidy := substr(tidy, 1, 3) || '-' || substr(tidy, 4, 3);
+
+  select * into hit from public.profiles where friend_code = tidy;
+  if hit.id is null then raise exception 'No account uses that code.'; end if;
+  if hit.id = auth.uid() then raise exception 'That is your own code.'; end if;
+  if public.blocked_between(auth.uid(), hit.id) then raise exception 'No account uses that code.'; end if;
+
+  select * into edge from public.friendships
+   where (requester = auth.uid() and addressee = hit.id)
+      or (requester = hit.id and addressee = auth.uid());
+
+  return jsonb_build_object(
+    'id', hit.id,
+    'username', hit.username,
+    'displayName', coalesce(nullif(hit.display_name, ''), hit.username::text),
+    'bio', hit.bio,
+    'role', hit.role,
+    'state', hit.state,
+    'lastSeen', (extract(epoch from hit.last_seen) * 1000)::bigint,
+    'online', (now() - hit.last_seen) < interval '150 seconds',
+    'edgeId', edge.id,
+    'relation', case
+      when edge.id is null then 'none'
+      when edge.state = 'accepted' then 'friends'
+      when edge.state = 'blocked' then
+        case when edge.blocked_by = auth.uid() then 'blocked' else 'blocked-by' end
+      when edge.requester = auth.uid() then 'pending-out'
+      else 'pending-in' end
+  );
+end;
+$$;
+
+-- ---------------------------------------------------------------------
+-- 13.6 · CALLING
+-- ---------------------------------------------------------------------
+
+-- start_call never checked for a block, so blocking someone stopped their
+-- messages and not their calls, and a suspended account could still ring
+-- people.
+create or replace function public.start_call(
+  target uuid default null, t bigint default null, call_kind text default 'audio'
+) returns bigint language plpgsql security definer set search_path = public as $$
+declare
+  new_id bigint;
+  invitee uuid;
+  invited uuid[];
+  me uuid := auth.uid();
+  max_peers constant int := 4;
+begin
+  perform public.require_active();
+  if call_kind not in ('audio','video','screen') then call_kind := 'audio'; end if;
+
+  if t is not null then
+    -- Membership of the thread is the permission. Requiring pairwise
+    -- friendship as well would break most group calls.
+    if not exists (select 1 from public.thread_members where thread_id = t and user_id = me) then
+      raise exception 'You are not in that conversation.';
+    end if;
+    select array_agg(user_id) into invited
+      from public.thread_members
+     where thread_id = t and user_id <> me
+       and not public.blocked_between(me, user_id);
+  else
+    if target is null then raise exception 'Say who you are calling.'; end if;
+    if not public.are_friends(me, target) then
+      raise exception 'You can only call friends.';
+    end if;
+    if public.blocked_between(me, target) then
+      raise exception 'You cannot call this person.';
+    end if;
+    invited := array[target];
+  end if;
+
+  if invited is null or array_length(invited, 1) is null then
+    raise exception 'There is nobody to call.';
+  end if;
+  if array_length(invited, 1) + 1 > max_peers then
+    raise exception 'Calls hold % people. Bigger groups need a relay server we do not run.', max_peers;
+  end if;
+
+  -- One live call at a time. Without this, a stuck ringing row from a
+  -- closed tab sits in pending_calls and rings forever.
+  update public.calls set state = 'ended', ended_at = now()
+   where state = 'ringing' and started_by = me;
+
+  insert into public.calls (thread_id, started_by, kind)
+  values (t, me, call_kind)
+  returning id into new_id;
+
+  insert into public.call_peers (call_id, user_id, state, joined_at)
+  values (new_id, me, 'joined', now());
+
+  foreach invitee in array invited loop
+    insert into public.call_peers (call_id, user_id) values (new_id, invitee)
+      on conflict do nothing;
+    perform public.notify(invitee, 'call', me,
+      coalesce(nullif((select display_name from public.profiles where id = me), ''),
+               (select username::text from public.profiles where id = me)) || ' is calling you.',
+      case when t is null then 'messages.html' else 'messages.html?thread=' || t end);
+  end loop;
+
+  return new_id;
+end;
+$$;
+
+-- Declining a call that was never answered left the caller staring at
+-- "Ringing…" until the 45-second sweep noticed. Ending the call when the
+-- last *invited* peer declines closes it straight away, and the bye goes
+-- to everyone still in it rather than only the joined ones.
+create or replace function public.leave_call(c bigint)
+returns void language plpgsql security definer set search_path = public as $$
+declare
+  still_here int;
+  still_ringing int;
+begin
+  if not public.in_call(c) then return; end if;
+
+  update public.call_peers set state = 'left'
+   where call_id = c and user_id = auth.uid();
+
+  -- Tell the others straight away rather than making them wait for a poll.
+  insert into public.call_signals (call_id, from_id, to_id, kind)
+  select c, auth.uid(), user_id, 'bye'
+    from public.call_peers
+   where call_id = c and user_id <> auth.uid() and state <> 'left';
+
+  select count(*) into still_here
+    from public.call_peers where call_id = c and state = 'joined';
+  select count(*) into still_ringing
+    from public.call_peers where call_id = c and state = 'invited';
+
+  -- The call ends when nobody is left who could still be talking: one
+  -- person alone with nobody else on the way is over.
+  if still_here <= 1 and still_ringing = 0 then
+    update public.calls set state = 'ended', ended_at = now() where id = c;
+  end if;
+end;
+$$;
+
+-- ---------------------------------------------------------------------
+-- 13.7 · THE AUDIT TRAIL
+--
+-- The audit table existed, the console read from it, and nothing on this
+-- backend ever wrote a row — so the tab was permanently empty and every
+-- staff action here was unrecorded. That is the opposite of what an audit
+-- trail is for.
+-- ---------------------------------------------------------------------
+
+create or replace function public.log_audit(action text, detail text default '')
+returns void language sql security definer set search_path = public as $$
+  insert into public.audit (actor, action, detail)
+  values (auth.uid(), left(action, 60), left(coalesce(detail, ''), 300));
+$$;
+
+revoke all on function public.log_audit(text, text) from public, anon, authenticated;
+
+-- ---------------------------------------------------------------------
+-- 13.8 · ADMIN
+--
+-- Role and state changes went straight at the profiles table. RLS grants
+-- rows and the guard trigger polices columns, so an admin could:
+--   · promote anyone to admin, including to their own rank;
+--   · demote another admin;
+--   · make a change that the trigger silently reverted, and get a 200
+--     back with the unchanged row, which reads exactly like success.
+-- None of the rank rules the Node backend enforces existed here. This RPC
+-- is the whole of it in one place, and it writes an audit row.
+-- ---------------------------------------------------------------------
+
+create or replace function public.rank_of(role text)
+returns int language sql immutable as $$
+  select case role when 'owner' then 3 when 'admin' then 2 when 'mod' then 1 else 0 end;
+$$;
+
+create or replace function public.admin_set_user(
+  target uuid, next_role text default null, next_state text default null
+) returns jsonb language plpgsql security definer set search_path = public as $$
+declare
+  me public.profiles%rowtype;
+  who public.profiles%rowtype;
+  changes text[] := '{}';
+begin
+  select * into me from public.profiles where id = auth.uid();
+  if me.id is null or public.rank_of(me.role) < 1 then
+    raise exception 'You do not have access to that.';
+  end if;
+
+  select * into who from public.profiles where id = target;
+  if who.id is null then raise exception 'No such user.'; end if;
+
+  if who.role = 'owner' then
+    raise exception 'The owner cannot be changed by anyone.';
+  end if;
+  if who.id = me.id then
+    raise exception 'You cannot change your own rank or state.';
+  end if;
+  -- The rule that makes ranks mean anything: you may only act on someone
+  -- below you.
+  if public.rank_of(me.role) <= public.rank_of(who.role) then
+    raise exception 'You can only manage accounts below your own rank.';
+  end if;
+
+  if next_role is not null then
+    if public.rank_of(me.role) < 2 then
+      raise exception 'Only administrators change ranks.';
+    end if;
+    if next_role not in ('user','mod','admin') then
+      raise exception 'Owner is set by the server, not granted here.';
+    end if;
+    if public.rank_of(next_role) >= public.rank_of(me.role) then
+      raise exception 'You cannot promote anyone to your own rank.';
+    end if;
+    if next_role <> who.role then
+      update public.profiles set role = next_role where id = target;
+      changes := changes || ('role=' || next_role);
+    end if;
+  end if;
+
+  if next_state is not null then
+    if public.rank_of(me.role) < 2 then
+      raise exception 'Only administrators suspend accounts.';
+    end if;
+    if next_state not in ('active','suspended') then raise exception 'Unknown state.'; end if;
+    if next_state <> who.state then
+      update public.profiles set state = next_state where id = target;
+      changes := changes || ('state=' || next_state);
+    end if;
+  end if;
+
+  if array_length(changes, 1) is null then
+    raise exception 'Nothing to change.';
+  end if;
+
+  perform public.log_audit('user-update',
+    who.username || ': ' || array_to_string(changes, ' '));
+
+  select * into who from public.profiles where id = target;
+  return jsonb_build_object(
+    'id', who.id, 'username', who.username,
+    'displayName', coalesce(nullif(who.display_name,''), who.username::text),
+    'role', who.role, 'state', who.state
+  );
+end;
+$$;
+
+create or replace function public.admin_delete_user(target uuid)
+returns void language plpgsql security definer set search_path = public as $$
+declare
+  me public.profiles%rowtype;
+  who public.profiles%rowtype;
+begin
+  select * into me from public.profiles where id = auth.uid();
+  select * into who from public.profiles where id = target;
+  if who.id is null then raise exception 'No such user.'; end if;
+  if me.id is null or public.rank_of(me.role) < 2 then
+    raise exception 'Only administrators delete accounts.';
+  end if;
+  if who.id = me.id then raise exception 'You cannot delete yourself here.'; end if;
+  if who.role = 'owner' then raise exception 'The owner cannot be deleted.'; end if;
+  if public.rank_of(me.role) <= public.rank_of(who.role) then
+    raise exception 'You can only delete accounts below your own rank.';
+  end if;
+
+  perform public.log_audit('user-delete', who.username::text);
+  delete from public.profiles where id = target;
+end;
+$$;
+
+-- Closing a report tells the person who raised it, and leaves a trace.
+-- Neither happened before: the client PATCHed the row directly.
+create or replace function public.admin_set_report(r bigint, next_state text)
+returns void language plpgsql security definer set search_path = public as $$
+declare rep public.reports%rowtype;
+begin
+  if not public.is_staff() then raise exception 'Staff only.'; end if;
+  if next_state not in ('open','closed') then raise exception 'Unknown state.'; end if;
+
+  select * into rep from public.reports where id = r;
+  if rep.id is null then raise exception 'No such report.'; end if;
+
+  update public.reports set state = next_state where id = r;
+
+  -- Close the loop for whoever raised it, which nothing did before.
+  if next_state = 'closed' and rep.state <> 'closed' and rep.reporter is not null then
+    perform public.notify(rep.reporter, 'report', auth.uid(),
+      'Your report about ' || rep.target || ' was reviewed', 'notifications.html');
+  end if;
+  perform public.log_audit('report-' || next_state, 'report ' || r || ' · ' || rep.target);
+end;
+$$;
+
+-- The console's own reads, so a moderator sees the same numbers whichever
+-- backend is behind it. admin_overview grew the two queues it was missing.
+create or replace function public.admin_overview()
+returns jsonb language plpgsql stable security definer set search_path = public as $$
+declare online_cut timestamptz := now() - interval '150 seconds';
+begin
+  if not public.is_staff() then raise exception 'You do not have access to that.'; end if;
+
+  return jsonb_build_object(
+    'users', jsonb_build_object(
+      'total',       (select count(*) from public.profiles),
+      'active',      (select count(*) from public.profiles where state = 'active'),
+      'suspended',   (select count(*) from public.profiles where state = 'suspended'),
+      'staff',       (select count(*) from public.profiles where role <> 'user'),
+      'online',      (select count(*) from public.profiles where last_seen > online_cut),
+      'newToday',    (select count(*) from public.profiles where created_at > now() - interval '1 day'),
+      'newThisWeek', (select count(*) from public.profiles where created_at > now() - interval '7 days')
+    ),
+    'social', jsonb_build_object(
+      'friendships',   (select count(*) from public.friendships where state = 'accepted'),
+      'pending',       (select count(*) from public.friendships where state = 'pending'),
+      'blocks',        (select count(*) from public.friendships where state = 'blocked'),
+      'threads',       (select count(*) from public.threads),
+      'groups',        (select count(*) from public.threads where is_group),
+      'messages',      (select count(*) from public.messages where not deleted),
+      'messagesToday', (select count(*) from public.messages where created_at > now() - interval '1 day')
+    ),
+    'queues', jsonb_build_object(
+      'reports',  (select count(*) from public.reports where state = 'open'),
+      'tickets',  (select count(*) from public.support_tickets where state = 'open'),
+      'feedback', (select count(*) from public.feedback where state = 'new'),
+      'calls',    (select count(*) from public.calls where state <> 'ended')
+    ),
+    'reports', jsonb_build_object(
+      'open',  (select count(*) from public.reports where state = 'open'),
+      'total', (select count(*) from public.reports)
+    ),
+    'sessions', (select count(*) from public.profiles where last_seen > online_cut),
+    'topGames', coalesce((
+      select jsonb_agg(g) from (
+        select game_id as id, plays, seconds
+          from public.game_stats order by seconds desc limit 10
+      ) g
+    ), '[]'::jsonb)
+  );
+end;
+$$;
+
+-- The user list now carries everything the console shows, so a row does
+-- not need a second round trip to be actionable.
+create or replace function public.admin_users(q text default null)
+returns jsonb language plpgsql stable security definer set search_path = public as $$
+begin
+  if not public.is_staff() then raise exception 'You do not have access to that.'; end if;
+
+  return coalesce((
+    select jsonb_agg(row_to_json(u)) from (
+      select p.id, p.username, p.display_name, p.bio, p.role, p.state,
+             p.accepts_dms, p.show_activity, p.created_at, p.last_seen,
+             p.current_game,
+             (select count(*) from public.friendships f
+               where f.state = 'accepted'
+                 and (f.requester = p.id or f.addressee = p.id)) as friends,
+             (select count(*) from public.messages m
+               where m.sender = p.id and not m.deleted)          as messages,
+             (select count(*) from public.reports r
+               where r.kind = 'user' and lower(r.target) = lower(p.username::text)) as reports,
+             (select max(l.at) from public.logins l where l.user_id = p.id) as last_login
+        from public.profiles p
+       where q is null or q = ''
+          or p.username ilike '%' || q || '%'
+          or p.display_name ilike '%' || q || '%'
+       order by p.created_at desc limit 200
+    ) u
+  ), '[]'::jsonb);
+end;
+$$;
+
+create or replace function public.admin_audit(q text default null, limit_to int default 200)
+returns jsonb language plpgsql stable security definer set search_path = public as $$
+begin
+  if not public.is_staff() then raise exception 'Staff only.'; end if;
+
+  return coalesce((
+    select jsonb_agg(jsonb_build_object(
+      'id', a.id,
+      'actor', coalesce(pr.username::text, 'system'),
+      'action', a.action,
+      'detail', a.detail,
+      'at', (extract(epoch from a.created_at) * 1000)::bigint
+    ) order by a.id desc)
+      from (
+        select * from public.audit
+         where q is null or q = ''
+            or action ilike '%' || q || '%'
+            or detail ilike '%' || q || '%'
+         order by id desc
+         limit greatest(1, least(coalesce(limit_to, 200), 500))
+      ) a
+      left join public.profiles pr on pr.id = a.actor
+  ), '[]'::jsonb);
+end;
+$$;
+
+-- Reports carry the reporter and, when the target is an account, enough of
+-- that account to act on it without leaving the queue.
+create or replace function public.admin_reports(want_state text default 'open')
+returns jsonb language plpgsql stable security definer set search_path = public as $$
+begin
+  if not public.is_staff() then raise exception 'Staff only.'; end if;
+
+  return coalesce((
+    select jsonb_agg(jsonb_build_object(
+      'id', r.id, 'kind', r.kind, 'target', r.target, 'reason', r.reason,
+      'state', r.state,
+      'at', (extract(epoch from r.created_at) * 1000)::bigint,
+      'reporter', coalesce(rp.username::text, '(deleted)'),
+      'subject', case when r.kind = 'user' then (
+        select jsonb_build_object(
+          'id', tp.id, 'username', tp.username, 'role', tp.role, 'state', tp.state
+        ) from public.profiles tp where lower(tp.username::text) = lower(r.target)
+      ) else null end
+    ) order by r.created_at desc)
+      from public.reports r
+      left join public.profiles rp on rp.id = r.reporter
+     where r.state = want_state
+  ), '[]'::jsonb);
+end;
+$$;
+
+-- Staff actions elsewhere leave a trace too, so the trail is the whole
+-- story rather than only the user tab.
+create or replace function public.on_feedback_touched()
+returns trigger language plpgsql security definer set search_path = public as $$
+begin
+  if new.state is distinct from old.state or new.reply is distinct from old.reply then
+    perform public.log_audit('feedback-' || new.state, '#' || new.id || ' ' || new.subject);
+  end if;
+
+  if new.user_id is null then return new; end if;
+  if new.state is distinct from old.state or new.reply is distinct from old.reply then
+    perform public.notify(new.user_id, 'feedback', auth.uid(),
+      case when new.reply is distinct from old.reply and new.reply <> ''
+           then 'A moderator replied to your feedback: ' || new.subject
+           else 'Your feedback was marked ' || new.state || ': ' || new.subject end,
+      'feedback.html');
+  end if;
+  return new;
+end;
+$$;
+
+create or replace function public.set_ticket_state(t bigint, next_state text)
+returns void language plpgsql security definer set search_path = public as $$
+declare
+  tk  public.support_tickets;
+  staff boolean := public.is_staff();
+begin
+  select * into tk from public.support_tickets where id = t;
+  if tk is null then raise exception 'No such ticket.'; end if;
+  if tk.user_id <> auth.uid() and not staff then
+    raise exception 'That is not your ticket.';
+  end if;
+  if next_state not in ('open','waiting','closed') then
+    raise exception 'Unknown state.';
+  end if;
+  if not staff and next_state <> 'closed' then
+    raise exception 'You can close your ticket; only staff can reopen it.';
+  end if;
+
+  update public.support_tickets set state = next_state, updated_at = now() where id = t;
+
+  if staff and tk.user_id is distinct from auth.uid() then
+    perform public.log_audit('ticket-' || next_state, '#' || t || ' ' || tk.subject);
+    if tk.user_id is not null and next_state = 'closed' then
+      perform public.notify(tk.user_id, 'support', auth.uid(),
+        'Your ticket was closed: ' || tk.subject, 'support.html#t' || t);
+    end if;
+  end if;
+end;
+$$;
+
+create or replace function public.set_ticket_priority(t bigint, next_priority text)
+returns void language plpgsql security definer set search_path = public as $$
+begin
+  if not public.is_staff() then raise exception 'Only staff set priority.'; end if;
+  if next_priority not in ('low','normal','high') then raise exception 'Unknown priority.'; end if;
+  update public.support_tickets set priority = next_priority, updated_at = now() where id = t;
+  perform public.log_audit('ticket-priority', '#' || t || ' → ' || next_priority);
+end;
+$$;
+
+create or replace function public.save_custom_game(entry jsonb)
+returns jsonb language plpgsql security definer set search_path = public as $$
+declare
+  slug text;
+begin
+  if not public.is_owner() then
+    raise exception 'Only the owner can change the catalogue.';
+  end if;
+
+  slug := regexp_replace(lower(coalesce(entry->>'id','')), '[^a-z0-9-]+', '-', 'g');
+  slug := regexp_replace(slug, '-+', '-', 'g');
+  slug := trim(both '-' from slug);
+  if slug = '' then raise exception 'That id has no usable characters.'; end if;
+
+  if coalesce(entry->>'title','') = '' then
+    raise exception 'A game needs a title.';
+  end if;
+
+  -- Same rule as the Node side: a bare path with no host would resolve
+  -- against the hub itself and quietly 404.
+  if coalesce(entry->>'host','') = ''
+     and coalesce(entry->>'source','') !~* '^https?://' then
+    raise exception 'Pick a host, or give a full https:// URL.';
+  end if;
+
+  insert into public.custom_games (game_id, payload, removed, added_by, updated_at)
+  values (slug, entry - 'id', false, auth.uid(), now())
+  on conflict (game_id) do update
+    set payload = excluded.payload, removed = false, updated_at = now();
+
+  perform public.log_audit('game-save', slug);
+  return entry || jsonb_build_object('id', slug);
+end;
+$$;
+
+create or replace function public.remove_custom_game(slug text, hard boolean default false)
+returns void language plpgsql security definer set search_path = public as $$
+begin
+  if not public.is_owner() then
+    raise exception 'Only the owner can change the catalogue.';
+  end if;
+
+  if hard then
+    delete from public.custom_games where game_id = slug and removed = false;
+  else
+    insert into public.custom_games (game_id, payload, removed, added_by, updated_at)
+    values (slug, '{}'::jsonb, true, auth.uid(), now())
+    on conflict (game_id) do update set removed = true, updated_at = now();
+  end if;
+
+  perform public.log_audit(case when hard then 'game-delete' else 'game-hide' end, slug);
+end;
+$$;
+
+create or replace function public.restore_custom_game(slug text)
+returns void language plpgsql security definer set search_path = public as $$
+begin
+  if not public.is_owner() then
+    raise exception 'Only the owner can change the catalogue.';
+  end if;
+  delete from public.custom_games where game_id = slug and removed = true;
+  perform public.log_audit('game-restore', slug);
+end;
+$$;
+
+-- ---------------------------------------------------------------------
+-- 13.9 · GRANTS FOR EVERYTHING NEW
+-- ---------------------------------------------------------------------
+
+revoke all on function public.is_active()                        from public, anon;
+revoke all on function public.require_active()                   from public, anon;
+revoke all on function public.post_block_reason(bigint)          from public, anon;
+revoke all on function public.mark_thread_read(bigint)           from public, anon;
+revoke all on function public.retract_message(bigint)            from public, anon;
+revoke all on function public.thread_list()                      from public, anon;
+revoke all on function public.block_user(uuid)                   from public, anon;
+revoke all on function public.accept_request(bigint)             from public, anon;
+revoke all on function public.admin_set_user(uuid, text, text)   from public, anon;
+revoke all on function public.admin_delete_user(uuid)            from public, anon;
+revoke all on function public.admin_set_report(bigint, text)     from public, anon;
+revoke all on function public.admin_audit(text, int)             from public, anon;
+revoke all on function public.admin_reports(text)                from public, anon;
+
+grant execute on function public.is_active()                      to authenticated;
+grant execute on function public.require_active()                 to authenticated;
+grant execute on function public.post_block_reason(bigint)        to authenticated;
+grant execute on function public.mark_thread_read(bigint)         to authenticated;
+grant execute on function public.retract_message(bigint)          to authenticated;
+grant execute on function public.thread_list()                    to authenticated;
+grant execute on function public.block_user(uuid)                 to authenticated;
+grant execute on function public.accept_request(bigint)           to authenticated;
+grant execute on function public.rank_of(text)                    to authenticated;
+grant execute on function public.admin_set_user(uuid, text, text) to authenticated;
+grant execute on function public.admin_delete_user(uuid)          to authenticated;
+grant execute on function public.admin_set_report(bigint, text)   to authenticated;
+grant execute on function public.admin_audit(text, int)           to authenticated;
+grant execute on function public.admin_reports(text)              to authenticated;
+
+-- ---------------------------------------------------------------------
+-- 13.10 · BACK-FILL
+--
+-- Repairs for data the bugs above already created. All of it is a no-op on
+-- a fresh project.
+-- ---------------------------------------------------------------------
+
+-- DMs opened before 13.3 have no membership rows, so they were invisible
+-- to in_thread() and their owners could not read their own conversation.
+insert into public.thread_members (thread_id, user_id)
+  select t.id, t.a from public.threads t where t.a is not null
+   on conflict do nothing;
+insert into public.thread_members (thread_id, user_id)
+  select t.id, t.b from public.threads t where t.b is not null
+   on conflict do nothing;
+
+-- Threads with no last_at were dropped from the list entirely.
+update public.threads set last_at = created_at where last_at is null;
+
+-- Calls left ringing by a closed tab never ended, because the sweep only
+-- runs when somebody polls the very call that is stuck.
+update public.calls set state = 'ended', ended_at = now()
+ where state <> 'ended' and created_at < now() - interval '10 minutes';
+
+-- =====================================================================
 -- Done.
 --
 -- Setup, once per project:

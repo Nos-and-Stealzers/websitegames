@@ -425,14 +425,19 @@
   }
 
   window.ChatDock = {
+    /* Resolves true when the conversation is showing in the dock and false
+       when the dock isn't there to show it — switched off in settings, or
+       the page loaded before it mounted. Callers need to be able to tell,
+       so they can fall back to the messages page instead of appearing to
+       do nothing at all. */
     openWith: function (username) {
       return window.API.openThread(username).then(function (res) {
-        if (!root) return null;
+        if (!root) return false;
         setOpen(true);
         return loadList().then(function () {
           var t = threadsCache.filter(function (x) { return x.id === res.threadId; })[0];
           return openThread(t || { id: res.threadId, title: username, isGroup: false });
-        });
+        }).then(function () { return true; });
       });
     },
     close: function () { if (root) setOpen(false); }

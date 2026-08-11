@@ -59,6 +59,7 @@
 
   function keepSession(next) {
     session = next;
+    selfProfile = null;
     try {
       if (next) window.localStorage.setItem(TOKEN_KEY, JSON.stringify(next));
       else window.localStorage.removeItem(TOKEN_KEY);
@@ -198,10 +199,19 @@
   var PROFILE_COLS = "id,username,display_name,bio,role,state,accepts_dms,show_activity," +
                      "friend_code,created_at,last_seen";
 
-  function me() {
+  /* The signed-in account's own profile row.
+     `session.user.user_metadata` is NOT a substitute: it is whatever was set
+     at sign-up, so it goes stale the moment someone edits their display name,
+     and a session restored from an older token may not carry it at all —
+     which is how sending a message could throw on `.username` of undefined. */
+  var selfProfile = null;
+
+  function me(force) {
     if (!session) return Promise.resolve(null);
+    if (selfProfile && !force) return Promise.resolve(selfProfile);
     return rest("/profiles?select=" + PROFILE_COLS + "&id=eq." + session.user.id)
-      .then(one);
+      .then(one)
+      .then(function (row) { selfProfile = row; return row; });
   }
 
   /* Cached so relation lookups don't refetch the whole graph per row. */
@@ -215,18 +225,36 @@
       .then(function (rows) { edgesCache = rows || []; return edgesCache; });
   }
 
+  function edgeOf(rows, otherId) {
+    if (!session) return null;
+    var mine = session.user.id;
+    return (rows || []).filter(function (r) {
+      return (r.requester === mine && r.addressee === otherId) ||
+             (r.requester === otherId && r.addressee === mine);
+    })[0] || null;
+  }
+
   function relationOf(rows, otherId) {
     if (!session) return "none";
     if (otherId === session.user.id) return "self";
     var me = session.user.id;
-    var row = rows.filter(function (r) {
-      return (r.requester === me && r.addressee === otherId) ||
-             (r.requester === otherId && r.addressee === me);
-    })[0];
+    var row = edgeOf(rows, otherId);
     if (!row) return "none";
     if (row.state === "accepted") return "friends";
     if (row.state === "blocked") return row.blocked_by === me ? "blocked" : "blocked-by";
     return row.requester === me ? "pending-out" : "pending-in";
+  }
+
+  /* Every people-shaped response carries the edge id as well as the relation.
+     Without it, the Accept / Cancel / Remove / Unblock buttons that the
+     friends page builds from `relation` had nothing to address, and fired a
+     DELETE at `/friendships?id=eq.undefined`. */
+  function withRelation(rows, row) {
+    var edge = edgeOf(rows, row.id);
+    return shapeUser(row, {
+      relation: relationOf(rows, row.id),
+      edgeId: edge ? edge.id : null
+    });
   }
 
   /* ------------------------------------------------------------------ API */
@@ -251,9 +279,12 @@
 
     /* --- auth --- */
 
+    /* Always re-read: this is the call every page boots on, and a stale copy
+       is how a role change or a suspension went unnoticed until the tab was
+       closed. */
     me: function () {
       if (!session) return Promise.resolve({ user: null });
-      return me().then(function (row) {
+      return me(true).then(function (row) {
         if (!row) { keepSession(null); return { user: null }; }
         rpc("touch_last_seen").catch(function () {});
         return { user: shapeSelf(row) };
@@ -355,7 +386,10 @@
 
       return rest("/profiles?id=eq." + session.user.id, {
         method: "PATCH", body: row, headers: { Prefer: "return=representation" }
-      }).then(function (rows) { return { user: shapeSelf(one(rows)) }; });
+      }).then(function (rows) {
+        selfProfile = one(rows);
+        return { user: shapeSelf(selfProfile) };
+      });
     },
 
     deleteAccount: function (confirm) {
@@ -382,7 +416,7 @@
         var rel = relationOf(out[1], row.id);
         if (rel === "blocked-by") throw fail("No such user.", 404);
 
-        var user = shapeUser(row, { relation: rel });
+        var user = withRelation(out[1], row);
         if (rel === "self") user.friendCode = row.friend_code || "";
 
         if (!row.show_activity || (rel !== "friends" && rel !== "self")) {
@@ -417,7 +451,7 @@
         return {
           users: (out[0] || [])
             .filter(function (r) { return r.id !== mine; })
-            .map(function (r) { return shapeUser(r, { relation: relationOf(out[1], r.id) }); })
+            .map(function (r) { return withRelation(out[1], r); })
             .filter(function (u) { return u.relation !== "blocked-by"; })
         };
       });
@@ -445,7 +479,10 @@
               var otherId = edge.requester === mine ? edge.addressee : edge.requester;
               var row = byId[otherId];
               if (!row) return;
-              var person = shapeUser(row, { edgeId: edge.id });
+              var person = shapeUser(row, {
+                edgeId: edge.id,
+                relation: relationOf(rows, otherId)
+              });
 
               if (edge.state === "accepted") out.friends.push(person);
               else if (edge.state === "blocked") {
@@ -463,12 +500,18 @@
     },
 
     addFriend: function (username) {
-      return rest("/profiles?select=id&username=eq." + encodeURIComponent(String(username).replace(/^@/, "")))
-        .then(one)
-        .then(function (row) {
-          if (!row) throw fail("No such user.", 404);
-          return sendRequest(row.id);
+      var name = String(username).replace(/^@/, "");
+      /* A six-character handle typed into the username box is a friend
+         code, not a username — the Node backend already tolerates that. */
+      if (/^[A-Za-z0-9]{3}[- ]?[A-Za-z0-9]{3}$/.test(name)) {
+        return API.addFriendByCode(name).catch(function (err) {
+          if (err.status === 404 || /no account uses that code/i.test(err.message)) {
+            return lookupUser(name).then(function (row) { return sendRequest(row.id); });
+          }
+          throw err;
         });
+      }
+      return lookupUser(name).then(function (row) { return sendRequest(row.id); });
     },
 
     addFriendByCode: function (code) {
@@ -477,143 +520,148 @@
       });
     },
 
+    /* find_by_code now returns a full person plus the relation and edge id,
+       so a code lookup renders exactly like a search hit — buttons and all. */
     lookupCode: function (code) {
       return rpc("find_by_code", { code: code }).then(function (hit) {
-        return edges(true).then(function (rows) {
-          return { user: hit, relation: relationOf(rows, hit.id) };
-        });
+        edgesCache = null;
+        return { user: hit, relation: hit.relation || "none" };
       });
     },
 
     rotateCode: function () {
       return rpc("rotate_friend_code").then(function (code) {
+        if (selfProfile) selfProfile.friend_code = code;
         return { friendCode: code };
       });
     },
 
+    /* Through an RPC rather than a PATCH: the update policy grants the row to
+       both sides of an edge, so a direct PATCH let the person who SENT a
+       request accept it themselves, and aiming at the wrong edge came back
+       200-with-zero-rows, which looked like success. */
     acceptFriend: function (id) {
-      return rest("/friendships?id=eq." + id, {
-        method: "PATCH", body: { state: "accepted", updated_at: new Date().toISOString() }
-      }).then(function () { edgesCache = null; return { state: "friends" }; });
+      return rpc("accept_request", { edge: Number(id) })
+        .then(function () { edgesCache = null; return { state: "friends" }; });
     },
 
     removeFriend: function (id) {
-      return rest("/friendships?id=eq." + id, { method: "DELETE" })
-        .then(function () { edgesCache = null; return { ok: true }; });
+      if (id == null || id === "" || !isFinite(Number(id))) {
+        return Promise.reject(fail("That request is no longer there — reload the page.", 400));
+      }
+      return rest("/friendships?id=eq." + Number(id), {
+        method: "DELETE", headers: { Prefer: "return=representation" }
+      }).then(function (rows) {
+        edgesCache = null;
+        /* A block raised by the other person is not yours to lift, and the
+           delete policy refuses it by returning nothing rather than erroring. */
+        if (Array.isArray(rows) && !rows.length) {
+          throw fail("That isn't yours to undo.", 403);
+        }
+        return { ok: true };
+      });
     },
 
     blockUser: function (username) {
-      if (!session) return Promise.reject(fail("Signed out.", 401));
-      var mine = session.user.id;
-      return rest("/profiles?select=id&username=eq." + encodeURIComponent(username))
-        .then(one)
-        .then(function (row) {
-          if (!row) throw fail("No such user.", 404);
-          return edges(true).then(function (rows) {
-            var existing = rows.filter(function (r) {
-              return (r.requester === mine && r.addressee === row.id) ||
-                     (r.requester === row.id && r.addressee === mine);
-            })[0];
-            var patch = { state: "blocked", blocked_by: mine, updated_at: new Date().toISOString() };
-            if (existing) {
-              return rest("/friendships?id=eq." + existing.id, { method: "PATCH", body: patch });
-            }
-            return rest("/friendships", {
-              method: "POST",
-              body: Object.assign({ requester: mine, addressee: row.id }, patch)
-            });
-          });
-        })
+      return lookupUser(String(username).replace(/^@/, ""))
+        .then(function (row) { return rpc("block_user", { target: row.id }); })
         .then(function () { edgesCache = null; return { state: "blocked" }; });
     },
 
     /* --- messages --- */
 
+    /* One RPC.
+       The old version pulled the newest 400 messages across every thread at
+       once and worked the previews and unread counts out in the browser, so
+       on a busy account everything past the first few conversations came back
+       with no preview and an unread count of zero. */
     threads: function () {
       if (!session) return Promise.reject(fail("Signed out.", 401));
-      var mine = session.user.id;
 
-      return rest("/thread_members?select=thread_id,threads!inner(id,is_group,title,owner_id,last_at)" +
-                  "&user_id=eq." + mine + "&order=thread_id.desc")
-        .then(function (rows) {
-          var threads = (rows || []).map(function (r) { return r.threads; })
-            .filter(function (t) { return t && t.last_at; });
-          if (!threads.length) return { threads: [] };
-
-          var ids = threads.map(function (t) { return t.id; });
-          return Promise.all([
-            rest("/thread_members?select=thread_id,user_id,profiles!inner(" + PROFILE_COLS + ")" +
-                 "&thread_id=in.(" + ids.join(",") + ")"),
-            rest("/messages?select=thread_id,body,sender,created_at,read_at,attachment_id," +
-                 "profiles!inner(username,display_name)" +
-                 "&thread_id=in.(" + ids.join(",") + ")&order=id.desc&limit=400")
-          ]).then(function (out) {
-            var members = {}, last = {}, unread = {};
-
-            (out[0] || []).forEach(function (m) {
-              if (m.user_id === mine) return;
-              (members[m.thread_id] = members[m.thread_id] || []).push(shapeUser(m.profiles));
+      return rpc("thread_list").then(function (rows) {
+        return {
+          threads: (rows || []).map(function (t) {
+            var people = (t.members || []).map(function (m) {
+              return {
+                id: m.id,
+                username: m.username,
+                displayName: m.displayName || m.username,
+                role: m.role,
+                state: m.state,
+                lastSeen: Number(m.lastSeen) || 0,
+                online: !!m.lastSeen && Date.now() - Number(m.lastSeen) < ONLINE_MS
+              };
             });
-            (out[1] || []).forEach(function (m) {
-              if (!last[m.thread_id]) {
-                last[m.thread_id] = {
-                  body: m.body || (m.attachment_id ? "sent an image" : ""),
-                  mine: m.sender === mine,
-                  who: m.profiles ? (m.profiles.display_name || m.profiles.username) : "",
-                  at: ms(m.created_at)
-                };
-              }
-              if (m.sender !== mine && !m.read_at) {
-                unread[m.thread_id] = (unread[m.thread_id] || 0) + 1;
-              }
-            });
-
             return {
-              threads: threads.map(function (t) {
-                var people = members[t.id] || [];
-                return {
-                  id: t.id,
-                  isGroup: !!t.is_group,
-                  title: t.is_group
-                    ? (t.title || people.map(function (p) { return p.displayName; }).join(", ") || "Group")
-                    : (people[0] ? people[0].displayName : "Conversation"),
-                  with: t.is_group ? null : (people[0] || null),
-                  members: people,
-                  memberCount: people.length + 1,
-                  owner: t.owner_id === mine,
-                  lastAt: ms(t.last_at),
-                  unread: unread[t.id] || 0,
-                  preview: last[t.id] || null
-                };
-              }).sort(function (a, b) { return b.lastAt - a.lastAt; })
+              id: t.id,
+              isGroup: !!t.isGroup,
+              title: t.isGroup
+                ? (t.rawTitle || people.map(function (p) { return p.displayName; }).join(", ") || "Group")
+                : (people[0] ? people[0].displayName : "Conversation"),
+              with: t.isGroup ? null : (people[0] || null),
+              members: people,
+              memberCount: people.length + 1,
+              owner: !!t.owner,
+              lastAt: Number(t.lastAt) || 0,
+              unread: Number(t.unread) || 0,
+              preview: t.preview && t.preview.at ? {
+                body: t.preview.body || "",
+                mine: !!t.preview.mine,
+                who: t.preview.who || "",
+                at: Number(t.preview.at) || 0
+              } : null
             };
-          });
-        });
+          })
+        };
+      });
     },
 
+    /* `after` means "the caller already has the conversation open and only
+       wants what is new". That is a 5-second poll, so it fetches messages
+       alone: the thread row, the member list and the can-I-post check do not
+       change between two ticks, and asking for them anyway was four requests
+       every five seconds for three unchanging answers. */
     thread: function (id, after) {
       if (!session) return Promise.reject(fail("Signed out.", 401));
       var mine = session.user.id;
+      var incremental = Number(after) > 0;
 
-      return Promise.all([
-        rest("/threads?select=*&id=eq." + id).then(one),
-        rest("/thread_members?select=user_id,profiles!inner(" + PROFILE_COLS + ")&thread_id=eq." + id),
+      var newMessages =
         rest("/messages?select=id,sender,body,created_at,deleted,attachment_id," +
              "profiles!inner(username,display_name)," +
              "attachments(id,mime,width,height,bytes,kind)" +
-             "&thread_id=eq." + id + "&id=gt." + (after || 0) + "&order=id.asc&limit=200")
+             "&thread_id=eq." + id + "&id=gt." + (Number(after) || 0) +
+             "&order=id.asc&limit=200");
+
+      return Promise.all(incremental ? [null, null, newMessages, null] : [
+        rest("/threads?select=*&id=eq." + id).then(one),
+        rest("/thread_members?select=user_id,profiles!inner(" + PROFILE_COLS + ")&thread_id=eq." + id),
+        newMessages,
+        /* Whether posting here is actually allowed. It used to be hardcoded
+           true, so a conversation with someone who has since blocked you, or
+           turned off open DMs, looked normal right up until send failed. */
+        rpc("post_block_reason", { t: Number(id) }).catch(function () { return null; })
       ]).then(function (out) {
+        var messages = out[2] || [];
+
+        /* Mark anything of theirs we just read. Through an RPC, because the
+           blanket "any member may update any message" policy this used to
+           rely on also let one group member retract another's. Only worth a
+           round trip when something actually arrived. */
+        if (!incremental || messages.length) {
+          rpc("mark_thread_read", { t: Number(id) }).catch(function () {});
+        }
+
+        if (incremental) {
+          return { threadId: Number(id), messages: messages.map(shapeMessage) };
+        }
+
         var t = out[0];
         if (!t) throw fail("No such thread.", 404);
 
         var people = (out[1] || [])
           .filter(function (m) { return m.user_id !== mine; })
           .map(function (m) { return shapeUser(m.profiles); });
-
-        /* Mark anything of theirs we just read. */
-        rest("/messages?thread_id=eq." + id + "&sender=neq." + mine + "&read_at=is.null", {
-          method: "PATCH", body: { read_at: new Date().toISOString() }
-        }).catch(function () {});
 
         return {
           threadId: t.id,
@@ -625,62 +673,72 @@
           members: people,
           memberCount: people.length + 1,
           owner: t.owner_id === mine,
-          canSend: true,
-          messages: (out[2] || []).map(function (m) {
-            var att = Array.isArray(m.attachments) ? m.attachments[0] : m.attachments;
-            return {
-              id: m.id,
-              mine: m.sender === mine,
-              from: {
-                username: m.profiles.username,
-                displayName: m.profiles.display_name || m.profiles.username
-              },
-              body: m.deleted ? "" : (m.body || ""),
-              deleted: !!m.deleted,
-              at: ms(m.created_at),
-              image: att && !m.deleted ? {
-                id: att.id,
-                url: URL_BASE + "/rest/v1/attachments?select=data&id=eq." + att.id,
-                mime: att.mime, width: att.width, height: att.height,
-                bytes: att.bytes, kind: att.kind,
-                /* PostgREST can't stream a blob to an <img>, so the adapter
-                   hands back a loader the UI resolves into a data URL. */
-                fetchData: function () {
-                  return rest("/attachments?select=data,mime&id=eq." + att.id)
-                    .then(one)
-                    .then(function (row) {
-                      return row ? "data:" + row.mime + ";base64," + row.data : "";
-                    });
-                }
-              } : null
-            };
-          })
+          canSend: !out[3],
+          lockedReason: out[3] || "",
+          messages: messages.map(shapeMessage)
         };
+
+        function shapeMessage(m) {
+          var att = Array.isArray(m.attachments) ? m.attachments[0] : m.attachments;
+          return {
+            id: m.id,
+            mine: m.sender === mine,
+            from: {
+              username: m.profiles.username,
+              displayName: m.profiles.display_name || m.profiles.username
+            },
+            body: m.deleted ? "" : (m.body || ""),
+            deleted: !!m.deleted,
+            at: ms(m.created_at),
+            image: att && !m.deleted ? {
+              id: att.id,
+              url: URL_BASE + "/rest/v1/attachments?select=data&id=eq." + att.id,
+              mime: att.mime, width: att.width, height: att.height,
+              bytes: att.bytes, kind: att.kind,
+              /* PostgREST can't stream a blob to an <img>, so the adapter
+                 hands back a loader the UI resolves into a data URL. */
+              fetchData: function () {
+                return rest("/attachments?select=data,mime&id=eq." + att.id)
+                  .then(one)
+                  .then(function (row) {
+                    return row ? "data:" + row.mime + ";base64," + row.data : "";
+                  });
+              }
+            } : null
+          };
+        }
       });
     },
 
+    /* The echoed message needs a name on it. It used to read that out of
+       `session.user.user_metadata`, which is a snapshot taken at sign-up: it
+       goes stale when someone renames themselves, and a session restored from
+       an older token may not carry it at all — in which case sending threw a
+       TypeError instead of posting. */
     send: function (id, body, image) {
-      return rpc("send_message", { t: Number(id), body: body || "", image: image || null })
-        .then(function (messageId) {
-          return {
-            message: {
-              id: messageId,
-              mine: true,
-              from: {
-                username: session.user.user_metadata.username,
-                displayName: session.user.user_metadata.display_name ||
-                             session.user.user_metadata.username
-              },
-              body: body || "",
-              deleted: false,
-              at: Date.now(),
-              image: image ? {
-                id: 0, url: image.dataUrl, mime: "image/jpeg",
-                width: image.width, height: image.height, kind: image.kind
-              } : null
-            }
-          };
-        });
+      return me().then(function (self) {
+        return rpc("send_message", { t: Number(id), body: body || "", image: image || null })
+          .then(function (messageId) {
+            return {
+              message: {
+                id: messageId,
+                mine: true,
+                from: {
+                  username: (self && self.username) || "you",
+                  displayName: (self && (self.display_name || self.username)) || "You"
+                },
+                body: body || "",
+                deleted: false,
+                at: Date.now(),
+                image: image ? {
+                  id: 0, url: image.dataUrl,
+                  mime: String(image.dataUrl || "").slice(5).split(";")[0] || "image/jpeg",
+                  width: image.width, height: image.height, kind: image.kind
+                } : null
+              }
+            };
+          });
+      });
     },
 
     openThread: function (username) {
@@ -688,10 +746,12 @@
         .then(function (threadId) { return { threadId: threadId }; });
     },
 
+    /* Through an RPC so the attachment goes with it. A retracted message used
+       to keep its image row, still readable by everyone else in the thread —
+       "message removed" on screen and the picture still served underneath. */
     deleteMessage: function (id) {
-      return rest("/messages?id=eq." + id, {
-        method: "PATCH", body: { deleted: true, body: "" }
-      }).then(function () { return { ok: true }; });
+      return rpc("retract_message", { m: Number(id) })
+        .then(function () { return { ok: true }; });
     },
 
     unread: function () {
@@ -1118,89 +1178,108 @@
           users: (rows || []).map(function (r) {
             return Object.assign(shapeUser(r), {
               acceptsDms: !!r.accepts_dms,
+              showActivity: !!r.show_activity,
               sessions: 0,
               friends: Number(r.friends) || 0,
-              messages: Number(r.messages) || 0
+              messages: Number(r.messages) || 0,
+              reports: Number(r.reports) || 0,
+              playing: r.current_game || "",
+              lastLogin: ms(r.last_login)
             });
           })
         };
       });
     },
 
+    /* Every one of these used to be a direct table write, which meant none of
+       the rank rules existed on this backend: an admin could promote anyone to
+       admin, demote another admin, and — because the guard trigger reverts a
+       refused change silently — get a 200 back with the row unchanged, which
+       reads exactly like it worked. The RPC enforces the ladder, refuses out
+       loud, and writes the audit row that was never being written. */
     adminUpdateUser: function (id, patch) {
-      var row = {};
-      if (patch.role !== undefined) row.role = patch.role;
-      if (patch.state !== undefined) row.state = patch.state;
-      return rest("/profiles?id=eq." + id, {
-        method: "PATCH", body: row, headers: { Prefer: "return=representation" }
-      }).then(function (rows) {
-        var updated = one(rows);
-        if (!updated) throw fail("That change was refused.", 403);
-        return { user: shapeUser(updated) };
-      });
+      return rpc("admin_set_user", {
+        target: id,
+        next_role: patch.role === undefined ? null : patch.role,
+        next_state: patch.state === undefined ? null : patch.state
+      }).then(function (user) { return { user: user }; });
     },
 
     adminDeleteUser: function (id) {
-      return rest("/profiles?id=eq." + id, { method: "DELETE" })
+      return rpc("admin_delete_user", { target: id })
         .then(function () { return { ok: true }; });
     },
 
     adminReports: function (state) {
-      return rest("/reports?select=*,profiles:reporter(username)&state=eq." +
-                  (state || "open") + "&order=created_at.desc&limit=200")
-        .then(function (rows) {
-          return {
-            reports: (rows || []).map(function (r) {
-              return {
-                id: r.id, kind: r.kind, target: r.target, reason: r.reason,
-                state: r.state, at: ms(r.created_at),
-                reporter: r.profiles ? r.profiles.username : "(deleted)"
-              };
-            })
-          };
-        });
+      return rpc("admin_reports", { want_state: state || "open" }).then(function (rows) {
+        return {
+          reports: (rows || []).map(function (r) {
+            return {
+              id: r.id, kind: r.kind, target: r.target, reason: r.reason,
+              state: r.state, at: Number(r.at) || 0,
+              reporter: r.reporter || "(deleted)",
+              subject: r.subject || null
+            };
+          })
+        };
+      });
     },
 
     adminCloseReport: function (id, state) {
-      return rest("/reports?id=eq." + id, { method: "PATCH", body: { state: state || "closed" } })
+      return rpc("admin_set_report", { r: Number(id), next_state: state || "closed" })
         .then(function () { return { ok: true }; });
     },
 
-    adminAudit: function () {
-      return rest("/audit?select=*,profiles:actor(username)&order=id.desc&limit=200")
-        .then(function (rows) {
-          return {
-            entries: (rows || []).map(function (r) {
-              return {
-                id: r.id, actor: r.profiles ? r.profiles.username : "system",
-                action: r.action, detail: r.detail, at: ms(r.created_at)
-              };
-            })
-          };
-        });
-    },
-
+    adminAudit: function (q) {
+      return rpc("admin_audit", { q: q || null, limit_to: 300 }).then(function (rows) {
+        return {
+          entries: (rows || []).map(function (r) {
+            return {
+              id: r.id, actor: r.actor || "system",
+              action: r.action, detail: r.detail, at: Number(r.at) || 0
+            };
+          })
+        };
+      });
+    }
   };
+
+  /* One place that turns a typed handle into a row, so every caller reports
+     a missing account the same way. A profile hidden by a block reads as
+     absent here, which is the point of a block. */
+  function lookupUser(username) {
+    return rest("/profiles?select=id,username,state&username=eq." +
+                encodeURIComponent(String(username)))
+      .then(one)
+      .then(function (row) {
+        if (!row) throw fail("No such user.", 404);
+        return row;
+      });
+  }
 
   function sendRequest(otherId) {
     if (!session) return Promise.reject(fail("Signed out.", 401));
     var mine = session.user.id;
-    if (otherId === mine) throw fail("That's you.", 400);
+    if (otherId === mine) return Promise.reject(fail("That's you.", 400));
 
-    return edges(true).then(function (rows) {
-      var existing = rows.filter(function (r) {
-        return (r.requester === mine && r.addressee === otherId) ||
-               (r.requester === otherId && r.addressee === mine);
-      })[0];
+    return Promise.all([
+      edges(true),
+      rest("/profiles?select=id,state&id=eq." + otherId).then(one)
+    ]).then(function (out) {
+      var rows = out[0];
+      var them = out[1];
+      if (!them) throw fail("No such user.", 404);
+      if (them.state === "suspended") throw fail("That account is suspended.", 403);
+
+      var existing = edgeOf(rows, otherId);
 
       if (existing) {
         if (existing.state === "accepted") throw fail("Already friends.", 409);
         if (existing.state === "blocked") throw fail("That isn't possible.", 403);
         if (existing.requester === mine) throw fail("Request already sent.", 409);
         /* They asked first — treat this as accepting. */
-        return rest("/friendships?id=eq." + existing.id, {
-          method: "PATCH", body: { state: "accepted" }
-        }).then(function () { edgesCache = null; return { state: "friends" }; });
+        return rpc("accept_request", { edge: existing.id })
+          .then(function () { edgesCache = null; return { state: "friends" }; });
       }
 
       return rest("/friendships", {

@@ -90,20 +90,19 @@
               var edge = d.blocked.filter(function (u) { return u.username === user.username; })[0];
               return edge ? API.removeFriend(edge.edgeId).then(after("Unblocked")) : null;
             }); },
-            message: function () {
-              return API.openThread(user.username).then(function (r) {
-                window.location.href = "messages.html?thread=" + r.threadId;
-              });
-            }
+            message: openConversation
           }).forEach(function (a) {
             button(a.label, a.kind === "cta" ? "btn-cta" : "", a.onClick);
           });
 
-          button("Message", "", function () {
-            return API.openThread(user.username).then(function (r) {
-              window.location.href = "messages.html?thread=" + r.threadId;
-            });
-          });
+          /* Not a friend yet, but their DMs are open? Then there is still a
+             conversation to start. relationActions already gives friends a
+             Message button, so adding one unconditionally — as this used to —
+             put two identical buttons side by side on every friend's page. */
+          if (user.relation !== "friends" && user.relation !== "blocked" &&
+              user.relation !== "blocked-by") {
+            button("Message", "", openConversation);
+          }
 
           /* Calling is friends-only, and the server says so too — no point
              offering a button that will come back 400. */
@@ -133,6 +132,22 @@
 
         function after(message) {
           return function () { UI.toast(message); return load(); };
+        }
+
+        /* The dock when it is there, the messages page when it isn't — the
+           same rule the friends page follows, so "Message" behaves the same
+           way wherever you press it. */
+        function openConversation() {
+          if (!window.ChatDock) return goToThread();
+          return window.ChatDock.openWith(user.username).then(function (opened) {
+            if (!opened) return goToThread();
+          });
+        }
+
+        function goToThread() {
+          return API.openThread(user.username).then(function (r) {
+            window.location.href = "messages.html?thread=" + r.threadId;
+          });
         }
 
         /* ---- activity ---- */

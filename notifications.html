@@ -23,14 +23,16 @@
       <h1>Notifications</h1>
       <div class="readout">
         <span>unread <b id="r-unread">0</b></span>
-        <span>total <b id="r-total">0</b></span>
+        <span>showing <b id="r-shown">0</b></span>
       </div>
     </header>
 
     <div class="toolbar" style="position:static">
       <div class="pills" style="margin:0;flex:1">
-        <button class="pill on" type="button" data-filter="all">All</button>
-        <button class="pill" type="button" data-filter="unread">Unread</button>
+        <button class="pill on" type="button" data-filter="all" aria-pressed="true">All</button>
+        <button class="pill" type="button" data-filter="unread" aria-pressed="false">Unread</button>
+        <button class="pill" type="button" data-filter="social" aria-pressed="false">Friends &amp; chat</button>
+        <button class="pill" type="button" data-filter="account" aria-pressed="false">Account</button>
       </div>
       <button class="btn btn-sm" type="button" id="mark-all">Mark all read</button>
       <button class="btn btn-sm btn-flat" type="button" id="clear-all">Clear</button>

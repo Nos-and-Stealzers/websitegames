@@ -5,7 +5,7 @@
 "use strict";
 
 const express = require("express");
-const { db } = require("../db");
+const { db, audit } = require("../db");
 const A = require("../auth");
 const S = require("../shape");
 const social = require("./social");
@@ -392,13 +392,21 @@ router.delete("/messages/:id", A.requireUser, (req, res) => {
   const row = db.prepare("SELECT * FROM messages WHERE id = ?").get(Number(req.params.id));
   if (!row) return res.status(404).json({ error: "Not found." });
 
-  const staff = req.user.role === "admin" || req.user.role === "mod";
+  /* Owner counts as staff here — it outranks admin everywhere else, so
+     leaving it off this list gave the owner *less* reach than a moderator. */
+  const staff = ["owner", "admin", "mod"].includes(req.user.role);
   if (row.sender_id !== req.user.id && !staff) {
     return res.status(403).json({ error: "That isn't yours." });
   }
-  db.prepare("UPDATE messages SET deleted = 1, body = '' WHERE id = ?").run(row.id);
+  db.prepare("UPDATE messages SET deleted = 1, body = '', attachment_id = NULL WHERE id = ?")
+    .run(row.id);
   if (row.attachment_id) {
     db.prepare("DELETE FROM attachments WHERE id = ?").run(row.attachment_id);
+  }
+  /* Removing someone else's words is a moderation action, so it is recorded
+     as one. Retracting your own is not. */
+  if (row.sender_id !== req.user.id) {
+    audit(req.user.id, "message-remove", `message ${row.id} in thread ${row.thread_id}`);
   }
   res.json({ ok: true });
 });

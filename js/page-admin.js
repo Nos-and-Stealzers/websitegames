@@ -1,7 +1,27 @@
-/* Admin console. The server enforces every one of these permissions; hiding
-   controls here is convenience, not security. */
+/* Admin console.
+ *
+ * Rebuilt. What was here before had the right tabs and the wrong plumbing:
+ *
+ *   · The audit tab read a table that nothing on the Supabase backend ever
+ *     wrote to, so it was permanently empty — an audit trail that recorded
+ *     nothing while claiming to record everything.
+ *   · Role and state changes went straight at the users table, so none of the
+ *     rank rules were enforced, and a change the database quietly refused came
+ *     back looking exactly like one it had accepted.
+ *   · The rank picker only listed ranks below yours, so a row for someone at
+ *     or above your rank displayed "user" as their current rank. Touching it
+ *     then demoted them.
+ *   · Every tab reloaded from scratch on every visit, and the overview polled
+ *     every thirty seconds whether or not you were looking at it.
+ *
+ * The permissions themselves are enforced on the server, in one RPC per
+ * action. Hiding a control here is convenience; it is not the lock.
+ */
 (function () {
   "use strict";
+
+  var RANKS = ["user", "mod", "admin", "owner"];
+  function rankOf(role) { return Math.max(0, RANKS.indexOf(role)); }
 
   function init() {
     window.SocialUI.gate(function (me) {
@@ -14,51 +34,140 @@
       }
 
       var isAdmin = window.Session.isAdmin();
+      var isOwner = window.Session.isOwner();
+
       document.getElementById("console").hidden = false;
       document.getElementById("r-role").textContent = me.role;
+      document.querySelectorAll("[data-owner]").forEach(function (n) { n.hidden = !isOwner; });
 
-      /* ----------------------------------------------------------- tabs */
+      /* ------------------------------------------------------------ tabs */
+
+      /* Each tab knows how to load itself and whether it already has. A tab
+         is fetched when you first open it and then left alone until you ask
+         for it again — the old console refetched everything on every click. */
+      var TABS = {
+        overview: { load: loadOverview, poll: 30000 },
+        live:     { load: loadLive, poll: 12000 },
+        users:    { load: loadUsers },
+        support:  { load: loadSupport },
+        reports:  { load: loadReports },
+        feedback: { load: loadFeedback },
+        logins:   { load: loadLogins },
+        games:    { load: loadCatalog },
+        gamedata: { load: function () { if (window.initGameData) window.initGameData(); } },
+        audit:    { load: loadAudit },
+        help:     { load: loadHelp }
+      };
+
+      var active = "overview";
+      var loadedOnce = {};
+      var pollTimer = null;
+
       var tabs = document.getElementById("tabs");
       tabs.addEventListener("click", function (event) {
         var tab = event.target.closest("[data-tab]");
-        if (!tab) return;
+        if (tab) show(tab.dataset.tab);
+      });
+
+      /* The tab lives in the URL, so a refresh — or a link someone pastes to
+         a colleague — lands where it was rather than back on Overview. */
+      function show(name, force) {
+        if (!TABS[name]) name = "overview";
+        active = name;
+
         tabs.querySelectorAll(".tab").forEach(function (t) {
-          var on = t === tab;
+          var on = t.dataset.tab === name;
           t.classList.toggle("on", on);
           t.setAttribute("aria-selected", on ? "true" : "false");
         });
         document.querySelectorAll("[data-panel]").forEach(function (p) {
-          p.hidden = p.dataset.panel !== tab.dataset.tab;
+          p.hidden = p.dataset.panel !== name;
         });
-        if (tab.dataset.tab === "users") loadUsers();
-        if (tab.dataset.tab === "live") loadLive();
-        if (tab.dataset.tab === "support") loadSupport();
-        if (tab.dataset.tab === "logins") loadLogins();
-        if (tab.dataset.tab === "games") loadCatalog();
-        if (tab.dataset.tab === "reports") loadReports();
-        if (tab.dataset.tab === "feedback") loadFeedback();
-        if (tab.dataset.tab === "gamedata" && window.initGameData) window.initGameData();
-        if (tab.dataset.tab === "audit") loadAudit();
-        if (tab.dataset.tab === "help") loadHelp();
+
+        if (window.location.hash.slice(1) !== name) {
+          window.history.replaceState({}, "", window.location.pathname + "#" + name);
+        }
+
+        window.clearInterval(pollTimer);
+        pollTimer = null;
+
+        var spec = TABS[name];
+        if (force || !loadedOnce[name]) {
+          loadedOnce[name] = true;
+          run(spec.load);
+        }
+        /* Only the tab you are actually looking at is allowed a timer. */
+        if (spec.poll) {
+          pollTimer = window.setInterval(function () {
+            if (document.hidden) return;
+            run(spec.load);
+          }, spec.poll);
+        }
+      }
+
+      function run(fn) {
+        var out;
+        try { out = fn(); } catch (err) { UI.toast(err.message); return; }
+        if (out && out.catch) out.catch(function (err) { UI.toast(err.message); });
+      }
+
+      document.getElementById("refresh").addEventListener("click", function () {
+        show(active, true);
+        loadOverview();          // the header counts, whichever tab is open
+        UI.toast("Refreshed");
       });
 
-      var isOwner = window.Session.isOwner();
-      document.querySelectorAll("[data-owner]").forEach(function (n) { n.hidden = !isOwner; });
+      window.addEventListener("hashchange", function () {
+        show(window.location.hash.slice(1) || "overview");
+      });
 
       /* ------------------------------------------------------- overview */
+
+      function setText(id, value) {
+        var node = document.getElementById(id);
+        if (node) node.textContent = value;
+      }
+
+      /* Queue depth belongs on the tab, not buried inside it — the whole
+         point of a moderation console is seeing what is waiting. */
+      function paintQueues(q) {
+        [["reports", q.reports], ["support", q.tickets], ["feedback", q.feedback]]
+          .forEach(function (pair) {
+            var tab = tabs.querySelector('[data-tab="' + pair[0] + '"]');
+            if (!tab) return;
+            var badge = tab.querySelector(".tab-n");
+            if (!badge) {
+              badge = UI.el("span", "tab-n");
+              tab.appendChild(badge);
+            }
+            badge.textContent = pair[1] > 99 ? "99+" : String(pair[1] || 0);
+            badge.hidden = !pair[1];
+          });
+      }
+
       function loadOverview() {
         return API.adminOverview().then(function (d) {
-          document.getElementById("k-users").textContent = d.users.total;
-          document.getElementById("k-online").textContent = d.users.online;
-          document.getElementById("k-new").textContent = d.users.newThisWeek;
-          document.getElementById("k-suspended").textContent = d.users.suspended;
-          document.getElementById("k-friends").textContent = d.social.friendships;
-          document.getElementById("k-messages").textContent = d.social.messages;
-          document.getElementById("k-today").textContent = d.social.messagesToday;
-          document.getElementById("k-sessions").textContent = d.sessions;
+          var q = d.queues || {
+            reports: (d.reports && d.reports.open) || 0, tickets: 0, feedback: 0, calls: 0
+          };
 
-          document.getElementById("r-reports").textContent = d.reports.open;
-          document.getElementById("r-online").textContent = d.users.online;
+          setText("k-users", d.users.total);
+          setText("k-online", d.users.online);
+          setText("k-new", d.users.newThisWeek);
+          setText("k-suspended", d.users.suspended);
+          setText("k-staff", d.users.staff == null ? "—" : d.users.staff);
+          setText("k-friends", d.social.friendships);
+          setText("k-messages", d.social.messages);
+          setText("k-today", d.social.messagesToday);
+
+          setText("q-reports", q.reports || 0);
+          setText("q-support", q.tickets || 0);
+          setText("q-feedback", q.feedback || 0);
+          setText("q-calls", q.calls == null ? "—" : q.calls);
+
+          setText("r-reports", q.reports || 0);
+          setText("r-online", d.users.online);
+          paintQueues(q);
 
           var host = document.getElementById("top-games");
           host.innerHTML = "";
@@ -91,88 +200,246 @@
         });
       }
 
+      /* The queue tiles are shortcuts, so a moderator lands on the work
+         rather than reading a number and then hunting for the tab. */
+      document.querySelectorAll("[data-goto]").forEach(function (tile) {
+        tile.addEventListener("click", function () { show(tile.dataset.goto); });
+      });
+
       /* ---------------------------------------------------------- users */
+
       var userQ = document.getElementById("user-q");
-      userQ.addEventListener("input", UI.debounce(function () { loadUsers(); }, 220));
+      var userFilter = document.getElementById("user-filter");
+      var userCache = [];
+
+      userQ.addEventListener("input", UI.debounce(function () { loadUsers(); }, 240));
+      userFilter.addEventListener("change", function () { drawUsers(); });
 
       function loadUsers() {
         return API.adminUsers(userQ.value.trim()).then(function (res) {
-          var host = document.getElementById("user-rows");
-          host.innerHTML = "";
+          userCache = res.users || [];
+          drawUsers();
+        });
+      }
 
-          var head = UI.el("div", "rows-head");
-          head.style.gridTemplateColumns = "1fr 6rem 6rem 5rem 12rem";
-          ["User", "Role", "State", "Social", "Actions"].forEach(function (h) {
-            head.appendChild(UI.el("span", null, h));
-          });
-          host.appendChild(head);
+      function drawUsers() {
+        var want = userFilter.value;
+        var rows = userCache.filter(function (u) {
+          if (want === "staff") return u.role !== "user";
+          if (want === "suspended") return u.state === "suspended";
+          if (want === "online") return u.online;
+          if (want === "reported") return (u.reports || 0) > 0;
+          return true;
+        });
 
-          res.users.forEach(function (u) {
-            var row = UI.el("div", "row");
-            row.style.gridTemplateColumns = "1fr 6rem 6rem 5rem 12rem";
+        var host = document.getElementById("user-rows");
+        host.innerHTML = "";
+        setText("user-count", rows.length + " of " + userCache.length);
 
-            var who = UI.el("a", "admin-who");
-            who.href = "profile.html?u=" + encodeURIComponent(u.username);
-            who.appendChild(window.SocialUI.avatar(u));
-            who.appendChild(window.SocialUI.nameBlock(u, { presence: true }));
-            row.appendChild(who);
+        var cols = "1fr 5.5rem 6rem 7rem 6rem";
+        var head = UI.el("div", "rows-head");
+        head.style.gridTemplateColumns = cols;
+        ["Account", "Rank", "State", "Activity", ""].forEach(function (h) {
+          head.appendChild(UI.el("span", null, h));
+        });
+        host.appendChild(head);
 
-            row.appendChild(UI.el("span", "cat", u.role));
+        if (!rows.length) {
+          host.appendChild(UI.el("p", "dim", "Nobody matches that."));
+          return;
+        }
 
-            var state = UI.el("span", "flag " + (u.state === "active" ? "flag-good" : "flag-bad"));
-            state.textContent = u.state;
-            row.appendChild(state);
+        rows.forEach(function (u) {
+          var row = UI.el("div", "row");
+          row.style.gridTemplateColumns = cols;
 
-            row.appendChild(UI.el("span", "plays", u.friends + "f " + u.messages + "m"));
+          var who = UI.el("a", "admin-who");
+          who.href = "profile.html?u=" + encodeURIComponent(u.username);
+          who.appendChild(window.SocialUI.avatar(u));
+          who.appendChild(window.SocialUI.nameBlock(u, { presence: true }));
+          row.appendChild(who);
 
-            var acts = UI.el("span", "admin-acts");
-            /* The owner is deliberately untouchable — the server refuses any
-               change to that account, so don't render controls that only
-               produce a 403. */
-            if (u.role === "owner" && u.id !== me.id) {
-              acts.appendChild(UI.el("span", "tiny dimmer", "owner — can't be changed"));
-            } else if (isAdmin && u.id !== me.id) {
-              var roleBox = UI.el("select");
-              /* You can never promote to your own rank or above, so only
-                 offer the ranks below yours. */
-              var RANKS = ["user", "mod", "admin", "owner"];
-              RANKS.slice(0, Math.max(1, RANKS.indexOf(me.role))).forEach(function (r) {
-                var o = UI.el("option", null, r);
-                o.value = r;
-                if (u.role === r) o.selected = true;
-                roleBox.appendChild(o);
-              });
-              roleBox.addEventListener("change", function () {
-                API.adminUpdateUser(u.id, { role: roleBox.value })
-                  .then(function () { UI.toast(u.username + " is now " + roleBox.value); loadUsers(); })
-                  .catch(function (err) { UI.toast(err.message); loadUsers(); });
-              });
-              acts.appendChild(roleBox);
+          row.appendChild(UI.el("span", "cat", u.role));
 
-              var toggle = UI.el("button", "btn btn-sm",
-                u.state === "active" ? "Suspend" : "Restore");
-              toggle.type = "button";
-              toggle.addEventListener("click", function () {
-                var next = u.state === "active" ? "suspended" : "active";
-                if (next === "suspended" &&
-                    !window.confirm("Suspend " + u.username + "? They'll be signed out immediately.")) return;
-                API.adminUpdateUser(u.id, { state: next })
-                  .then(function () { UI.toast(u.username + " " + next); loadUsers(); })
-                  .catch(function (err) { UI.toast(err.message); });
-              });
-              acts.appendChild(toggle);
-            } else if (u.id === me.id) {
-              acts.appendChild(UI.el("span", "tiny dimmer", "that's you"));
-            } else {
-              acts.appendChild(UI.el("span", "tiny dimmer", "admins only"));
-            }
-            row.appendChild(acts);
-            host.appendChild(row);
-          });
-        }).catch(function (err) { UI.toast(err.message); });
+          var state = UI.el("span", "flag " + (u.state === "active" ? "flag-good" : "flag-bad"));
+          state.textContent = u.state;
+          row.appendChild(state);
+
+          var stats = UI.el("span", "plays");
+          stats.textContent = u.friends + "f · " + u.messages + "m" +
+            (u.reports ? " · " + u.reports + "⚑" : "");
+          stats.title = u.friends + " friends, " + u.messages + " messages" +
+            (u.reports ? ", " + u.reports + " reports against them" : "");
+          row.appendChild(stats);
+
+          var acts = UI.el("span", "admin-acts");
+          /* One rule decides whether anything is offered at all, and it is
+             the same rule the server applies: you may act only on someone
+             below your own rank. Everything else is a label saying why not. */
+          if (u.id === me.id) {
+            acts.appendChild(UI.el("span", "tiny dimmer", "that's you"));
+          } else if (u.role === "owner") {
+            acts.appendChild(UI.el("span", "tiny dimmer", "owner"));
+          } else if (!isAdmin || rankOf(me.role) <= rankOf(u.role)) {
+            acts.appendChild(UI.el("span", "tiny dimmer",
+              isAdmin ? "outranks you" : "admins only"));
+          } else {
+            var manage = UI.el("button", "btn btn-sm", "Manage");
+            manage.type = "button";
+            manage.addEventListener("click", function () { manageUser(u); });
+            acts.appendChild(manage);
+          }
+          row.appendChild(acts);
+          host.appendChild(row);
+        });
+      }
+
+      /* A sheet rather than inline controls: suspending someone and deleting
+         an account are not things to put one stray click away in a list. */
+      function manageUser(u) {
+        var sheet = UI.el("div", "sheet");
+        var card = UI.el("div", "sheet-card");
+
+        var head = UI.el("div", "sheet-head");
+        head.appendChild(UI.el("span", "label", "Manage @" + u.username));
+        var close = UI.el("button", "btn btn-sq", "✕");
+        close.type = "button";
+        close.addEventListener("click", function () { sheet.remove(); });
+        head.appendChild(close);
+        card.appendChild(head);
+
+        var body = UI.el("div", "sheet-body");
+
+        var summary = UI.el("p", "tiny dimmer");
+        summary.style.margin = "0 0 1rem";
+        summary.textContent = [
+          "joined " + (u.createdAt ? new Date(u.createdAt).toLocaleDateString() : "—"),
+          "last seen " + (u.online ? "now" : UI.formatWhen(u.lastSeen)),
+          u.lastLogin ? "last sign-in " + UI.formatWhen(u.lastLogin) : null,
+          u.friends + " friends",
+          u.messages + " messages",
+          u.reports ? u.reports + " reports against them" : null,
+          u.playing ? "playing " + u.playing : null
+        ].filter(Boolean).join(" · ");
+        body.appendChild(summary);
+
+        /* Rank.
+           Only the ranks you are allowed to hand out are listed — and because
+           you can only be here at all when you outrank them, their current
+           rank is always one of those. The old picker listed the same subset
+           but rendered it for everyone, so a row it could not represent
+           showed the first option instead and quietly proposed a demotion. */
+        var rankField = UI.el("div", "field");
+        var rankLabel = UI.el("label", null, "Rank");
+        rankLabel.setAttribute("for", "sheet-rank");
+        rankField.appendChild(rankLabel);
+
+        var rankBox = UI.el("select");
+        rankBox.id = "sheet-rank";
+        RANKS.slice(0, rankOf(me.role)).forEach(function (r) {
+          var o = UI.el("option", null, r);
+          o.value = r;
+          if (u.role === r) o.selected = true;
+          rankBox.appendChild(o);
+        });
+        rankField.appendChild(rankBox);
+        var rankNote = UI.el("p", "tiny dimmer");
+        rankNote.style.margin = "0.3rem 0 0";
+        rankNote.textContent = "You can grant any rank below your own. " +
+          "Owner is set by the server and never handed out here.";
+        rankField.appendChild(rankNote);
+        body.appendChild(rankField);
+
+        var apply = UI.el("button", "btn btn-cta", "Save rank");
+        apply.type = "button";
+        apply.style.marginTop = "0.6rem";
+        apply.addEventListener("click", function () {
+          if (rankBox.value === u.role) { UI.toast("That's already their rank"); return; }
+          if (!window.confirm("Make @" + u.username + " a " + rankBox.value + "?")) return;
+          busy(apply, API.adminUpdateUser(u.id, { role: rankBox.value })
+            .then(function () {
+              UI.toast("@" + u.username + " is now " + rankBox.value);
+              sheet.remove();
+              loadUsers();
+            }));
+        });
+        body.appendChild(apply);
+
+        body.appendChild(UI.el("hr", "sheet-rule"));
+
+        /* Suspension. */
+        var suspended = u.state === "suspended";
+        var stateNote = UI.el("p", "tiny dimmer");
+        stateNote.style.margin = "0 0 0.6rem";
+        stateNote.textContent = suspended
+          ? "Suspended. Friends, messages and calls are refused by the database, " +
+            "not just hidden from them."
+          : "Suspending stops friend requests, messages and calls at the database. " +
+            "Playing signed out still works.";
+        body.appendChild(stateNote);
+
+        var toggle = UI.el("button", "btn", suspended ? "Restore account" : "Suspend account");
+        toggle.type = "button";
+        toggle.addEventListener("click", function () {
+          var next = suspended ? "active" : "suspended";
+          if (next === "suspended" &&
+              !window.confirm("Suspend @" + u.username + "?")) return;
+          busy(toggle, API.adminUpdateUser(u.id, { state: next })
+            .then(function () {
+              UI.toast("@" + u.username + " " + next);
+              sheet.remove();
+              loadUsers();
+            }));
+        });
+        body.appendChild(toggle);
+
+        body.appendChild(UI.el("hr", "sheet-rule"));
+
+        /* Deletion. There is no password reset on this hub, so this is also
+           the only answer to "I've forgotten mine" — worth saying, because
+           it is the one action here that cannot be undone. */
+        var dangerNote = UI.el("p", "tiny dimmer");
+        dangerNote.style.margin = "0 0 0.6rem";
+        dangerNote.textContent = "Deleting removes the profile, their friends, " +
+          "messages and saved progress. It cannot be undone, and it does not " +
+          "free the account to be recreated by them.";
+        body.appendChild(dangerNote);
+
+        var wipe = UI.el("button", "btn btn-flat is-danger", "Delete account");
+        wipe.type = "button";
+        wipe.addEventListener("click", function () {
+          var typed = window.prompt("Type " + u.username + " to confirm deletion.");
+          if (typed === null) return;
+          if (typed.trim().toLowerCase() !== u.username.toLowerCase()) {
+            UI.toast("That didn't match — nothing was deleted");
+            return;
+          }
+          busy(wipe, API.adminDeleteUser(u.id).then(function () {
+            UI.toast("@" + u.username + " deleted");
+            sheet.remove();
+            loadUsers();
+          }));
+        });
+        body.appendChild(wipe);
+
+        card.appendChild(body);
+        sheet.appendChild(card);
+        sheet.addEventListener("click", function (e) { if (e.target === sheet) sheet.remove(); });
+        document.body.appendChild(sheet);
+        rankBox.focus();
+      }
+
+      /* Every action in the sheet reports its own failure, rather than
+         leaving a disabled button and no explanation. */
+      function busy(button, promise) {
+        button.disabled = true;
+        return promise.catch(function (err) {
+          UI.toast(err.message || "That didn't work");
+        }).then(function () { button.disabled = false; });
       }
 
       /* -------------------------------------------------------- reports */
+
       var reportState = "open";
       document.querySelectorAll("[data-state]").forEach(function (pill) {
         pill.addEventListener("click", function () {
@@ -196,38 +463,79 @@
             host.appendChild(v);
             return;
           }
-          res.reports.forEach(function (r) {
-            var card = UI.el("div", "report");
-            var top = UI.el("div", "report-top");
-            top.appendChild(UI.el("span", "pill on", r.kind));
-            var target = UI.el("span", "report-target");
-            target.textContent = r.target;
-            top.appendChild(target);
-            var when = UI.el("span", "tiny dimmer");
-            when.textContent = UI.formatWhen(r.at) + " · by " + r.reporter;
-            when.style.marginLeft = "auto";
-            top.appendChild(when);
-            card.appendChild(top);
+          res.reports.forEach(function (r) { host.appendChild(reportCard(r)); });
+        });
+      }
 
-            var reason = UI.el("p", "report-reason");
-            reason.textContent = r.reason;      // untrusted
-            card.appendChild(reason);
+      function reportCard(r) {
+        var card = UI.el("div", "report");
 
-            var act = UI.el("button", "btn btn-sm",
-              r.state === "open" ? "Mark handled" : "Reopen");
-            act.type = "button";
-            act.addEventListener("click", function () {
-              API.adminCloseReport(r.id, r.state === "open" ? "closed" : "open")
-                .then(function () { loadReports(); loadOverview(); })
-                .catch(function (err) { UI.toast(err.message); });
-            });
-            card.appendChild(act);
-            host.appendChild(card);
+        var top = UI.el("div", "report-top");
+        top.appendChild(UI.el("span", "pill on", r.kind));
+
+        /* A report on an account links to that account. Reading "@someone"
+           as flat text and then going to find them by hand was most of the
+           work of handling one. */
+        if (r.kind === "user") {
+          var link = UI.el("a", "report-target");
+          link.href = "profile.html?u=" + encodeURIComponent(String(r.target).replace(/^@/, ""));
+          link.textContent = r.target;
+          top.appendChild(link);
+        } else {
+          var target = UI.el("span", "report-target");
+          target.textContent = r.target;
+          top.appendChild(target);
+        }
+
+        var when = UI.el("span", "tiny dimmer");
+        when.textContent = UI.formatWhen(r.at) + " · by " + r.reporter;
+        when.style.marginLeft = "auto";
+        top.appendChild(when);
+        card.appendChild(top);
+
+        var reason = UI.el("p", "report-reason");
+        reason.textContent = r.reason;      // untrusted
+        card.appendChild(reason);
+
+        var acts = UI.el("div", "btn-row");
+
+        var act = UI.el("button", "btn btn-sm btn-cta",
+          r.state === "open" ? "Mark handled" : "Reopen");
+        act.type = "button";
+        act.addEventListener("click", function () {
+          busy(act, API.adminCloseReport(r.id, r.state === "open" ? "closed" : "open")
+            .then(function () { loadReports(); loadOverview(); }));
+        });
+        acts.appendChild(act);
+
+        /* Acting on the report without leaving the queue. Only offered when
+           the target is an account this moderator actually outranks — the
+           server refuses anything else anyway. */
+        var subject = r.subject;
+        if (subject && isAdmin && subject.id !== me.id &&
+            rankOf(me.role) > rankOf(subject.role)) {
+          var next = subject.state === "suspended" ? "active" : "suspended";
+          var punish = UI.el("button", "btn btn-sm",
+            next === "suspended" ? "Suspend @" + subject.username : "Restore @" + subject.username);
+          punish.type = "button";
+          punish.addEventListener("click", function () {
+            if (next === "suspended" &&
+                !window.confirm("Suspend @" + subject.username + "?")) return;
+            busy(punish, API.adminUpdateUser(subject.id, { state: next })
+              .then(function () {
+                UI.toast("@" + subject.username + " " + next);
+                loadReports();
+              }));
           });
-        }).catch(function (err) { UI.toast(err.message); });
+          acts.appendChild(punish);
+        }
+
+        card.appendChild(acts);
+        return card;
       }
 
       /* ------------------------------------------------------- feedback */
+
       var fbState = "new";
       document.querySelectorAll("[data-fb]").forEach(function (pill) {
         pill.addEventListener("click", function () {
@@ -243,10 +551,12 @@
 
       function loadFeedback() {
         return API.adminFeedback(fbState).then(function (res) {
-          /* Put the queue depth on the tabs so nothing rots unnoticed. */
+          /* Put the queue depth on the pills so nothing rots unnoticed. */
           document.querySelectorAll("[data-fb]").forEach(function (p) {
             var n = res.counts[p.dataset.fb] || 0;
-            p.textContent = p.textContent.replace(/\s*\(\d+\)$/, "") + (n ? " (" + n + ")" : "");
+            var label = p.dataset.label || p.textContent.replace(/\s*\(\d+\)$/, "");
+            p.dataset.label = label;
+            p.textContent = label + (n ? " (" + n + ")" : "");
           });
 
           var host = document.getElementById("fb-list");
@@ -312,9 +622,12 @@
                 var b = UI.el("button", "btn btn-sm", pair[0]);
                 b.type = "button";
                 b.addEventListener("click", function () {
-                  API.adminUpdateFeedback(f.id, { state: pair[1] })
-                    .then(function () { UI.toast("Marked " + pair[1]); loadFeedback(); loadOverview(); })
-                    .catch(function (err) { UI.toast(err.message); });
+                  busy(b, API.adminUpdateFeedback(f.id, { state: pair[1] })
+                    .then(function () {
+                      UI.toast("Marked " + pair[1]);
+                      loadFeedback();
+                      loadOverview();
+                    }));
                 });
                 acts.appendChild(b);
               });
@@ -324,43 +637,31 @@
             replyBtn.addEventListener("click", function () {
               var text2 = window.prompt("Reply to “" + f.subject + "”", f.reply || "");
               if (text2 === null) return;
-              API.adminUpdateFeedback(f.id, { reply: text2.trim() })
-                .then(function () { UI.toast("Reply sent"); loadFeedback(); })
-                .catch(function (err) { UI.toast(err.message); });
+              busy(replyBtn, API.adminUpdateFeedback(f.id, { reply: text2.trim() })
+                .then(function () { UI.toast("Reply sent"); loadFeedback(); }));
             });
             acts.appendChild(replyBtn);
 
             card.appendChild(acts);
             host.appendChild(card);
           });
-        }).catch(function (err) { UI.toast(err.message); });
+        });
       }
 
       /* ----------------------------------------------------------- live */
 
-      /* Refreshed on a timer, but only while its tab is showing — polling a
-         hidden panel every ten seconds is just noise. */
-      var liveTimer = null;
-
       function loadLive() {
-        window.clearInterval(liveTimer);
-        liveTimer = window.setInterval(function () {
-          var panel = document.querySelector('[data-panel="live"]');
-          if (!panel || panel.hidden) { window.clearInterval(liveTimer); return; }
-          fetchLive();
-        }, 12000);
-        return fetchLive();
-      }
-
-      function fetchLive() {
         return API.adminLive().then(function (res) {
           var host = document.getElementById("live-rows");
           host.innerHTML = "";
 
-          var cols = "1fr 7rem 1fr 7rem";
+          setText("live-online", res.online || 0);
+          setText("live-playing", res.playing || 0);
+
+          var cols = "1fr 6rem 1fr 7rem";
           var head = UI.el("div", "rows-head");
           head.style.gridTemplateColumns = cols;
-          ["User", "Role", "Playing", "Last seen"].forEach(function (h) {
+          ["User", "Rank", "Playing", "Last seen"].forEach(function (h) {
             head.appendChild(UI.el("span", null, h));
           });
           host.appendChild(head);
@@ -400,33 +701,30 @@
             row.appendChild(UI.el("span", "plays", UI.formatWhen(u.lastSeen)));
             host.appendChild(row);
           });
-        }).catch(function (err) { UI.toast(err.message); });
+        });
       }
 
       /* --------------------------------------------------------- logins */
+
       function loadLogins() {
         return API.adminLogins().then(function (res) {
           var host = document.getElementById("login-rows");
           host.innerHTML = "";
 
-          var cols = "1fr 6rem 1fr 8rem";
+          var note = document.getElementById("login-note");
+          /* The Supabase backend cannot see failed attempts — the password
+             check happens inside Supabase Auth. Say so, or the list reads as
+             "nobody has ever failed a sign-in", which is a dangerous thing to
+             believe about a security log. */
+          note.hidden = res.failuresVisible !== false;
+
+          var cols = "1fr 5rem 1fr 7rem";
           var head = UI.el("div", "rows-head");
           head.style.gridTemplateColumns = cols;
           ["Account", "Result", "Where from", "When"].forEach(function (h) {
             head.appendChild(UI.el("span", null, h));
           });
           host.appendChild(head);
-
-          /* The Supabase backend can't see failed attempts — the password
-             check happens inside Supabase Auth. Say so rather than let the
-             list read as "nobody has ever failed a login". */
-          if (res.failuresVisible === false) {
-            var note = UI.el("p", "tiny dimmer");
-            note.style.margin = "0.6rem 0";
-            note.textContent = "Successful sign-ins only on this backend — " +
-              "failed attempts are in the Supabase dashboard under Authentication → Logs.";
-            host.appendChild(note);
-          }
 
           if (!res.logins.length) {
             host.appendChild(UI.el("p", "dim", "No sign-ins recorded yet."));
@@ -448,15 +746,17 @@
 
             var where = UI.el("span", "cat");
             where.textContent = (l.ip || "?") + (l.agent ? " · " + l.agent.slice(0, 40) : "");
+            where.title = where.textContent;
             row.appendChild(where);
 
             row.appendChild(UI.el("span", "plays", UI.formatWhen(l.at)));
             host.appendChild(row);
           });
-        }).catch(function (err) { UI.toast(err.message); });
+        });
       }
 
       /* -------------------------------------------------------- support */
+
       var supState = "open";
       document.querySelectorAll("[data-sup]").forEach(function (pill) {
         pill.addEventListener("click", function () {
@@ -472,7 +772,9 @@
         return API.adminTickets(supState).then(function (res) {
           document.querySelectorAll("[data-sup]").forEach(function (p) {
             var n = res.counts[p.dataset.sup] || 0;
-            p.textContent = p.textContent.replace(/\s*\(\d+\)$/, "") + (n ? " (" + n + ")" : "");
+            var label = p.dataset.label || p.textContent.replace(/\s*\(\d+\)$/, "");
+            p.dataset.label = label;
+            p.textContent = label + (n ? " (" + n + ")" : "");
           });
 
           var host = document.getElementById("sup-list");
@@ -486,7 +788,7 @@
           }
 
           res.tickets.forEach(function (t) { host.appendChild(ticketCard(t)); });
-        }).catch(function (err) { UI.toast(err.message); });
+        });
       }
 
       function ticketCard(t) {
@@ -525,7 +827,7 @@
         openBtn.type = "button";
         openBtn.addEventListener("click", function () {
           if (!thread.hidden) { thread.hidden = true; openBtn.textContent = "Open thread"; return; }
-          API.ticket(t.id).then(function (res) {
+          busy(openBtn, API.ticket(t.id).then(function (res) {
             thread.innerHTML = "";
             res.messages.forEach(function (m) {
               var wrap = UI.el("div", "tmsg" + (m.staff ? " is-staff" : ""));
@@ -538,7 +840,7 @@
             });
             thread.hidden = false;
             openBtn.textContent = "Hide thread";
-          }).catch(function (err) { UI.toast(err.message); });
+          }));
         });
         acts.appendChild(openBtn);
 
@@ -547,39 +849,25 @@
         reply.addEventListener("click", function () {
           var text = window.prompt("Reply to “" + t.subject + "”");
           if (text === null || !text.trim()) return;
-          API.replyTicket(t.id, text.trim())
-            .then(function () { UI.toast("Reply sent"); loadSupport(); })
-            .catch(function (err) { UI.toast(err.message); });
+          busy(reply, API.replyTicket(t.id, text.trim())
+            .then(function () { UI.toast("Reply sent"); loadSupport(); }));
         });
         acts.appendChild(reply);
 
-        if (t.state !== "closed") {
-          var close = UI.el("button", "btn btn-sm", "Close");
-          close.type = "button";
-          close.addEventListener("click", function () {
-            API.updateTicket(t.id, { state: "closed" })
-              .then(function () { loadSupport(); })
-              .catch(function (err) { UI.toast(err.message); });
-          });
-          acts.appendChild(close);
-        } else {
-          var reopen = UI.el("button", "btn btn-sm", "Reopen");
-          reopen.type = "button";
-          reopen.addEventListener("click", function () {
-            API.updateTicket(t.id, { state: "open" })
-              .then(function () { loadSupport(); })
-              .catch(function (err) { UI.toast(err.message); });
-          });
-          acts.appendChild(reopen);
-        }
+        var flip = UI.el("button", "btn btn-sm", t.state === "closed" ? "Reopen" : "Close");
+        flip.type = "button";
+        flip.addEventListener("click", function () {
+          busy(flip, API.updateTicket(t.id, { state: t.state === "closed" ? "open" : "closed" })
+            .then(function () { loadSupport(); loadOverview(); }));
+        });
+        acts.appendChild(flip);
 
         var bump = UI.el("button", "btn btn-sm btn-flat",
           t.priority === "high" ? "Lower priority" : "Raise priority");
         bump.type = "button";
         bump.addEventListener("click", function () {
-          API.updateTicket(t.id, { priority: t.priority === "high" ? "normal" : "high" })
-            .then(function () { loadSupport(); })
-            .catch(function (err) { UI.toast(err.message); });
+          busy(bump, API.updateTicket(t.id, { priority: t.priority === "high" ? "normal" : "high" })
+            .then(function () { loadSupport(); }));
         });
         acts.appendChild(bump);
 
@@ -587,47 +875,112 @@
         return card;
       }
 
+      /* ---------------------------------------------------------- audit */
+
+      var auditQ = document.getElementById("audit-q");
+      auditQ.addEventListener("input", UI.debounce(function () { loadAudit(); }, 260));
+
+      /* Staff actions are grouped by what they touch, so a trail can be read
+         at a glance rather than parsed word by word. */
+      var ACTION_TONE = {
+        "user-delete": "bad", "user-update": "accent", "message-remove": "bad",
+        "report-closed": "good", "report-open": "accent",
+        "game-delete": "bad", "game-hide": "accent", "game-save": "accent",
+        "game-restore": "good"
+      };
+
+      function loadAudit() {
+        return API.adminAudit(auditQ.value.trim()).then(function (res) {
+          var host = document.getElementById("audit-rows");
+          host.innerHTML = "";
+
+          var cols = "4.5rem 9rem 10rem 1fr 7rem";
+          var head = UI.el("div", "rows-head");
+          head.style.gridTemplateColumns = cols;
+          ["Entry", "Who", "Did", "To what", "When"].forEach(function (h) {
+            head.appendChild(UI.el("span", null, h));
+          });
+          host.appendChild(head);
+
+          if (!res.entries.length) {
+            var empty = UI.el("div", "void");
+            empty.appendChild(UI.el("strong", null,
+              auditQ.value.trim() ? "Nothing matches" : "Nothing recorded yet"));
+            empty.appendChild(UI.el("p", null, auditQ.value.trim()
+              ? "Try a username, an action like “suspend”, or clear the search."
+              : "Rank changes, suspensions, deletions, closed reports and " +
+                "catalogue edits all land here as they happen."));
+            host.appendChild(empty);
+            return;
+          }
+
+          res.entries.forEach(function (e) {
+            var row = UI.el("div", "row");
+            row.style.gridTemplateColumns = cols;
+
+            /* The row number used to be the position on screen, which changed
+               as soon as anything new arrived. The entry's own id doesn't. */
+            row.appendChild(UI.el("span", "idx", "#" + e.id));
+            row.appendChild(UI.el("span", "cat", e.actor));
+
+            var action = UI.el("span", "flag " +
+              ({ bad: "flag-bad", good: "flag-good", accent: "flag-warn" }[ACTION_TONE[e.action]] || ""));
+            action.textContent = e.action;
+            row.appendChild(action);
+
+            var detail = UI.el("span", "name");
+            detail.textContent = e.detail || "—";
+            detail.title = e.detail || "";
+            row.appendChild(detail);
+
+            row.appendChild(UI.el("span", "plays", UI.formatWhen(e.at)));
+            host.appendChild(row);
+          });
+        });
+      }
+
       /* ----------------------------------------------------------- help */
 
-      /* Written out here rather than in the HTML so the admin combo shows the
-         key that is actually configured, and so rows for things you can't
-         reach don't appear at all. */
       function loadHelp() {
         var mac = /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent || "");
         var mod = mac ? "⌘" : "Ctrl";
         var fallback = (window.SITE.defaults && window.SITE.defaults.adminKey) || "k";
         var adminKey = (window.Store.settings().adminKey || fallback).toUpperCase();
 
-        var TABS = [
-          ["Overview", "Counts for the whole site and the most-played titles across every " +
-            "account. Refreshes itself every 30 seconds."],
+        var TAB_HELP = [
+          ["Overview", "Counts for the whole site, the queues waiting on staff, and the " +
+            "most-played titles across every account. Refreshes itself while you're on it."],
           ["Live", "Who is signed in right now and what they have open. Presence comes from " +
             "the player page, so it lags by up to a minute and stops when someone closes the tab. " +
             "It is not a location log — it only knows the game, not the person."],
-          ["Users", "Search accounts, change someone's rank, suspend or restore them. " +
-            "Suspending signs that person out immediately and blocks them from signing back in."],
+          ["Users", "Search accounts and open one to change its rank, suspend it or delete it. " +
+            "A suspension is enforced in the database: friend requests, messages and calls are " +
+            "refused, not merely hidden."],
           ["Support", "The ticket queue. “Needs a reply” is waiting on staff; " +
             "“waiting on them” means you have replied and it is with the user. " +
             "Replying moves it between those two by itself, so the queue stays honest without " +
             "anyone filing it."],
-          ["Reports", "What people have reported — users, messages or games. Marking one " +
-            "handled tells the reporter it was looked at."],
+          ["Reports", "What people have reported — users, messages or games. A report about an " +
+            "account can be acted on from the card, so you don't have to go and find them. " +
+            "Marking one handled tells the reporter it was looked at."],
           ["Feedback", "One-way notes: bugs, ideas, game requests. Unlike a ticket, there is " +
             "no back-and-forth — you set a state and can leave one reply."],
-          ["Logins", "Every sign-in attempt. A run of failures against one account is what a " +
-            "break-in attempt looks like."],
+          ["Logins", "Sign-in history. A run of failures against one account is what a " +
+            "break-in attempt looks like. On the Supabase backend only successes are visible; " +
+            "the tab says so when that applies."],
           ["Games", "Owner only. Adds a title to the live catalogue without a commit and a " +
             "deploy, repoints one whose host moved, or hides one. It stores a pointer, not the " +
             "game files — those still have to be hosted somewhere."],
           ["Game data", "A save editor for whatever a game has stored in <b>your own browser</b>. " +
             "It edits your copy only; nothing here touches anyone else's progress."],
-          ["Audit", "Every staff action, with who did it and when. It is append-only, and it " +
-            "records your actions too."]
+          ["Audit", "Every staff action, with who did it and when — rank changes, suspensions, " +
+            "deletions, removed messages, closed reports, catalogue edits. Append-only, and it " +
+            "records your actions too. Searchable."]
         ];
 
         var host = document.getElementById("help-tabs");
         host.innerHTML = "";
-        TABS.forEach(function (pair) {
+        TAB_HELP.forEach(function (pair) {
           /* Don't document a tab this account can't open. */
           if (pair[0] === "Games" && !isOwner) return;
           var dt = UI.el("dt", null, pair[0]);
@@ -653,8 +1006,7 @@
         KEYS.forEach(function (row) {
           var tr = UI.el("tr");
           var kb = UI.el("td");
-          var key = UI.el("kbd", null, row[0]);
-          kb.appendChild(key);
+          kb.appendChild(UI.el("kbd", null, row[0]));
           if (row[3]) kb.appendChild(UI.el("span", "tiny dimmer", " staff only"));
           tr.appendChild(kb);
           tr.appendChild(UI.el("td", null, row[1]));
@@ -662,12 +1014,12 @@
           body.appendChild(tr);
         });
 
-        var RANKS = [
+        var RANK_HELP = [
           ["user", "The default. No console."],
-          ["mod", "Reports, feedback, support, the live view and the login history. " +
+          ["mod", "Reports, feedback, support, the live view and the sign-in history. " +
             "Cannot change anyone's rank or suspend anyone."],
-          ["admin", "Everything a mod has, plus promoting people to mod and suspending " +
-            "accounts. Cannot promote anyone to admin — that is the rank rule, not an oversight."],
+          ["admin", "Everything a mod has, plus ranks up to mod, suspensions and deletions. " +
+            "Cannot promote anyone to admin — that is the rank rule, not an oversight."],
           ["owner", "Everything, plus the catalogue editor. Set by the server from the " +
             "configured owner name, never granted through this panel. The owner cannot be " +
             "demoted, suspended or deleted by anyone, including another owner — it exists so " +
@@ -676,7 +1028,7 @@
 
         var rankHost = document.getElementById("help-ranks");
         rankHost.innerHTML = "";
-        RANKS.forEach(function (pair) {
+        RANK_HELP.forEach(function (pair) {
           var dt = UI.el("dt", null, pair[0]);
           if (pair[0] === me.role) dt.appendChild(UI.el("span", "tiny dimmer", " ← you"));
           rankHost.appendChild(dt);
@@ -684,52 +1036,28 @@
         });
 
         var NOTES = [
-          "Every permission here is checked again on the server. A hidden button is " +
-            "a convenience, not a lock.",
+          "Every permission here is checked again on the server, in the same function " +
+            "that performs the action. A hidden button is a convenience, not a lock.",
+          "You can only act on someone below your own rank, and you can never grant your " +
+            "own rank. That is why a row for another admin offers you nothing.",
+          "Suspending is enforced by the database, not the interface: a suspended account " +
+            "is refused friend requests, messages and calls even if it keeps a valid session.",
+          "There is no password reset on this hub. If someone forgets theirs, deleting the " +
+            "account is the only thing anyone can do — including you.",
           "Admins and owners can change the console shortcut in Settings — the " +
             "letter only, " + mod + " is fixed. The picker marks which letters the " +
             "browser already wants, and which of those it will not give up at all.",
-          "Suspending someone drops their sessions immediately; they are signed out on " +
-            "their next request, not whenever they next close the tab.",
           "Support tickets and feedback are different things on purpose. Feedback is a " +
             "note you file; a ticket is a conversation that stays open until someone closes it.",
           "Adding a game through the Games tab points at files hosted elsewhere. If that " +
             "host goes away, so does the game — the catalogue entry is a link, not a copy.",
           "Messages are stored in plain text and moderators can read and remove them. " +
-            "That is worth saying out loud to anyone who asks."
+            "Removing one is recorded in the audit trail under your name."
         ];
 
         var notes = document.getElementById("help-notes");
         notes.innerHTML = "";
         NOTES.forEach(function (text) { notes.appendChild(UI.el("li", null, text)); });
-      }
-
-      /* ---------------------------------------------------------- audit */
-      function loadAudit() {
-        return API.adminAudit().then(function (res) {
-          var host = document.getElementById("audit-rows");
-          host.innerHTML = "";
-
-          var head = UI.el("div", "rows-head");
-          head.style.gridTemplateColumns = "3rem 8rem 10rem 1fr 7rem";
-          ["#", "Actor", "Action", "Detail", "When"].forEach(function (h) {
-            head.appendChild(UI.el("span", null, h));
-          });
-          host.appendChild(head);
-
-          res.entries.forEach(function (e, i) {
-            var row = UI.el("div", "row");
-            row.style.gridTemplateColumns = "3rem 8rem 10rem 1fr 7rem";
-            row.appendChild(UI.el("span", "idx", UI.pad(i + 1)));
-            row.appendChild(UI.el("span", "cat", e.actor));
-            row.appendChild(UI.el("span", "cat", e.action));
-            var detail = UI.el("span", "name");
-            detail.textContent = e.detail || "—";
-            row.appendChild(detail);
-            row.appendChild(UI.el("span", "plays", UI.formatWhen(e.at)));
-            host.appendChild(row);
-          });
-        }).catch(function (err) { UI.toast(err.message); });
       }
 
       /* ------------------------------------------------- catalogue (owner) */
@@ -832,21 +1160,18 @@
         API.saveCatalogEntry(entry).then(function () {
           UI.toast("“" + entry.title + "” is live.");
           catField("cat-form").reset();
+          hideForm();
           preview();
-          loadCatalog();
+          reloadCatalog();
         }).catch(function (e2) {
           err.textContent = e2.message || "Could not save that.";
           err.hidden = false;
         }).then(function () { catField("cg-save").disabled = false; });
       }
 
-      /* The catalogue manager.
-       *
-       * The first version listed only what had been added here, which on any
-       * real install is nothing — so the tab read as broken. This lists the
-       * whole catalogue, marks where each title comes from, and puts the
-       * actions on the row. Adding is one button among several rather than
-       * the entire screen. */
+      /* The catalogue manager lists the whole catalogue and marks where each
+         title comes from, so the tab is useful on an install where nothing
+         has been added here yet. */
 
       var overlay = { added: [], removed: [] };
       var LIST_CAP = 60;
@@ -920,10 +1245,10 @@
           if (st === "gone") gone++;
         });
 
-        document.getElementById("cg-k-total").textContent = all.length;
-        document.getElementById("cg-k-added").textContent = added;
-        document.getElementById("cg-k-hidden").textContent = overlay.removed.length;
-        document.getElementById("cg-k-gone").textContent = gone;
+        setText("cg-k-total", all.length);
+        setText("cg-k-added", added);
+        setText("cg-k-hidden", overlay.removed.length);
+        setText("cg-k-gone", gone);
 
         var matches = all.filter(function (g) {
           if (cat && g.category !== cat) return false;
@@ -947,10 +1272,10 @@
         var total = matches.length + ghosts.length;
         var shown = Math.min(matches.length, LIST_CAP) + ghosts.length;
 
-        document.getElementById("cg-count").textContent = total === 0
+        setText("cg-count", total === 0
           ? "Nothing matches that."
           : "Showing " + shown + " of " + total +
-            (total > shown ? " — narrow the search to see the rest." : "");
+            (total > shown ? " — narrow the search to see the rest." : ""));
 
         host.innerHTML = "";
         ghosts.forEach(function (g) { host.appendChild(gameRow(g, "hidden")); });
@@ -999,9 +1324,8 @@
           var back = UI.el("button", "btn btn-sm btn-cta", "Show");
           back.type = "button";
           back.addEventListener("click", function () {
-            API.restoreCatalogEntry(game.id)
-              .then(function () { UI.toast("Back in the catalogue"); reloadCatalog(); })
-              .catch(function (e) { UI.toast(e.message); });
+            busy(back, API.restoreCatalogEntry(game.id)
+              .then(function () { UI.toast("Back in the catalogue"); reloadCatalog(); }));
           });
           acts.appendChild(back);
         } else {
@@ -1024,9 +1348,8 @@
             if (!window.confirm(hard
               ? "Remove " + game.title + "? It was added here, so this deletes it."
               : "Hide " + game.title + " from the catalogue? You can put it back.")) return;
-            API.removeCatalogEntry(game.id, hard)
-              .then(function () { UI.toast(hard ? "Removed" : "Hidden"); reloadCatalog(); })
-              .catch(function (e) { UI.toast(e.message); });
+            busy(hide, API.removeCatalogEntry(game.id, hard)
+              .then(function () { UI.toast(hard ? "Removed" : "Hidden"); reloadCatalog(); }));
           });
           acts.appendChild(hide);
         }
@@ -1051,10 +1374,8 @@
         document.getElementById("cg-form-head").hidden = false;
         document.getElementById("cg-form-note").hidden = false;
         document.getElementById("cat-form").hidden = false;
-        document.getElementById("cg-form-title").textContent =
-          game ? "Edit " + game.title : "Add a game";
-        document.getElementById("cg-save").textContent =
-          game ? "Save changes" : "Add to the catalogue";
+        setText("cg-form-title", game ? "Edit " + game.title : "Add a game");
+        setText("cg-save", game ? "Save changes" : "Add to the catalogue");
 
         if (game) intoForm(game);
         else { document.getElementById("cat-form").reset(); preview(); }
@@ -1085,8 +1406,14 @@
         preview();
       }
 
-      loadOverview().catch(function (err) { UI.toast(err.message); });
-      window.setInterval(loadOverview, 30000);
+      /* ----------------------------------------------------------- boot */
+
+      /* The header counts are wanted on every tab, so they load regardless of
+         which one the URL asks for — and marking overview loaded stops it
+         being fetched twice when that is also the tab being shown. */
+      loadedOnce.overview = true;
+      run(loadOverview);
+      show(window.location.hash.slice(1) || "overview");
     });
   }
 

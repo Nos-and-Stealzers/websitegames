@@ -24,6 +24,7 @@ router.get("/overview", staff, (req, res) => {
       total: one("SELECT COUNT(*) FROM users"),
       active: one("SELECT COUNT(*) FROM users WHERE state = 'active'"),
       suspended: one("SELECT COUNT(*) FROM users WHERE state = 'suspended'"),
+      staff: one("SELECT COUNT(*) FROM users WHERE role != 'user'"),
       online: one("SELECT COUNT(*) FROM users WHERE last_seen > ?", Date.now() - S.ONLINE_WINDOW),
       newToday: one("SELECT COUNT(*) FROM users WHERE created_at > ?", dayAgo),
       newThisWeek: one("SELECT COUNT(*) FROM users WHERE created_at > ?", weekAgo)
@@ -40,6 +41,14 @@ router.get("/overview", staff, (req, res) => {
       open: one("SELECT COUNT(*) FROM reports WHERE state = 'open'"),
       total: one("SELECT COUNT(*) FROM reports")
     },
+    /* What is actually waiting on a human, which is what the console leads
+       with. Counting it here saves the overview four extra requests. */
+    queues: {
+      reports: one("SELECT COUNT(*) FROM reports WHERE state = 'open'"),
+      tickets: one("SELECT COUNT(*) FROM support_tickets WHERE state = 'open'"),
+      feedback: one("SELECT COUNT(*) FROM feedback WHERE state = 'new'"),
+      calls: one("SELECT COUNT(*) FROM calls WHERE state != 'ended'")
+    },
     sessions: one("SELECT COUNT(*) FROM sessions WHERE expires_at > ?", Date.now()),
     topGames: db.prepare(
       "SELECT game_id AS id, plays, seconds FROM game_stats ORDER BY seconds DESC LIMIT 10"
@@ -49,15 +58,21 @@ router.get("/overview", staff, (req, res) => {
 
 router.get("/users", staff, (req, res) => {
   const q = String(req.query.q || "").trim().toLowerCase().replace(/[%_]/g, "");
-  const where = q ? "WHERE u.username_lower LIKE ?" : "";
-  const args = q ? [q + "%"] : [];
+  /* Substring, not prefix: the console searches display names too, and
+     "find the account whose handle ends in 07" is a real moderation task. */
+  const where = q ? "WHERE u.username_lower LIKE ? OR LOWER(u.display_name) LIKE ?" : "";
+  const args = q ? [`%${q}%`, `%${q}%`] : [];
 
   const rows = db.prepare(
     `SELECT u.*,
             (SELECT COUNT(*) FROM sessions s WHERE s.user_id = u.id AND s.expires_at > ${Date.now()}) AS sessions,
             (SELECT COUNT(*) FROM friendships f WHERE f.state='accepted'
                AND (f.requester_id = u.id OR f.addressee_id = u.id)) AS friends,
-            (SELECT COUNT(*) FROM messages m WHERE m.sender_id = u.id AND m.deleted = 0) AS messages
+            (SELECT COUNT(*) FROM messages m WHERE m.sender_id = u.id AND m.deleted = 0) AS messages,
+            (SELECT COUNT(*) FROM reports r
+              WHERE r.kind = 'user' AND LOWER(r.target) = u.username_lower) AS reports,
+            (SELECT MAX(l.at) FROM logins l
+              WHERE l.user_id = u.id AND l.outcome = 'ok') AS last_login
        FROM users u ${where}
       ORDER BY u.created_at DESC LIMIT 200`
   ).all(...args);
@@ -210,10 +225,20 @@ router.get("/reports", staff, (req, res) => {
       WHERE r.state = ? ORDER BY r.created_at DESC LIMIT 200`
   ).all(state);
 
+  /* When the report is about an account, send enough of that account for the
+     card to act on it. Reading "@someone" as flat text and then going to find
+     them by hand was most of the work of handling a report. */
+  const subjectOf = db.prepare(
+    "SELECT id, username, role, state FROM users WHERE username_lower = ?"
+  );
+
   res.json({
     reports: rows.map((r) => ({
       id: r.id, kind: r.kind, target: r.target, reason: r.reason,
-      state: r.state, at: r.created_at, reporter: r.reporter || "(deleted)"
+      state: r.state, at: r.created_at, reporter: r.reporter || "(deleted)",
+      subject: r.kind === "user"
+        ? subjectOf.get(String(r.target).replace(/^@/, "").toLowerCase()) || null
+        : null
     }))
   });
 });
@@ -232,12 +257,21 @@ router.patch("/reports/:id", staff, (req, res) => {
   res.json({ ok: true });
 });
 
+/* Searchable, because a trail you can only scroll is one nobody reads. */
 router.get("/audit", staff, (req, res) => {
+  const q = String(req.query.q || "").trim().toLowerCase().replace(/[%_]/g, "");
+  const where = q
+    ? `WHERE LOWER(a.action) LIKE ? OR LOWER(a.detail) LIKE ? OR LOWER(u.username) LIKE ?`
+    : "";
+  const args = q ? [`%${q}%`, `%${q}%`, `%${q}%`] : [];
+
   const rows = db.prepare(
     `SELECT a.*, u.username AS actor
        FROM audit a LEFT JOIN users u ON u.id = a.actor_id
-      ORDER BY a.id DESC LIMIT 200`
-  ).all();
+      ${where}
+      ORDER BY a.id DESC LIMIT 300`
+  ).all(...args);
+
   res.json({
     entries: rows.map((r) => ({
       id: r.id, actor: r.actor || "system", action: r.action,

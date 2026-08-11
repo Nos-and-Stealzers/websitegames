@@ -89,13 +89,19 @@ function friendCode(value) {
   return raw.slice(0, 3) + "-" + raw.slice(3);
 }
 
-/* Admin listing adds moderation context; still no credential material. */
+/* Admin listing adds moderation context; still no credential material.
+   The console shows all of this on the row, so it is all sent at once
+   rather than costing a second request per account. */
 function adminUser(row) {
   return Object.assign(publicUser(row), {
     acceptsDms: !!row.accepts_dms,
+    showActivity: !!row.show_activity,
     sessions: row.sessions ?? 0,
     friends: row.friends ?? 0,
-    messages: row.messages ?? 0
+    messages: row.messages ?? 0,
+    reports: row.reports ?? 0,
+    playing: row.current_game || "",
+    lastLogin: row.last_login || 0
   });
 }
 

@@ -8,6 +8,27 @@
       var S = window.SocialUI;
       var API = window.API;
 
+      /* A person can arrive here from three places — the friend lists, a
+         search result, or a friend-code lookup — and only the first of those
+         used to carry the edge id. Every accept / decline / cancel / unblock
+         button on a search result was therefore firing at
+         `/friendships?id=eq.undefined`. The backends now return `edgeId`
+         everywhere, and this resolves it from the friend graph as a fallback
+         so a stale row on screen still does the right thing. */
+      function edgeFor(u) {
+        if (u.edgeId != null) return Promise.resolve(u.edgeId);
+        return API.friends().then(function (d) {
+          var hit = d.friends.concat(d.incoming, d.outgoing, d.blocked)
+            .filter(function (p) { return p.username === u.username; })[0];
+          if (!hit) throw new Error("That's already been dealt with — reloading.");
+          return hit.edgeId;
+        });
+      }
+
+      function onEdge(u, run) {
+        return edgeFor(u).then(run).then(function () { return load(); });
+      }
+
       var handlers = {
         add: function (u) {
           return API.addFriend(u.username).then(function () {
@@ -16,24 +37,23 @@
           });
         },
         accept: function (u) {
-          return API.acceptFriend(u.edgeId).then(function () {
-            UI.toast("You're now friends with " + u.username);
-            return load();
+          return onEdge(u, function (id) {
+            return API.acceptFriend(id).then(function () {
+              UI.toast("You're now friends with " + u.username);
+            });
           });
         },
         remove: function (u) {
-          return API.removeFriend(u.edgeId).then(function () { return load(); });
+          return onEdge(u, function (id) { return API.removeFriend(id); });
         },
         cancel: function (u) {
-          return API.removeFriend(u.edgeId).then(function () {
-            UI.toast("Request cancelled");
-            return load();
+          return onEdge(u, function (id) {
+            return API.removeFriend(id).then(function () { UI.toast("Request cancelled"); });
           });
         },
         unblock: function (u) {
-          return API.removeFriend(u.edgeId).then(function () {
-            UI.toast("Unblocked " + u.username);
-            return load();
+          return onEdge(u, function (id) {
+            return API.removeFriend(id).then(function () { UI.toast("Unblocked " + u.username); });
           });
         },
         block: function (u) {
@@ -46,14 +66,27 @@
           });
         },
         /* Open it in the dock rather than navigating away — you can keep
-           browsing, or keep playing, with the conversation alongside. */
+           browsing, or keep playing, with the conversation alongside. The
+           dock returns null when it isn't mounted (switched off in settings),
+           in which case nothing at all used to happen. */
         message: function (u) {
-          if (window.ChatDock) return window.ChatDock.openWith(u.username);
-          return API.openThread(u.username).then(function (res) {
-            window.location.href = "messages.html?thread=" + res.threadId;
+          if (!window.ChatDock) return goToThread(u.username);
+          return window.ChatDock.openWith(u.username).then(function (opened) {
+            if (!opened) return goToThread(u.username);
+          }).catch(function (err) {
+            UI.toast(err.message || "Could not open that conversation");
           });
+        },
+        call: function (u) {
+          return window.Calls.start({ userId: u.id, kind: "audio" });
         }
       };
+
+      function goToThread(username) {
+        return API.openThread(username).then(function (res) {
+          window.location.href = "messages.html?thread=" + res.threadId;
+        });
+      }
 
       /* ---- your code ---- */
       var codeEl = document.getElementById("my-code");
@@ -168,12 +201,21 @@
             });
           });
 
+          var canCall = window.Calls && window.Calls.supported();
+
           S.renderPeople(document.getElementById("friends"), data.friends, function (u) {
             return S.person(u, {
               actions: [
                 { label: "Message", kind: "cta", onClick: function () { return handlers.message(u); } },
-                { label: "Remove", onClick: function () { return handlers.remove(u); } }
-              ]
+                /* Calling a friend was reachable from their profile and from
+                   the chat dock, but not from the list of friends. */
+                canCall ? { label: "☎", onClick: function () { return handlers.call(u); } } : null,
+                { label: "Remove", onClick: function () { return handlers.remove(u); } },
+                /* Blocking was only offered on an incoming request, so the
+                   one case it exists for — someone you already accepted
+                   turning unpleasant — had no button anywhere on this page. */
+                { label: "Block", onClick: function () { return handlers.block(u); } }
+              ].filter(Boolean)
             });
           }, {
             title: "No friends yet",

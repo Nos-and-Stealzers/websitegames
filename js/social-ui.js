@@ -85,30 +85,43 @@
     return users.length;
   }
 
-  /* Turns a relation string into the buttons that make sense for it. */
+  /* Turns a relation string into the buttons that make sense for it.
+     `handlers` may leave any of these out; a missing one drops its button
+     rather than wiring up something that throws when clicked. */
   function relationActions(user, handlers) {
+    function act(label, name, kind) {
+      if (typeof handlers[name] !== "function") return null;
+      return {
+        label: label, kind: kind,
+        onClick: function () { return handlers[name](user); }
+      };
+    }
+
+    var list;
     switch (user.relation) {
       case "friends":
-        return [
-          { label: "Message", kind: "cta", onClick: function () { return handlers.message(user); } },
-          { label: "Remove", onClick: function () { return handlers.remove(user); } }
-        ];
+        list = [act("Message", "message", "cta"), act("Remove", "remove")];
+        break;
       case "pending-out":
-        return [{ label: "Requested", onClick: function () { return handlers.cancel(user); } }];
+        list = [act("Requested", "cancel")];
+        break;
       case "pending-in":
-        return [
-          { label: "Accept", kind: "cta", onClick: function () { return handlers.accept(user); } },
-          { label: "Decline", onClick: function () { return handlers.remove(user); } }
-        ];
+        list = [act("Accept", "accept", "cta"), act("Decline", "remove")];
+        break;
       case "blocked":
-        return [{ label: "Unblock", onClick: function () { return handlers.unblock(user); } }];
+        list = [act("Unblock", "unblock")];
+        break;
+      /* They blocked you. There is nothing to offer, and the old code fell
+         through to "Add friend" — a button whose only possible outcome was
+         an error, which also told them they had been blocked. */
+      case "blocked-by":
       case "self":
-        return [];
+        list = [];
+        break;
       default:
-        return [
-          { label: "Add friend", kind: "cta", onClick: function () { return handlers.add(user); } }
-        ];
+        list = [act("Add friend", "add", "cta")];
     }
+    return list.filter(Boolean);
   }
 
   /* Guard used by every account-only page. */
@@ -134,6 +147,32 @@
       if (!state.user) {
         var back = window.location.pathname.split("/").pop() + window.location.search;
         window.location.replace("login.html?next=" + encodeURIComponent(back));
+        return;
+      }
+      /* A suspension is enforced in the database, so a suspended account
+         reaching one of these pages would just watch every action fail with
+         no explanation. Say what happened instead. */
+      if (state.user.state === "suspended") {
+        var main2 = document.getElementById("main");
+        main2.innerHTML = "";
+        var panel = el("div", "panel");
+        panel.style.marginTop = "2rem";
+        panel.appendChild(el("strong", null, "This account is suspended"));
+        var line = el("p", "dim");
+        line.style.margin = "0.4rem 0 0";
+        line.textContent = "Friends, messages and calls are switched off while a " +
+          "suspension is in place. Playing still works, and you can appeal through support.";
+        panel.appendChild(line);
+        var row = el("div", "btn-row");
+        row.style.marginTop = "0.9rem";
+        var help = el("a", "btn btn-cta", "Contact support");
+        help.href = "support.html";
+        row.appendChild(help);
+        var home = el("a", "btn btn-flat", "Back to the arcade");
+        home.href = "index.html";
+        row.appendChild(home);
+        panel.appendChild(row);
+        main2.appendChild(panel);
         return;
       }
       onReady(state.user);

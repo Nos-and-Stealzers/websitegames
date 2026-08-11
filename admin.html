@@ -35,6 +35,7 @@
           <span>you are <b id="r-role">—</b></span>
           <span>open reports <b id="r-reports">0</b></span>
           <span>online now <b id="r-online">0</b></span>
+          <button class="btn btn-sm btn-flat" type="button" id="refresh">Refresh</button>
         </div>
       </header>
 
@@ -54,15 +55,29 @@
 
       <!-- overview -->
       <section class="tab-panel" data-panel="overview">
+
+        <div class="block-head"><h2>Waiting on staff</h2><span class="fill"></span></div>
+        <div class="metrics queue-metrics" style="margin-bottom:1.4rem">
+          <button class="metric" type="button" data-goto="reports">
+            <b id="q-reports">0</b><span>Open reports</span></button>
+          <button class="metric" type="button" data-goto="support">
+            <b id="q-support">0</b><span>Open tickets</span></button>
+          <button class="metric" type="button" data-goto="feedback">
+            <b id="q-feedback">0</b><span>New feedback</span></button>
+          <button class="metric" type="button" data-goto="live">
+            <b id="q-calls">0</b><span>Calls in progress</span></button>
+        </div>
+
+        <div class="block-head"><h2>The site</h2><span class="fill"></span></div>
         <div class="metrics" style="margin-bottom:1.4rem">
           <div class="metric"><b id="k-users">0</b><span>Accounts</span></div>
           <div class="metric"><b id="k-online">0</b><span>Online now</span></div>
           <div class="metric"><b id="k-new">0</b><span>New this week</span></div>
           <div class="metric"><b id="k-suspended">0</b><span>Suspended</span></div>
+          <div class="metric"><b id="k-staff">0</b><span>Staff accounts</span></div>
           <div class="metric"><b id="k-friends">0</b><span>Friendships</span></div>
           <div class="metric"><b id="k-messages">0</b><span>Messages</span></div>
           <div class="metric"><b id="k-today">0</b><span>Messages today</span></div>
-          <div class="metric"><b id="k-sessions">0</b><span>Live sessions</span></div>
         </div>
 
         <div class="block-head"><h2>Most played, everyone</h2><span class="fill"></span></div>
@@ -71,11 +86,16 @@
 
       <!-- live -->
       <section class="tab-panel" data-panel="live" hidden>
+        <div class="metrics" style="margin-bottom:1rem">
+          <div class="metric"><b id="live-online">0</b><span>Signed in</span></div>
+          <div class="metric"><b id="live-playing">0</b><span>In a game</span></div>
+        </div>
         <div class="panel" style="margin-bottom:1rem">
           <p class="tiny dimmer" style="margin:0">
             Who is signed in right now and what they have open. Presence is
             reported by the player page, so it lags by up to a minute and stops
-            when someone closes the tab.
+            when someone closes the tab. It knows the game, not the person —
+            this is not a location log.
           </p>
         </div>
         <div class="rows" id="live-rows"></div>
@@ -84,8 +104,28 @@
       <!-- users -->
       <section class="tab-panel" data-panel="users" hidden>
         <div class="panel" style="margin-bottom:1rem">
-          <input type="search" id="user-q" placeholder="Filter by username…"
-                 autocomplete="off" aria-label="Filter users">
+          <div class="toolbar" style="position:static;margin:0;border:0;padding:0;background:none">
+            <div class="search">
+              <label for="user-q" class="sr-only">Search accounts</label>
+              <input type="search" id="user-q" placeholder="Search by name or handle…"
+                     autocomplete="off">
+            </div>
+            <label for="user-filter" class="label">Show</label>
+            <select id="user-filter" style="width:auto">
+              <option value="all">Everyone</option>
+              <option value="online">Online now</option>
+              <option value="staff">Staff</option>
+              <option value="suspended">Suspended</option>
+              <option value="reported">Reported</option>
+            </select>
+            <span class="fill"></span>
+            <span class="tiny dimmer" id="user-count">—</span>
+          </div>
+          <p class="tiny dimmer" style="margin:0.8rem 0 0">
+            You can act only on accounts below your own rank, and you can never
+            grant your own rank. The server applies the same rule, so a hidden
+            button here is a convenience rather than the control.
+          </p>
         </div>
         <div class="rows" id="user-rows"></div>
       </section>
@@ -152,8 +192,15 @@
       <section class="tab-panel" data-panel="logins" hidden>
         <div class="panel" style="margin-bottom:1rem">
           <p class="tiny dimmer" style="margin:0">
-            Every sign-in attempt, successful or not. A run of failures against
-            one account is what a break-in attempt looks like.
+            Sign-in history. A run of failures against one account is what a
+            break-in attempt looks like.
+          </p>
+          <p class="tiny dimmer" id="login-note" hidden style="margin:0.6rem 0 0">
+            <b>Successful sign-ins only on this backend.</b> The password check
+            happens inside Supabase Auth, in a schema this site cannot read, so
+            failed attempts are not listed here — they are in the Supabase
+            dashboard under Authentication → Logs. Do not read an empty list as
+            "nobody has ever failed a sign-in".
           </p>
         </div>
         <div class="rows" id="login-rows"></div>
@@ -273,6 +320,18 @@
 
       <!-- audit -->
       <section class="tab-panel" data-panel="audit" hidden>
+        <div class="panel" style="margin-bottom:1rem">
+          <div class="search">
+            <label for="audit-q" class="sr-only">Search the audit trail</label>
+            <input type="search" id="audit-q" autocomplete="off"
+                   placeholder="Search by action, username or detail…">
+          </div>
+          <p class="tiny dimmer" style="margin:0.8rem 0 0">
+            Every staff action, append-only, including your own. Rank changes,
+            suspensions, deletions, messages removed by a moderator, closed
+            reports and catalogue edits all land here as they happen.
+          </p>
+        </div>
         <div class="rows" id="audit-rows"></div>
       </section>
 

@@ -232,7 +232,9 @@
     adminCloseReport: function (id, state) {
       return request("PATCH", "/admin/reports/" + id, { state: state || "closed" });
     },
-    adminAudit: function () { return request("GET", "/admin/audit"); }
+    adminAudit: function (q) {
+      return request("GET", "/admin/audit" + (q ? "?q=" + encodeURIComponent(q) : ""));
+    }
   };
 
   window.API = API;

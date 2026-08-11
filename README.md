@@ -115,11 +115,33 @@ device and deletion sections appear only once signed in.
 - **Images in chat** — screenshot, camera photo, or a file. Downscaled and re-encoded in the
   browser first, then served only to members of that conversation.
 - Direct messages with unread badges, presence dots and retractable messages.
-- Notifications for friend requests, acceptances, new messages, role changes,
-  suspensions and closed reports — badged in the rail, toasted when they land
-  mid-session, and coalesced so a chatty friend produces one bell, not forty.
+- Notifications for friend requests, acceptances, new messages, group invites,
+  calls, role changes, suspensions, feedback and support replies and closed
+  reports — badged in the rail, toasted when they land mid-session, and
+  coalesced so a chatty friend produces one bell, not forty.
 - Deterministic identicon avatars generated from the username — nothing to upload.
-- Admin console: live metrics, role management, suspensions, reports queue, audit trail.
+- Admin console: queue tiles that take you to the work, live metrics, rank
+  management under a ladder the database enforces, suspensions that actually
+  suspend, account deletion, a reports queue you can act on without leaving it,
+  and a searchable audit trail.
+
+### Ranks and moderation
+
+Ranks are ordered — `user` < `mod` < `admin` < `owner` — and one rule applies
+everywhere: **you may only act on someone below you, and you may never grant
+your own rank.** It is enforced inside the function that performs the action, on
+both backends, so hiding a control in the console is a convenience rather than
+the lock.
+
+A suspension is enforced in the database, not the interface: a suspended account
+is refused friend requests, messages, group posts and calls even while it still
+holds a valid session. The owner rank cannot be demoted, suspended or deleted by
+anyone, including another owner — it exists so a compromised admin cannot lock
+the real owner out.
+
+Every staff action writes an audit row: rank changes, suspensions, deletions,
+messages removed by a moderator, closed reports and catalogue edits. The trail is
+append-only, searchable, and records your own actions too.
 
 ## Game icons
 
@@ -239,12 +261,21 @@ fetched JSON file — but the service worker stays off over `file://`.
 ## Tests
 
 ```powershell
-node server\test\api.test.js    # 117 end-to-end API checks
+node server\test\api.test.js    # 272 end-to-end API checks
+node tools\test-security.js     # 42 header and hardening checks
+bash supabase/test/run.sh       # the Postgres schema, against a real Postgres
 ```
 
 The API suite boots the real app against a throwaway SQLite file and drives it over HTTP with
 real cookies, covering auth, authorisation, friends, DM privacy, blocking, save-merge
 semantics, moderation guard rails, CSRF, rate limits and account deletion.
+
+`supabase/test/run.sh` needs the Postgres client tools (`initdb`, `pg_ctl`, `psql`) on PATH.
+It builds its own throwaway cluster on port 55432, applies `schema.sql` to it three times and
+checks the owner rank behaves — so it never touches a database you care about and needs no
+credentials. **Run it after any schema change**: the Supabase half of the hub has no other way
+to be tested, and the failure mode it exists to catch is a statement that reports success and
+changes nothing.
 
 ## Adding games
 
