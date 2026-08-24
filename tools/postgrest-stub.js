@@ -385,4 +385,41 @@ function splitTop(s) {
   return out.filter((x) => x.length);
 }
 
+/* The same routes over HTTP, so a real browser can talk to it. Used by
+   tools/test-ui.js, which drives the site's own pages against it. */
+Stub.prototype.serve = function (port) {
+  const http = require("http");
+  const stub = this;
+
+  const server = http.createServer(async (req, res) => {
+    const u = new URL(req.url, "http://localhost");
+    const chunks = [];
+    for await (const c of req) chunks.push(c);
+    const raw = Buffer.concat(chunks).toString("utf8");
+
+    const cors = {
+      "Access-Control-Allow-Origin": req.headers.origin || "*",
+      "Access-Control-Allow-Credentials": "true",
+      "Access-Control-Allow-Headers": "apikey, authorization, content-type, prefer, accept",
+      "Access-Control-Allow-Methods": "GET, POST, PATCH, DELETE, OPTIONS",
+      "Content-Type": "application/json"
+    };
+    if (req.method === "OPTIONS") { res.writeHead(204, cors); res.end(); return; }
+
+    const token = String(req.headers.authorization || "").replace(/^Bearer\s+/, "");
+    const uid = stub.tokens.get(token) || null;
+    let out;
+    try {
+      out = await stub.route(u, req.method, uid, token,
+                             raw ? JSON.parse(raw) : undefined, req.headers.prefer);
+    } catch (e) {
+      out = { status: 400, body: { message: e.message } };
+    }
+    res.writeHead(out.status === 204 ? 200 : out.status, cors);
+    res.end(JSON.stringify(out.body === null ? [] : out.body));
+  });
+
+  return new Promise((resolve) => server.listen(port, () => resolve(server)));
+};
+
 module.exports = { Stub };

@@ -150,11 +150,24 @@ case_adapter() {
   return "${PIPESTATUS[0]}"
 }
 
+# ------------------------------------------------------- the pages themselves
+# Optional: skips cleanly when Playwright is not installed, so a checkout
+# that only wants the static site is never asked to download a browser.
+#   cd server && npm install --no-save playwright
+case_browser() {
+  command -v node >/dev/null || { echo "  ·     node not on PATH, skipping"; return 0; }
+  fresh_db
+  PGHOST=127.0.0.1 PGPORT=$PORT PGUSER=postgres PGDATABASE=archtest \
+    node "$HERE/../../tools/test-ui.js" | sed 's/^/  /'
+  return "${PIPESTATUS[0]}"
+}
+
 run_case "fresh project"                 case_fresh
 run_case "project with an existing admin" case_upgrade
 run_case "re-running the file"            case_idempotent
 run_case "feature flows under RLS"        case_flows
 run_case "js/api-supabase.js end to end"  case_adapter
+run_case "the pages, in a browser"        case_browser
 
 echo ""
 echo "========================================================"
