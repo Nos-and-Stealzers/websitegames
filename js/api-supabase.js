@@ -308,7 +308,15 @@
         keepSession(body);
         edgesCache = null;
         return me().then(function (row) {
-          return { user: shapeSelf(row), firstAccount: row && row.role === "admin" };
+          /* The very first account gets a rank the schema chooses: `owner`
+             when it signs up under the owner name, `admin` otherwise. Only
+             the second was checked here, so the owner — the one account
+             that always exists — was sent to the front page instead of the
+             console it had just been handed. */
+          return {
+            user: shapeSelf(row),
+            firstAccount: !!row && (row.role === "admin" || row.role === "owner")
+          };
         });
       });
     },

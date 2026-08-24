@@ -3135,6 +3135,95 @@ update public.calls set state = 'ended', ended_at = now()
  where state <> 'ended' and created_at < now() - interval '10 minutes';
 
 -- =====================================================================
+-- 14 · REPAIRS FOUND BY THE SUPABASE TEST SUITE
+--
+-- Until now this backend had no automated tests — the Node one did, which
+-- is why bugs kept landing on the side the live site actually runs. There
+-- are two suites behind this section now:
+--
+--   bash supabase/test/run.sh     the schema, against a real Postgres,
+--                                 as the `authenticated` role so RLS
+--                                 decides what comes back
+--
+-- and inside it, tools/test-supabase.js, which drives js/api-supabase.js —
+-- the adapter the browser loads — through the same database.
+-- =====================================================================
+
+-- ---------------------------------------------------------------------
+-- 14.1 · PER-GAME CLOUD SAVES
+--
+-- `on conflict (user_id, host)` is not a column list here: `host` is also
+-- the name of this function's parameter, so Postgres refused the whole
+-- statement with "column reference host is ambiguous" — every call, on
+-- every host. Per-game progress had never once reached the cloud on this
+-- backend; the site's own "Saved" toast was reporting a write that raised.
+--
+-- Naming the primary key removes the ambiguity without renaming the
+-- parameter, which PostgREST sends by name and the adapter cannot change
+-- without a matching release.
+-- ---------------------------------------------------------------------
+
+create or replace function public.put_game_save(host text, payload jsonb)
+returns int language plpgsql security definer set search_path = public as $$
+declare n int;
+begin
+  if auth.uid() is null then raise exception 'Not signed in.'; end if;
+  if put_game_save.host !~ '^[A-Za-z0-9._-]{1,64}$' then
+    raise exception 'Unknown game host.';
+  end if;
+  -- 4 MB: IndexedDB saves carry binary (Unity keeps a whole virtual
+  -- filesystem there) and it is base64'd to survive JSON.
+  if pg_column_size(payload) > 4194304 then raise exception 'That host''s saves are too large.'; end if;
+
+  n := (select count(*) from jsonb_object_keys(coalesce(payload, '{}'::jsonb)));
+
+  insert into public.game_saves (user_id, host, payload, keys, updated_at)
+  values (auth.uid(), put_game_save.host, coalesce(payload, '{}'::jsonb), n, now())
+  on conflict on constraint game_saves_pkey do update
+    set payload = excluded.payload, keys = excluded.keys, updated_at = now();
+
+  return n;
+end;
+$$;
+
+revoke all on function public.put_game_save(text, jsonb) from public, anon;
+grant execute on function public.put_game_save(text, jsonb) to authenticated;
+
+-- ---------------------------------------------------------------------
+-- 14.2 · UN-HIDING A GAME IN THE CATALOGUE
+--
+-- `custom_games` holds two different kinds of row: a game the owner added,
+-- and a tombstone that hides one of the built-in catalogue entries. Hiding
+-- either sets `removed`. Restoring deleted the row outright — right for a
+-- tombstone, and for an added game it threw the game away: title, host,
+-- path and all. "Restore" was a delete button wearing the wrong label.
+--
+-- A tombstone is the row with no payload, so that is what gets deleted;
+-- anything carrying a game comes back as the game it was.
+-- ---------------------------------------------------------------------
+
+create or replace function public.restore_custom_game(slug text)
+returns void language plpgsql security definer set search_path = public as $$
+begin
+  if not public.is_owner() then
+    raise exception 'Only the owner can change the catalogue.';
+  end if;
+
+  delete from public.custom_games
+   where game_id = slug and removed = true
+     and coalesce(payload, '{}'::jsonb) = '{}'::jsonb;
+
+  update public.custom_games
+     set removed = false, updated_at = now()
+   where game_id = slug and removed = true;
+
+  perform public.log_audit('game-restore', slug);
+end;
+$$;
+
+grant execute on function public.restore_custom_game(text) to authenticated;
+
+-- =====================================================================
 -- Done.
 --
 -- Setup, once per project:

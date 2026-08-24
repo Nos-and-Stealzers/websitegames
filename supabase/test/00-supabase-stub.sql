@@ -37,3 +37,14 @@ end
 $$;
 
 grant usage on schema public to anon, authenticated;
+
+-- Supabase ships these default privileges on a new project, so every table
+-- the SQL editor creates is reachable by PostgREST and RLS is what decides
+-- who sees which row. Without them a local run would "pass" every policy
+-- test by failing at the grant instead, which proves nothing.
+alter default privileges for role postgres in schema public
+  grant all on tables to anon, authenticated;
+alter default privileges for role postgres in schema public
+  grant all on sequences to anon, authenticated;
+grant all on all tables in schema public to anon, authenticated;
+grant all on all sequences in schema public to anon, authenticated;

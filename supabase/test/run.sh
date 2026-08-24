@@ -1,7 +1,13 @@
 #!/usr/bin/env bash
 #
-# Runs supabase/schema.sql against a real, throwaway Postgres and checks how
-# the owner rank actually behaves.
+# Runs supabase/schema.sql against a real, throwaway Postgres and checks that
+# the backend the live site talks to actually behaves:
+#
+#   · how the owner rank behaves (10-owner.test.sql)
+#   · sign-in, messages, groups, calls, saves and the console, as the
+#     `authenticated` role with RLS on (30-flows.test.sql)
+#   · the same ground again through js/api-supabase.js itself, the adapter
+#     the browser loads (../../tools/test-supabase.js)
 #
 # This exists because a bug got through that no amount of reading could have
 # caught: the statement that claims the owner rank was silently a no-op.
@@ -17,6 +23,14 @@
 # a database you care about and needs no credentials.
 
 set -uo pipefail
+
+# Postgres refuses to run as root, which is what a container shell usually
+# is. Hand the whole run to the `postgres` account when there is one rather
+# than failing at initdb with a hint nobody reads.
+if [ "$(id -u)" = "0" ] && id postgres >/dev/null 2>&1 && [ "${ARCADE_PG_REEXEC:-}" != "1" ]; then
+  export ARCADE_PG_REEXEC=1
+  exec su postgres -s /bin/bash -c "PATH='$PATH' ARCADE_PG_REEXEC=1 bash '$0' $*"
+fi
 
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SCHEMA="$HERE/../schema.sql"
@@ -111,9 +125,36 @@ case_idempotent() {
   echo "  ok    three consecutive runs, no errors, rank stable"
 }
 
+# --------------------------------------------------------- feature flows
+case_flows() {
+  fresh_db
+  apply_schema >/dev/null || { echo "  FAIL  schema errored"; return 1; }
+  local out
+  out="$(psql $CONN -q -d archtest -f "$HERE/30-flows.test.sql" 2>&1 >/dev/null \
+         | sed 's/^psql:[^ ]* //;s/^NOTICE:  //' \
+         | grep -E '^(ok|FAIL)')"
+  echo "$out" | sed 's/^/  /'
+  ! echo "$out" | grep -q '^FAIL'
+}
+
+# ------------------------------------------------- the adapter the site runs
+case_adapter() {
+  command -v node >/dev/null || { echo "  ·     node not on PATH, skipping"; return 0; }
+  if [ ! -d "$HERE/../../server/node_modules/pg" ]; then
+    echo "  ·     server/node_modules/pg missing — run 'npm install' in server/, skipping"
+    return 0
+  fi
+  fresh_db
+  PGHOST=127.0.0.1 PGPORT=$PORT PGUSER=postgres PGDATABASE=archtest \
+    node "$HERE/../../tools/test-supabase.js" | sed 's/^/  /'
+  return "${PIPESTATUS[0]}"
+}
+
 run_case "fresh project"                 case_fresh
 run_case "project with an existing admin" case_upgrade
 run_case "re-running the file"            case_idempotent
+run_case "feature flows under RLS"        case_flows
+run_case "js/api-supabase.js end to end"  case_adapter
 
 echo ""
 echo "========================================================"
