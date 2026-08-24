@@ -35,11 +35,17 @@
     } catch (err) { /* private mode; we just don't cache */ }
   }
 
+  /* The shipped list, before anything is layered on it. Applying a second
+     overlay has to start from here: folding one over the result of the last
+     would keep a game hidden after it was restored, and would never drop an
+     entry the owner had just deleted. */
+  var shipped = (window.GAME_CATALOG || []).slice();
+
   /* Added entries win over a shipped one with the same id — that's how you
      repoint a game whose host moved without touching the file. */
   function apply(overlay) {
     if (!overlay) return;
-    var list = window.GAME_CATALOG || (window.GAME_CATALOG = []);
+    var list = shipped;
 
     var hidden = {};
     (overlay.removed || []).forEach(function (id) { hidden[id] = true; });
@@ -114,6 +120,19 @@
     invalidate: function () {
       try { window.localStorage.removeItem(KEY); } catch (err) { /* fine */ }
       refresh();
+    },
+
+    /* Fold an overlay in and re-index immediately.
+       `apply` alone was not enough: catalog.js indexes GAME_CATALOG once, at
+       load, and every page reads that index — so the console could save a
+       game, cache the change, and still show a catalogue that had never
+       heard of it. Only the console calls this, and only right after an
+       edit, where seeing the result is the whole point. */
+    applyNow: function (overlay) {
+      if (!overlay) return;
+      apply(overlay);
+      store(overlay);
+      if (window.Catalog && window.Catalog.reindex) window.Catalog.reindex();
     }
   };
 })();

@@ -64,9 +64,15 @@
       var pollTimer = null;
 
       var tabs = document.getElementById("tabs");
+      /* Clicking a tab refetches it. The panels are views onto state this
+         very console changes — close a report, promote someone, add a game —
+         and a cached panel meant coming back to it showed the world as it
+         was before you touched it. The audit trail was the clearest case: it
+         is written by the actions in the other tabs, so it was empty every
+         time unless you reloaded the page. */
       tabs.addEventListener("click", function (event) {
         var tab = event.target.closest("[data-tab]");
-        if (tab) show(tab.dataset.tab);
+        if (tab) show(tab.dataset.tab, true);
       });
 
       /* The tab lives in the URL, so a refresh — or a link someone pastes to
@@ -1188,6 +1194,7 @@
 
         return API.customCatalog().then(function (res) {
           overlay = { added: res.added || [], removed: res.removed || [] };
+          if (window.CatalogOverlay) window.CatalogOverlay.applyNow(overlay);
           drawCatalog();
         }).catch(function (err) {
           UI.toast(err.message);
@@ -1362,10 +1369,14 @@
          is built once at page load. Re-reading the overlay keeps the counts
          and badges here honest; the catalogue itself picks it up on the next
          navigation. */
+      /* Re-reads the overlay and folds it into the live index, so the list
+         below the form shows the edit that was just saved. It used to only
+         drop the cache and redraw from an index built at page load, which
+         meant adding a game left you looking at a catalogue without it. */
       function reloadCatalog() {
         return API.customCatalog().then(function (res) {
           overlay = { added: res.added || [], removed: res.removed || [] };
-          if (window.CatalogOverlay) window.CatalogOverlay.invalidate();
+          if (window.CatalogOverlay) window.CatalogOverlay.applyNow(overlay);
           drawCatalog();
         }).catch(function (err) { UI.toast(err.message); });
       }

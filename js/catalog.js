@@ -76,20 +76,51 @@
     };
   }
 
-  var all = (window.GAME_CATALOG || []).map(normalise);
+  var all = [];
   var byId = {};
-  all.forEach(function (g) { byId[g.id] = g; });
-
-  /* ---- category counts ---- */
   var counts = {};
-  all.forEach(function (g) { counts[g.category] = (counts[g.category] || 0) + 1; });
+  var categories = [];
+  var playable = [];
 
-  var categories = Object.keys(counts)
-    .map(function (key) {
-      var meta = SITE.categories[key] || SITE.categories.other;
-      return { id: key, label: meta.label, icon: meta.icon, count: counts[key] };
-    })
-    .sort(function (a, b) { return b.count - a.count || a.label.localeCompare(b.label); });
+  /* Everything below holds a reference to these four, and so does every
+     caller through window.Catalog — so a rebuild refills them in place
+     rather than making new ones. */
+  function refill(target, next) {
+    target.length = 0;
+    for (var i = 0; i < next.length; i++) target.push(next[i]);
+  }
+
+  function wipe(obj) {
+    Object.keys(obj).forEach(function (k) { delete obj[k]; });
+  }
+
+  /* Rebuilds the index from window.GAME_CATALOG. Called once at load, and
+     again by the catalogue overlay when the owner edits a title from the
+     console — without it the console's own list could not show the game it
+     had just saved until the page was navigated away from and back. */
+  function reindex() {
+    refill(all, (window.GAME_CATALOG || []).map(normalise));
+
+    wipe(byId);
+    all.forEach(function (g) { byId[g.id] = g; });
+
+    wipe(counts);
+    all.forEach(function (g) { counts[g.category] = (counts[g.category] || 0) + 1; });
+
+    refill(categories, Object.keys(counts)
+      .map(function (key) {
+        var meta = SITE.categories[key] || SITE.categories.other;
+        return { id: key, label: meta.label, icon: meta.icon, count: counts[key] };
+      })
+      .sort(function (a, b) { return b.count - a.count || a.label.localeCompare(b.label); }));
+
+    /* Titles no host carries. They stay in the index so the catalog is
+       honest, but anything that *picks* a game for you should never land
+       on one. */
+    refill(playable, all.filter(function (g) { return !g.unavailable; }));
+  }
+
+  reindex();
 
   /* ---- search ---- */
 
@@ -124,10 +155,6 @@
   }
 
   /* ---- filter + sort ---- */
-
-  /* Titles no host carries. They stay in the index so the catalog is honest,
-     but anything that *picks* a game for you should never land on one. */
-  var playable = all.filter(function (g) { return !g.unavailable; });
 
   function filter(opts) {
     opts = opts || {};
@@ -272,6 +299,7 @@
     recentGames: recentGames,
     favoriteGames: favoriteGames,
     randomGame: randomGame,
-    resolveUrl: resolveUrl
+    resolveUrl: resolveUrl,
+    reindex: reindex
   };
 })();

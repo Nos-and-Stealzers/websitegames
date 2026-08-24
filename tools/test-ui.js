@@ -144,7 +144,13 @@ async function main() {
     const page = await ctx.newPage();
     const errors = [];
     page.on("pageerror", (e) => errors.push(String(e.message)));
-    page.on("console", (m) => { if (m.type() === "error") errors.push(m.text()); });
+    page.on("console", (m) => {
+      if (m.type() !== "error") return;
+      /* The browser logs one of these for every non-2xx response, with no
+         URL on it. The response handler below judges those properly. */
+      if (/^Failed to load resource/.test(m.text())) return;
+      errors.push(m.text());
+    });
     /* Only this site's own requests count. */
     page.on("requestfailed", (r) => {
       if (!r.url().startsWith(base) && !r.url().startsWith(apiBase)) return;
@@ -155,7 +161,10 @@ async function main() {
       errors.push("request failed: " + r.url() + " (" + why + ")");
     });
     page.on("response", (r) => {
-      if ((r.url().startsWith(base) || r.url().startsWith(apiBase)) && r.status() >= 400) {
+      /* A 4xx from the API is often the app working: refusing a bad form and
+         showing why. A missing file, or a 5xx, never is. */
+      const bad = r.url().startsWith(apiBase) ? r.status() >= 500 : r.status() >= 400;
+      if ((r.url().startsWith(base) || r.url().startsWith(apiBase)) && bad) {
         errors.push("HTTP " + r.status() + " " + r.url());
       }
     });
@@ -389,6 +398,90 @@ async function main() {
   }
   ok("the console throws nothing on any tab", ownerS.page.errors.length === 0,
      ownerS.page.errors.join(" | "));
+
+  /* ---- acting on an account ---- */
+  ownerS.page.on("dialog", (d) => d.accept("carol"));
+
+  await ownerS.page.click('[data-tab="users"]');
+  await ownerS.page.waitForTimeout(700);
+  await ownerS.page.fill("#user-q", "carol");
+  await ownerS.page.waitForTimeout(700);
+  ok("the user list narrows to a search",
+     (await ownerS.page.textContent("#user-rows")).indexOf("carol") !== -1,
+     await ownerS.page.textContent("#user-count"));
+
+  await ownerS.page.click('#user-rows button:has-text("Manage")');
+  await ownerS.page.waitForSelector(".sheet", { timeout: 8000 });
+  ok("the manage sheet opens", await ownerS.page.isVisible(".sheet"));
+  await ownerS.page.selectOption("#sheet-rank", "mod");
+  await ownerS.page.click('.sheet button:has-text("Save rank")');
+  await ownerS.page.waitForTimeout(1400);
+  ok("promoting from the console works",
+     (await ownerS.page.textContent("#user-rows")).indexOf("mod") !== -1,
+     await ownerS.page.textContent("#user-rows"));
+
+  await ownerS.page.click('#user-rows button:has-text("Manage")');
+  await ownerS.page.waitForSelector(".sheet", { timeout: 8000 });
+  await ownerS.page.click('.sheet button:has-text("Suspend account")');
+  await ownerS.page.waitForTimeout(1400);
+  ok("suspending from the console works",
+     (await ownerS.page.textContent("#user-rows")).indexOf("suspended") !== -1,
+     await ownerS.page.textContent("#user-rows"));
+
+  await ownerS.page.click('#user-rows button:has-text("Manage")');
+  await ownerS.page.waitForSelector(".sheet", { timeout: 8000 });
+  await ownerS.page.click('.sheet button:has-text("Restore account")');
+  await ownerS.page.waitForTimeout(1400);
+  ok("...and so does putting them back",
+     (await ownerS.page.textContent("#user-rows")).indexOf("suspended") === -1,
+     await ownerS.page.textContent("#user-rows"));
+
+  /* ---- the catalogue ---- */
+  await ownerS.page.click('[data-tab="games"]');
+  await ownerS.page.waitForTimeout(600);
+  await ownerS.page.click("#cg-new");
+  await ownerS.page.waitForSelector("#cat-form:not([hidden])", { timeout: 8000 });
+  await ownerS.page.fill("#cg-title", "Tetra");
+  await ownerS.page.fill("#cg-id", "tetra");
+  await ownerS.page.selectOption("#cg-host", "games-huge");
+  await ownerS.page.fill("#cg-source", "tetra/index.html");
+  await ownerS.page.click("#cg-save");
+  await ownerS.page.waitForTimeout(1800);
+  ok("a game can be added from the console",
+     (await ownerS.page.textContent("#cg-error")) === "" ||
+     await ownerS.page.isHidden("#cg-error"),
+     await ownerS.page.textContent("#cg-error"));
+  await ownerS.page.fill("#cg-q", "Tetra");
+  await ownerS.page.waitForTimeout(800);
+  ok("...and shows up in the catalogue list",
+     (await ownerS.page.textContent("#cg-list")).indexOf("Tetra") !== -1,
+     await ownerS.page.textContent("#cg-count"));
+
+  /* A form the database refuses must say so rather than looking like it
+     worked: a path with no host resolves against the hub and 404s. */
+  await ownerS.page.click("#cg-new");
+  await ownerS.page.waitForSelector("#cat-form:not([hidden])", { timeout: 8000 });
+  await ownerS.page.fill("#cg-title", "Nowhere");
+  await ownerS.page.fill("#cg-id", "nowhere");
+  await ownerS.page.selectOption("#cg-host", "");
+  await ownerS.page.fill("#cg-source", "nowhere/index.html");
+  await ownerS.page.click("#cg-save");
+  await ownerS.page.waitForTimeout(1500);
+  ok("a game with no host is refused, out loud",
+     await ownerS.page.isVisible("#cg-error"),
+     await ownerS.page.textContent("#cg-error"));
+  await ownerS.page.click("#cg-close");
+
+  /* ---- the audit trail ---- */
+  await ownerS.page.click('[data-tab="audit"]');
+  await ownerS.page.waitForSelector("#audit-rows .row", { timeout: 10000 })
+    .catch(function () {});
+  const audit = await ownerS.page.textContent("#audit-rows");
+  ok("the audit trail recorded the rank change", audit.indexOf("user-update") !== -1,
+     audit.slice(0, 200));
+  ok("...and the catalogue change", audit.indexOf("game-") !== -1, audit.slice(0, 200));
+  ok("the console throws nothing while being used",
+     ownerS.page.errors.length === 0, ownerS.page.errors.join(" | "));
 
   await go(aliceS.page, "/admin.html");
   await aliceS.page.waitForTimeout(600);
