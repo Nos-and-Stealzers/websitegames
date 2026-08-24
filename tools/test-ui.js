@@ -488,6 +488,94 @@ async function main() {
   ok("a plain user is refused the console",
      await aliceS.page.isVisible("#denied"));
 
+  /* -------------------------------------------------------- cloud saves */
+  group("cloud saves");
+
+  await go(aliceS.page, "/library.html");
+  await aliceS.page.evaluate(() => {
+    window.Store.toggleFavorite("pac-man");
+    window.Store.recordPlay("pac-man");
+    window.Store.addSeconds("pac-man", 90);
+  });
+  await go(aliceS.page, "/settings.html");
+  await aliceS.page.waitForTimeout(700);
+  ok("settings offers a sync button when signed in",
+     await aliceS.page.isVisible("#sync-now"));
+  await aliceS.page.click("#sync-now");
+  await aliceS.page.waitForTimeout(1500);
+  ok("...and reports when it last synced",
+     /synced/i.test(await aliceS.page.textContent("#sync-state")),
+     await aliceS.page.textContent("#sync-state"));
+
+  /* A second browser, same account: the point of syncing at all. */
+  const other = await session();
+  await signIn(other.page, "alice", "correct horse 42");
+  await go(other.page, "/library.html");
+  await other.page.waitForTimeout(1200);
+  const carried = await other.page.evaluate(() => ({
+    favorites: window.Store.favorites(),
+    seconds: window.Store.statFor("pac-man").seconds
+  }));
+  ok("a favourite reaches a second device",
+     carried.favorites.indexOf("pac-man") !== -1, JSON.stringify(carried));
+  ok("...and so does the playtime", carried.seconds >= 90, JSON.stringify(carried));
+  ok("the second device shows it on the pinned page",
+     (await other.page.textContent("#main")).length > 0);
+  await other.ctx.close();
+
+  /* Per-game progress: a whole host's localStorage, kept per account. */
+  await aliceS.page.evaluate(() =>
+    window.API.putGameSave("hd_fnaf", { fnaf1: JSON.stringify({ stars: 2 }) }));
+  const readBack = await aliceS.page.evaluate(() => window.API.getGameSave("hd_fnaf"));
+  ok("per-game progress round-trips through the browser",
+     readBack && readBack.payload && readBack.payload.fnaf1 === JSON.stringify({ stars: 2 }),
+     JSON.stringify(readBack));
+
+  await go(ownerS.page, "/index.html");
+  await go(ownerS.page, "/admin.html#gamedata");
+  await ownerS.page.waitForTimeout(1200);
+  ok("the console's game-data tab opens",
+     await ownerS.page.isVisible('[data-panel="gamedata"]'));
+  ok("...and lists the hosts it can read",
+     (await ownerS.page.$$eval("#gd-host option", (n) => n.length)) > 0,
+     String(await ownerS.page.$$eval("#gd-host option", (n) => n.length)));
+
+  /* --------------------------------------------------------- feedback */
+  group("feedback and support");
+
+  await go(aliceS.page, "/feedback.html");
+  await aliceS.page.waitForTimeout(700);
+  await aliceS.page.waitForSelector("#form:not([hidden])", { timeout: 15000 });
+  await aliceS.page.fill("#subject", "No sound");
+  await aliceS.page.fill("#body", "Pac-Man plays silently on this machine.");
+  await aliceS.page.click("#submit");
+  await aliceS.page.waitForTimeout(1500);
+  ok("feedback is accepted", await aliceS.page.isVisible("#thanks"),
+     await aliceS.page.textContent("#error"));
+
+  /* Straight from one hash to another on the same page: the console has to
+     notice, or a link a colleague pastes into the tab you already have open
+     does nothing. */
+  await ownerS.page.goto(base + "/admin.html#feedback");
+  await ownerS.page.waitForTimeout(1800);
+  ok("feedback reaches the console",
+     (await ownerS.page.textContent("#fb-list")).indexOf("No sound") !== -1,
+     await ownerS.page.textContent("#fb-list"));
+
+  await go(aliceS.page, "/support.html");
+  await aliceS.page.waitForTimeout(900);
+  ok("the support page loads for a signed-in account",
+     (await aliceS.page.textContent("#main")).length > 0);
+
+  /* ---------------------------------------------------- notifications */
+  group("notifications");
+
+  await go(bobS.page, "/notifications.html");
+  await bobS.page.waitForTimeout(1200);
+  const feed = await bobS.page.textContent("#main");
+  ok("the feed has something in it", /friend|message|call/i.test(feed), feed.slice(0, 200));
+  ok("...and throws nothing", bobS.page.errors.length === 0, bobS.page.errors.join(" | "));
+
   /* -------------------------------------------------- the rest of the site */
   group("every page loads");
 

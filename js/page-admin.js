@@ -42,9 +42,13 @@
 
       /* ------------------------------------------------------------ tabs */
 
-      /* Each tab knows how to load itself and whether it already has. A tab
-         is fetched when you first open it and then left alone until you ask
-         for it again — the old console refetched everything on every click. */
+      /* Each tab knows how to load itself, and opening one loads it. Only
+         the tab you are looking at is fetched — the console never asks for
+         all of them at once — but it is fetched every time you ask for it.
+         Caching the first load meant every panel showed the world as it was
+         before the console changed it: the audit trail, which is written by
+         the actions in the other tabs, was empty unless you reloaded the
+         page. */
       var TABS = {
         overview: { load: loadOverview, poll: 30000 },
         live:     { load: loadLive, poll: 12000 },
@@ -60,24 +64,17 @@
       };
 
       var active = "overview";
-      var loadedOnce = {};
       var pollTimer = null;
 
       var tabs = document.getElementById("tabs");
-      /* Clicking a tab refetches it. The panels are views onto state this
-         very console changes — close a report, promote someone, add a game —
-         and a cached panel meant coming back to it showed the world as it
-         was before you touched it. The audit trail was the clearest case: it
-         is written by the actions in the other tabs, so it was empty every
-         time unless you reloaded the page. */
       tabs.addEventListener("click", function (event) {
         var tab = event.target.closest("[data-tab]");
-        if (tab) show(tab.dataset.tab, true);
+        if (tab) show(tab.dataset.tab);
       });
 
       /* The tab lives in the URL, so a refresh — or a link someone pastes to
          a colleague — lands where it was rather than back on Overview. */
-      function show(name, force) {
+      function show(name) {
         if (!TABS[name]) name = "overview";
         active = name;
 
@@ -98,10 +95,7 @@
         pollTimer = null;
 
         var spec = TABS[name];
-        if (force || !loadedOnce[name]) {
-          loadedOnce[name] = true;
-          run(spec.load);
-        }
+        run(spec.load);
         /* Only the tab you are actually looking at is allowed a timer. */
         if (spec.poll) {
           pollTimer = window.setInterval(function () {
@@ -118,7 +112,7 @@
       }
 
       document.getElementById("refresh").addEventListener("click", function () {
-        show(active, true);
+        show(active);
         loadOverview();          // the header counts, whichever tab is open
         UI.toast("Refreshed");
       });
@@ -1419,12 +1413,12 @@
 
       /* ----------------------------------------------------------- boot */
 
-      /* The header counts are wanted on every tab, so they load regardless of
-         which one the URL asks for — and marking overview loaded stops it
-         being fetched twice when that is also the tab being shown. */
-      loadedOnce.overview = true;
-      run(loadOverview);
-      show(window.location.hash.slice(1) || "overview");
+      /* The header counts are wanted on every tab, so they load regardless
+         of which one the URL asks for. `show` fetches the tab itself, so
+         overview only needs the extra call when it is not the one opening. */
+      var opening = window.location.hash.slice(1) || "overview";
+      if (opening !== "overview") run(loadOverview);
+      show(opening);
     });
   }
 
