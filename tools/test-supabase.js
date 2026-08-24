@@ -465,6 +465,52 @@ async function main() {
   ok("the sign-in log answers", Array.isArray((await owner.adminLogins()).logins),
      JSON.stringify(await owner.adminLogins()));
 
+  /* -------------------------------------------------- reporting a message */
+  group("reporting a message");
+
+  const rude = await alice.send(opened.threadId, "something rude");
+  /* The RPC hands ids back as strings; the message list carries numbers. */
+  const rudeId = Number(rude.message.id);
+
+  /* dave was deleted by the console two sections ago, so the outsider here
+     is somebody who has never been near this conversation. */
+  const mallory = await account(stub, "mallory");
+  await throws("an outsider cannot report a message they cannot see",
+               mallory.reportMessage(rudeId, "looks bad"), "no such message");
+  await throws("you cannot report your own message",
+               alice.reportMessage(rudeId, "on reflection"), "your own message");
+  await throws("a one-word reason is refused",
+               bob.reportMessage(rudeId, "bad"), "say what is wrong");
+
+  await bob.reportMessage(rudeId, "this is abusive");
+  await bob.reportMessage(rudeId, "still abusive");
+  const msgQueue = (await owner.adminReports("open")).reports
+    .filter((r) => r.kind === "message");
+  ok("reporting reaches the queue exactly once", msgQueue.length === 1,
+     JSON.stringify(msgQueue.map((r) => r.target)));
+  ok("...carrying the words complained about",
+     msgQueue[0] && msgQueue[0].message && msgQueue[0].message.body === "something rude",
+     JSON.stringify(msgQueue[0] && msgQueue[0].message));
+  ok("...and who wrote them",
+     msgQueue[0].message.author && msgQueue[0].message.author.username === "alice",
+     JSON.stringify(msgQueue[0].message.author));
+
+  await owner.deleteMessage(rudeId);
+  const afterStrike = (await owner.adminReports("open")).reports
+    .filter((r) => r.kind === "message")[0];
+  ok("staff can remove the reported message",
+     afterStrike && afterStrike.message.deleted === true,
+     JSON.stringify(afterStrike && afterStrike.message));
+  ok("...and it lands in the audit trail",
+     (await owner.adminAudit()).entries.some((a) => a.action === "message-remove"));
+  ok("...and the people in the thread see it as removed",
+     (await bob.thread(opened.threadId)).messages
+       .filter((m) => m.id === rudeId)[0].deleted === true);
+
+  await owner.adminCloseReport(msgQueue[0].id, "closed");
+  ok("closing it clears the queue",
+     (await owner.adminReports("open")).reports.filter((r) => r.kind === "message").length === 0);
+
   /* ------------------------------------------------- blocking and privacy */
   group("blocking and privacy");
 

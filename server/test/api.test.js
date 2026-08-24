@@ -355,6 +355,44 @@ function client() {
     ok("report closed", r.status === 200);
     r = await admin.get("/api/admin/reports");
     ok("closed report leaves the open list", r.data.reports.length === 0);
+
+    /* Reporting a message rather than the person who sent it. A report that
+       only names an account leaves whoever picks it up to go and find the
+       conversation by hand. */
+    const t = (await alice.post("/api/messages/with/bob")).data.threadId;
+    const said = (await alice.post(`/api/messages/threads/${t}`,
+      { body: "something rude" })).data.message;
+
+    r = await admin.post(`/api/messages/${said.id}/report`, { reason: "this is abusive" });
+    ok("an outsider cannot report a message they cannot see", r.status === 404);
+    r = await alice.post(`/api/messages/${said.id}/report`, { reason: "on reflection" });
+    ok("you cannot report your own message", r.status === 400);
+    r = await bob.post(`/api/messages/${said.id}/report`, { reason: "bad" });
+    ok("a one-word reason is refused", r.status === 400);
+
+    r = await bob.post(`/api/messages/${said.id}/report`, { reason: "this is abusive" });
+    ok("reporting works", r.status === 201);
+    await bob.post(`/api/messages/${said.id}/report`, { reason: "still abusive" });
+
+    r = await admin.get("/api/admin/reports");
+    const flagged = r.data.reports.filter((x) => x.kind === "message");
+    ok("it reaches the queue exactly once", flagged.length === 1,
+       JSON.stringify(r.data.reports.map((x) => x.kind)));
+    ok("...carrying the words complained about",
+       flagged[0].message && flagged[0].message.body === "something rude",
+       JSON.stringify(flagged[0].message));
+    ok("...and who wrote them",
+       flagged[0].message.author && flagged[0].message.author.username === "alice");
+
+    r = await admin.del(`/api/messages/${said.id}`);
+    ok("staff can remove the reported message", r.status === 200);
+    r = await admin.get("/api/admin/reports");
+    ok("...and the queue says so",
+       r.data.reports.filter((x) => x.kind === "message")[0].message.deleted === true);
+    r = await admin.get("/api/admin/audit");
+    ok("...and it is recorded as a moderation action",
+       r.data.entries.some((a) => a.action === "message-remove"),
+       JSON.stringify(r.data.entries.map((a) => a.action)));
   }
 
   /* ---------------------------------------------------------- friend codes */

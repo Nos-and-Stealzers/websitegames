@@ -257,6 +257,29 @@
             });
             meta.appendChild(x);
           }
+
+          /* Reporting the message rather than the person who sent it. A
+             report that only names an account leaves whoever picks it up to
+             go and find the conversation by hand, which was most of the work
+             of handling one — and in a group, "someone said something" does
+             not say who or what. */
+          if (!m.mine && !m.deleted) {
+            var flag = UI.el("button", "bubble-x", "⚑");
+            flag.type = "button";
+            flag.title = "Report this message";
+            flag.setAttribute("aria-label", "Report this message");
+            flag.addEventListener("click", function () {
+              var reason = window.prompt(
+                "What's wrong with this message? A moderator will see it along " +
+                "with what was said.");
+              if (reason === null) return;
+              if (reason.trim().length < 4) { UI.toast("Say a little more than that"); return; }
+              API.reportMessage(m.id, reason.trim())
+                .then(function () { UI.toast("Reported — thanks"); flag.remove(); })
+                .catch(function (err) { UI.toast(err.message); });
+            });
+            meta.appendChild(flag);
+          }
           row.appendChild(meta);
           log.appendChild(row);
         });

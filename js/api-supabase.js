@@ -871,6 +871,15 @@
       }).then(function () { return { ok: true }; });
     },
 
+    /* Reporting a message, rather than the person who sent it. Through an
+       RPC because a plain insert into `reports` accepts any target string:
+       nothing stopped someone naming a message id they had never been able
+       to see. */
+    reportMessage: function (id, reason) {
+      return rpc("report_message", { m: Number(id), reason: reason })
+        .then(function (reportId) { return { id: reportId }; });
+    },
+
     /* --- feedback --- */
 
     sendFeedback: function (payload) {
@@ -1226,7 +1235,8 @@
               id: r.id, kind: r.kind, target: r.target, reason: r.reason,
               state: r.state, at: Number(r.at) || 0,
               reporter: r.reporter || "(deleted)",
-              subject: r.subject || null
+              subject: r.subject || null,
+              message: r.message || null
             };
           })
         };

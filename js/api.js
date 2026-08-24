@@ -170,6 +170,13 @@
       return request("POST", "/reports", { kind: kind, target: target, reason: reason });
     },
 
+    /* A route of its own, not POST /reports: that one takes any target
+       string, so a message id nobody could see was as reportable as one they
+       could. This checks membership of the thread. */
+    reportMessage: function (id, reason) {
+      return request("POST", "/messages/" + Number(id) + "/report", { reason: reason });
+    },
+
     /* --- feedback --- */
     sendFeedback: function (payload) { return request("POST", "/feedback", payload); },
     myFeedback: function () { return request("GET", "/feedback/mine"); },

@@ -1435,6 +1435,26 @@ kbd {
   white-space: pre-wrap; overflow-wrap: anywhere;
 }
 
+/* A narrow filter box that sits in a section heading rather than above it,
+   so the list it filters stays where it was. */
+.inline-filter {
+  width: auto; max-width: 12rem;
+  padding: 0.3rem 0.55rem;
+  font-size: 0.82rem;
+}
+
+/* The reported message, quoted into the card so a moderator reads what they
+   are being asked to remove before deciding. */
+.report-quote {
+  margin: 0 0 0.8rem;
+  padding: 0.55rem 0.75rem;
+  border-left: 2px solid var(--warn, var(--accent));
+  background: var(--sel);
+  font-size: 0.86rem; color: var(--ink);
+  white-space: pre-wrap; overflow-wrap: anywhere;
+}
+.report-quote .tiny { display: block; }
+
 /* A staff reply, quoted back to whoever sent the feedback. */
 .note-reply {
   margin: 0.5rem 0 0;

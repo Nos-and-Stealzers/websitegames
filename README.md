@@ -261,7 +261,7 @@ fetched JSON file — but the service worker stays off over `file://`.
 ## Tests
 
 ```powershell
-node server\test\api.test.js    # 272 end-to-end API checks (Node backend)
+node server\test\api.test.js    # 282 end-to-end API checks (Node backend)
 node tools\test-security.js     # 42 header and hardening checks
 bash supabase/test/run.sh       # everything Supabase, against a real Postgres
 ```

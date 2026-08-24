@@ -411,6 +411,46 @@ router.delete("/messages/:id", A.requireUser, (req, res) => {
   res.json({ ok: true });
 });
 
+/* Reporting a message.
+ *
+ * A route of its own rather than the generic POST /api/reports, which takes
+ * any target string at all: nothing stopped someone naming a message id they
+ * had never been able to see, and a queue you can seed with guessed ids is
+ * worse than no queue. Membership of the thread is the permission — the same
+ * rule reading it uses. */
+const messageReportLimit = A.rateLimit({ name: "message-reports", windowMs: 3600000, max: 20 });
+
+router.post("/messages/:id/report", A.requireUser, messageReportLimit, (req, res, next) => {
+  try {
+    const row = db.prepare("SELECT * FROM messages WHERE id = ?").get(Number(req.params.id));
+    if (!row) return res.status(404).json({ error: "No such message." });
+
+    const member = db.prepare(
+      "SELECT 1 FROM thread_members WHERE thread_id = ? AND user_id = ?"
+    ).get(row.thread_id, req.user.id);
+    if (!member) return res.status(404).json({ error: "No such message." });
+
+    if (row.sender_id === req.user.id) {
+      return res.status(400).json({ error: "That is your own message — remove it instead." });
+    }
+
+    const reason = S.str(req.body.reason, { field: "Reason", min: 4, max: 1000 });
+
+    /* Reporting the same message twice does not make it twice as reported. */
+    const open = db.prepare(
+      `SELECT id FROM reports
+        WHERE reporter_id = ? AND kind = 'message' AND target = ? AND state = 'open'`
+    ).get(req.user.id, String(row.id));
+    if (open) return res.status(201).json({ id: open.id });
+
+    const done = db.prepare(
+      "INSERT INTO reports (reporter_id, kind, target, reason, created_at) VALUES (?,?,?,?,?)"
+    ).run(req.user.id, "message", String(row.id), reason, Date.now());
+
+    res.status(201).json({ id: done.lastInsertRowid });
+  } catch (err) { next(err); }
+});
+
 /* ---------------------------------------------------------- attachments */
 
 /* Accepts a data URL produced by the browser after it has already downscaled

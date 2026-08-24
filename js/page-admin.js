@@ -497,6 +497,36 @@
         reason.textContent = r.reason;      // untrusted
         card.appendChild(reason);
 
+        /* The words being complained about, where the report is about a
+           message. Deciding whether to remove someone's message without
+           having read it is not moderation, and the queue used to offer
+           nothing but the id. */
+        var msg = r.message;
+        if (msg) {
+          var quote = UI.el("div", "report-quote");
+
+          var byline = UI.el("span", "tiny dimmer");
+          byline.textContent = (msg.author
+              ? "@" + msg.author.username
+              : "(deleted account)") +
+            " · " + UI.formatWhen(msg.at) +
+            " · " + (msg.isGroup ? "group" : "direct message");
+          quote.appendChild(byline);
+
+          var said = UI.el("p");
+          said.style.margin = "0.35rem 0 0";
+          said.textContent = msg.deleted
+            ? "Already removed."
+            : (msg.body || (msg.hasImage ? "(an image, no text)" : "(empty)"));   // untrusted
+          if (msg.deleted) said.className = "dimmer";
+          quote.appendChild(said);
+
+          if (msg.hasImage && !msg.deleted) {
+            quote.appendChild(UI.el("span", "tiny dimmer", "Has an image attached."));
+          }
+          card.appendChild(quote);
+        }
+
         var acts = UI.el("div", "btn-row");
 
         var act = UI.el("button", "btn btn-sm btn-cta",
@@ -508,10 +538,27 @@
         });
         acts.appendChild(act);
 
+        /* Removing the message itself. Every backend already lets staff do
+           this and records it in the audit trail under their name; there was
+           simply no button anywhere that reached it. */
+        if (msg && !msg.deleted) {
+          var strike = UI.el("button", "btn btn-sm", "Remove the message");
+          strike.type = "button";
+          strike.addEventListener("click", function () {
+            if (!window.confirm("Remove this message? It cannot be put back.")) return;
+            busy(strike, API.deleteMessage(msg.id).then(function () {
+              UI.toast("Message removed");
+              loadReports();
+            }));
+          });
+          acts.appendChild(strike);
+        }
+
         /* Acting on the report without leaving the queue. Only offered when
            the target is an account this moderator actually outranks — the
-           server refuses anything else anyway. */
-        var subject = r.subject;
+           server refuses anything else anyway. A message report names the
+           message, so the account to act on is whoever wrote it. */
+        var subject = r.subject || (msg && msg.author) || null;
         if (subject && isAdmin && subject.id !== me.id &&
             rankOf(me.role) > rankOf(subject.role)) {
           var next = subject.state === "suspended" ? "active" : "suspended";

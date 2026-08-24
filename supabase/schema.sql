@@ -3224,6 +3224,122 @@ $$;
 grant execute on function public.restore_custom_game(text) to authenticated;
 
 -- =====================================================================
+-- 15 · REPORTING A MESSAGE
+--
+-- `reports.kind` has allowed 'message' since the table was written, and
+-- retract_message has always let staff remove someone else's words and
+-- logged it. Nothing joined the two: you could report a *person* and that
+-- was all, so the one thing a moderator is actually called about — this
+-- message, right here — had no way in and no way to act on it. A report
+-- that only names an account leaves whoever picks it up to go and find the
+-- conversation by hand, which is most of the work of handling one.
+-- =====================================================================
+
+-- ---------------------------------------------------------------------
+-- 15.1 · RAISING ONE
+--
+-- Through an RPC, not an insert, because a bare INSERT into `reports`
+-- takes any target string at all: nothing stopped someone naming a
+-- message id they had never been able to see, and a queue you can seed
+-- with ids you are guessing at is worse than no queue. Membership of the
+-- thread is the permission, which is the same rule reading it uses.
+-- ---------------------------------------------------------------------
+
+create or replace function public.report_message(m bigint, reason text)
+returns bigint language plpgsql security definer set search_path = public as $$
+declare
+  msg public.messages%rowtype;
+  clean text;
+  rid bigint;
+begin
+  perform public.require_active();
+
+  select * into msg from public.messages where id = m;
+  if msg.id is null then raise exception 'No such message.'; end if;
+  if not public.in_thread(msg.thread_id) then raise exception 'No such message.'; end if;
+  if msg.sender = auth.uid() then
+    raise exception 'That is your own message — remove it instead.';
+  end if;
+
+  clean := btrim(coalesce(reason, ''));
+  if length(clean) < 4 then raise exception 'Say what is wrong with it.'; end if;
+  if length(clean) > 1000 then raise exception 'That is too long.'; end if;
+
+  -- Reporting the same message twice does not make it twice as reported,
+  -- and a queue full of duplicates is a queue nobody works through.
+  select id into rid from public.reports
+   where reporter = auth.uid() and kind = 'message'
+     and target = m::text and state = 'open';
+  if rid is not null then return rid; end if;
+
+  insert into public.reports (reporter, kind, target, reason)
+  values (auth.uid(), 'message', m::text, clean)
+  returning id into rid;
+
+  return rid;
+end;
+$$;
+
+revoke all on function public.report_message(bigint, text) from public, anon;
+grant execute on function public.report_message(bigint, text) to authenticated;
+
+-- ---------------------------------------------------------------------
+-- 15.2 · SEEING IT
+--
+-- The queue built a `subject` for an account report and nothing for the
+-- other two kinds, so a message report arrived as an id and a complaint.
+-- Staff can already read the row — retract_message has always let them
+-- act on it — so the card may as well carry the words being complained
+-- about, and say when someone has already dealt with it.
+-- ---------------------------------------------------------------------
+
+create or replace function public.admin_reports(want_state text default 'open')
+returns jsonb language plpgsql stable security definer set search_path = public as $$
+begin
+  if not public.is_staff() then raise exception 'Staff only.'; end if;
+
+  return coalesce((
+    select jsonb_agg(jsonb_build_object(
+      'id', r.id, 'kind', r.kind, 'target', r.target, 'reason', r.reason,
+      'state', r.state,
+      'at', (extract(epoch from r.created_at) * 1000)::bigint,
+      'reporter', coalesce(rp.username::text, '(deleted)'),
+      'subject', case when r.kind = 'user' then (
+        select jsonb_build_object(
+          'id', tp.id, 'username', tp.username, 'role', tp.role, 'state', tp.state
+        ) from public.profiles tp where lower(tp.username::text) = lower(r.target)
+      ) else null end,
+      'message', case when r.kind = 'message' and r.target ~ '^[0-9]+$' then (
+        select jsonb_build_object(
+          'id', m.id,
+          'threadId', m.thread_id,
+          'isGroup', t.is_group,
+          'body', case when m.deleted then '' else m.body end,
+          'deleted', m.deleted,
+          'hasImage', m.attachment_id is not null,
+          'at', (extract(epoch from m.created_at) * 1000)::bigint,
+          'author', jsonb_build_object(
+            'id', ap.id, 'username', ap.username, 'role', ap.role, 'state', ap.state,
+            'displayName', coalesce(nullif(ap.display_name,''), ap.username::text)
+          )
+        )
+          from public.messages m
+          join public.threads t on t.id = m.thread_id
+          left join public.profiles ap on ap.id = m.sender
+         where m.id = r.target::bigint
+      ) else null end
+    ) order by r.created_at desc)
+      from public.reports r
+      left join public.profiles rp on rp.id = r.reporter
+     where r.state = want_state
+  ), '[]'::jsonb);
+end;
+$$;
+
+revoke all on function public.admin_reports(text) from public, anon;
+grant execute on function public.admin_reports(text) to authenticated;
+
+-- =====================================================================
 -- Done.
 --
 -- Setup, once per project:

@@ -564,3 +564,73 @@ select test_ok('...and it is back',
 select test_call('deleting an account works', 'select public.admin_delete_user(uid_of(''dave''))');
 select test_ok('...and the account is gone',
   (select count(*) from public.profiles where username = 'dave') = 0);
+
+-- =====================================================================
+-- 9 · REPORTING A MESSAGE
+-- =====================================================================
+\echo ''
+\echo '-- reporting a message'
+
+-- dave was deleted by the console two sections ago, so the outsider here is
+-- somebody who has never been near this conversation.
+reset role;
+select signup('mallory');
+set role authenticated;
+
+select act_as('alice');
+select set_config('test.dm2', public.open_thread('bob')::text, false);
+select set_config('test.msg',
+  public.send_message(current_setting('test.dm2')::bigint, 'something rude')::text, false);
+
+select act_as('mallory');
+select test_call('an outsider cannot report a message they cannot see',
+  'select public.report_message(current_setting(''test.msg'')::bigint, ''looks bad'')',
+  'no such message');
+
+select act_as('alice');
+select test_call('you cannot report your own message',
+  'select public.report_message(current_setting(''test.msg'')::bigint, ''oops'')',
+  'your own message');
+
+select act_as('bob');
+select test_call('a one-word reason is refused',
+  'select public.report_message(current_setting(''test.msg'')::bigint, ''bad'')',
+  'say what is wrong');
+select test_call('reporting works',
+  'select public.report_message(current_setting(''test.msg'')::bigint, ''this is abusive'')');
+select test_ok('...and it reaches the queue once',
+  (select count(*) from public.reports
+    where kind = 'message' and target = current_setting('test.msg')) = 1);
+select test_call('reporting it twice does not stack up',
+  'select public.report_message(current_setting(''test.msg'')::bigint, ''still abusive'')');
+select test_ok('...still one open report',
+  (select count(*) from public.reports
+    where kind = 'message' and target = current_setting('test.msg') and state = 'open') = 1,
+  (select count(*)::text from public.reports where kind = 'message'));
+
+select act_as('Stealzers');
+select set_config('test.q', public.admin_reports('open')::text, false);
+select test_ok('the queue carries the reported message',
+  (select count(*) from jsonb_array_elements(current_setting('test.q')::jsonb) e
+    where e->>'kind' = 'message' and e->'message'->>'body' = 'something rude') = 1,
+  current_setting('test.q'));
+select test_ok('...and names who wrote it',
+  (select e->'message'->'author'->>'username' from jsonb_array_elements(current_setting('test.q')::jsonb) e
+    where e->>'kind' = 'message') = 'alice');
+select test_ok('...and says whether it is a group',
+  (select e->'message'->>'isGroup' from jsonb_array_elements(current_setting('test.q')::jsonb) e
+    where e->>'kind' = 'message') = 'false');
+select test_call('staff can remove the message',
+  'select public.retract_message(current_setting(''test.msg'')::bigint)');
+select test_ok('...and it is recorded as a moderation action',
+  (select count(*) from jsonb_array_elements(public.admin_audit()) e
+    where e->>'action' = 'message-remove') = 1,
+  public.admin_audit()::text);
+select test_ok('...and the queue now says it is gone',
+  (select e->'message'->>'deleted' from jsonb_array_elements(public.admin_reports('open')) e
+    where e->>'kind' = 'message') = 'true',
+  public.admin_reports('open')::text);
+
+select act_as('alice');
+select test_call('a plain user still cannot read the queue',
+  'select public.admin_reports()', 'staff');

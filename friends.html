@@ -75,6 +75,11 @@
     <section class="block">
       <div class="block-head">
         <h2>Your friends</h2><span class="fill"></span>
+        <label for="friend-filter" class="sr-only">Filter your friends</label>
+        <input type="search" id="friend-filter" class="inline-filter"
+               placeholder="Filter…" autocomplete="off">
+        <button class="btn btn-sm" type="button" id="online-only"
+                aria-pressed="false">Online only</button>
         <a class="more" href="messages.html">Messages →</a>
       </div>
       <div class="people" id="friends"></div>

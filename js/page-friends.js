@@ -77,8 +77,8 @@
             UI.toast(err.message || "Could not open that conversation");
           });
         },
-        call: function (u) {
-          return window.Calls.start({ userId: u.id, kind: "audio" });
+        call: function (u, kind) {
+          return window.Calls.start({ userId: u.id, kind: kind || "audio" });
         }
       };
 
@@ -174,6 +174,59 @@
       }, 220));
 
       /* ---- lists ---- */
+      /* The friend list is drawn from the last response rather than refetched
+         on every keystroke: filtering is a view of what you already have. */
+      var lastFriends = [];
+      var filterBox = document.getElementById("friend-filter");
+      var onlineBtn = document.getElementById("online-only");
+      var onlineOnly = false;
+
+      function drawFriends() {
+        var q = filterBox.value.trim().toLowerCase();
+        var canCall = window.Calls && window.Calls.supported();
+
+        var shown = lastFriends.filter(function (u) {
+          if (onlineOnly && !u.online) return false;
+          if (!q) return true;
+          return u.username.toLowerCase().indexOf(q) !== -1 ||
+                 (u.displayName || "").toLowerCase().indexOf(q) !== -1;
+        });
+
+        S.renderPeople(document.getElementById("friends"), shown, function (u) {
+          return S.person(u, {
+            actions: [
+              { label: "Message", kind: "cta", onClick: function () { return handlers.message(u); } },
+              /* Voice *and* video, the same two the profile page and the
+                 chat dock offer. The list gave you audio only, so the one
+                 place you actually look for a friend was the one place you
+                 could not ring them properly. */
+              canCall ? { label: "☎", onClick: function () { return handlers.call(u, "audio"); } } : null,
+              canCall ? { label: "🎥", onClick: function () { return handlers.call(u, "video"); } } : null,
+              { label: "Remove", onClick: function () { return handlers.remove(u); } },
+              /* Blocking was only offered on an incoming request, so the
+                 one case it exists for — someone you already accepted
+                 turning unpleasant — had no button anywhere on this page. */
+              { label: "Block", onClick: function () { return handlers.block(u); } }
+            ].filter(Boolean)
+          });
+        }, lastFriends.length && !shown.length
+          ? { title: "Nobody matches that",
+              body: onlineOnly && q
+                ? "No online friend by that name. Try clearing one of the two."
+                : onlineOnly ? "None of them are online right now."
+                             : "Try a shorter search." }
+          : { title: "No friends yet",
+              body: "Search for someone above and send a request." });
+      }
+
+      filterBox.addEventListener("input", UI.debounce(drawFriends, 120));
+      onlineBtn.addEventListener("click", function () {
+        onlineOnly = !onlineOnly;
+        onlineBtn.classList.toggle("on", onlineOnly);
+        onlineBtn.setAttribute("aria-pressed", onlineOnly ? "true" : "false");
+        drawFriends();
+      });
+
       function load() {
         return API.friends().then(function (data) {
           var online = data.friends.filter(function (u) { return u.online; }).length;
@@ -201,26 +254,8 @@
             });
           });
 
-          var canCall = window.Calls && window.Calls.supported();
-
-          S.renderPeople(document.getElementById("friends"), data.friends, function (u) {
-            return S.person(u, {
-              actions: [
-                { label: "Message", kind: "cta", onClick: function () { return handlers.message(u); } },
-                /* Calling a friend was reachable from their profile and from
-                   the chat dock, but not from the list of friends. */
-                canCall ? { label: "☎", onClick: function () { return handlers.call(u); } } : null,
-                { label: "Remove", onClick: function () { return handlers.remove(u); } },
-                /* Blocking was only offered on an incoming request, so the
-                   one case it exists for — someone you already accepted
-                   turning unpleasant — had no button anywhere on this page. */
-                { label: "Block", onClick: function () { return handlers.block(u); } }
-              ].filter(Boolean)
-            });
-          }, {
-            title: "No friends yet",
-            body: "Search for someone above and send a request."
-          });
+          lastFriends = data.friends;
+          drawFriends();
 
           document.getElementById("b-blocked").hidden = data.blocked.length === 0;
           S.renderPeople(document.getElementById("blocked"), data.blocked, function (u) {

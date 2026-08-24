@@ -256,6 +256,9 @@ async function main() {
   ok("the request shows up for the other side", !!acceptBtn,
      await bobS.page.innerHTML("#incoming"));
   if (acceptBtn) { await acceptBtn.click(); await bobS.page.waitForTimeout(900); }
+  ok("a friend row offers voice and video",
+     (await bobS.page.innerHTML("#friends")).indexOf("🎥") !== -1,
+     await bobS.page.textContent("#friends"));
   ok("...and they end up in the friend list",
      (await bobS.page.textContent("#friends")).indexOf("alice") !== -1,
      await bobS.page.textContent("#friends"));
@@ -297,6 +300,51 @@ async function main() {
   ok("...and reply", (await bobS.page.textContent("#log")).indexOf("hello back") !== -1,
      await bobS.page.textContent("#log"));
   ok("...with no errors", bobS.page.errors.length === 0, bobS.page.errors.join(" | "));
+
+  /* ------------------------------------------------ reporting a message */
+  group("reporting a message");
+
+  await go(aliceS.page, "/messages.html?u=bob");
+  await aliceS.page.waitForTimeout(1200);
+  await aliceS.page.fill("#body", "something rude");
+  await aliceS.page.click("#send");
+  await aliceS.page.waitForTimeout(1200);
+
+  await go(bobS.page, "/messages.html");
+  await bobS.page.waitForTimeout(1200);
+  await bobS.page.click("#thread-list .dm-item");
+  await bobS.page.waitForTimeout(1200);
+  /* The newest of theirs, not the first — the thread already has earlier
+     messages in it and the flag on any of them would pass a laxer check. */
+  const flags = await bobS.page.$$('#log .bubble-row:not(.mine) button[title="Report this message"]');
+  const flag = flags[flags.length - 1];
+  ok("someone else's message can be reported", !!flag,
+     await bobS.page.innerHTML("#log"));
+  bobS.page.once("dialog", (d) => d.accept("this is abusive"));
+  if (flag) { await flag.click(); await bobS.page.waitForTimeout(1500); }
+  ok("...and only theirs",
+     !(await bobS.page.$('#log .bubble-row.mine button[title="Report this message"]')));
+
+  await go(ownerS.page, "/admin.html#reports");
+  await ownerS.page.waitForTimeout(1800);
+  const queue = await ownerS.page.textContent("#report-list");
+  ok("the console shows the words that were reported",
+     queue.indexOf("something rude") !== -1, queue.slice(0, 240));
+  ok("...and who wrote them", queue.indexOf("alice") !== -1, queue.slice(0, 240));
+  ownerS.page.once("dialog", (d) => d.accept());
+  await ownerS.page.click('#report-list button:has-text("Remove the message")');
+  await ownerS.page.waitForTimeout(1800);
+  ok("...and it can be removed from there",
+     (await ownerS.page.textContent("#report-list")).indexOf("Already removed") !== -1,
+     await ownerS.page.textContent("#report-list"));
+
+  await go(bobS.page, "/messages.html");
+  await bobS.page.waitForTimeout(1200);
+  await bobS.page.click("#thread-list .dm-item");
+  await bobS.page.waitForTimeout(1200);
+  ok("the thread shows it as removed",
+     (await bobS.page.textContent("#log")).indexOf("message removed") !== -1,
+     await bobS.page.textContent("#log"));
 
   /* ------------------------------------------------------- group chats */
   group("group chats");

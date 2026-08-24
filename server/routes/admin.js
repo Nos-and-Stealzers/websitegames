@@ -232,13 +232,47 @@ router.get("/reports", staff, (req, res) => {
     "SELECT id, username, role, state FROM users WHERE username_lower = ?"
   );
 
+  /* And when it is about a message, the words being complained about. Staff
+     can already remove it; sending only the id meant deciding whether to,
+     without having read it. */
+  const messageOf = db.prepare(
+    `SELECT m.id, m.thread_id, m.body, m.deleted, m.attachment_id, m.created_at,
+            t.is_group, u.id AS author_id, u.username, u.display_name,
+            u.role AS author_role, u.state AS author_state
+       FROM messages m
+       JOIN threads t ON t.id = m.thread_id
+       LEFT JOIN users u ON u.id = m.sender_id
+      WHERE m.id = ?`
+  );
+
+  function messageSubject(target) {
+    if (!/^\d+$/.test(String(target))) return null;
+    const m = messageOf.get(Number(target));
+    if (!m) return null;
+    return {
+      id: m.id,
+      threadId: m.thread_id,
+      isGroup: !!m.is_group,
+      body: m.deleted ? "" : m.body,
+      deleted: !!m.deleted,
+      hasImage: !!m.attachment_id,
+      at: m.created_at,
+      author: m.author_id ? {
+        id: m.author_id, username: m.username,
+        displayName: m.display_name || m.username,
+        role: m.author_role, state: m.author_state
+      } : null
+    };
+  }
+
   res.json({
     reports: rows.map((r) => ({
       id: r.id, kind: r.kind, target: r.target, reason: r.reason,
       state: r.state, at: r.created_at, reporter: r.reporter || "(deleted)",
       subject: r.kind === "user"
         ? subjectOf.get(String(r.target).replace(/^@/, "").toLowerCase()) || null
-        : null
+        : null,
+      message: r.kind === "message" ? messageSubject(r.target) : null
     }))
   });
 });
