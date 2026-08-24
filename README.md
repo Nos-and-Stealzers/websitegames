@@ -261,21 +261,44 @@ fetched JSON file — but the service worker stays off over `file://`.
 ## Tests
 
 ```powershell
-node server\test\api.test.js    # 272 end-to-end API checks
+node server\test\api.test.js    # 272 end-to-end API checks (Node backend)
 node tools\test-security.js     # 42 header and hardening checks
-bash supabase/test/run.sh       # the Postgres schema, against a real Postgres
+bash supabase/test/run.sh       # everything Supabase, against a real Postgres
 ```
 
 The API suite boots the real app against a throwaway SQLite file and drives it over HTTP with
 real cookies, covering auth, authorisation, friends, DM privacy, blocking, save-merge
 semantics, moderation guard rails, CSRF, rate limits and account deletion.
 
-`supabase/test/run.sh` needs the Postgres client tools (`initdb`, `pg_ctl`, `psql`) on PATH.
-It builds its own throwaway cluster on port 55432, applies `schema.sql` to it three times and
-checks the owner rank behaves — so it never touches a database you care about and needs no
-credentials. **Run it after any schema change**: the Supabase half of the hub has no other way
-to be tested, and the failure mode it exists to catch is a statement that reports success and
-changes nothing.
+`supabase/test/run.sh` covers the backend the deployed site actually runs on. It needs the
+Postgres client tools (`initdb`, `pg_ctl`, `psql`) on PATH, builds its own throwaway cluster on
+port 55432, and never touches a database you care about or needs credentials. Run as root in a
+container it hands itself to the `postgres` account, because Postgres will not start as root.
+It runs five cases:
+
+| Case | What it proves |
+| --- | --- |
+| fresh project | `schema.sql` applies clean, and the owner rank lands where it should |
+| existing admin | re-running promotes an account that was already an admin |
+| re-running the file | three consecutive applies, no errors, no drift |
+| feature flows under RLS | sign-in, friends, direct messages, group chats, calls, cloud saves and the console — and what each must refuse — executed as the `authenticated` role, so row-level security answers exactly as PostgREST makes it |
+| the adapter and the pages | `tools/test-supabase.js` drives `js/api-supabase.js` itself; `tools/test-ui.js` drives the site's own pages in Chromium |
+
+The last two are the ones worth understanding. `tools/postgrest-stub.js` translates the
+adapter's requests into SQL — the subset of PostgREST and GoTrue the adapter uses, and nothing
+else, so a query shape nobody has taught it fails loudly instead of quietly passing. Everything
+below the adapter is real: a real Postgres, the real `schema.sql`, RLS enforced.
+
+The browser pass is optional and skips cleanly when Playwright is absent, so a checkout that
+only wants the static site is never asked to download a browser:
+
+```bash
+cd server && npm install --no-save playwright
+```
+
+**Run all of this after any schema change.** The failure mode it exists to catch is a statement
+that reports success and changes nothing — and, on this backend, a function that only works
+because the SQL editor runs as the table owner.
 
 ## Adding games
 

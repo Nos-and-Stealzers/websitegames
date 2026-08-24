@@ -55,6 +55,11 @@ Vercel deploy above.
    all of [`supabase/schema.sql`](supabase/schema.sql) → **Run**. It is
    idempotent, so re-running after an update is safe.
 
+   > **Re-run it after pulling.** The file carries the fixes as well as the
+   > tables: a project still on an older copy keeps whatever was wrong with
+   > it, however current the rest of the site is. Nothing in the deploy
+   > pipeline touches your database — this step is the only thing that does.
+
 2. **Turn off email confirmation.** *Authentication → Providers → Email* →
    uncheck **Confirm email**.
 
