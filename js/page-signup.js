@@ -18,7 +18,6 @@
   function init() {
     var form = document.getElementById("form");
     var offline = document.getElementById("offline");
-    var firstRun = document.getElementById("first-run");
     var errorBox = document.getElementById("error");
     var submit = document.getElementById("submit");
     var pass = document.getElementById("password");
@@ -28,7 +27,6 @@
       if (!state.backend) { offline.hidden = false; return; }
       if (state.user) { window.location.replace("index.html"); return; }
       form.hidden = false;
-      if (window.API.health && window.API.health.needsSetup) firstRun.hidden = false;
       document.getElementById("username").focus();
     });
 
@@ -88,7 +86,10 @@
 
       window.Session.signup(username, password, display, true)
         .then(function (res) {
-          window.UI.toast(res.firstAccount ? "Admin account created" : "Welcome, " + username);
+          window.UI.toast("Welcome, " + username);
+          /* The very first account is handed the console. Nothing on this
+             page says so — a signup form is not the place to advertise that
+             the site has one — it simply opens there. */
           window.location.href = res.firstAccount ? "admin.html" : "index.html";
         })
         .catch(function (err) { fail(err.message || "Could not create the account."); });

@@ -449,20 +449,88 @@
      it opens is an owner/admin concern and there is no point showing everyone
      else a control that would do nothing for them.
 
-     This is presentation, not protection — the console checks rank on the
-     server. All this setting decides is which key *you* press. */
+     The whole block is built here rather than sitting hidden in
+     settings.html. Hiding it with an attribute still shipped the text — the
+     shortcut, the rank names, the link to the console — to every visitor who
+     opened view-source. This is presentation, not protection: the console
+     checks rank on the server, and all this setting decides is which key
+     *you* press. But there is no reason to hand out the map. */
   function staffSection(user) {
     var Store = window.Store;
     var UI = window.UI;
     if (!window.Session.isAdmin()) return;
 
-    var block = document.getElementById("staff-block");
-    if (!block) return;
-    block.hidden = false;
-    document.getElementById("staff-role").textContent = user.role;
+    var mount = document.getElementById("staff-mount");
+    if (!mount) return;
 
     var mac = /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent || "");
-    document.getElementById("combo-mod").textContent = mac ? "⌘" : "Ctrl";
+
+    /* ---- markup ---- */
+
+    /* The detail line is always created, empty or not: the warning row fills
+       its own in later and needs somewhere to put it. */
+    function opt(title, detail) {
+      var row = UI.el("div", "opt");
+      var left = UI.el("div");
+      left.appendChild(UI.el("div", "k", title));
+      left.appendChild(UI.el("div", "d", detail || ""));
+      row.appendChild(left);
+      return row;
+    }
+
+    var block = UI.el("section", "block");
+    var head = UI.el("div", "block-head");
+    head.appendChild(UI.el("h2", null, "Staff"));
+    head.appendChild(UI.el("span", "fill"));
+    head.appendChild(UI.el("span", "more dimmer", user.role));
+    block.appendChild(head);
+
+    var panel = UI.el("div", "panel");
+
+    var keyRow = opt("Open the console with",
+      "A modifier combo, not a single key, so it still works while a game has " +
+      "the keyboard — the single-key shortcuts stand down there deliberately. " +
+      "The modifiers are fixed; pick the letter. Anything marked taken is one " +
+      "the browser handles itself.");
+    var picker = UI.el("div", "combo-picker");
+    picker.appendChild(UI.el("span", "combo-mod", mac ? "⌘" : "Ctrl"));
+    picker.appendChild(UI.el("span", "combo-plus", "+"));
+    var select = UI.el("select");
+    select.id = "admin-key";
+    select.setAttribute("aria-label", "Console shortcut key");
+    picker.appendChild(select);
+    keyRow.appendChild(picker);
+    panel.appendChild(keyRow);
+
+    var warn = opt("Heads up", "");
+    var warnText = warn.querySelector(".d");
+    warn.hidden = true;
+    panel.appendChild(warn);
+
+    var onRow = opt("Enable that shortcut",
+      "Off means the console is reachable only from the sidebar. Your rank is " +
+      "unchanged either way.");
+    var label = UI.el("label", "toggle");
+    var toggle = UI.el("input");
+    toggle.type = "checkbox";
+    toggle.id = "admin-key-on";
+    label.appendChild(toggle);
+    label.appendChild(UI.el("i"));
+    onRow.appendChild(label);
+    panel.appendChild(onRow);
+
+    var note = UI.el("p", "tiny dimmer");
+    note.style.margin = "0.9rem 0 0";
+    note.appendChild(document.createTextNode(
+      "Kept on this device, like every other setting here. It changes how you " +
+      "open the console, not who may. "));
+    var link = UI.el("a", null, "Open the console →");
+    link.href = "admin.html";
+    note.appendChild(link);
+    panel.appendChild(note);
+
+    block.appendChild(panel);
+    mount.appendChild(block);
 
     /* Keys the browser wants for itself. The split that matters is not "is it
        used" but "can a page take it": most of these the hub overrides fine,
@@ -488,11 +556,6 @@
       k: "the search bar in Firefox"
     };
     function claimedBy(ch) { return UNAVAILABLE[ch] || CONTESTED[ch]; }
-
-    var select = document.getElementById("admin-key");
-    var warn = document.getElementById("admin-key-warn");
-    var warnText = document.getElementById("admin-key-warn-text");
-    var toggle = document.getElementById("admin-key-on");
 
     "abcdefghijklmnopqrstuvwxyz0123456789".split("").forEach(function (ch) {
       var tag = UNAVAILABLE[ch] ? "  ·  won't work"

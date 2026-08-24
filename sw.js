@@ -1,8 +1,24 @@
 /* Offline shell cache.
-   The site's own pages and assets are cached; game folders never are, so a
-   game always fetches its current build. Bump SHELL_VERSION after a deploy. */
+ *
+ * The site's own pages and assets are cached; game folders never are, so a
+ * game always fetches its current build.
+ *
+ * The cache used to answer first and refresh behind you. That is the right
+ * shape for artwork and the wrong shape for the code that draws the page:
+ * every visit ran the *previous* deploy, and the fix you had just shipped
+ * only appeared on the visit after the one where you looked for it. A stale
+ * console and a stale friends list are indistinguishable from a change that
+ * never happened.
+ *
+ * So: HTML, CSS and JS go to the network first and fall back to the cache
+ * when there isn't one. Everything else stays cache-first. Offline still
+ * works — that is what the fallback is — and online is always current.
+ */
 
-var SHELL_VERSION = "ach-shell-v7";
+var SHELL_VERSION = "ach-shell-v8";
+
+/* The site's own code. These are what must never be a deploy behind. */
+var CODE = /\.(?:html|css|js|json|webmanifest)$/i;
 
 var SHELL = [
   "index.html",
@@ -105,7 +121,25 @@ self.addEventListener("fetch", function (event) {
     return;
   }
 
-  /* Assets: cache first, refresh in the background. */
+  /* The site's own code: network first, cache only as a fallback. */
+  if (CODE.test(url.pathname) || url.pathname === "/" || url.pathname === "") {
+    event.respondWith(
+      fetch(request).then(function (response) {
+        if (response && response.status === 200) {
+          var copy = response.clone();
+          caches.open(SHELL_VERSION).then(function (c) { c.put(request, copy); });
+        }
+        return response;
+      }).catch(function () {
+        return caches.match(request).then(function (hit) {
+          return hit || Response.error();
+        });
+      })
+    );
+    return;
+  }
+
+  /* Everything else — artwork, icons, fonts: cache first, refresh behind. */
   event.respondWith(
     caches.match(request).then(function (hit) {
       var network = fetch(request).then(function (response) {

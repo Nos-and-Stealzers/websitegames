@@ -33,19 +33,14 @@
 
       <h2>The build</h2>
       <p>
-        Static HTML, CSS and plain JavaScript on the front. No framework, no bundler. The catalog
-        lives in <code>data/games.json</code> — mirrored as <code>data/games.js</code> so it also
-        works straight off a filesystem — and every page reads from that one list.
+        Static HTML, CSS and plain JavaScript. No framework, no bundler, nothing to install.
+        Every page reads from one catalogue, so the index, the categories and the search box
+        can never disagree about what exists.
       </p>
       <p>
-        Accounts, friends and messages are served by a small Node + SQLite backend in
-        <code>server/</code>. It is entirely optional: without it the site is still a complete,
-        deployable static arcade.
-      </p>
-      <p>
-        Cover art is real where a game ships its own icon, and generated from the title's id
-        where it doesn't — a deterministic geometric plate, so no two entries look alike and
-        there are no placeholder images to ship.
+        Cover art is real where a game ships its own icon, and generated from the title where it
+        doesn't — a deterministic geometric plate, so no two entries look alike and there are no
+        placeholder images to ship.
       </p>
       <p>
         There are no webfonts either. Everything uses the fonts already on your machine, which
@@ -79,17 +74,16 @@
         <li>Two devices merge rather than overwrite: the higher playtime and the union of your
             pins always win, so signing in somewhere new can't wipe your progress.</li>
         <li>No email, no verification, no password reset — so <b>don't forget your password</b>.</li>
-        <li>The first account created on a fresh install becomes the administrator.</li>
         <li>Passwords are stored as salted scrypt hashes, never in plain text.</li>
-        <li>If the hub's server isn't running, account features simply disappear and the
+        <li>If the hub can't be reached, account features simply disappear and the
             arcade carries on.</li>
       </ul>
 
       <h2>What's stored</h2>
       <p>
         There are no analytics and no ad trackers. Pins, history, ratings, playtime and your skin
-        choice sit in this browser's <code>localStorage</code> under the <code>ach:</code> prefix.
-        Signed in, everything except your skin also syncs to the hub's own server — nowhere else.
+        choice are kept in this browser. Signed in, everything except your skin also syncs to the
+        hub itself — nowhere else.
       </p>
       <ul>
         <li>Signed out: clearing site data, private browsing, or a different device resets it all.</li>
@@ -179,42 +173,12 @@
         <li><kbd>F</kbd> pin the title you're on</li>
         <li><kbd>?</kbd> settings</li>
         <li><kbd>Esc</kbd> close anything open</li>
-        <li><kbd>Ctrl</kbd>+<kbd>L</kbd> the admin console, for staff — a modifier
-            combo so it still reaches you mid-game, where the single-key
-            shortcuts deliberately stand down. Admins can change the letter in
-            Settings; the sidebar always works too.</li>
       </ul>
 
-      <h2>Adding a title</h2>
+      <h2>Missing something?</h2>
       <p>
-        The owner can add one from the browser: <b>Admin → Games</b> takes a title, a host and a
-        path, and it is live for everyone on their next page load. That layers over the shipped
-        list rather than editing it, so it also lets you repoint a game whose host moved, or hide
-        one, without touching a file. The same screen puts a hidden title back.
-      </p>
-      <p>
-        For a bulk change, or anything you want in version control, append an object to
-        <code>data/games.json</code> and regenerate the derived files:
-      </p>
-      <pre><code>{
-  "id": "my-game",
-  "title": "My Game",
-  "category": "arcade",
-  "description": "One line about it.",
-  "gradient": "linear-gradient(135deg, #ff5c33, #7c2d12)",
-  "source": "/games/my-game/index.html",
-  "direct": "/games/my-game/index.html",
-  "platform": "local",
-  "embed": "allowed",
-  "schoolRisk": "low"
-}</code></pre>
-      <p class="tiny dimmer">
-        <code>embed</code> is <code>"allowed"</code>/<code>true</code> for in-page play or
-        <code>false</code> to force a new tab. <code>preferDirect: true</code> skips the player even
-        when framing works. <code>schoolRisk</code> is <code>low</code> | <code>medium</code> |
-        <code>high</code>. <code>gradient</code> seeds the generated cover. Unknown categories fall
-        back to <b>Other</b>. Where the game files are served from is set once in
-        <code>js/config.js</code> via <code>gameBase</code>.
+        If a title you want isn't here, or one that is here has stopped loading, say so through
+        <a href="feedback.html">Feedback</a> — that is the queue the catalogue is worked from.
       </p>
 
       <h2>Disclaimer</h2>
