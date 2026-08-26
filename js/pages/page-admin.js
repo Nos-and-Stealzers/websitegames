@@ -39,6 +39,7 @@
       document.getElementById("console").hidden = false;
       document.getElementById("r-role").textContent = me.role;
       document.querySelectorAll("[data-owner]").forEach(function (n) { n.hidden = !isOwner; });
+      document.querySelectorAll("[data-owner-or-admin]").forEach(function (n) { n.hidden = !isAdmin; });
 
       /* ------------------------------------------------------------ tabs */
 
@@ -75,7 +76,7 @@
         if (!TABS[name]) name = "overview";
         active = name;
 
-        tabs.querySelectorAll(".tab").forEach(function (t) {
+        tabs.querySelectorAll(".admin-nav-link[role='tab']").forEach(function (t) {
           var on = t.dataset.tab === name;
           t.classList.toggle("on", on);
           t.setAttribute("aria-selected", on ? "true" : "false");
@@ -135,9 +136,9 @@
           .forEach(function (pair) {
             var tab = tabs.querySelector('[data-tab="' + pair[0] + '"]');
             if (!tab) return;
-            var badge = tab.querySelector(".tab-n");
+            var badge = tab.querySelector(".admin-nav-n");
             if (!badge) {
-              badge = UI.el("span", "tab-n");
+              badge = UI.el("span", "admin-nav-n");
               tab.appendChild(badge);
             }
             badge.textContent = pair[1] > 99 ? "99+" : String(pair[1] || 0);
@@ -145,7 +146,49 @@
           });
       }
 
+      var ACTION_TONE = {
+        "user-delete": "bad", "user-update": "accent", "message-remove": "bad",
+        "report-closed": "good", "report-open": "accent",
+        "game-delete": "bad", "game-hide": "accent", "game-save": "accent",
+        "game-restore": "good"
+      };
+
+      /* A dashboard's landing tab should show a pulse, not just a static
+         snapshot — so Overview borrows a slice of the audit trail rather
+         than making that the only reason to open the Audit tab. */
+      function loadRecentActivity() {
+        var host = document.getElementById("recent-audit");
+        if (!host) return Promise.resolve();
+        return API.adminAudit("").then(function (res) {
+          host.innerHTML = "";
+          var entries = (res.entries || []).slice(0, 6);
+          if (!entries.length) {
+            host.appendChild(UI.el("p", "dim", "Nothing yet."));
+            return;
+          }
+          var cols = "1fr 5rem";
+          entries.forEach(function (e) {
+            var row = UI.el("div", "row");
+            row.style.gridTemplateColumns = cols;
+
+            var detail = UI.el("span", "name");
+            var action = UI.el("span", "flag " +
+              ({ bad: "flag-bad", good: "flag-good", accent: "flag-warn" }[ACTION_TONE[e.action]] || ""));
+            action.textContent = e.action;
+            detail.appendChild(action);
+            detail.appendChild(document.createTextNode(
+              " " + e.actor + (e.detail ? " — " + e.detail : "")));
+            detail.title = detail.textContent;
+            row.appendChild(detail);
+
+            row.appendChild(UI.el("span", "plays", UI.formatWhen(e.at)));
+            host.appendChild(row);
+          });
+        }).catch(function () { /* non-critical */ });
+      }
+
       function loadOverview() {
+        loadRecentActivity();
         return API.adminOverview().then(function (d) {
           var q = d.queues || {
             reports: (d.reports && d.reports.open) || 0, tickets: 0, feedback: 0, calls: 0
@@ -211,6 +254,7 @@
       var userQ = document.getElementById("user-q");
       var userFilter = document.getElementById("user-filter");
       var userCache = [];
+      var selectedUserId = null;
 
       userQ.addEventListener("input", UI.debounce(function () { loadUsers(); }, 240));
       userFilter.addEventListener("change", function () { drawUsers(); });
@@ -276,6 +320,8 @@
           /* One rule decides whether anything is offered at all, and it is
              the same rule the server applies: you may act only on someone
              below your own rank. Everything else is a label saying why not. */
+          var manageable = u.id !== me.id && u.role !== "owner" &&
+            isAdmin && rankOf(me.role) > rankOf(u.role);
           if (u.id === me.id) {
             acts.appendChild(UI.el("span", "tiny dimmer", "that's you"));
           } else if (u.role === "owner") {
@@ -284,31 +330,47 @@
             acts.appendChild(UI.el("span", "tiny dimmer",
               isAdmin ? "outranks you" : "admins only"));
           } else {
-            var manage = UI.el("button", "btn btn-sm", "Manage");
-            manage.type = "button";
-            manage.addEventListener("click", function () { manageUser(u); });
-            acts.appendChild(manage);
+            acts.appendChild(UI.el("span", "tiny dimmer", "›"));
           }
           row.appendChild(acts);
+
+          /* The row itself opens the detail pane beside the list — clicking
+             the account link still goes to the profile page as before. */
+          row.classList.add("user-row");
+          row.dataset.userId = u.id;
+          row.tabIndex = 0;
+          row.setAttribute("role", "button");
+          row.setAttribute("aria-label", "Manage @" + u.username);
+          function open(event) {
+            if (event && event.target.closest("a")) return;
+            selectUser(u, row, manageable);
+          }
+          row.addEventListener("click", open);
+          row.addEventListener("keydown", function (event) {
+            if (event.key === "Enter" || event.key === " ") { event.preventDefault(); open(); }
+          });
+          if (selectedUserId === u.id) row.classList.add("is-on");
+
           host.appendChild(row);
         });
       }
 
-      /* A sheet rather than inline controls: suspending someone and deleting
-         an account are not things to put one stray click away in a list. */
-      function manageUser(u) {
-        var sheet = UI.el("div", "sheet");
-        var card = UI.el("div", "sheet-card");
+      /* Clicking a row selects it and fills the pane beside the list — a
+         master-detail layout rather than a sheet stacked over the list you
+         were just scanning. Deleting an account is still not one stray
+         click away: it lives behind a typed confirmation either way. */
+      function selectUser(u, row, manageable) {
+        selectedUserId = u.id;
+        document.querySelectorAll("#user-rows .user-row").forEach(function (r) {
+          r.classList.toggle("is-on", r === row);
+        });
+        renderUserDetail(u, manageable);
+      }
 
-        var head = UI.el("div", "sheet-head");
-        head.appendChild(UI.el("span", "label", "Manage @" + u.username));
-        var close = UI.el("button", "btn btn-sq", "✕");
-        close.type = "button";
-        close.addEventListener("click", function () { sheet.remove(); });
-        head.appendChild(close);
-        card.appendChild(head);
-
-        var body = UI.el("div", "sheet-body");
+      function renderUserDetail(u, manageable) {
+        var body = document.getElementById("user-detail");
+        body.innerHTML = "";
+        body.appendChild(UI.el("span", "label", "@" + u.username));
 
         var summary = UI.el("p", "tiny dimmer");
         summary.style.margin = "0 0 1rem";
@@ -323,6 +385,21 @@
         ].filter(Boolean).join(" · ");
         body.appendChild(summary);
 
+        if (!manageable) {
+          body.appendChild(UI.el("p", "tiny dimmer",
+            u.id === me.id ? "That's you." :
+            u.role === "owner" ? "The owner can't be managed by anyone." :
+            isAdmin ? "This account outranks you." : "Admins and owners only."));
+          return;
+        }
+
+        function clearDetail() {
+          var host = document.getElementById("user-detail");
+          host.innerHTML = "";
+          host.appendChild(UI.el("p", "user-detail-empty", "Select an account to manage it."));
+          selectedUserId = null;
+        }
+
         /* Rank.
            Only the ranks you are allowed to hand out are listed — and because
            you can only be here at all when you outrank them, their current
@@ -331,11 +408,11 @@
            showed the first option instead and quietly proposed a demotion. */
         var rankField = UI.el("div", "field");
         var rankLabel = UI.el("label", null, "Rank");
-        rankLabel.setAttribute("for", "sheet-rank");
+        rankLabel.setAttribute("for", "detail-rank");
         rankField.appendChild(rankLabel);
 
         var rankBox = UI.el("select");
-        rankBox.id = "sheet-rank";
+        rankBox.id = "detail-rank";
         RANKS.slice(0, rankOf(me.role)).forEach(function (r) {
           var o = UI.el("option", null, r);
           o.value = r;
@@ -359,7 +436,7 @@
           busy(apply, API.adminUpdateUser(u.id, { role: rankBox.value })
             .then(function () {
               UI.toast("@" + u.username + " is now " + rankBox.value);
-              sheet.remove();
+              clearDetail();
               loadUsers();
             }));
         });
@@ -387,7 +464,7 @@
           busy(toggle, API.adminUpdateUser(u.id, { state: next })
             .then(function () {
               UI.toast("@" + u.username + " " + next);
-              sheet.remove();
+              clearDetail();
               loadUsers();
             }));
         });
@@ -416,20 +493,15 @@
           }
           busy(wipe, API.adminDeleteUser(u.id).then(function () {
             UI.toast("@" + u.username + " deleted");
-            sheet.remove();
+            clearDetail();
             loadUsers();
           }));
         });
         body.appendChild(wipe);
-
-        card.appendChild(body);
-        sheet.appendChild(card);
-        sheet.addEventListener("click", function (e) { if (e.target === sheet) sheet.remove(); });
-        document.body.appendChild(sheet);
         rankBox.focus();
       }
 
-      /* Every action in the sheet reports its own failure, rather than
+      /* Every action in the pane reports its own failure, rather than
          leaving a disabled button and no explanation. */
       function busy(button, promise) {
         button.disabled = true;
@@ -881,14 +953,8 @@
       auditQ.addEventListener("input", UI.debounce(function () { loadAudit(); }, 260));
 
       /* Staff actions are grouped by what they touch, so a trail can be read
-         at a glance rather than parsed word by word. */
-      var ACTION_TONE = {
-        "user-delete": "bad", "user-update": "accent", "message-remove": "bad",
-        "report-closed": "good", "report-open": "accent",
-        "game-delete": "bad", "game-hide": "accent", "game-save": "accent",
-        "game-restore": "good"
-      };
-
+         at a glance rather than parsed word by word. Tone map lives beside
+         loadRecentActivity() above, which reuses it for the Overview slice. */
       function loadAudit() {
         return API.adminAudit(auditQ.value.trim()).then(function (res) {
           var host = document.getElementById("audit-rows");

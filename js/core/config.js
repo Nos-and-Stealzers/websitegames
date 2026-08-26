@@ -19,11 +19,11 @@
        start working. Swap any of them for Vercel/Netlify/your own host and
        only this table changes. */
     gameHosts: {
-      "games-huge": "https://lucasgrimm389.github.io/games-huge",
+      "games-huge": "https://arcadecampushub.github.io/games-huge",
       "swfgalaxy":  "https://nos-and-stealzers.github.io/swfgalaxy",
-      "flashgames": "https://lucasgrimm389.github.io/flashgames",
-      "hd_fnaf":    "https://lucasgrimm389.github.io/hd_fnaf",
-      "eaglercraft": "https://lucasgrimm389.github.io/eaglercraft"
+      "flashgames": "https://arcadecampushub.github.io/flashgames",
+      "hd_fnaf":    "https://arcadecampushub.github.io/hd_fnaf",
+      "eaglercraft": "https://arcadecampushub.github.io/eaglercraft"
     },
 
     /* Fallback for any entry without a `host`, and for legacy catalogs whose

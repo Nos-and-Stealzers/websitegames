@@ -415,7 +415,13 @@
     return entry.pc.createOffer()
       .then(function (offer) { return entry.pc.setLocalDescription(offer); })
       .then(function () { send(userId, "offer", entry.pc.localDescription.toJSON()); })
-      .catch(function () { /* retried on the next poll */ });
+      .catch(function () {
+        /* A transient createOffer/setLocalDescription failure must not wedge
+           this peer forever: pump()'s "already has a pc" guard skips anyone
+           with one, so a broken pc left in place here was never retried. */
+        if (entry.pc) { try { entry.pc.close(); } catch (err) { /* already closed */ } }
+        entry.pc = null;
+      });
   }
 
   function send(to, kind, payload) {

@@ -201,9 +201,15 @@ does no guessing at runtime.
 | host | repo | titles |
 | --- | --- | --- |
 | `swfgalaxy` | [Nos-and-Stealzers/swfgalaxy](https://github.com/Nos-and-Stealzers/swfgalaxy) | 96 |
-| `games-huge` | [LucasGrimm389/games-huge](https://github.com/LucasGrimm389/games-huge) | 89 |
-| `flashgames` | [LucasGrimm389/flashgames](https://github.com/LucasGrimm389/flashgames) | 11 |
-| `hd_fnaf` | [LucasGrimm389/hd_fnaf](https://github.com/LucasGrimm389/hd_fnaf) | 8 |
+| `games-huge` | [arcadecampushub/games-huge](https://github.com/arcadecampushub/games-huge) | 89 |
+| `flashgames` | [arcadecampushub/flashgames](https://github.com/arcadecampushub/flashgames) | 11 |
+| `hd_fnaf` | [arcadecampushub/hd_fnaf](https://github.com/arcadecampushub/hd_fnaf) | 8 |
+| `eaglercraft` | [arcadecampushub/eaglercraft](https://github.com/arcadecampushub/eaglercraft) | 3 |
+
+Most of the org's repos serve games this way — see the full list at
+[github.com/orgs/arcadecampushub/repositories](https://github.com/orgs/arcadecampushub/repositories).
+Two more (`RetroBow`, `Waterboy-Firegirl`) are deployed straight to Vercel/Render rather
+than GitHub Pages and aren't in the catalog yet.
 
 **204 of 216 playable. 1 external. 11 unavailable** — those eleven point at paths no repo
 carries (`/games/websie/…`, `/games/retro-bowl/…`, four `swf-*` aliases). They stay in the
@@ -214,10 +220,11 @@ index but are flagged, and the player says so instead of loading a frame that wo
 
 ```js
 gameHosts: {
-  "games-huge": "https://lucasgrimm389.github.io/games-huge",
+  "games-huge": "https://arcadecampushub.github.io/games-huge",
   "swfgalaxy":  "https://nos-and-stealzers.github.io/swfgalaxy",
-  "flashgames": "https://lucasgrimm389.github.io/flashgames",
-  "hd_fnaf":    "https://lucasgrimm389.github.io/hd_fnaf"
+  "flashgames": "https://arcadecampushub.github.io/flashgames",
+  "hd_fnaf":    "https://arcadecampushub.github.io/hd_fnaf",
+  "eaglercraft": "https://arcadecampushub.github.io/eaglercraft"
 }
 ```
 

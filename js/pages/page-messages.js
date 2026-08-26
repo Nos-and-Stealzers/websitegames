@@ -7,6 +7,7 @@
   var lastId = 0;
   var poll = null;
   var pending = null;      // staged image awaiting send
+  var openSeq = 0;         // guards against a slow open() landing after a newer one
 
   function init() {
     window.SocialUI.gate(function () {
@@ -140,9 +141,14 @@
         if (data.isGroup) {
           if (data.owner) {
             head.appendChild(button("Rename", function () {
-              var title = window.prompt("Group name", data.title);
+              var title = window.prompt("Group name (60 characters max)", data.title);
               if (!title || !title.trim()) return;
-              API.renameGroup(data.id, title.trim())
+              title = title.trim();
+              if (title.length > 60) {
+                title = title.slice(0, 60);
+                UI.toast("Trimmed to 60 characters");
+              }
+              API.renameGroup(data.id, title)
                 .then(function () { UI.toast("Renamed"); open(data.id); })
                 .catch(function (err) { UI.toast(err.message); });
             }));
@@ -266,13 +272,21 @@
         window.clearInterval(poll);
         lastId = 0;
         log.innerHTML = "";
+        head.innerHTML = "";
         var strip = document.querySelector(".member-strip");
         if (strip) strip.remove();
 
         document.getElementById("dm-empty").hidden = true;
         document.getElementById("dm-open").hidden = false;
 
+        /* A fast click to a second thread must win over a slow response for
+           the first one — without this token, switching quickly could paint
+           an abandoned thread's messages into the conversation you're now
+           actually looking at. */
+        var seq = ++openSeq;
+
         return API.thread(id).then(function (res) {
+          if (seq !== openSeq) return;
           current = {
             id: res.threadId, title: res.title, isGroup: res.isGroup,
             owner: res.owner, members: res.members, canSend: res.canSend,
@@ -297,7 +311,12 @@
           window.Session.refreshBadges();
           poll = window.setInterval(tick, 5000);
         }).catch(function (err) {
+          if (seq !== openSeq) return;
           UI.toast(err.message);
+          current = null;
+          head.innerHTML = "";
+          var stale = document.querySelector(".member-strip");
+          if (stale) stale.remove();
           document.getElementById("dm-open").hidden = true;
           document.getElementById("dm-empty").hidden = false;
         });
@@ -397,10 +416,24 @@
 
       /* --------------------------------------------------------- groups */
 
-      function pickFriends(title, onDone) {
+      /* Shared by "New group" and "Add to group": pick one or more friends
+         from a sheet rather than typing a raw username blind. `opts.showName`
+         adds the group-name field new-group needs; `opts.exclude` drops
+         friends already in the group so add-to-group only offers people who
+         can actually be added. */
+      function pickFriends(title, onDone, opts) {
+        opts = opts || {};
+        var exclude = opts.exclude || [];
         API.friends().then(function (data) {
+          var available = data.friends.filter(function (u) {
+            return exclude.indexOf(u.username) === -1;
+          });
           if (!data.friends.length) {
             UI.toast("Add a friend first — groups are friends only");
+            return;
+          }
+          if (!available.length) {
+            UI.toast("Everyone you can add is already in this group");
             return;
           }
           var chosen = [];
@@ -416,23 +449,26 @@
           card.appendChild(h);
 
           var body = UI.el("div", "sheet-body");
-          var nameField = UI.el("div", "field");
-          var label = UI.el("label", null, "Group name");
-          label.setAttribute("for", "group-name");
-          nameField.appendChild(label);
-          var nameInput = UI.el("input");
-          nameInput.id = "group-name";
-          nameInput.type = "text";
-          nameInput.maxLength = 60;
-          nameInput.placeholder = "Squad";
-          nameField.appendChild(nameInput);
-          body.appendChild(nameField);
+          var nameInput = null;
+          if (opts.showName) {
+            var nameField = UI.el("div", "field");
+            var label = UI.el("label", null, "Group name");
+            label.setAttribute("for", "group-name");
+            nameField.appendChild(label);
+            nameInput = UI.el("input");
+            nameInput.id = "group-name";
+            nameInput.type = "text";
+            nameInput.maxLength = 60;
+            nameInput.placeholder = "Squad";
+            nameField.appendChild(nameInput);
+            body.appendChild(nameField);
+          }
 
           var picked = UI.el("div", "picker");
           body.appendChild(picked);
 
           var people = UI.el("div", "people");
-          data.friends.forEach(function (u) {
+          available.forEach(function (u) {
             people.appendChild(S.person(u, {
               presence: false,
               actions: [{
@@ -465,14 +501,15 @@
             });
           }
 
-          var go = UI.el("button", "btn btn-cta", "Create group");
+          var go = UI.el("button", "btn btn-cta", opts.buttonLabel || "Create group");
           go.type = "button";
           go.style.width = "100%";
           go.style.marginTop = "0.9rem";
           go.addEventListener("click", function () {
             if (!chosen.length) { UI.toast("Pick at least one friend"); return; }
             go.disabled = true;
-            onDone(nameInput.value.trim(), chosen, function () { sheet.remove(); },
+            onDone(nameInput ? nameInput.value.trim() : "", chosen,
+                   function () { sheet.remove(); },
                    function () { go.disabled = false; });
           });
           body.appendChild(go);
@@ -481,7 +518,7 @@
           sheet.appendChild(card);
           sheet.addEventListener("click", function (e) { if (e.target === sheet) sheet.remove(); });
           document.body.appendChild(sheet);
-          nameInput.focus();
+          (nameInput || go).focus();
         }).catch(function (err) { UI.toast(err.message); });
       }
 
@@ -492,15 +529,20 @@
             UI.toast("Group created");
             loadList().then(function () { open(res.thread.id); });
           }).catch(function (err) { UI.toast(err.message); fail(); });
-        });
+        }, { showName: true, buttonLabel: "Create group" });
       }
 
       function addToGroup(data) {
-        var name = window.prompt("Add which friend? (username)");
-        if (!name || !name.trim()) return;
-        API.addToGroup(data.id, name.trim().replace(/^@/, ""))
-          .then(function () { UI.toast("Added"); open(data.id); })
-          .catch(function (err) { UI.toast(err.message); });
+        var existing = (data.members || []).map(function (m) { return m.username; });
+        pickFriends("Add to " + data.title, function (title, usernames, done, fail) {
+          usernames.reduce(function (chain, name) {
+            return chain.then(function () { return API.addToGroup(data.id, name); });
+          }, Promise.resolve()).then(function () {
+            done();
+            UI.toast(usernames.length > 1 ? "Added " + usernames.length + " people" : "Added");
+            open(data.id);
+          }).catch(function (err) { UI.toast(err.message); fail(); });
+        }, { showName: false, buttonLabel: "Add to group", exclude: existing });
       }
 
       /* ----------------------------------------------------------- boot */

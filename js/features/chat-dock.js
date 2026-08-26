@@ -392,6 +392,11 @@
 
   function mount() {
     if (!window.Session || !window.API || !window.UI) return;
+    /* The full messages page already polls its own thread list and open
+       conversation — mounting the dock there too doubled every request and
+       kept two independent copies of "the current thread" in sync with
+       nothing. */
+    if (/(^|\/)messages\.html$/.test(window.location.pathname)) return;
 
     window.Session.ready.then(function (state) {
       if (!state.backend || !state.user) return;

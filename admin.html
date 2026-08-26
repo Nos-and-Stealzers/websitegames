@@ -10,7 +10,7 @@
   <link rel="icon" type="image/svg+xml" href="assets/icon.svg">
   <link rel="manifest" href="manifest.json">
   <link rel="stylesheet" href="css/style.css">
-  <script src="js/theme-boot.js"></script>
+  <script src="js/core/theme-boot.js"></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -27,31 +27,51 @@
       </div>
     </div>
 
-    <div id="console" hidden>
-      <header class="page-head">
-        <span class="label">Staff</span>
-        <h1>Admin console</h1>
+    <div id="console" class="admin-shell" hidden>
+
+      <nav class="admin-nav" id="tabs" role="tablist" aria-label="Admin sections">
+        <button class="admin-nav-link on" type="button" role="tab" data-tab="overview" aria-selected="true">
+          <span class="ico" aria-hidden="true">◆</span><span class="lbl">Overview</span></button>
+        <button class="admin-nav-link" type="button" role="tab" data-tab="live" aria-selected="false">
+          <span class="ico" aria-hidden="true">●</span><span class="lbl">Live</span></button>
+        <button class="admin-nav-link" type="button" role="tab" data-tab="users" aria-selected="false">
+          <span class="ico" aria-hidden="true">◈</span><span class="lbl">Users</span></button>
+        <button class="admin-nav-link" type="button" role="tab" data-tab="support" aria-selected="false">
+          <span class="ico" aria-hidden="true">✉</span><span class="lbl">Support</span></button>
+        <button class="admin-nav-link" type="button" role="tab" data-tab="reports" aria-selected="false">
+          <span class="ico" aria-hidden="true">⚑</span><span class="lbl">Reports</span></button>
+        <button class="admin-nav-link" type="button" role="tab" data-tab="feedback" aria-selected="false">
+          <span class="ico" aria-hidden="true">◐</span><span class="lbl">Feedback</span></button>
+        <button class="admin-nav-link" type="button" role="tab" data-tab="logins" aria-selected="false">
+          <span class="ico" aria-hidden="true">⏚</span><span class="lbl">Logins</span></button>
+        <button class="admin-nav-link" type="button" role="tab" data-tab="games" aria-selected="false" data-owner hidden>
+          <span class="ico" aria-hidden="true">▦</span><span class="lbl">Games</span></button>
+        <button class="admin-nav-link" type="button" role="tab" data-tab="gamedata" aria-selected="false">
+          <span class="ico" aria-hidden="true">⎘</span><span class="lbl">Game data</span></button>
+        <button class="admin-nav-link" type="button" role="tab" data-tab="audit" aria-selected="false">
+          <span class="ico" aria-hidden="true">≡</span><span class="lbl">Audit</span></button>
+        <a class="admin-nav-link" href="admin-search.html" data-owner-or-admin hidden>
+          <span class="ico" aria-hidden="true">⌕</span><span class="lbl">Tools</span></a>
+        <button class="admin-nav-link" type="button" role="tab" data-tab="help" aria-selected="false">
+          <span class="ico" aria-hidden="true">?</span><span class="lbl">Help</span></button>
+        <div class="admin-nav-foot">
+          <button class="btn btn-sm btn-flat" type="button" id="refresh">Refresh</button>
+        </div>
+      </nav>
+
+      <div class="admin-main">
+
+      <header class="admin-topbar">
+        <div>
+          <span class="label">Staff</span>
+          <h1>Admin console</h1>
+        </div>
         <div class="readout">
           <span>you are <b id="r-role">—</b></span>
           <span>open reports <b id="r-reports">0</b></span>
           <span>online now <b id="r-online">0</b></span>
-          <button class="btn btn-sm btn-flat" type="button" id="refresh">Refresh</button>
         </div>
       </header>
-
-      <div class="tabs" role="tablist" id="tabs">
-        <button class="tab on" type="button" role="tab" data-tab="overview" aria-selected="true">Overview</button>
-        <button class="tab" type="button" role="tab" data-tab="live" aria-selected="false">Live</button>
-        <button class="tab" type="button" role="tab" data-tab="users" aria-selected="false">Users</button>
-        <button class="tab" type="button" role="tab" data-tab="support" aria-selected="false">Support</button>
-        <button class="tab" type="button" role="tab" data-tab="reports" aria-selected="false">Reports</button>
-        <button class="tab" type="button" role="tab" data-tab="feedback" aria-selected="false">Feedback</button>
-        <button class="tab" type="button" role="tab" data-tab="logins" aria-selected="false">Logins</button>
-        <button class="tab" type="button" role="tab" data-tab="games" aria-selected="false" data-owner hidden>Games</button>
-        <button class="tab" type="button" role="tab" data-tab="gamedata" aria-selected="false">Game data</button>
-        <button class="tab" type="button" role="tab" data-tab="audit" aria-selected="false">Audit</button>
-        <button class="tab" type="button" role="tab" data-tab="help" aria-selected="false">Help</button>
-      </div>
 
       <!-- overview -->
       <section class="tab-panel" data-panel="overview">
@@ -80,8 +100,17 @@
           <div class="metric"><b id="k-today">0</b><span>Messages today</span></div>
         </div>
 
-        <div class="block-head"><h2>Most played, everyone</h2><span class="fill"></span></div>
-        <div class="panel"><div class="meters" id="top-games"></div></div>
+        <div class="two-col">
+          <div class="block" style="margin:0">
+            <div class="block-head"><h2>Most played, everyone</h2><span class="fill"></span></div>
+            <div class="panel"><div class="meters" id="top-games"></div></div>
+          </div>
+          <div class="block" style="margin:0">
+            <div class="block-head"><h2>Recent activity</h2><span class="fill"></span>
+              <button class="btn btn-sm btn-flat" type="button" data-goto="audit">All →</button></div>
+            <div class="panel panel-flush"><div class="rows" id="recent-audit" style="border:0"></div></div>
+          </div>
+        </div>
       </section>
 
       <!-- live -->
@@ -127,7 +156,12 @@
             button here is a convenience rather than the control.
           </p>
         </div>
-        <div class="rows" id="user-rows"></div>
+        <div class="two-col">
+          <div class="rows" id="user-rows"></div>
+          <div class="panel" id="user-detail">
+            <p class="user-detail-empty">Select an account to manage it.</p>
+          </div>
+        </div>
       </section>
 
       <!-- reports -->
@@ -340,7 +374,7 @@
         <div class="help-grid">
 
           <section class="panel">
-            <h2 class="help-h">What each tab does</h2>
+            <h2 class="help-h">What each section does</h2>
             <dl class="help-list" id="help-tabs"></dl>
           </section>
 
@@ -377,30 +411,32 @@
 
         </div>
       </section>
+
+      </div>
     </div>
 
     <div data-shell="foot"></div>
   </main>
 
-  <script src="js/config.js"></script>
+  <script src="js/core/config.js"></script>
   <script src="data/games.js"></script>
-  <script src="js/store.js"></script>
-  <script src="js/catalog-overlay.js"></script>
-  <script src="js/catalog.js"></script>
-  <script src="js/art.js"></script>
-  <script src="js/ui.js"></script>
-  <script src="js/api.js"></script>
-  <script src="js/api-supabase.js"></script>
-  <script src="js/session.js"></script>
-  <script src="js/social-ui.js"></script>
-  <script src="js/capture.js"></script>
-  <script src="js/chat-dock.js"></script>
-  <script src="js/call.js"></script>
-  <script src="js/save-formats.js"></script>
-  <script src="js/game-keys.js"></script>
-  <script src="js/game-saves.js"></script>
-  <script src="js/shell.js"></script>
-  <script src="js/page-gamedata.js"></script>
-  <script src="js/page-admin.js"></script>
+  <script src="js/core/store.js"></script>
+  <script src="js/features/catalog-overlay.js"></script>
+  <script src="js/features/catalog.js"></script>
+  <script src="js/features/art.js"></script>
+  <script src="js/core/ui.js"></script>
+  <script src="js/core/api.js"></script>
+  <script src="js/core/api-supabase.js"></script>
+  <script src="js/core/session.js"></script>
+  <script src="js/features/social-ui.js"></script>
+  <script src="js/features/capture.js"></script>
+  <script src="js/features/chat-dock.js"></script>
+  <script src="js/features/call.js"></script>
+  <script src="js/features/save-formats.js"></script>
+  <script src="js/features/game-keys.js"></script>
+  <script src="js/features/game-saves.js"></script>
+  <script src="js/features/shell.js"></script>
+  <script src="js/pages/page-gamedata.js"></script>
+  <script src="js/pages/page-admin.js"></script>
 </body>
 </html>

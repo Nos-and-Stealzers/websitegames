@@ -10,7 +10,7 @@
   <link rel="icon" type="image/svg+xml" href="assets/icon.svg">
   <link rel="manifest" href="manifest.json">
   <link rel="stylesheet" href="css/style.css">
-  <script src="js/theme-boot.js"></script>
+  <script src="js/core/theme-boot.js"></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -26,7 +26,7 @@
     <div class="dm" id="dm">
       <aside class="dm-list" id="thread-list" aria-label="Conversations"></aside>
 
-      <section class="dm-panel" id="panel" aria-live="polite">
+      <section class="dm-panel" id="panel">
         <div class="dm-empty" id="dm-empty">
           <strong>Pick a conversation</strong>
           <p class="dim tiny">Or start one from <a href="friends.html">Friends</a>.</p>
@@ -34,7 +34,7 @@
 
         <div class="dm-open" id="dm-open" hidden>
           <header class="dm-head" id="dm-head"></header>
-          <div class="dm-log" id="log" tabindex="0"></div>
+          <div class="dm-log" id="log" tabindex="0" aria-live="polite" aria-relevant="additions"></div>
           <form class="dm-compose" id="compose">
             <label for="body" class="sr-only">Message</label>
             <textarea id="body" rows="1" maxlength="2000" placeholder="Write a message…"></textarea>
@@ -48,22 +48,22 @@
     <div data-shell="foot"></div>
   </main>
 
-  <script src="js/config.js"></script>
+  <script src="js/core/config.js"></script>
   <script src="data/games.js"></script>
-  <script src="js/store.js"></script>
-  <script src="js/catalog-overlay.js"></script>
-  <script src="js/catalog.js"></script>
-  <script src="js/art.js"></script>
-  <script src="js/ui.js"></script>
-  <script src="js/api.js"></script>
-  <script src="js/api-supabase.js"></script>
-  <script src="js/session.js"></script>
-  <script src="js/social-ui.js"></script>
-  <script src="js/capture.js"></script>
-  <script src="js/chat-dock.js"></script>
-  <script src="js/call.js"></script>
-  <script src="js/game-saves.js"></script>
-  <script src="js/shell.js"></script>
-  <script src="js/page-messages.js"></script>
+  <script src="js/core/store.js"></script>
+  <script src="js/features/catalog-overlay.js"></script>
+  <script src="js/features/catalog.js"></script>
+  <script src="js/features/art.js"></script>
+  <script src="js/core/ui.js"></script>
+  <script src="js/core/api.js"></script>
+  <script src="js/core/api-supabase.js"></script>
+  <script src="js/core/session.js"></script>
+  <script src="js/features/social-ui.js"></script>
+  <script src="js/features/capture.js"></script>
+  <script src="js/features/chat-dock.js"></script>
+  <script src="js/features/call.js"></script>
+  <script src="js/features/game-saves.js"></script>
+  <script src="js/features/shell.js"></script>
+  <script src="js/pages/page-messages.js"></script>
 </body>
 </html>

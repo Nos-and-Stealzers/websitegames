@@ -1405,19 +1405,77 @@ kbd {
    20 · ADMIN
    -------------------------------------------------------------------------- */
 
-.tabs {
-  display: flex; gap: 0; flex-wrap: wrap;
+/* A second-level shell inside .main: the site's own .rail already claims the
+   left edge, so the console gets its own slim nav rather than fighting it
+   for that space. Collapses to a horizontal scroller on narrow screens,
+   independent of the site-wide 900px rail breakpoint. */
+.admin-shell {
+  display: grid;
+  grid-template-columns: 13rem minmax(0, 1fr);
+  gap: 1.8rem;
+  align-items: start;
+}
+.admin-nav {
+  position: sticky; top: 1.4rem;
+  display: flex; flex-direction: column; gap: 0.15rem;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  padding: 0.5rem;
+}
+.admin-nav-link {
+  display: flex; align-items: center; gap: 0.55rem;
+  padding: 0.5rem 0.6rem;
+  font: inherit; font-size: 0.84rem; font-weight: 600;
+  color: var(--ink-2);
+  background: none; border: 0; border-left: 2px solid transparent;
+  cursor: pointer; text-align: left; width: 100%;
+}
+.admin-nav-link:hover { background: var(--surface-2); color: var(--ink); text-decoration: none; }
+.admin-nav-link.on {
+  background: var(--sel); color: var(--ink); border-left-color: var(--accent); font-weight: 700;
+}
+.admin-nav-link .ico { width: 1.05rem; text-align: center; flex: none; font-size: 0.92rem; }
+.admin-nav-link .lbl { flex: 1; }
+.admin-nav-foot { border-top: 1px solid var(--line); margin-top: 0.4rem; padding-top: 0.5rem; }
+.admin-nav-foot .btn { width: 100%; }
+
+.admin-main { min-width: 0; }
+.admin-topbar {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 1rem; flex-wrap: wrap;
+  padding-bottom: 1.2rem; margin-bottom: 1.6rem;
   border-bottom: 1px solid var(--line);
-  margin-bottom: 1.5rem;
 }
-.tab {
-  background: none; border: 0; border-bottom: 2px solid transparent;
-  padding: 0.6rem 1rem; margin-bottom: -1px;
-  font: inherit; font-size: 0.86rem; font-weight: 600;
-  color: var(--ink-3); cursor: pointer;
+.admin-topbar h1 { margin-bottom: 0.5rem; }
+
+@media (max-width: 860px) {
+  .admin-shell { grid-template-columns: 1fr; gap: 1rem; }
+  .admin-nav {
+    position: static;
+    flex-direction: row; flex-wrap: nowrap;
+    overflow-x: auto; overscroll-behavior-x: contain;
+  }
+  .admin-nav-link { border-left: 0; border-bottom: 2px solid transparent; white-space: nowrap; }
+  .admin-nav-link.on { border-left-color: transparent; border-bottom-color: var(--accent); }
+  .admin-nav-foot { display: none; }
 }
-.tab:hover { color: var(--ink); }
-.tab.on { color: var(--accent); border-bottom-color: var(--accent); }
+
+/* Queue depth on the nav link itself. A moderation console whose whole
+   purpose is showing what is waiting should not make you open each
+   section to find out. */
+.admin-nav-n {
+  margin-left: auto;
+  font-family: var(--mono); font-size: 0.64rem; line-height: 1;
+  padding: 0.15rem 0.3rem; border: 1px solid var(--accent);
+  color: var(--accent); border-radius: var(--r); flex: none;
+}
+.admin-nav-n[hidden] { display: none; }
+
+/* Users tab: a clickable row that fills the detail pane beside it, rather
+   than opening a full-screen sheet over the list you were just scanning. */
+.user-row { cursor: pointer; }
+.user-row.is-on { background: var(--sel); }
+.user-detail-empty { padding: 2.2rem 1rem; text-align: center; color: var(--ink-3); font-size: 0.86rem; }
 
 .admin-who { display: flex; align-items: center; gap: 0.6rem; min-width: 0; color: var(--ink); }
 .admin-who:hover { text-decoration: none; }
@@ -1444,16 +1502,6 @@ kbd {
   font-size: 0.84rem; color: var(--ink);
   white-space: pre-wrap; overflow-wrap: anywhere;
 }
-
-/* Queue depth on the tab itself. A moderation console whose whole purpose is
-   showing what is waiting should not make you open each tab to find out. */
-.tab { position: relative; display: inline-flex; align-items: center; gap: 0.4rem; }
-.tab-n {
-  font-family: var(--mono); font-size: 0.66rem; line-height: 1;
-  padding: 0.15rem 0.3rem; border: 1px solid var(--accent);
-  color: var(--accent); border-radius: var(--r);
-}
-.tab-n[hidden] { display: none; }
 
 /* The queue tiles are buttons, because they take you to the work. */
 .queue-metrics .metric {

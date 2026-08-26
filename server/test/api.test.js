@@ -668,7 +668,7 @@ function client() {
   /* ------------------------------------------------- game progress sync */
   group("game save sync");
   {
-    const host = "lucasgrimm389.github.io";
+    const host = "arcadecampushub.github.io";
     let r = await bob.get(`/api/game-saves/${host}`);
     ok("empty to start", r.status === 200 && Object.keys(r.data.payload).length === 0);
 

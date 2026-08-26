@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" data-skin="noir" data-lite="off">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Search — Arcade Campus Hub</title>
+  <meta name="description" content="Admin tool: an embedded search engine, for looking things up without leaving the console.">
+  <meta name="theme-color" content="#0c0d10">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="icon" type="image/svg+xml" href="assets/icon.svg">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/core/theme-boot.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div data-shell="chrome"></div>
+
+  <main class="main" id="main">
+
+    <div id="denied" hidden>
+      <div class="crash">
+        <div class="code">403</div>
+        <h1>Not your console</h1>
+        <p class="dim">This tool is for administrators and the owner.</p>
+        <div class="acts"><a class="btn btn-cta" href="index.html">Back to the arcade</a></div>
+      </div>
+    </div>
+
+    <div id="tool" hidden>
+      <header class="page-head">
+        <span class="label">Staff · Tools</span>
+        <h1>Search</h1>
+        <p>
+          An embedded search engine, for looking something up without leaving
+          the console — or on a network that filters the search bar itself.
+          It's a plain iframe: nothing you search here is logged by this site.
+        </p>
+      </header>
+
+      <div class="panel" style="margin-bottom:1.2rem">
+        <form id="search-form" class="btn-row" style="flex-wrap:nowrap">
+          <label for="q" class="sr-only">Search</label>
+          <input type="search" id="q" placeholder="Search the web…" autocomplete="off" style="flex:1">
+          <button class="btn btn-cta" type="submit">Search</button>
+          <a class="btn btn-flat" id="open-tab" href="https://html.duckduckgo.com/html/" target="_blank" rel="noopener">
+            Open in a new tab ↗
+          </a>
+        </form>
+        <p class="tiny dimmer" id="frame-note" style="margin:0.8rem 0 0">
+          Results load from DuckDuckGo's plain-HTML endpoint, which embeds far
+          more reliably than a full search homepage — some networks and
+          browser extensions can still block the frame outright, though. If
+          the box below stays blank, use "Open in a new tab" instead.
+        </p>
+      </div>
+
+      <div class="panel panel-flush" style="height:70vh;overflow:hidden">
+        <iframe id="results" title="Search results" style="width:100%;height:100%;border:0"
+                referrerpolicy="no-referrer"></iframe>
+      </div>
+    </div>
+
+    <div data-shell="foot"></div>
+  </main>
+
+  <script src="js/core/config.js"></script>
+  <script src="data/games.js"></script>
+  <script src="js/core/store.js"></script>
+  <script src="js/features/catalog-overlay.js"></script>
+  <script src="js/features/catalog.js"></script>
+  <script src="js/features/art.js"></script>
+  <script src="js/core/ui.js"></script>
+  <script src="js/core/api.js"></script>
+  <script src="js/core/api-supabase.js"></script>
+  <script src="js/core/session.js"></script>
+  <script src="js/features/social-ui.js"></script>
+  <script src="js/features/capture.js"></script>
+  <script src="js/features/chat-dock.js"></script>
+  <script src="js/features/call.js"></script>
+  <script src="js/features/shell.js"></script>
+  <script src="js/pages/page-admin-search.js"></script>
+</body>
+</html>
