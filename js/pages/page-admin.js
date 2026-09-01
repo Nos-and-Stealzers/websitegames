@@ -55,6 +55,7 @@
         feedback: { load: loadFeedback },
         logins:   { load: loadLogins },
         games:    { load: loadCatalog },
+        workbench: { load: function () {} },
         gamedata: { load: function () { if (window.initGameData) window.initGameData(); } },
         audit:    { load: loadAudit },
         help:     { load: loadHelp }
@@ -72,8 +73,14 @@
 
       /* The tab lives in the URL, so a refresh — or a link someone pastes to
          a colleague — lands where it was rather than back on Overview. */
+      /* Hiding the nav button is convenience, not a lock — the data behind
+         every other tab is re-checked on the server. Workbench has no server
+         call to fall back on (it's just a link), so it gets an explicit
+         client-side gate here rather than relying on the button being hidden. */
+      var OWNER_ONLY_TABS = { workbench: true };
+
       function show(name, force) {
-        if (!TABS[name]) name = "overview";
+        if (!TABS[name] || (OWNER_ONLY_TABS[name] && !isOwner)) name = "overview";
         active = name;
 
         tabs.querySelectorAll(".admin-nav-link[role='tab']").forEach(function (t) {
@@ -1037,6 +1044,9 @@
           ["Games", "Owner only. Adds a title to the live catalogue without a commit and a " +
             "deploy, repoints one whose host moved, or hides one. It stores a pointer, not the " +
             "game files — those still have to be hosted somewhere."],
+          ["Workbench", "Owner only. A link out to a machine you've set up for this, reachable " +
+            "from any device — full keyboard and mouse, direct and end-to-end encrypted. It " +
+            "opens in its own tab; this page has no way to reach into it."],
           ["Game data", "A save editor for whatever a game has stored in <b>your own browser</b>. " +
             "It edits your copy only; nothing here touches anyone else's progress."],
           ["Audit", "Every staff action, with who did it and when — rank changes, suspensions, " +
@@ -1048,7 +1058,7 @@
         host.innerHTML = "";
         TAB_HELP.forEach(function (pair) {
           /* Don't document a tab this account can't open. */
-          if (pair[0] === "Games" && !isOwner) return;
+          if ((pair[0] === "Games" || pair[0] === "Workbench") && !isOwner) return;
           var dt = UI.el("dt", null, pair[0]);
           var dd = UI.el("dd");
           dd.innerHTML = pair[1];        // fixed copy above, not user input

@@ -46,6 +46,8 @@
           <span class="ico" aria-hidden="true">⏚</span><span class="lbl">Logins</span></button>
         <button class="admin-nav-link" type="button" role="tab" data-tab="games" aria-selected="false" data-owner hidden>
           <span class="ico" aria-hidden="true">▦</span><span class="lbl">Games</span></button>
+        <button class="admin-nav-link" type="button" role="tab" data-tab="workbench" aria-selected="false" data-owner hidden>
+          <span class="ico" aria-hidden="true">⚙</span><span class="lbl">Workbench</span></button>
         <button class="admin-nav-link" type="button" role="tab" data-tab="gamedata" aria-selected="false">
           <span class="ico" aria-hidden="true">⎘</span><span class="lbl">Game data</span></button>
         <button class="admin-nav-link" type="button" role="tab" data-tab="audit" aria-selected="false">
@@ -350,6 +352,22 @@
             <button class="btn btn-flat" type="button" id="cg-reset">Clear</button>
           </div>
         </form>
+      </section>
+
+      <!-- workbench (owner only) -->
+      <section class="tab-panel" data-panel="workbench" hidden>
+        <div class="panel" style="margin-bottom:1rem">
+          <p class="tiny dimmer" style="margin:0">
+            Reach a machine you've set up for this from wherever you are — full
+            keyboard and mouse, direct end-to-end encrypted connection. Opens in its
+            own tab; nothing about it runs inside this page.
+          </p>
+        </div>
+        <div class="panel">
+          <div class="btn-row">
+            <a class="btn btn-cta" id="wb-open" href="workbench/" target="_blank" rel="noopener noreferrer">Open workbench →</a>
+          </div>
+        </div>
       </section>
 
       <!-- audit -->
