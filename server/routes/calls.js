@@ -227,11 +227,18 @@ router.post("/calls/:id/leave", A.requireUser, (req, res) => {
   const left = db.prepare(
     "SELECT COUNT(*) AS n FROM call_peers WHERE call_id = ? AND state = 'joined'"
   ).get(call.id).n;
-  if (left <= 1) {
+  /* A group call with people still ringing is not "everyone left" — without
+     this check, one invitee declining before anyone else answered killed the
+     call outright for every other invitee, who never even saw it ring. */
+  const stillRinging = db.prepare(
+    "SELECT COUNT(*) AS n FROM call_peers WHERE call_id = ? AND state = 'invited'"
+  ).get(call.id).n;
+  const ended = left <= 1 && stillRinging === 0;
+  if (ended) {
     db.prepare("UPDATE calls SET state = 'ended', ended_at = ? WHERE id = ?").run(now, call.id);
   }
 
-  res.json({ ok: true, ended: left <= 1 });
+  res.json({ ok: true, ended });
 });
 
 /* -------------------------------------------------------------- signals */

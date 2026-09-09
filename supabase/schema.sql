@@ -532,7 +532,30 @@ begin
         select jsonb_array_elements_text(coalesce(incoming->'favorites','[]'::jsonb))
       ) s
     ),
-    'recents', coalesce(incoming->'recents', stored->'recents', '[]'::jsonb),
+    'recents', (
+      /* Node's merge does this by id with newest-wins, then caps at 40 —
+         this used to just take `incoming` wholesale (falling back to
+         `stored` only if incoming had none at all), so syncing from a
+         second device replaced the first device's whole recently-played
+         list with whatever that device happened to have, even if it was
+         shorter or older. Recents are keyed by game id here the same way,
+         so the two clients' histories interleave instead of one clobbering
+         the other. */
+      select coalesce(jsonb_agg(jsonb_build_object('id', id, 'at', at)
+               order by at desc), '[]'::jsonb)
+      from (
+        select r->>'id' as id, max(coalesce((r->>'at')::bigint, 0)) as at
+        from (
+          select jsonb_array_elements(coalesce(stored->'recents','[]'::jsonb)) r
+          union all
+          select jsonb_array_elements(coalesce(incoming->'recents','[]'::jsonb)) r
+        ) both_recents
+        where r->>'id' is not null
+        group by r->>'id'
+        order by max(coalesce((r->>'at')::bigint, 0)) desc
+        limit 40
+      ) capped
+    ),
     'ratings', coalesce(stored->'ratings','{}'::jsonb) || coalesce(incoming->'ratings','{}'::jsonb),
     'stats', (
       select coalesce(jsonb_object_agg(k, jsonb_build_object(
@@ -822,7 +845,10 @@ create or replace function public.create_group(title text, usernames text[])
 returns bigint language plpgsql security definer set search_path = public as $$
 declare tid bigint; name text; other uuid;
 begin
-  if auth.uid() is null then raise exception 'Not signed in.'; end if;
+  -- require_active() also covers "not signed in": the Node backend's
+  -- requireUser rejects a suspended account on every one of these routes,
+  -- and this RPC used to allow a suspended account to keep making groups.
+  perform public.require_active();
   if coalesce(array_length(usernames, 1), 0) = 0 then raise exception 'Pick at least one person.'; end if;
   if array_length(usernames, 1) > 25 then raise exception 'Groups hold 25 people.'; end if;
 
@@ -856,6 +882,7 @@ create or replace function public.add_to_group(t bigint, username text)
 returns void language plpgsql security definer set search_path = public as $$
 declare other uuid; grp public.threads%rowtype;
 begin
+  perform public.require_active();
   select * into grp from public.threads where id = t;
   if grp.id is null or not public.in_thread(t) then raise exception 'No such thread.'; end if;
   if not grp.is_group then raise exception 'Make a group first.'; end if;
@@ -880,6 +907,7 @@ create or replace function public.leave_thread(t bigint, who uuid default null)
 returns void language plpgsql security definer set search_path = public as $$
 declare grp public.threads%rowtype; target uuid; remaining uuid;
 begin
+  perform public.require_active();
   select * into grp from public.threads where id = t;
   if grp.id is null or not public.in_thread(t) then raise exception 'No such thread.'; end if;
   if not grp.is_group then raise exception 'You cannot leave a direct message.'; end if;
@@ -912,6 +940,7 @@ drop function if exists public.rename_group(bigint, text);
 create or replace function public.rename_group(t bigint, new_title text)
 returns void language plpgsql security definer set search_path = public as $$
 begin
+  perform public.require_active();
   if not exists (select 1 from public.threads where id = t and owner_id = auth.uid()) then
     raise exception 'Only the owner can rename this.';
   end if;

@@ -23,7 +23,10 @@
       "swfgalaxy":  "https://nos-and-stealzers.github.io/swfgalaxy",
       "flashgames": "https://arcadecampushub.github.io/flashgames",
       "hd_fnaf":    "https://arcadecampushub.github.io/hd_fnaf",
-      "eaglercraft": "https://arcadecampushub.github.io/eaglercraft"
+      "eaglercraft": "https://arcadecampushub.github.io/eaglercraft",
+      "retrobowl":  "https://arcadecampushub.github.io/RetroBow",
+      "waterboy-firegirl": "https://arcadecampushub.github.io/Waterboy-Firegirl",
+      "extgames": "https://arcadecampushub.github.io/extgames"
     },
 
     /* Fallback for any entry without a `host`, and for legacy catalogs whose

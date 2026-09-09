@@ -188,7 +188,14 @@ function findTarget(body) {
   const name = S.str(body.username, { field: "Username", max: 20 });
   /* Tolerate a pasted "@name", and a code typed into the username box. */
   const cleaned = name.replace(/^@/, "");
-  if (/^[A-Za-z0-9]{3}-?[A-Za-z0-9]{3}$/.test(cleaned) && !/^[A-Za-z]/.test(cleaned.slice(3, 4))) {
+  /* Codes are drawn from a mixed letters+digits alphabet (see makeFriendCode
+     in db.js), so the character right after the third slot can just as well
+     be a letter as a digit — "ABC-XYZ" is a perfectly normal code. A stray
+     `!/^[A-Za-z]/` check here used to reject any code with a letter in that
+     spot and fall through to a username lookup that could never match,
+     which silently broke "add friend" by code for roughly two codes in
+     three. Matching shape is enough; a lookup miss falls through below. */
+  if (/^[A-Za-z0-9]{3}-?[A-Za-z0-9]{3}$/.test(cleaned)) {
     const byCode = db.prepare("SELECT * FROM users WHERE friend_code = ?")
       .get(S.friendCode(cleaned));
     if (byCode) return byCode;

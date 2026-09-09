@@ -56,8 +56,10 @@
     hostSel.dataset.ready = "1";
 
     window.GameSaves.hosts().forEach(function (origin) {
-      var opt = el("option", null, window.GameSaves.hostKey(origin));
+      var label = window.GameSaves.configKey(origin) || window.GameSaves.hostKey(origin);
+      var opt = el("option", null, label);
       opt.value = window.GameSaves.hostKey(origin);
+      opt.dataset.configKey = window.GameSaves.configKey(origin) || "";
       hostSel.appendChild(opt);
     });
 
@@ -74,7 +76,9 @@
       gameSel.appendChild(any);
 
       var host = hostSel.value;
-      var games = window.Catalog.all.filter(function (g) { return g.host === host; });
+      var configKey = hostSel.selectedOptions && hostSel.selectedOptions[0] &&
+        hostSel.selectedOptions[0].dataset.configKey;
+      var games = window.Catalog.all.filter(function (g) { return g.host === configKey; });
       var learned = {};
       (window.GameKeys ? window.GameKeys.known() : []).forEach(function (k) {
         learned[k.id] = k.keys;

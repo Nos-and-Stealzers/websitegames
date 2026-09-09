@@ -33,6 +33,19 @@
     return out;
   }
 
+  /* The config key a catalog entry's `host` field actually uses (e.g.
+     "games-huge"), as opposed to keyFor()'s storage key derived from the
+     origin's URL. The admin game-data editor filters the catalog by
+     `game.host === <config key>`, so it needs this — not keyFor() — or every
+     host-scoped game list comes back empty. */
+  function configKeyFor(origin) {
+    var map = (window.SITE && window.SITE.gameHosts) || {};
+    var hit = Object.keys(map).filter(function (key) {
+      return String(map[key] || "").replace(/\/+$/, "") === origin;
+    })[0];
+    return hit || null;
+  }
+
   /* A GitHub Pages project site lives under /<repo>/, so the bridge sits at
      the repo root, not the domain root. Deriving it from the configured game
      base keeps that correct for any host. */
@@ -40,17 +53,44 @@
     return origin.replace(/\/+$/, "") + "/save-bridge.html";
   }
 
+  /* Several game hosts are separate repos served as GitHub Pages *project*
+     sites under the SAME account domain (arcadecampushub.github.io/games-huge,
+     .../flashgames, .../hd_fnaf, .../eaglercraft all share the hostname
+     "arcadecampushub.github.io" and differ only by path). Keying saves by
+     `new URL(origin).host` alone collapsed every one of those into the same
+     string, so putGameSave()/getGameSave() for four unrelated hosts all hit
+     the same row: whichever backup ran last silently overwrote the others,
+     and restoring could push one game's world into a different game's
+     origin. The path's first segment (the repo name) has to be part of the
+     key so distinct project sites stay distinct. The result still has to
+     satisfy the server's host validator ([A-Za-z0-9._-]{1,64}) — no slashes —
+     so the segment and hostname are joined with a dot instead of a path. */
   function keyFor(origin) {
-    try { return new URL(origin).host; } catch (e) { return origin; }
+    try {
+      var u = new URL(origin);
+      var seg = u.pathname.replace(/^\/+|\/+$/g, "").split("/")[0] || "";
+      var key = seg ? seg + "." + u.host : u.host;
+      return key.slice(0, 64);
+    } catch (e) { return origin; }
   }
 
   window.addEventListener("message", function (event) {
     var msg = event.data;
     if (!msg || msg.channel !== CHANNEL) return;
 
+    /* The reply can only be trusted if it actually came from one of the
+       iframes this module opened at the origin it was opened for — otherwise
+       any page that can reach this window (or a compromised/rogue frame)
+       could forge a "ready" or a save-bridge reply and inject fake save data
+       or resolve a pending request early. */
+    var known = Object.keys(frames).some(function (origin) {
+      return frames[origin].iframe.contentWindow === event.source;
+    });
+    if (!known) return;
+
     if (msg.action === "ready") {
       Object.keys(frames).forEach(function (origin) {
-        if (origin.indexOf(msg.host) !== -1) frames[origin].ready = true;
+        if (frames[origin].iframe.contentWindow === event.source) frames[origin].ready = true;
       });
       return;
     }
@@ -85,6 +125,7 @@
       iframe.addEventListener("error", function () {
         if (settled) return;
         settled = true;
+        iframe.remove();
         reject(new Error("No save bridge on " + origin));
       });
 
@@ -93,6 +134,12 @@
       window.setTimeout(function () {
         if (settled) return;
         settled = true;
+        /* Without this the iframe (and its message listeners inside the
+           bridge document) stayed attached forever after a timeout — a
+           silent per-attempt leak on every host that lacks a bridge, since
+           frameFor() is retried from scratch (frames[origin] was never set)
+           on every subsequent backup/restore/probe call. */
+        iframe.remove();
         reject(new Error("Save bridge on " + origin + " did not load"));
       }, TIMEOUT);
     });
@@ -279,6 +326,7 @@
   window.GameSaves = {
     hosts: hostsFromConfig,
     hostKey: keyFor,
+    configKey: configKeyFor,
     backup: backup,
     restore: restore,
     probe: probe,
