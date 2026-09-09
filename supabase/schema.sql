@@ -260,6 +260,33 @@ alter table public.game_stats    enable row level security;
 alter table public.reports       enable row level security;
 alter table public.audit         enable row level security;
 
+-- ---------------------------------------------------------------------
+-- 5b · GRANTS (the piece every RLS policy above depends on)
+--
+-- Postgres checks table-level GRANTs *before* it ever looks at a row
+-- security policy. Supabase used to grant select/insert/update/delete on
+-- every new public table to anon/authenticated automatically; that default
+-- is being phased out (opt-in for new projects since 2026-05-30, enforced
+-- on every project 2026-10-30 per Supabase's own changelog), so a project
+-- created under the new default — or an older one that had this revoked —
+-- has RLS policies that can never fire: the grant is missing, so Postgres
+-- rejects the query first and every policy above is dead code. This is
+-- almost certainly why "add friend" and cloud save error out: the table
+-- itself refuses the authenticated role, full stop, regardless of RLS.
+--
+-- Explicit and idempotent, safe to re-run: grants the four DML privileges
+-- to anon/authenticated on every current table, the sequences behind
+-- identity columns, and sets it as the default for any table added later
+-- in this same file (so a future `create table` further down doesn't
+-- silently repeat this bug).
+grant usage on schema public to anon, authenticated;
+grant select, insert, update, delete on all tables    in schema public to anon, authenticated;
+grant usage, select            on all sequences in schema public to anon, authenticated;
+alter default privileges in schema public
+  grant select, insert, update, delete on tables to anon, authenticated;
+alter default privileges in schema public
+  grant usage, select on sequences to anon, authenticated;
+
 -- ---- profiles ----
 drop policy if exists profiles_read on public.profiles;
 create policy profiles_read on public.profiles for select
@@ -1099,12 +1126,19 @@ create trigger feedback_notify
   after update on public.feedback
   for each row execute function public.on_feedback_touched();
 
-create or replace function public.put_game_save(host text, payload jsonb)
+-- The parameter used to be named `host`, same as the column it's written
+-- into. PL/pgSQL resolves bare identifiers against variables before
+-- columns, so `on conflict (user_id, host)` was ambiguous between the two
+-- and every call failed with "column reference \"host\" is ambiguous" —
+-- put_game_save has never successfully written a row. Renamed to p_host;
+-- dropped first because CREATE OR REPLACE cannot rename a parameter.
+drop function if exists public.put_game_save(text, jsonb);
+create or replace function public.put_game_save(p_host text, payload jsonb)
 returns int language plpgsql security definer set search_path = public as $$
 declare n int;
 begin
   if auth.uid() is null then raise exception 'Not signed in.'; end if;
-  if host !~ '^[A-Za-z0-9._-]{1,64}$' then raise exception 'Unknown game host.'; end if;
+  if p_host !~ '^[A-Za-z0-9._-]{1,64}$' then raise exception 'Unknown game host.'; end if;
   -- 4 MB: IndexedDB saves carry binary (Unity keeps a whole virtual
   -- filesystem there) and it is base64'd to survive JSON.
   if pg_column_size(payload) > 4194304 then raise exception 'That host''s saves are too large.'; end if;
@@ -1112,7 +1146,7 @@ begin
   n := (select count(*) from jsonb_object_keys(coalesce(payload, '{}'::jsonb)));
 
   insert into public.game_saves (user_id, host, payload, keys, updated_at)
-  values (auth.uid(), put_game_save.host, coalesce(payload, '{}'::jsonb), n, now())
+  values (auth.uid(), p_host, coalesce(payload, '{}'::jsonb), n, now())
   on conflict (user_id, host) do update
     set payload = excluded.payload, keys = excluded.keys, updated_at = now();
 
@@ -3194,3 +3228,34 @@ where role <> 'user'
 order by
   case role when 'owner' then 0 when 'admin' then 1 else 2 end,
   username;
+
+-- =====================================================================
+-- Belt-and-suspenders re-grant, now that every table/view in this file
+-- has actually been created. The block near the top of the file (search
+-- "5b · GRANTS") covers everything that exists at that point in the
+-- script and relies on ALTER DEFAULT PRIVILEGES for tables created later
+-- — which only applies automatically when the whole file runs as one
+-- role in one session. Re-stating it here, after every `create table`
+-- below that point, means the grant holds even if this file is ever
+-- split, run in pieces, or run by a migration tool that changes role
+-- between statements.
+grant usage on schema public to anon, authenticated;
+grant select, insert, update, delete on all tables in schema public to anon, authenticated;
+grant select on public.custom_games_public to anon, authenticated;
+grant usage, select on all sequences in schema public to anon, authenticated;
+
+-- =====================================================================
+-- Tell PostgREST (the API layer the browser actually talks to) to drop
+-- its cached list of tables/functions and re-read the schema right now.
+-- Without this, every function above genuinely exists in Postgres the
+-- instant this script finishes, but calls to it from the app keep
+-- failing with "Could not find the function public.X in the schema
+-- cache" until PostgREST's next scheduled refresh — because PostgREST
+-- caches the schema at startup and only re-reads it on this signal or
+-- a restart. The Dashboard's SQL Editor sends this automatically
+-- after you click Run; running the file any other way (psql, a
+-- migration tool, pgAdmin) does not, which is almost certainly why
+-- accept_request (and possibly others) showed up as missing even
+-- though `create or replace function` already ran successfully.
+-- =====================================================================
+NOTIFY pgrst, 'reload schema';

@@ -20,7 +20,24 @@ set -uo pipefail
 
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SCHEMA="$HERE/../schema.sql"
-PGDIR="${TMPDIR:-/tmp}/arcade-pgtest-$$"
+# initdb/pg_ctl/psql are native Windows binaries under MSYS/git-bash. They
+# don't understand bash-style paths (/c/Users/...) the way bash itself
+# does, so every path handed to one of them needs the native C:\... form.
+# cygpath does that; anywhere it's missing (real Linux/macOS), the path is
+# already native and this is a no-op passthrough.
+nativepath() {
+  if command -v cygpath >/dev/null 2>&1; then cygpath -w "$1"; else printf '%s' "$1"; fi
+}
+SCHEMA_NATIVE="$(nativepath "$SCHEMA")"
+HERE_NATIVE="$(nativepath "$HERE")"
+# initdb/pg_ctl/psql are native Windows binaries under MSYS/git-bash, so a
+# bash-only path like /tmp/... (valid to bash, meaningless to them) makes
+# every one of them fail silently or hang. ${LOCALAPPDATA:-$TMPDIR}/Temp is
+# a real Windows path on Windows and a harmless fallback everywhere else.
+PGBASE="${LOCALAPPDATA:+$LOCALAPPDATA/Temp}"
+PGBASE="${PGBASE:-${TMPDIR:-/tmp}}"
+PGDIR="$PGBASE/arcade-pgtest-$$"
+PGDIR_NATIVE="$(nativepath "$PGDIR")"
 PORT=55432
 CONN="-U postgres -h 127.0.0.1 -p $PORT -w"
 
@@ -31,14 +48,14 @@ command -v initdb >/dev/null || {
 }
 
 cleanup() {
-  pg_ctl -D "$PGDIR" stop -m immediate >/dev/null 2>&1
+  pg_ctl -D "$PGDIR_NATIVE" stop -m immediate >/dev/null 2>&1
   rm -rf "$PGDIR"
 }
 trap cleanup EXIT
 
 echo "· starting a throwaway cluster on port $PORT"
-initdb -D "$PGDIR" -U postgres --auth=trust -E UTF8 >/dev/null 2>&1 || { echo "initdb failed"; exit 1; }
-pg_ctl -D "$PGDIR" -o "-p $PORT" -l "$PGDIR/log" start >/dev/null 2>&1
+initdb -D "$PGDIR_NATIVE" -U postgres --auth=trust -E UTF8 >/dev/null 2>&1 || { echo "initdb failed"; exit 1; }
+pg_ctl -D "$PGDIR_NATIVE" -o "-p $PORT" -l "$PGDIR_NATIVE/log" start >/dev/null 2>&1
 for _ in $(seq 1 20); do
   psql $CONN -c "select 1" >/dev/null 2>&1 && break
   sleep 0.5
@@ -58,12 +75,12 @@ fresh_db() {
   dropdb $CONN --if-exists --force archtest >/dev/null 2>&1
   createdb $CONN archtest >/dev/null 2>&1
   psql $CONN -q -v ON_ERROR_STOP=1 -d archtest -c "create extension if not exists citext;" >/dev/null 2>&1
-  psql $CONN -q -v ON_ERROR_STOP=1 -d archtest -f "$HERE/00-supabase-stub.sql" >/dev/null 2>&1
+  psql $CONN -q -v ON_ERROR_STOP=1 -d archtest -f "$HERE_NATIVE/00-supabase-stub.sql" >/dev/null 2>&1
 }
 
 apply_schema() {
   local out
-  out="$(psql $CONN -q -v ON_ERROR_STOP=1 -d archtest -f "$SCHEMA" 2>&1 | grep -iE '^psql.*ERROR|^ERROR|FATAL')"
+  out="$(psql $CONN -q -v ON_ERROR_STOP=1 -d archtest -f "$SCHEMA_NATIVE" 2>&1 | grep -iE '^psql.*ERROR|^ERROR|FATAL')"
   if [ -n "$out" ]; then echo "  FAIL  schema errored:"; echo "$out" | head -5; return 1; fi
   echo "  ok    schema applied clean"
 }
@@ -79,7 +96,7 @@ case_fresh() {
   # Capture once: the suite inserts accounts, so a second run would collide
   # on the username unique index and report failures that are not real.
   local out
-  out="$(psql $CONN -q -d archtest -f "$HERE/10-owner.test.sql" 2>&1 \
+  out="$(psql $CONN -q -d archtest -f "$HERE_NATIVE/10-owner.test.sql" 2>&1 \
          | grep -E 'ok  |FAIL' | sed 's/^psql:.*NOTICE:  //;s/^NOTICE:  //')"
   echo "$out" | sed 's/^/  /'
   ! echo "$out" | grep -q 'FAIL'
@@ -88,7 +105,7 @@ case_fresh() {
 # --------------------------------------------------- existing admin account
 case_upgrade() {
   fresh_db
-  psql $CONN -q -v ON_ERROR_STOP=1 -d archtest -f "$HERE/20-legacy-state.sql" >/dev/null 2>&1
+  psql $CONN -q -v ON_ERROR_STOP=1 -d archtest -f "$HERE_NATIVE/20-legacy-state.sql" >/dev/null 2>&1
   local before after
   before="$(role_of Stealzers)"
   apply_schema || return 1

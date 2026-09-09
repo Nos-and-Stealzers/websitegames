@@ -1126,7 +1126,7 @@
     /* --- third-party game progress --- */
 
     putGameSave: function (host, payload) {
-      return rpc("put_game_save", { host: host, payload: payload })
+      return rpc("put_game_save", { p_host: host, payload: payload })
         .then(function (keys) { return { ok: true, keys: keys }; });
     },
 
