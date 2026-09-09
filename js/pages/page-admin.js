@@ -1140,7 +1140,8 @@
 
       var CATEGORIES = [
         "arcade", "action", "puzzle", "strategy", "horror", "platformer", "sports",
-        "racing", "adventure", "simulation", "rpg", "sandbox", "idle", "clicker", "other"
+        "racing", "adventure", "simulation", "rpg", "sandbox", "idle", "clicker",
+        "cards", "board", "trivia", "music", "other"
       ];
 
       function catField(id) { return document.getElementById(id); }

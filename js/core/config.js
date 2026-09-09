@@ -103,6 +103,10 @@
       sandbox:    { label: "Sandbox",    icon: "▦" },
       idle:       { label: "Idle",       icon: "◔" },
       clicker:    { label: "Clicker",    icon: "◉" },
+      cards:      { label: "Cards",      icon: "♠" },
+      board:      { label: "Board",      icon: "⛃" },
+      trivia:     { label: "Trivia",     icon: "?" },
+      music:      { label: "Music",      icon: "♪" },
       other:      { label: "Other",      icon: "◇" }
     },
 

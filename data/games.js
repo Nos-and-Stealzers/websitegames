@@ -855,7 +855,7 @@ window.GAME_CATALOG = [
   {
     "id": "swfgalaxy-impossiblequiz",
     "title": "Impossiblequiz",
-    "category": "arcade",
+    "category": "trivia",
     "description": "Swfgalaxy game: Impossiblequiz.",
     "gradient": "linear-gradient(135deg, #ec4899, #be185d)",
     "source": "impossiblequiz.html",
@@ -868,7 +868,7 @@ window.GAME_CATALOG = [
   {
     "id": "swfgalaxy-impossiblequiz2",
     "title": "Impossiblequiz2",
-    "category": "arcade",
+    "category": "trivia",
     "description": "Swfgalaxy game: Impossiblequiz2.",
     "gradient": "linear-gradient(135deg, #eab308, #a16207)",
     "source": "impossiblequiz2.html",
@@ -881,7 +881,7 @@ window.GAME_CATALOG = [
   {
     "id": "swfgalaxy-impossiblequizhacked",
     "title": "Impossiblequizhacked",
-    "category": "arcade",
+    "category": "trivia",
     "description": "Swfgalaxy game: Impossiblequizhacked.",
     "gradient": "linear-gradient(135deg, #14b8a6, #0f766e)",
     "source": "impossiblequizhacked.html",
@@ -1752,7 +1752,7 @@ window.GAME_CATALOG = [
   {
     "id": "swfgalaxy-uno",
     "title": "Uno",
-    "category": "arcade",
+    "category": "cards",
     "description": "Swfgalaxy game: Uno.",
     "gradient": "linear-gradient(135deg, #ec4899, #be185d)",
     "source": "uno.html",
@@ -3048,7 +3048,7 @@ window.GAME_CATALOG = [
   {
     "id": "ext2-bridge",
     "title": "Bridge",
-    "category": "other",
+    "category": "cards",
     "description": "A JavaScript implementation of the classic card game Bridge.",
     "gradient": "linear-gradient(135deg, #eab308, #713f12)",
     "source": "gh-victorqribeiro-bridge/index.html",
@@ -3386,7 +3386,7 @@ window.GAME_CATALOG = [
   {
     "id": "ext2-webosu",
     "title": "WebOsu",
-    "category": "other",
+    "category": "music",
     "description": "An unofficial web rhythm game inspired by osu!.",
     "gradient": "linear-gradient(135deg, #06b6d4, #164e63)",
     "source": "gh-111116-webosu/index.html",
@@ -3594,7 +3594,7 @@ window.GAME_CATALOG = [
   {
     "id": "ext2-open-trivia",
     "title": "Open Trivia",
-    "category": "other",
+    "category": "trivia",
     "description": "A single or local multiplayer trivia game built with Vue.js.",
     "gradient": "linear-gradient(135deg, #6366f1, #312e81)",
     "source": "gh-splode-open-trivia-app/index.html",
@@ -4491,7 +4491,7 @@ window.GAME_CATALOG = [
   {
     "id": "ext3-1keys",
     "title": "1 Kilobyte Piano",
-    "category": "other",
+    "category": "music",
     "description": "A playable piano built in just 1 kilobyte of JavaScript.",
     "gradient": "linear-gradient(135deg, #1f2937, #000000)",
     "source": "gh-killedbyapixel-1keys/index.html",
@@ -4595,7 +4595,7 @@ window.GAME_CATALOG = [
   {
     "id": "ext4-klondike-solitaire",
     "title": "Klondike Solitaire",
-    "category": "puzzle",
+    "category": "cards",
     "description": "A fully responsive web adaptation of classic Klondike Solitaire with proper deck shuffling and foundation piles.",
     "gradient": "linear-gradient(135deg, #166534, #052e16)",
     "source": "gh-bocaletto-luca-solitaire/index.html",
@@ -4608,7 +4608,7 @@ window.GAME_CATALOG = [
   {
     "id": "ext4-mahjong-solitaire",
     "title": "Mahjong Solitaire",
-    "category": "puzzle",
+    "category": "cards",
     "description": "Classic Mahjong Solitaire with tile emoji styling, dynamically generated levels and layered boards.",
     "gradient": "linear-gradient(135deg, #b91c1c, #450a0a)",
     "source": "gh-bocaletto-luca-mahjong-solitaire/index.html",
@@ -4621,7 +4621,7 @@ window.GAME_CATALOG = [
   {
     "id": "ext4-texas-holdem",
     "title": "Texas Hold'em Web Game",
-    "category": "other",
+    "category": "cards",
     "description": "Browser-based Texas Hold'em poker experience with customizable settings and AI opponents (no real-money play).",
     "gradient": "linear-gradient(135deg, #15803d, #14532d)",
     "source": "gh-bocaletto-luca-texas-holdem/index.html",
@@ -4647,7 +4647,7 @@ window.GAME_CATALOG = [
   {
     "id": "ext4-blackjack-saganaki",
     "title": "Blackjack (Saganaki22)",
-    "category": "other",
+    "category": "cards",
     "description": "Sleek responsive Blackjack card game with animated dealing, chip betting and touch-optimized controls (no real-money gambling).",
     "gradient": "linear-gradient(135deg, #065f46, #022c22)",
     "source": "gh-saganaki22-blackjack/index.html",
@@ -4777,7 +4777,7 @@ window.GAME_CATALOG = [
   {
     "id": "ext4-checkers-dama",
     "title": "Dama Checkers",
-    "category": "puzzle",
+    "category": "board",
     "description": "Fully featured browser-based checkers game with official rules, move history, undo/reset and a bot with three difficulty modes.",
     "gradient": "linear-gradient(135deg, #7f1d1d, #1c1917)",
     "source": "gh-bocaletto-luca-dama/index.html",
@@ -4790,7 +4790,7 @@ window.GAME_CATALOG = [
   {
     "id": "ext4-backgammon-bocaletto",
     "title": "Backgammon vs Bot",
-    "category": "puzzle",
+    "category": "board",
     "description": "Fully responsive single-player Backgammon against a bot with hitting, the bar and re-entry mechanics.",
     "gradient": "linear-gradient(135deg, #92400e, #1c1917)",
     "source": "gh-bocaletto-luca-backgammon/index.html",
@@ -4829,7 +4829,7 @@ window.GAME_CATALOG = [
   {
     "id": "ext4-checkers-cherche",
     "title": "Checkers HTML5",
-    "category": "puzzle",
+    "category": "board",
     "description": "A clean HTML5 implementation of the classic checkers board game.",
     "gradient": "linear-gradient(135deg, #b45309, #451a03)",
     "source": "gh-cherche-checkers/index.html",
@@ -4868,7 +4868,7 @@ window.GAME_CATALOG = [
   {
     "id": "ext4-annex-reversi",
     "title": "Annex Reversi",
-    "category": "puzzle",
+    "category": "board",
     "description": "A Reversi/Othello board game implemented with HTML5 and JavaScript by Intel's webapps team.",
     "gradient": "linear-gradient(135deg, #0f766e, #042f2e)",
     "source": "gh-intel-webapps-annex/app/index.html",
@@ -4881,7 +4881,7 @@ window.GAME_CATALOG = [
   {
     "id": "ext4-othellojs",
     "title": "OthelloJS",
-    "category": "puzzle",
+    "category": "board",
     "description": "Othello (Reversi) game implemented using HTML5 canvas and vanilla JavaScript.",
     "gradient": "linear-gradient(135deg, #059669, #022c22)",
     "source": "gh-angelmariages-othellojs/othello.html",
@@ -4894,7 +4894,7 @@ window.GAME_CATALOG = [
   {
     "id": "ext4-html5-simon-says",
     "title": "HTML5 Simon Says",
-    "category": "puzzle",
+    "category": "music",
     "description": "A fun and simple music-memory Simon Says game built in HTML5 and JavaScript.",
     "gradient": "linear-gradient(135deg, #ca8a04, #422006)",
     "source": "gh-dbchristopher-html5-simon-says/index.html",
@@ -5154,7 +5154,7 @@ window.GAME_CATALOG = [
   {
     "id": "ext4-dominoes-web-game",
     "title": "Dominoes",
-    "category": "puzzle",
+    "category": "board",
     "description": "A classic Dominoes tile-matching board game created with HTML5, CSS and JavaScript.",
     "gradient": "linear-gradient(135deg, #1e293b, #020617)",
     "source": "gh-martakoprivica-dominoes-web-game/index.html",

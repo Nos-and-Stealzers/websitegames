@@ -20,7 +20,8 @@ const owner = A.requireRole("owner");
 
 const CATEGORIES = [
   "arcade", "action", "puzzle", "strategy", "horror", "platformer", "sports",
-  "racing", "adventure", "simulation", "rpg", "sandbox", "idle", "clicker", "other"
+  "racing", "adventure", "simulation", "rpg", "sandbox", "idle", "clicker",
+  "cards", "board", "trivia", "music", "other"
 ];
 const RISKS = ["low", "medium", "high", "unknown"];
 
