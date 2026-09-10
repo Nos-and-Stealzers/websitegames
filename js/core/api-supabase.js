@@ -46,8 +46,16 @@
 
   /* Supabase Auth needs an address. The hub is username-only, so one is
      derived. Nothing is ever sent to it — turn OFF "Confirm email" in
-     Authentication → Providers → Email, or signup will hang unconfirmed. */
-  var MAIL_DOMAIN = "users." + (SITE.domain || "arcade.local");
+     Authentication → Providers → Email, or signup will hang unconfirmed.
+
+     IMPORTANT: this must be a domain that actually resolves in DNS.
+     Supabase's signup validator rejects addresses on domains with no DNS
+     records at all (NXDOMAIN) as "invalid", even though no mail is ever
+     sent — a "users." subdomain that was never given an A/MX record will
+     break every single signup with "Email address ... is invalid".
+     SITE.domain itself already has to resolve for the site to be reachable,
+     so it's used directly here instead of an unconfigured subdomain. */
+  var MAIL_DOMAIN = SITE.domain || "arcade.local";
   function emailFor(username) {
     return String(username).toLowerCase() + "@" + MAIL_DOMAIN;
   }
