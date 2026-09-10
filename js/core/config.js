@@ -27,7 +27,7 @@
       "retrobowl":  "https://arcadecampushub.github.io/RetroBow",
       "waterboy-firegirl": "https://arcadecampushub.github.io/Waterboy-Firegirl",
       "extgames": "https://arcadecampushub.github.io/extgames",
-      "nebula-cdn": "https://cdn.jsdelivr.net/gh/GoatTech-42/NEBULA-CDN@main/games"
+      "nebula-cdn": "https://cdn.jsdelivr.net/gh/Nos-and-Stealzers/NEBULA-CDN@main/games"
     },
 
     /* Fallback for any entry without a `host`, and for legacy catalogs whose
