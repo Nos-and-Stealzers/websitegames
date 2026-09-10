@@ -1353,6 +1353,9 @@
     playlistDetail: function (id) {
       return rpc("playlist_detail", { p_id: id });
     },
+    acceptPolicy: function (version) {
+      return rpc("accept_policy", { version: version });
+    },
     adminListPlaylists: function (q) {
       return rpc("admin_list_playlists", { q: q || null });
     },
