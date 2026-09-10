@@ -246,6 +246,21 @@
     adminSetMute: function (id, minutes) {
       return request("POST", "/admin/users/" + id + "/mute", { minutes: minutes });
     },
+    createPlaylist: function (title, description, isPublic) {
+      return request("POST", "/playlists", { title: title, description: description, isPublic: isPublic });
+    },
+    updatePlaylist: function (id, patch) { return request("PATCH", "/playlists/" + id, patch); },
+    deletePlaylist: function (id) { return request("DELETE", "/playlists/" + id); },
+    addPlaylistItem: function (playlistId, videoId, title) {
+      return request("POST", "/playlists/" + playlistId + "/items", { videoId: videoId, title: title });
+    },
+    removePlaylistItem: function (itemId) { return request("DELETE", "/playlist-items/" + itemId); },
+    reorderPlaylistItem: function (itemId, position) {
+      return request("PATCH", "/playlist-items/" + itemId, { position: position });
+    },
+    myPlaylists: function () { return request("GET", "/playlists/mine"); },
+    publicPlaylists: function (q) { return request("GET", "/playlists/public" + (q ? "?q=" + encodeURIComponent(q) : "")); },
+    playlistDetail: function (id) { return request("GET", "/playlists/" + id); },
     adminReports: function (state) { return request("GET", "/admin/reports?state=" + (state || "open")); },
     adminCloseReport: function (id, state) {
       return request("PATCH", "/admin/reports/" + id, { state: state || "closed" });

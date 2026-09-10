@@ -73,6 +73,7 @@
         reports:  { load: loadReports },
         feedback: { load: loadFeedback },
         logins:   { load: loadLogins },
+        playlists: { load: loadPlaylists },
         games:    { load: loadCatalog },
         workbench: { load: function () {} },
         gamedata: { load: function () { if (window.initGameData) window.initGameData(); } },
@@ -1091,6 +1092,61 @@
           });
         });
       }
+
+      /* ------------------------------------------------------- playlists */
+
+      /* Campus+ moderation. Staff can see every shared playlist (private ones
+         stay private even from here — the RPC only returns what's public,
+         plus anything staff already own) and pull down anything that
+         shouldn't be there. There is no edit here on purpose: the fix for a
+         bad playlist is removing it, not staff curating someone else's. */
+      var plQ = document.getElementById("pl-q");
+      function loadPlaylists() {
+        return API.adminListPlaylists(plQ ? plQ.value.trim() : "").then(function (rows) {
+          var host = document.getElementById("pl-rows");
+          host.innerHTML = "";
+
+          if (!rows.length) {
+            host.appendChild(UI.el("p", "dim", "No shared playlists yet."));
+            return;
+          }
+
+          var cols = "1fr 8rem 6rem 8rem auto";
+          var head = UI.el("div", "rows-head");
+          head.style.gridTemplateColumns = cols;
+          ["Playlist", "Owner", "Videos", "Updated", ""].forEach(function (h) {
+            head.appendChild(UI.el("span", null, h));
+          });
+          host.appendChild(head);
+
+          rows.forEach(function (p) {
+            var row = UI.el("div", "row");
+            row.style.gridTemplateColumns = cols;
+
+            var name = UI.el("span", "name");
+            name.textContent = p.title + (p.isPublic ? "" : " (private)");
+            row.appendChild(name);
+
+            row.appendChild(UI.el("span", "cat", "@" + p.ownerUsername));
+            row.appendChild(UI.el("span", "cat", String(p.itemCount)));
+            row.appendChild(UI.el("span", "plays", UI.formatWhen(new Date(p.updatedAt).getTime())));
+
+            var del = UI.el("button", "btn btn-sm btn-flat is-danger", "Remove");
+            del.type = "button";
+            del.addEventListener("click", function () {
+              if (!window.confirm("Remove \u201c" + p.title + "\u201d? This deletes it for @" + p.ownerUsername + " too.")) return;
+              API.adminDeletePlaylist(p.id).then(function () {
+                UI.toast("Removed");
+                loadPlaylists();
+              }).catch(function (err) { UI.toast(err.message); });
+            });
+            row.appendChild(del);
+
+            host.appendChild(row);
+          });
+        });
+      }
+      if (plQ) plQ.addEventListener("input", UI.debounce(loadPlaylists, 250));
 
       /* -------------------------------------------------------- support */
 

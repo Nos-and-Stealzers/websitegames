@@ -44,6 +44,8 @@
           <span class="ico" aria-hidden="true">◐</span><span class="lbl">Feedback</span></button>
         <button class="admin-nav-link" type="button" role="tab" data-tab="logins" aria-selected="false">
           <span class="ico" aria-hidden="true">⏚</span><span class="lbl">Logins</span></button>
+        <button class="admin-nav-link" type="button" role="tab" data-tab="playlists" aria-selected="false">
+          <span class="ico" aria-hidden="true">▶</span><span class="lbl">Playlists</span></button>
         <button class="admin-nav-link" type="button" role="tab" data-tab="games" aria-selected="false" data-owner hidden>
           <span class="ico" aria-hidden="true">▦</span><span class="lbl">Games</span></button>
         <button class="admin-nav-link" type="button" role="tab" data-tab="workbench" aria-selected="false" data-owner hidden>
@@ -269,6 +271,21 @@
           </p>
         </div>
         <div class="rows" id="login-rows"></div>
+      </section>
+
+      <!-- playlists -->
+      <section class="tab-panel" data-panel="playlists" hidden>
+        <div class="panel" style="margin-bottom:1rem">
+          <p class="tiny dimmer" style="margin:0">
+            Every playlist shared publicly through Campus+. Private playlists stay
+            private — this only lists what people chose to share, plus anything
+            staff themselves own. Removing one deletes it for its owner too.
+          </p>
+        </div>
+        <div class="field" style="margin-bottom:1rem">
+          <input type="text" id="pl-q" placeholder="Search playlists or owners…" autocomplete="off">
+        </div>
+        <div class="rows" id="pl-rows"></div>
       </section>
 
       <!-- games (owner only) -->

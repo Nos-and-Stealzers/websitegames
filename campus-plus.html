@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" data-skin="noir" data-lite="off">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Campus+ — Arcade Campus Hub</title>
+  <meta name="description" content="Paste a YouTube link, it plays right here. Build playlists, share them, or keep them to yourself.">
+  <meta name="theme-color" content="#0c0d10">
+  <meta name="robots" content="noindex,follow">
+  <link rel="icon" type="image/svg+xml" href="assets/icon.svg">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/core/theme-boot.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div data-shell="chrome"></div>
+
+  <main class="main" id="main">
+
+    <header class="page-head">
+      <span class="label">Campus<span class="plus-mark">+</span></span>
+      <h1>Watch, play, keep a playlist</h1>
+      <p>Paste any YouTube link and it plays right here — no leaving the site. Save what you find
+        into a playlist, keep it to yourself or share it with everyone.</p>
+    </header>
+
+    <section class="block" aria-labelledby="add-h">
+      <div class="block-head"><h2 id="add-h">Play something</h2><span class="fill"></span></div>
+      <div class="panel">
+        <div class="field" style="margin-bottom:0.6rem">
+          <label for="cp-url">YouTube link</label>
+          <input type="text" id="cp-url" placeholder="https://youtube.com/watch?v=… or youtu.be/…" autocomplete="off">
+        </div>
+        <div class="btn-row" style="gap:0.5rem">
+          <button class="btn btn-cta" type="button" id="cp-play">▶ Play</button>
+          <button class="btn" type="button" id="cp-add" disabled>+ Add to a playlist</button>
+        </div>
+        <p class="tiny dimmer" id="cp-url-note" style="margin:0.6rem 0 0"></p>
+      </div>
+    </section>
+
+    <section class="block" id="cp-player-block" hidden aria-labelledby="player-h">
+      <div class="block-head"><h2 id="player-h">Now playing</h2><span class="fill"></span></div>
+      <div class="panel panel-flush">
+        <div class="cp-player-wrap">
+          <iframe id="cp-player" title="Video player" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" aria-labelledby="mine-h">
+      <div class="block-head">
+        <h2 id="mine-h">Your playlists</h2>
+        <span class="fill"></span>
+        <button class="btn btn-sm" type="button" id="cp-new">+ New playlist</button>
+      </div>
+      <div class="panel" id="cp-signed-out" hidden>
+        <p class="tiny dimmer" style="margin:0">
+          <a href="login.html?next=campus-plus.html">Sign in</a> to keep playlists across devices.
+        </p>
+      </div>
+      <div class="rows" id="cp-mine" style="border:0"></div>
+    </section>
+
+    <section class="block" aria-labelledby="public-h">
+      <div class="block-head">
+        <h2 id="public-h">Shared by everyone</h2>
+        <span class="fill"></span>
+      </div>
+      <div class="field" style="margin-bottom:0.8rem">
+        <input type="text" id="cp-public-q" placeholder="Search shared playlists…" autocomplete="off">
+      </div>
+      <div class="rows" id="cp-public" style="border:0"></div>
+    </section>
+
+    <!-- playlist detail -->
+    <section class="block" id="cp-detail-block" hidden aria-labelledby="detail-h">
+      <div class="block-head">
+        <h2 id="detail-h">Playlist</h2>
+        <span class="fill"></span>
+        <button class="btn btn-sm btn-flat" type="button" id="cp-detail-close">Close</button>
+      </div>
+      <div class="panel" id="cp-detail-content"></div>
+    </section>
+
+    <div data-shell="foot"></div>
+  </main>
+
+  <script src="js/core/config.js"></script>
+  <script src="data/games.js"></script>
+  <script src="js/core/store.js"></script>
+  <script src="js/features/catalog-overlay.js"></script>
+  <script src="js/features/catalog.js"></script>
+  <script src="js/features/art.js"></script>
+  <script src="js/core/ui.js"></script>
+  <script src="js/core/api.js"></script>
+  <script src="js/core/api-supabase.js"></script>
+  <script src="js/core/session.js"></script>
+  <script src="js/features/capture.js"></script>
+  <script src="js/features/chat-dock.js"></script>
+  <script src="js/features/call.js"></script>
+  <script src="js/features/game-saves.js"></script>
+  <script src="js/features/shell.js"></script>
+  <script src="js/pages/page-campus-plus.js"></script>
+</body>
+</html>

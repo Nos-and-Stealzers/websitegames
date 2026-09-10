@@ -12,6 +12,7 @@
     { href: "browse.html", icon: "▤", label: "All games", count: function () { return window.Catalog.all.length; } },
     { href: "categories.html", icon: "◫", label: "Categories", count: function () { return window.Catalog.categories.length; } },
     { href: "library.html", icon: "★", label: "Pinned", count: function () { return window.Store.favorites().length; } },
+    { href: "campus-plus.html", icon: "▶", label: "Campus+" },
     { href: "stats.html", icon: "◔", label: "Activity" },
     { href: "feedback.html", icon: "✎", label: "Feedback" },
     { href: "support.html", icon: "☂", label: "Support" },

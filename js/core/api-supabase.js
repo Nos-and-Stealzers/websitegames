@@ -1315,6 +1315,51 @@
       return rpc("admin_set_mute", { target: id, minutes: minutes });
     },
 
+    /* ---- Campus+ : YouTube-link playlists ---- */
+    createPlaylist: function (title, description, isPublic) {
+      return rpc("create_playlist", {
+        p_title: title, p_description: description || "", p_is_public: !!isPublic
+      });
+    },
+    updatePlaylist: function (id, patch) {
+      return rpc("update_playlist", {
+        p_id: id,
+        p_title: patch.title === undefined ? null : patch.title,
+        p_description: patch.description === undefined ? null : patch.description,
+        p_is_public: patch.isPublic === undefined ? null : patch.isPublic
+      });
+    },
+    deletePlaylist: function (id) {
+      return rpc("delete_playlist", { p_id: id }).then(function () { return { ok: true }; });
+    },
+    addPlaylistItem: function (playlistId, videoId, title) {
+      return rpc("add_playlist_item", {
+        p_playlist_id: playlistId, p_video_id: videoId, p_title: title || ""
+      });
+    },
+    removePlaylistItem: function (itemId) {
+      return rpc("remove_playlist_item", { p_item_id: itemId }).then(function () { return { ok: true }; });
+    },
+    reorderPlaylistItem: function (itemId, position) {
+      return rpc("reorder_playlist_item", { p_item_id: itemId, p_position: position })
+        .then(function () { return { ok: true }; });
+    },
+    myPlaylists: function () {
+      return rpc("my_playlists", {});
+    },
+    publicPlaylists: function (q) {
+      return rpc("public_playlists", { q: q || null });
+    },
+    playlistDetail: function (id) {
+      return rpc("playlist_detail", { p_id: id });
+    },
+    adminListPlaylists: function (q) {
+      return rpc("admin_list_playlists", { q: q || null });
+    },
+    adminDeletePlaylist: function (id) {
+      return rpc("delete_playlist", { p_id: id }).then(function () { return { ok: true }; });
+    },
+
     adminReports: function (state) {
       return rpc("admin_reports", { want_state: state || "open" }).then(function (rows) {
         return {
