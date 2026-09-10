@@ -455,6 +455,10 @@
         var body = document.getElementById("user-detail");
         body.innerHTML = "";
         body.appendChild(UI.el("span", "label", "@" + u.username));
+        if (u.isPlus) {
+          var plusTag = UI.el("span", "role plus", "Campus+");
+          body.appendChild(plusTag);
+        }
 
         var summary = UI.el("p", "tiny dimmer");
         summary.style.margin = "0 0 1rem";
