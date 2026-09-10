@@ -704,6 +704,8 @@
   function bindKeys() {
     document.addEventListener("keydown", function (event) {
       if (event.key === "Escape") {
+        var kh = document.getElementById("kbd-help");
+        if (kh) kh.remove();
         closeFinder(); closeSettings(); toggleRail(false);
         return;
       }
@@ -745,9 +747,56 @@
       } else if (event.key === "r" || event.key === "R") {
         playRandom();
       } else if (event.key === "?") {
-        openSettings();
+        event.preventDefault(); toggleShortcutHelp();
       }
     });
+  }
+
+  /* A small, discoverable cheat-sheet of the single-key shortcuts. Press ?
+     to toggle. Injects its own styles so it works on every page. */
+  function toggleShortcutHelp() {
+    var existing = document.getElementById("kbd-help");
+    if (existing) { existing.remove(); return; }
+
+    if (!document.getElementById("kbd-help-style")) {
+      var css =
+        "#kbd-help{position:fixed;inset:0;z-index:2147481000;display:flex;" +
+        "align-items:center;justify-content:center;background:rgba(4,5,8,.6);" +
+        "backdrop-filter:blur(4px);}" +
+        "#kbd-help .kh-card{background:var(--card,#14161c);color:var(--foreground,#e9edf3);" +
+        "border:1px solid var(--border,#2a2f3a);border-radius:14px;padding:1.4rem 1.6rem;" +
+        "min-width:18rem;max-width:24rem;box-shadow:0 20px 60px rgba(0,0,0,.5);" +
+        "font:0.95rem/1.4 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;}" +
+        "#kbd-help h3{margin:0 0 .8rem;font-size:1.1rem;}" +
+        "#kbd-help .kh-row{display:flex;justify-content:space-between;gap:1rem;" +
+        "padding:.35rem 0;border-bottom:1px solid var(--border,#2a2f3a);}" +
+        "#kbd-help .kh-row:last-child{border-bottom:0;}" +
+        "#kbd-help kbd{font-family:var(--mono,monospace);background:var(--accent,#ff5c33);" +
+        "color:#111;border-radius:5px;padding:.05rem .45rem;font-weight:700;font-size:.85rem;}" +
+        "#kbd-help .kh-hint{margin:.9rem 0 0;font-size:.8rem;opacity:.6;}";
+      var st = document.createElement("style");
+      st.id = "kbd-help-style";
+      st.textContent = css;
+      document.head.appendChild(st);
+    }
+
+    var wrap = el("div");
+    wrap.id = "kbd-help";
+    var rows = [
+      ["/", "Search"],
+      ["K", "Command palette"],
+      ["R", "Play something random"],
+      ["F", "Pin / unpin (while playing)"],
+      ["?", "This help"],
+      ["Esc", "Close menus"],
+      ["Right-click", "Quick actions menu"]
+    ].map(function (r) {
+      return '<div class="kh-row"><span>' + r[1] + '</span><kbd>' + r[0] + '</kbd></div>';
+    }).join("");
+    wrap.innerHTML = '<div class="kh-card"><h3>Keyboard shortcuts</h3>' + rows +
+      '<p class="kh-hint">Press ? or Esc to close.</p></div>';
+    wrap.addEventListener("click", function (e) { if (e.target === wrap) wrap.remove(); });
+    document.body.appendChild(wrap);
   }
 
   /* ----------------------------------------------------------- site banner */
