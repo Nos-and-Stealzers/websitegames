@@ -5189,5 +5189,19 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "host": "extgames"
+  },
+  {
+    "id": "polytrack",
+    "title": "PolyTrack",
+    "category": "racing",
+    "description": "Low-poly racing game inspired by TrackMania — loops, jumps and high speeds where every millisecond counts, with a built-in level editor for building and sharing tracks.",
+    "gradient": "linear-gradient(135deg, #0ea5e9, #0c4a6e)",
+    "source": "https://do-not-dusturb.github.io/polytrack/",
+    "direct": "https://do-not-dusturb.github.io/polytrack/",
+    "sandbox": "allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-pointer-lock allow-downloads",
+    "platform": "external",
+    "embed": "blocked",
+    "schoolRisk": "low",
+    "host": "external"
   }
 ];
