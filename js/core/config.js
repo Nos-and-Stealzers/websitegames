@@ -61,11 +61,11 @@
        here; it bypasses RLS and would hand every visitor full database
        access. If one has ever been pasted anywhere public, rotate it. */
     supabase: {
-      url: "https://jtpostzpnhyyvuvywbiy.supabase.co",
+      url: "https://qopjzxrjkkljpumyirtb.supabase.co",
       anonKey:
         "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." +
-        "eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp0cG9zdHpwbmh5eXZ1dnl3Yml5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU4OTEyNjgsImV4cCI6MjEwMTQ2NzI2OH0." +
-        "pBbjcEMqRMLjzRc0uvL0mAEcyYaxgvzjho0kXwH7eKA"
+        "eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFvcGp6eHJqa2tsanB1bXlpcnRiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYxOTE0NzYsImV4cCI6MjA5MTc2NzQ3Nn0." +
+        "wHLn-q1OpO0HP87yiDGnNmHfnI0J_AUDEXT09HpKUNg"
     },
 
     /* Used when backend === "node". Empty means same origin. */
