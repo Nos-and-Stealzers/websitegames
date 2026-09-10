@@ -262,10 +262,30 @@
 
     /* ------------------------------------------------------------- boot */
 
+    /* Show the current membership tier + limits in the header. Campus+ is free
+       for everyone; members (staff-granted) get much higher limits and a badge. */
+    function showMembership(user) {
+      var el = document.getElementById("cp-membership");
+      if (!el) return;
+      if (!user) { el.hidden = true; return; }
+      el.hidden = false;
+      if (user.isPlus) {
+        el.innerHTML = '<b style="color:var(--accent,#ff5c33)">Campus+ member</b> ' +
+          '\u2726 \u2014 up to 50 playlists, 500 videos each.';
+      } else {
+        el.textContent = "Free tier: up to 5 playlists, 100 videos each. " +
+          "Ask staff about Campus+ for more.";
+      }
+    }
+
     Session.ready.then(function () {
       loadMine();
+      showMembership(Session.user);
     });
-    document.addEventListener("session:change", loadMine);
+    document.addEventListener("session:change", function () {
+      loadMine();
+      showMembership(Session.user);
+    });
     loadPublic("");
   }
 

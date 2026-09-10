@@ -600,6 +600,33 @@
           body.appendChild(muteRow);
         }
 
+        /* Campus+ membership — a staff-granted perk (more playlists + a badge).
+           The feature itself is free; this is the "better things" tier. */
+        var plusWrap = UI.el("div", "field");
+        plusWrap.style.margin = "0.6rem 0";
+        var plusLabel = UI.el("label", null, "Campus+ membership");
+        plusWrap.appendChild(plusLabel);
+        var hasPlus = !!u.isPlus;
+        var plusNote = UI.el("p", "tiny dimmer");
+        plusNote.style.margin = "0 0 0.5rem";
+        plusNote.textContent = hasPlus
+          ? "Member. 50 playlists / 500 videos each, and a Campus+ badge."
+          : "Free tier (5 playlists / 100 videos each). Grant to raise the limits and give a badge.";
+        plusWrap.appendChild(plusNote);
+        var plusBtn = UI.el("button", "btn" + (hasPlus ? "" : " btn-cta"),
+          hasPlus ? "Revoke Campus+" : "Grant Campus+");
+        plusBtn.type = "button";
+        plusBtn.addEventListener("click", function () {
+          busy(plusBtn, API.adminSetPlus(u.id, !hasPlus).then(function () {
+            UI.toast(hasPlus ? "Campus+ revoked for @" + u.username
+                             : "Campus+ granted to @" + u.username);
+            clearDetail();
+            loadUsers();
+          }).catch(function (err) { UI.toast(err.message); }));
+        });
+        plusWrap.appendChild(plusBtn);
+        body.appendChild(plusWrap);
+
         body.appendChild(UI.el("hr", "sheet-rule"));
 
         /* Staff notes — never visible to the account holder. Gives reports

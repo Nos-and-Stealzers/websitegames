@@ -159,6 +159,7 @@
       state: row.state,
       online: !!seen && Date.now() - seen < ONLINE_MS,
       lastSeen: seen,
+      isPlus: !!row.is_plus,
       createdAt: row.created_at ? Date.parse(row.created_at) : 0
     }, extra || {});
   }
@@ -195,7 +196,7 @@
   }
 
   var PROFILE_COLS = "id,username,display_name,bio,role,state,accepts_dms,show_activity," +
-                     "friend_code,created_at,last_seen";
+                     "friend_code,created_at,last_seen,is_plus";
 
   /* The signed-in account's own profile row.
      `session.user.user_metadata` is NOT a substitute: it is whatever was set
@@ -1361,6 +1362,9 @@
     },
     adminDeletePlaylist: function (id) {
       return rpc("delete_playlist", { p_id: id }).then(function () { return { ok: true }; });
+    },
+    adminSetPlus: function (id, grant) {
+      return rpc("admin_set_plus", { target: id, grant_it: !!grant });
     },
 
     adminReports: function (state) {
