@@ -44,21 +44,11 @@
 
   var TOKEN_KEY = "ach:sb-session";
 
-  /* Supabase Auth needs an address. The hub is username-only, so one is
-     derived. Nothing is ever sent to it — turn OFF "Confirm email" in
-     Authentication → Providers → Email, or signup will hang unconfirmed.
-
-     IMPORTANT: this must be a domain that actually resolves in DNS.
-     Supabase's signup validator rejects addresses on domains with no DNS
-     records at all (NXDOMAIN) as "invalid", even though no mail is ever
-     sent — a "users." subdomain that was never given an A/MX record will
-     break every single signup with "Email address ... is invalid".
-     SITE.domain itself already has to resolve for the site to be reachable,
-     so it's used directly here instead of an unconfigured subdomain. */
-  var MAIL_DOMAIN = SITE.domain || "arcade.local";
-  function emailFor(username) {
-    return String(username).toLowerCase() + "@" + MAIL_DOMAIN;
-  }
+  /* Login accepts either a username or a real email in one box (email_for_login
+     resolves a username to the account's real address server-side, since the
+     client has no way to read auth.users directly). Signup now collects a real
+     email — Confirm Email is ON, so a placeholder address nobody can receive
+     mail at would leave every new account stuck unconfirmed forever. */
 
   /* ------------------------------------------------------------- session */
 
@@ -299,19 +289,20 @@
       }).catch(function () { return { user: null }; });
     },
 
-    signup: function (username, password, displayName) {
+    signup: function (username, password, displayName, email) {
       return call("/auth/v1/signup", {
         method: "POST",
         body: {
-          email: emailFor(username),
+          email: String(email).trim().toLowerCase(),
           password: password,
           data: { username: username, display_name: displayName || username }
         }
       }).then(function (body) {
         if (!body || !body.access_token) {
-          /* Almost always email confirmation still switched on. */
-          throw fail("Account created but not signed in — turn off " +
-                     "\"Confirm email\" in Supabase Authentication settings.", 400);
+          /* Confirm Email is ON: the account exists but needs the link in
+             their inbox clicked before a session is handed out. That's
+             success, not an error — just a different next step. */
+          return { user: null, needsConfirmation: true };
         }
         keepSession(body);
         edgesCache = null;
@@ -321,12 +312,17 @@
       });
     },
 
-    login: function (username, password) {
-      return call("/auth/v1/token?grant_type=password", {
-        method: "POST",
-        body: { email: emailFor(username), password: password }
+    login: function (identifier, password) {
+      /* The box takes a username or an email — resolve it server-side to
+         the real address before the password grant, since Supabase Auth's
+         token endpoint only ever accepts an email. */
+      return rpc("email_for_login", { identifier: identifier }).then(function (email) {
+        return call("/auth/v1/token?grant_type=password", {
+          method: "POST",
+          body: { email: email || identifier, password: password }
+        });
       }).then(function (body) {
-        if (!body || !body.access_token) throw fail("Wrong username or password.", 401);
+        if (!body || !body.access_token) throw fail("Wrong username/email or password.", 401);
         keepSession(body);
         edgesCache = null;
         /* Record the sign-in for the staff log. Best-effort — a failure here
@@ -336,7 +332,7 @@
         return me().then(function (row) { return { user: shapeSelf(row) }; });
       }).catch(function (err) {
         /* Never leak whether the account exists. */
-        if (err.status === 400 || err.status === 401) throw fail("Wrong username or password.", 401);
+        if (err.status === 400 || err.status === 401) throw fail("Wrong username/email or password.", 401);
         throw err;
       });
     },

@@ -3230,6 +3230,51 @@ order by
   username;
 
 -- =====================================================================
+-- 24 · LOGIN WITH EMAIL *OR* USERNAME
+--
+-- Supabase Auth's password grant only ever accepts an email. The sign-in
+-- form takes either an email or a username in one box; the client can't
+-- read auth.users itself (no direct table access, and RLS wouldn't let
+-- it see other people's rows anyway), so this SECURITY DEFINER function
+-- is the one narrow, safe hole through that: given whatever the visitor
+-- typed, look up the matching account's real email and hand back
+-- nothing else. It runs before anyone is signed in, so it's granted to
+-- anon as well as authenticated — but it exposes only the one email
+-- string needed to attempt a login, nothing about whether the username
+-- exists if the login is about to fail anyway (same address back for a
+-- literal email typed in, so a miss here isn't a "no such user" oracle).
+-- =====================================================================
+create or replace function public.email_for_login(identifier text)
+returns text language plpgsql stable security definer set search_path = public as $$
+declare
+  found text;
+begin
+  if identifier is null or length(trim(identifier)) = 0 then
+    return null;
+  end if;
+
+  -- Typed an email already — hand it straight back, no lookup needed.
+  if identifier like '%@%' then
+    return lower(trim(identifier));
+  end if;
+
+  select u.email into found
+  from public.profiles p
+  join auth.users u on u.id = p.id
+  where p.username = trim(identifier)::citext
+  limit 1;
+
+  -- No match: return the typed value as-is. The password grant will then
+  -- fail with Supabase's own generic invalid-credentials error, exactly
+  -- as it would for a wrong password on a real account — a caller can't
+  -- tell "no such username" apart from "wrong password" either way.
+  return coalesce(found, trim(identifier));
+end;
+$$;
+
+revoke all on function public.email_for_login(text) from public;
+grant execute on function public.email_for_login(text) to anon, authenticated;
+
 -- Belt-and-suspenders re-grant, now that every table/view in this file
 -- has actually been created. The block near the top of the file (search
 -- "5b · GRANTS") covers everything that exists at that point in the
