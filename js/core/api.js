@@ -230,6 +230,9 @@
     adminUsers: function (q) { return request("GET", "/admin/users" + (q ? "?q=" + encodeURIComponent(q) : "")); },
     adminUpdateUser: function (id, patch) { return request("PATCH", "/admin/users/" + id, patch); },
     adminDeleteUser: function (id) { return request("DELETE", "/admin/users/" + id); },
+    adminSetPassword: function (id, newPassword) {
+      return request("POST", "/admin/users/" + id + "/password", { password: newPassword });
+    },
     adminReports: function (state) { return request("GET", "/admin/reports?state=" + (state || "open")); },
     adminCloseReport: function (id, state) {
       return request("PATCH", "/admin/reports/" + id, { state: state || "closed" });

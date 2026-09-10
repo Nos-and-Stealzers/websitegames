@@ -1215,6 +1215,7 @@
         return {
           users: (rows || []).map(function (r) {
             return Object.assign(shapeUser(r), {
+              email: r.email || "",
               acceptsDms: !!r.accepts_dms,
               showActivity: !!r.show_activity,
               sessions: 0,
@@ -1241,6 +1242,16 @@
         next_role: patch.role === undefined ? null : patch.role,
         next_state: patch.state === undefined ? null : patch.state
       }).then(function (user) { return { user: user }; });
+    },
+
+    /* Staff-issued password reset — the account-recovery answer to "I lost
+       access". A real password can never be shown to staff (Supabase Auth
+       only ever stores a one-way hash, on this or any platform), so this
+       sets a NEW one instead and immediately invalidates every existing
+       session/refresh token, exactly like Discord/every real platform's
+       support-side recovery flow. */
+    adminSetPassword: function (id, newPassword) {
+      return rpc("admin_set_password", { target: id, new_password: newPassword });
     },
 
     adminDeleteUser: function (id) {

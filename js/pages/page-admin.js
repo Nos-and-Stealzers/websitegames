@@ -287,10 +287,10 @@
         host.innerHTML = "";
         setText("user-count", rows.length + " of " + userCache.length);
 
-        var cols = "1fr 5.5rem 6rem 7rem 6rem";
+        var cols = "1fr 12rem 5.5rem 6rem 7rem 6rem";
         var head = UI.el("div", "rows-head");
         head.style.gridTemplateColumns = cols;
-        ["Account", "Rank", "State", "Activity", ""].forEach(function (h) {
+        ["Account", "Email", "Rank", "State", "Activity", ""].forEach(function (h) {
           head.appendChild(UI.el("span", null, h));
         });
         host.appendChild(head);
@@ -309,6 +309,14 @@
           who.appendChild(window.SocialUI.avatar(u));
           who.appendChild(window.SocialUI.nameBlock(u, { presence: true }));
           row.appendChild(who);
+
+          var emailCell = UI.el("span", "tiny dimmer");
+          emailCell.textContent = u.email || "—";
+          emailCell.style.overflow = "hidden";
+          emailCell.style.textOverflow = "ellipsis";
+          emailCell.style.whiteSpace = "nowrap";
+          emailCell.title = u.email || "";
+          row.appendChild(emailCell);
 
           row.appendChild(UI.el("span", "cat", u.role));
 
@@ -382,6 +390,7 @@
         var summary = UI.el("p", "tiny dimmer");
         summary.style.margin = "0 0 1rem";
         summary.textContent = [
+          u.email ? "email " + u.email : null,
           "joined " + (u.createdAt ? new Date(u.createdAt).toLocaleDateString() : "—"),
           "last seen " + (u.online ? "now" : UI.formatWhen(u.lastSeen)),
           u.lastLogin ? "last sign-in " + UI.formatWhen(u.lastLogin) : null,
@@ -479,9 +488,50 @@
 
         body.appendChild(UI.el("hr", "sheet-rule"));
 
-        /* Deletion. There is no password reset on this hub, so this is also
-           the only answer to "I've forgotten mine" — worth saying, because
-           it is the one action here that cannot be undone. */
+        /* Password reset — the real answer to "I've forgotten mine" / "I
+           got locked out" / "this got reported, get the account back".
+           A real password is never stored anywhere retrievable (Supabase
+           Auth only ever keeps a one-way hash) — this sets a NEW one and
+           immediately kills every existing session on the account, same
+           as Discord/every real platform's support-side recovery. Admin
+           rank or higher only, matching the server-side guard. */
+        if (isAdmin) {
+          var pwNote = UI.el("p", "tiny dimmer");
+          pwNote.style.margin = "0 0 0.5rem";
+          pwNote.textContent = "Set a new password for them — for account recovery " +
+            "after a lost password or a report. This signs them out everywhere.";
+          body.appendChild(pwNote);
+
+          var pwField = UI.el("div", "field");
+          pwField.style.marginBottom = "0.5rem";
+          var pwInput = UI.el("input");
+          pwInput.type = "text";
+          pwInput.placeholder = "New password (min 8 characters)";
+          pwInput.autocomplete = "off";
+          pwInput.spellcheck = false;
+          pwInput.minLength = 8;
+          pwField.appendChild(pwInput);
+          body.appendChild(pwField);
+
+          var pwBtn = UI.el("button", "btn", "Set new password");
+          pwBtn.type = "button";
+          pwBtn.style.marginBottom = "0.6rem";
+          pwBtn.addEventListener("click", function () {
+            var next = pwInput.value;
+            if (next.length < 8) { UI.toast("At least 8 characters."); return; }
+            if (!window.confirm("Set a new password for @" + u.username +
+                "? This signs them out everywhere immediately.")) return;
+            busy(pwBtn, API.adminSetPassword(u.id, next).then(function () {
+              UI.toast("Password set for @" + u.username + " — sessions cleared.");
+              pwInput.value = "";
+            }));
+          });
+          body.appendChild(pwBtn);
+
+          body.appendChild(UI.el("hr", "sheet-rule"));
+        }
+
+        /* Deletion. */
         var dangerNote = UI.el("p", "tiny dimmer");
         dangerNote.style.margin = "0 0 0.6rem";
         dangerNote.textContent = "Deleting removes the profile, their friends, " +
