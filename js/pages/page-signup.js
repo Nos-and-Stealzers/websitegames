@@ -73,10 +73,12 @@
 
       var username = document.getElementById("username").value.trim();
       var display = document.getElementById("display").value.trim();
+      var email = document.getElementById("email").value.trim();
       var password = pass.value;
       var confirm = document.getElementById("confirm").value;
 
       if (!accept.checked) return fail("You need to accept the terms to sign up.");
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return fail("Enter a valid email address.");
       if (password !== confirm) return fail("The two passwords don't match.");
       if (password.length < 8) return fail("Password must be at least 8 characters.");
       if (!/[a-z]/i.test(password) || !/[0-9]/.test(password)) {
@@ -86,8 +88,13 @@
       submit.disabled = true;
       submit.textContent = "Creating…";
 
-      window.Session.signup(username, password, display, true)
+      window.Session.signup(username, password, display, true, email)
         .then(function (res) {
+          if (res.needsConfirmation) {
+            window.UI.toast("Check your email to confirm your account, then sign in.");
+            window.location.href = "login.html";
+            return;
+          }
           window.UI.toast(res.firstAccount ? "Admin account created" : "Welcome, " + username);
           window.location.href = res.firstAccount ? "admin.html" : "index.html";
         })

@@ -21,7 +21,7 @@
       <header class="page-head" style="border:0;margin-bottom:1rem">
         <span class="label">Account</span>
         <h1>Create an account</h1>
-        <p>No email, no verification, no ads. Just a name and a password.</p>
+        <p>No ads, no spam. A real email is needed to confirm your account and is never shown to anyone.</p>
       </header>
 
       <div class="panel" id="offline" hidden>
@@ -53,6 +53,12 @@
         </div>
 
         <div class="field">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" autocomplete="email" required maxlength="254">
+          <p class="hint">Used to confirm your account and, if you set one, to reset a forgotten password. Never shown to other users.</p>
+        </div>
+
+        <div class="field">
           <label for="password">Password</label>
           <input type="password" id="password" name="password" autocomplete="new-password"
                  required minlength="8">
@@ -74,8 +80,8 @@
             <a href="terms.html" target="_blank" rel="noopener">Terms of Use</a> and the
             <a href="privacy.html" target="_blank" rel="noopener">Privacy notice</a>.
             <span class="tiny dimmer" style="display:block;margin-top:0.25rem">
-              Both are short and in plain language. The important one:
-              <b>there is no password reset</b>, because no email is collected.
+              Both are short and in plain language. Your email is used only to confirm
+              the account and, if needed, recover it — it's never shown to other users.
             </span>
           </span>
         </label>

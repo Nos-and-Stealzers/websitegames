@@ -95,8 +95,9 @@
     });
   }
 
-  function signup(username, password, displayName, acceptedTerms) {
-    return window.API.signup(username, password, displayName, acceptedTerms).then(function (res) {
+  function signup(username, password, displayName, acceptedTerms, email) {
+    return window.API.signup(username, password, displayName, email, acceptedTerms).then(function (res) {
+      if (res.needsConfirmation) return res;
       setUser(res.user);
       /* Everything played before signing up comes along. */
       return pushSave().then(function () {

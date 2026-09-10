@@ -84,10 +84,10 @@
     login: function (username, password) {
       return request("POST", "/auth/login", { username: username, password: password });
     },
-    signup: function (username, password, displayName, acceptedTerms) {
+    signup: function (username, password, displayName, email, acceptedTerms) {
       return request("POST", "/auth/signup", {
         username: username, password: password, displayName: displayName,
-        acceptedTerms: acceptedTerms === true
+        email: email, acceptedTerms: acceptedTerms === true
       });
     },
 
@@ -104,6 +104,8 @@
     },
     sessions: function () { return request("GET", "/auth/sessions"); },
     signOutEverywhere: function () { return request("POST", "/auth/signout-everywhere"); },
+    requestPasswordReset: function (email) { return request("POST", "/auth/forgot-password", { email: email }); },
+    resetPassword: function (token, next) { return request("POST", "/auth/reset-password", { token: token, password: next }); },
 
     /* --- profile --- */
     updateProfile: function (patch) { return request("PATCH", "/users/me", patch); },

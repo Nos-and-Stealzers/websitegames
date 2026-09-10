@@ -361,6 +361,40 @@
       }).then(function () { return { ok: true }; });
     },
 
+    /* Forgot-password flow. GoTrue emails a link back to `redirectTo` with a
+       recovery token in the URL fragment; reset-password.html reads that
+       fragment, turns it into a session, then calls resetPassword to set the
+       new password on it. Always resolves ok — whether or not the address
+       has an account is never revealed. */
+    requestPasswordReset: function (email) {
+      var redirectTo = encodeURIComponent(window.location.origin + "/reset-password.html");
+      return call("/auth/v1/recover?redirect_to=" + redirectTo, {
+        method: "POST",
+        body: { email: String(email).trim().toLowerCase() }
+      }).then(function () { return { ok: true }; })
+        .catch(function () { return { ok: true }; });
+    },
+
+    /* Called on reset-password.html once the recovery link has handed back
+       an access token (see that page's script for how the fragment becomes
+       a session). */
+    resetPassword: function (accessToken, next) {
+      return fetch(URL_BASE + "/auth/v1/user", {
+        method: "PUT",
+        headers: {
+          apikey: ANON,
+          Authorization: "Bearer " + accessToken,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ password: next })
+      }).then(function (res) {
+        return res.json().catch(function () { return null; }).then(function (body) {
+          if (!res.ok) throw fail(readError(body, res.status), res.status);
+          return { ok: true };
+        });
+      });
+    },
+
     sessions: function () {
       /* Supabase does not expose a per-device session list to the client. */
       return Promise.resolve({

@@ -40,9 +40,11 @@
       <p>Stored on the hub's own server, nowhere else:</p>
       <ul>
         <li><b>Username, display name, bio</b> — what you typed.</li>
-        <li><b>Password</b> — as a salted scrypt hash. The original is never stored
-            and cannot be recovered, which is why there's no reset.</li>
-        <li><b>No email address.</b> None is asked for.</li>
+        <li><b>Password</b> — as a salted hash, held by Supabase Auth. The original is
+            never stored and cannot be recovered directly, but a forgotten password can
+            be reset through your email.</li>
+        <li><b>Email address</b> — required at sign-up, used only to confirm the account
+            and for password recovery. It is never shown to other users.</li>
         <li><b>Your save</b> — pins, history, ratings, playtime, so it follows you
             between devices.</li>
         <li><b>Game progress</b> — a copy of what the games themselves save, if you
@@ -93,9 +95,10 @@
 
       <h2>Children</h2>
       <p>
-        This is aimed at school-age players and collects no email, no real name and
-        no location. If you're a parent or teacher and want an account removed,
-        message through <a href="feedback.html">feedback</a> and it will be.
+        This is aimed at school-age players and asks for no real name, phone number
+        or location — only the sign-up email, which is never shown to anyone else.
+        If you're a parent or teacher and want an account removed, message through
+        <a href="feedback.html">feedback</a> and it will be.
       </p>
 
       <h2>Being straight with you</h2>
