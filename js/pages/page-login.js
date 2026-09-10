@@ -8,6 +8,8 @@
     var errorBox = document.getElementById("error");
     var submit = document.getElementById("submit");
 
+    window.wirePasswordToggle("password", "pw-toggle");
+
     function nextPage() {
       var next = window.UI.params().get("next") || "index.html";
       /* Only ever bounce to a page on this site. */
@@ -35,7 +37,7 @@
 
       var username = document.getElementById("username").value.trim();
       var password = document.getElementById("password").value;
-      if (!username || !password) return fail("Fill in both fields.");
+      if (!username || !password) return fail("Enter your username or email, and your password.");
 
       submit.disabled = true;
       submit.textContent = "Signing in…";

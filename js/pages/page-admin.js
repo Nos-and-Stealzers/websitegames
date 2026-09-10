@@ -23,6 +23,25 @@
   var RANKS = ["user", "mod", "admin", "owner"];
   function rankOf(role) { return Math.max(0, RANKS.indexOf(role)); }
 
+  /* A short, actually-typeable random password for the admin "Generate"
+     button — mixed case + digit + symbol so it clears the site's own
+     signup strength rules without staff having to invent one by hand. */
+  function randomPassword() {
+    var upper = "ABCDEFGHJKMNPQRSTUVWXYZ";
+    var lower = "abcdefghjkmnpqrstuvwxyz";
+    var digits = "23456789";
+    var symbols = "!@#$%*?";
+    var all = upper + lower + digits + symbols;
+    function pick(set) { return set[Math.floor(Math.random() * set.length)]; }
+    var chars = [pick(upper), pick(lower), pick(digits), pick(symbols)];
+    for (var i = chars.length; i < 12; i++) chars.push(pick(all));
+    for (var j = chars.length - 1; j > 0; j--) {
+      var k = Math.floor(Math.random() * (j + 1));
+      var tmp = chars[j]; chars[j] = chars[k]; chars[k] = tmp;
+    }
+    return chars.join("");
+  }
+
   function init() {
     window.SocialUI.gate(function (me) {
       var UI = window.UI;
@@ -498,35 +517,56 @@
         if (isAdmin) {
           var pwNote = UI.el("p", "tiny dimmer");
           pwNote.style.margin = "0 0 0.5rem";
-          pwNote.textContent = "Set a new password for them — for account recovery " +
-            "after a lost password or a report. This signs them out everywhere.";
+          pwNote.textContent = "Their real password can never be shown — Supabase only ever " +
+            "keeps a one-way hash of it, the same as every real platform. This is the actual " +
+            "recovery tool: set a NEW password they can log in with, for a lost password or " +
+            "a report. It signs them out everywhere immediately.";
           body.appendChild(pwNote);
 
           var pwField = UI.el("div", "field");
           pwField.style.marginBottom = "0.5rem";
+          var pwRow = UI.el("div", "btn-row");
+          pwRow.style.gap = "0.4rem";
           var pwInput = UI.el("input");
           pwInput.type = "text";
           pwInput.placeholder = "New password (min 8 characters)";
           pwInput.autocomplete = "off";
           pwInput.spellcheck = false;
           pwInput.minLength = 8;
-          pwField.appendChild(pwInput);
+          pwInput.style.flex = "1";
+          pwRow.appendChild(pwInput);
+
+          var pwGen = UI.el("button", "btn btn-sm", "Generate");
+          pwGen.type = "button";
+          pwGen.title = "Fill in a random strong password";
+          pwGen.addEventListener("click", function () {
+            pwInput.value = randomPassword();
+            pwInput.type = "text";
+            pwInput.focus();
+          });
+          pwRow.appendChild(pwGen);
+          pwField.appendChild(pwRow);
           body.appendChild(pwField);
 
-          var pwBtn = UI.el("button", "btn", "Set new password");
+          var pwBtn = UI.el("button", "btn btn-cta", "Set new password");
           pwBtn.type = "button";
-          pwBtn.style.marginBottom = "0.6rem";
+          pwBtn.style.marginBottom = "0.4rem";
           pwBtn.addEventListener("click", function () {
             var next = pwInput.value;
             if (next.length < 8) { UI.toast("At least 8 characters."); return; }
             if (!window.confirm("Set a new password for @" + u.username +
                 "? This signs them out everywhere immediately.")) return;
             busy(pwBtn, API.adminSetPassword(u.id, next).then(function () {
-              UI.toast("Password set for @" + u.username + " — sessions cleared.");
-              pwInput.value = "";
+              UI.toast("Password set for @" + u.username + " — write it down now, it " +
+                "won't be shown again. Sessions cleared.");
             }));
           });
           body.appendChild(pwBtn);
+          var pwCopyNote = UI.el("p", "tiny dimmer");
+          pwCopyNote.style.margin = "0 0 0.6rem";
+          pwCopyNote.textContent = "Copy the password from the box above before submitting — " +
+            "it clears from view once set, same as it does for the person themselves at sign-up.";
+          body.appendChild(pwCopyNote);
 
           body.appendChild(UI.el("hr", "sheet-rule"));
         }

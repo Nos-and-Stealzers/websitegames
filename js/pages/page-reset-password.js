@@ -45,6 +45,9 @@
     form.hidden = false;
     document.getElementById("password").focus();
 
+    window.wirePasswordToggle("password", "pw-toggle");
+    window.wirePasswordToggle("confirm", "confirm-toggle");
+
     function fail(message) {
       errorBox.textContent = message;
       errorBox.hidden = false;

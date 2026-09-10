@@ -299,9 +299,21 @@
         }
       }).then(function (body) {
         if (!body || !body.access_token) {
-          /* Confirm Email is ON: the account exists but needs the link in
-             their inbox clicked before a session is handed out. That's
-             success, not an error — just a different next step. */
+          /* Supabase Auth deliberately never says "that email is already
+             registered" outright (it would let anyone probe which emails
+             have accounts) — a re-signup on an existing address comes back
+             200 OK with a fake user object, an EMPTY identities array, and
+             NO email actually sent. Telling the caller "check your inbox"
+             here is a dead end: nothing arrives, ever. identities.length
+             is the one field that tells the two cases apart, so use it. */
+          var alreadyRegistered = body && Array.isArray(body.identities) && body.identities.length === 0;
+          if (alreadyRegistered) {
+            throw fail("An account already uses that email. Try signing in instead, " +
+              "or use \u201cForgot your password\u201d if you don't remember it.", 409);
+          }
+          /* Confirm Email is ON: the account was genuinely just created and
+             needs the link in their inbox clicked before a session is handed
+             out. That's success, not an error — just a different next step. */
           return { user: null, needsConfirmation: true };
         }
         keepSession(body);
@@ -309,6 +321,16 @@
         return me().then(function (row) {
           return { user: shapeSelf(row), firstAccount: row && row.role === "admin" };
         });
+      }).catch(function (err) {
+        /* The trigger that creates the profiles row surfaces Postgres'
+           raw constraint-violation text ("duplicate key value violates
+           unique constraint \"profiles_username_key\"") which means nothing
+           to someone filling in a form. Translate the one case that's
+           actually reachable from here — a username someone else has. */
+        if (err && /profiles_username_key/i.test(err.message || "")) {
+          throw fail("That username is already taken.", 409);
+        }
+        throw err;
       });
     },
 

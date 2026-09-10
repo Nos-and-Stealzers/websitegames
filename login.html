@@ -34,13 +34,16 @@
 
       <form class="panel form" id="form" hidden>
         <div class="field">
-          <label for="username">Username</label>
+          <label for="username">Username or email</label>
           <input type="text" id="username" name="username" autocomplete="username"
                  autocapitalize="none" spellcheck="false" required>
         </div>
         <div class="field">
           <label for="password">Password</label>
-          <input type="password" id="password" name="password" autocomplete="current-password" required>
+          <div class="pw-field">
+            <input type="password" id="password" name="password" autocomplete="current-password" required>
+            <button type="button" class="pw-toggle" id="pw-toggle" aria-label="Show password" aria-pressed="false">👁</button>
+          </div>
         </div>
 
         <p class="form-error" id="error" hidden></p>
@@ -66,6 +69,7 @@
   <script src="js/features/catalog.js"></script>
   <script src="js/features/art.js"></script>
   <script src="js/core/ui.js"></script>
+  <script src="js/core/password-toggle.js"></script>
   <script src="js/core/api.js"></script>
   <script src="js/core/api-supabase.js"></script>
   <script src="js/core/session.js"></script>

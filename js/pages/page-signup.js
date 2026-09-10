@@ -24,6 +24,9 @@
     var pass = document.getElementById("password");
     var meter = document.getElementById("strength");
 
+    window.wirePasswordToggle("password", "pw-toggle");
+    window.wirePasswordToggle("confirm", "confirm-toggle");
+
     window.Session.ready.then(function (state) {
       if (!state.backend) { offline.hidden = false; return; }
       if (state.user) { window.location.replace("index.html"); return; }
@@ -78,6 +81,8 @@
       var confirm = document.getElementById("confirm").value;
 
       if (!accept.checked) return fail("You need to accept the terms to sign up.");
+      if (!username) return fail("Choose a username.");
+      if (!display) return fail("Enter a display name.");
       if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return fail("Enter a valid email address.");
       if (password !== confirm) return fail("The two passwords don't match.");
       if (password.length < 8) return fail("Password must be at least 8 characters.");
