@@ -1136,6 +1136,11 @@ kbd {
   vertical-align: middle;
 }
 .role.bad { border-color: var(--bad); color: var(--bad); }
+.role.plus {
+  border-color: var(--accent); color: #111;
+  background: var(--accent); border-radius: 999px;
+  text-transform: none; letter-spacing: 0.02em;
+}
 
 .badge {
   min-width: 1.15rem; height: 1.15rem; padding: 0 0.3rem;

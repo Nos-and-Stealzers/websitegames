@@ -320,6 +320,34 @@
     }
     loadSessions();
 
+    /* ---- recent sign-in history (security) ---- */
+    function loadLoginHistory() {
+      if (!API.myLogins) return;
+      API.myLogins().then(function (rows) {
+        var host = document.getElementById("login-history");
+        if (!host) return;
+        host.innerHTML = "";
+        if (!rows || !rows.length) {
+          host.appendChild(UI.el("p", "tiny dimmer", "No sign-ins recorded yet."));
+          return;
+        }
+        rows.forEach(function (l) {
+          var row = UI.el("div", "row");
+          row.style.gridTemplateColumns = "1fr auto";
+          var mid = UI.el("span", "name");
+          mid.textContent = (l.agent || "Unknown device").slice(0, 70);
+          row.appendChild(mid);
+          var when = UI.el("span", "plays",
+            (l.outcome === "failed" ? "\u26a0 failed \u00b7 " : "") +
+            UI.formatWhen(new Date(l.at).getTime()));
+          if (l.outcome === "failed") when.style.color = "var(--bad)";
+          row.appendChild(when);
+          host.appendChild(row);
+        });
+      }).catch(function () { /* non-critical */ });
+    }
+    loadLoginHistory();
+
     document.getElementById("signout-all").addEventListener("click", function () {
       if (!window.confirm("Sign out of every other device?")) return;
       API.signOutEverywhere()

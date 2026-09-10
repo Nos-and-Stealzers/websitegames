@@ -33,6 +33,7 @@
         var handle = UI.el("p", "handle");
         handle.textContent = "@" + user.username;
         if (user.role !== "user") handle.appendChild(UI.el("span", "role", user.role));
+        if (user.isPlus) handle.appendChild(UI.el("span", "role plus", "Campus+"));
         if (user.state === "suspended") handle.appendChild(UI.el("span", "role bad", "suspended"));
         block.appendChild(handle);
         var presence = UI.el("p", "tiny dimmer");

@@ -1357,6 +1357,9 @@
     acceptPolicy: function (version) {
       return rpc("accept_policy", { version: version });
     },
+    myLogins: function () {
+      return rpc("my_logins");
+    },
     adminListPlaylists: function (q) {
       return rpc("admin_list_playlists", { q: q || null });
     },
