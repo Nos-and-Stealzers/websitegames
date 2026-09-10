@@ -47,7 +47,7 @@ window.GAME_CATALOG = [
   {
     "id": "huge-alienhominid",
     "title": "Alien Hominid",
-    "category": "action",
+    "category": "shooter",
     "description": "Run-and-gun action inspired by the classic Alien Hominid console game.",
     "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
     "source": "alienhominid/index.html",
@@ -228,7 +228,7 @@ window.GAME_CATALOG = [
   {
     "id": "alien-invaders-io",
     "title": "Alien Invaders.io",
-    "category": "arcade",
+    "category": "multiplayer",
     "description": "Multiplayer take on Space Invaders — defend against waves of alien attackers.",
     "gradient": "linear-gradient(135deg, #fa709a 0%, #fee140 100%)",
     "source": "alien-invaders-io/index.html",
@@ -459,7 +459,7 @@ window.GAME_CATALOG = [
   {
     "id": "huge-clean-up-io",
     "title": "Clean Up.io",
-    "category": "arcade",
+    "category": "multiplayer",
     "description": "Multiplayer territory game — clean more tiles than opponents to win.",
     "gradient": "linear-gradient(135deg, #34d399, #065f46)",
     "source": "clean-up-io/index.html",
@@ -1010,9 +1010,9 @@ window.GAME_CATALOG = [
   },
   {
     "id": "swfgalaxy-n",
-    "title": "N",
+    "title": "N (Ninja Platformer)",
     "category": "arcade",
-    "description": "Swfgalaxy game: N.",
+    "description": "A minimalist ninja platformer with fluid wall-jumping and momentum-based movement.",
     "gradient": "linear-gradient(135deg, #8b5cf6, #4c1d95)",
     "source": "n.html",
     "direct": "n.html",
@@ -1490,19 +1490,6 @@ window.GAME_CATALOG = [
     "host": "swfgalaxy"
   },
   {
-    "id": "swfgalaxy-swf-super-smash-flash",
-    "title": "Super%20Smash%20Flash",
-    "category": "arcade",
-    "description": "Swfgalaxy game: Super%20Smash%20Flash.",
-    "gradient": "linear-gradient(135deg, #eab308, #a16207)",
-    "source": "supersmashflash.html",
-    "direct": "supersmashflash.html",
-    "platform": "local",
-    "embed": "allowed",
-    "schoolRisk": "medium",
-    "host": "swfgalaxy"
-  },
-  {
     "id": "swfgalaxy-superfighters",
     "title": "Superfighters",
     "category": "arcade",
@@ -1586,19 +1573,6 @@ window.GAME_CATALOG = [
     "category": "arcade",
     "description": "Swfgalaxy game: Swords And Sandals 2 (Full).",
     "gradient": "linear-gradient(135deg, #f43f5e, #9f1239)",
-    "source": "swordsandsandals2.html",
-    "direct": "swordsandsandals2.html",
-    "platform": "local",
-    "embed": "allowed",
-    "schoolRisk": "medium",
-    "host": "swfgalaxy"
-  },
-  {
-    "id": "swfgalaxy-swf-swords-and-sandals-2",
-    "title": "Swords%20And%20Sandals%202%20%28Full%29",
-    "category": "arcade",
-    "description": "Swfgalaxy game: Swords%20And%20Sandals%202%20%28Full%29.",
-    "gradient": "linear-gradient(135deg, #14b8a6, #0f766e)",
     "source": "swordsandsandals2.html",
     "direct": "swordsandsandals2.html",
     "platform": "local",
@@ -2443,7 +2417,7 @@ window.GAME_CATALOG = [
   {
     "id": "basket-bros-io",
     "title": "Basket Bros.io",
-    "category": "sports",
+    "category": "multiplayer",
     "description": "Head-to-head basketball with comically large heads — dunk on your friends.",
     "gradient": "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
     "source": "basket-bros-io/index.html",
@@ -3074,7 +3048,7 @@ window.GAME_CATALOG = [
   {
     "id": "ext2-aim-and-shoot",
     "title": "Aim and Shoot",
-    "category": "action",
+    "category": "shooter",
     "description": "A neuroevolution shooting game where AI learns to aim.",
     "gradient": "linear-gradient(135deg, #14b8a6, #134e4a)",
     "source": "gh-victorqribeiro-aimandshoot/index.html",
@@ -3100,7 +3074,7 @@ window.GAME_CATALOG = [
   {
     "id": "ext2-bangbang-ml",
     "title": "BangBang ML",
-    "category": "action",
+    "category": "shooter",
     "description": "Watch (or play against) a neural network that learns to shoot a target.",
     "gradient": "linear-gradient(135deg, #f43f5e, #881337)",
     "source": "gh-victorqribeiro-bangbangml/index.html",
@@ -3347,7 +3321,7 @@ window.GAME_CATALOG = [
   {
     "id": "ext2-radius-raid",
     "title": "Radius Raid",
-    "category": "action",
+    "category": "shooter",
     "description": "A space-themed shoot-em-up made for js13kGames.",
     "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
     "source": "gh-jackrugile-radius-raid-js13k/index.html",
@@ -3659,7 +3633,7 @@ window.GAME_CATALOG = [
   {
     "id": "ext-myraycast",
     "title": "MyRaycast",
-    "category": "action",
+    "category": "shooter",
     "description": "A raycasting first-person engine demo built from scratch in JavaScript.",
     "gradient": "linear-gradient(135deg, #22c55e, #14532d)",
     "source": "gh-victorqribeiro-myraycast/index.html",
@@ -3750,7 +3724,7 @@ window.GAME_CATALOG = [
   {
     "id": "ext-js-delta",
     "title": "Delta",
-    "category": "action",
+    "category": "shooter",
     "description": "A JavaScript shoot-em-up inspired by the C64 classic Delta.",
     "gradient": "linear-gradient(135deg, #ec4899, #831843)",
     "source": "gh-jakesgordon-javascript-delta/index.html",
@@ -4153,7 +4127,7 @@ window.GAME_CATALOG = [
   {
     "id": "ext-snakeio-clone",
     "title": "Snake.io Clone",
-    "category": "arcade",
+    "category": "multiplayer",
     "description": "A Slither.io-style multiplayer-feel snake game in plain JavaScript.",
     "gradient": "linear-gradient(135deg, #a855f7, #581c87)",
     "source": "gh-bibhuticoder-snake/index.html",
@@ -5180,7 +5154,7 @@ window.GAME_CATALOG = [
   {
     "id": "ext4-tanks-mayur",
     "title": "Tanks Shootout",
-    "category": "action",
+    "category": "shooter",
     "description": "Fast-paced tank shooting game where the objective is to shoot all enemy tanks within 60 seconds without losing lives.",
     "gradient": "linear-gradient(135deg, #365314, #1a2e05)",
     "source": "gh-mayur0906-tanks/index.html",
@@ -5216,7 +5190,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-2048-multitask",
@@ -5230,7 +5205,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-doge-miner",
@@ -5244,7 +5220,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-hexgl",
@@ -5258,7 +5235,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-offline-paradise",
@@ -5272,7 +5250,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-stickman-survival",
@@ -5286,7 +5265,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "medium",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-anti-terrorist-rush",
@@ -5300,7 +5280,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "medium",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-ascii-space",
@@ -5314,7 +5295,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-aspiring-artist",
@@ -5328,7 +5310,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-backflip-dive-3d",
@@ -5342,7 +5325,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-basketball-legends-2020",
@@ -5356,7 +5340,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-binding-of-isaac",
@@ -5370,7 +5355,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "medium",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-blackholesquare",
@@ -5384,7 +5370,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-blocky-snakes",
@@ -5398,7 +5385,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-chess",
@@ -5412,7 +5400,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-chill-radio",
@@ -5426,7 +5415,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-color-switch-2-challenges",
@@ -5440,7 +5430,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-connect-3",
@@ -5454,7 +5445,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-cookie-clicker",
@@ -5468,7 +5460,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-core-ball",
@@ -5482,7 +5475,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-craftmine",
@@ -5496,7 +5490,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-creativekillchamber",
@@ -5510,7 +5505,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "medium",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-crowd-city-2",
@@ -5524,7 +5520,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-ctr-tr",
@@ -5538,7 +5535,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-cupcake2048",
@@ -5552,7 +5550,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-cut-the-rope-2",
@@ -5566,7 +5565,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-dadish-3",
@@ -5580,7 +5580,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-dante",
@@ -5594,7 +5595,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "medium",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-death-run-3d",
@@ -5608,7 +5610,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "medium",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-death-soul",
@@ -5622,7 +5625,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "medium",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-deathrun",
@@ -5636,7 +5640,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "medium",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-defend-the-tank",
@@ -5650,7 +5655,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-doctor-acorn-2",
@@ -5664,7 +5670,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-doge-miner-2",
@@ -5678,7 +5685,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-doge-mining-simulator",
@@ -5692,7 +5700,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-doublewires",
@@ -5706,7 +5715,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-douchebag-workout-2",
@@ -5720,7 +5730,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "medium",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-dragon-vs-bricks",
@@ -5734,7 +5745,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-draw-the-hill",
@@ -5748,7 +5760,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-duck-life-treasure-hunt",
@@ -5762,7 +5775,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-duck-life",
@@ -5776,7 +5790,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-duck-life-2",
@@ -5790,7 +5805,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-duck-life-3",
@@ -5804,7 +5820,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-duck-life-4",
@@ -5818,7 +5835,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-duke-dashington-remastered",
@@ -5832,7 +5850,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-dungeon-craft",
@@ -5846,7 +5865,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-edge-surf",
@@ -5860,7 +5880,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-elasticman",
@@ -5874,7 +5895,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-endless-war-3",
@@ -5888,7 +5910,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "medium",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-escaping-the-prison",
@@ -5902,7 +5925,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-evil-glitch",
@@ -5916,7 +5940,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-evolution",
@@ -5930,7 +5955,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-factory-balls-forever",
@@ -5944,7 +5970,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-fake-virus",
@@ -5958,7 +5985,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-fancy-pants-adventures",
@@ -5972,7 +6000,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-finns-fantastic-food-machine",
@@ -5986,7 +6015,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-fireboy-watergirl-forest-temple",
@@ -6000,7 +6030,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-fireice",
@@ -6014,7 +6045,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-firewater",
@@ -6028,7 +6060,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-flappy-2048",
@@ -6042,7 +6075,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-flappy-bird",
@@ -6056,7 +6090,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-flappy-defense",
@@ -6070,7 +6105,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-flappybird",
@@ -6084,7 +6120,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-flashtetris",
@@ -6098,7 +6135,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-flippy-fish",
@@ -6112,7 +6150,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-flood-runner-2",
@@ -6126,7 +6165,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-friday-night-funkin",
@@ -6140,7 +6180,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-friendly-fire",
@@ -6154,7 +6195,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "medium",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-froggys-battle",
@@ -6168,7 +6210,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-fruit-ninja",
@@ -6182,7 +6225,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-frying-nemo",
@@ -6196,7 +6240,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-game-inside",
@@ -6210,7 +6255,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-generic-fishing-game",
@@ -6224,7 +6270,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-geodash",
@@ -6238,7 +6285,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-geometry-jump-sketchy",
@@ -6252,7 +6300,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-geometry-dash",
@@ -6266,7 +6315,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-george-and-the-printer",
@@ -6280,7 +6330,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-getaway-shootout",
@@ -6294,7 +6345,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "medium",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-getting-over-it",
@@ -6308,7 +6360,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-gimme-the-airpod",
@@ -6322,7 +6375,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-glass-city",
@@ -6336,7 +6390,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-go-ball",
@@ -6350,7 +6405,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-golf",
@@ -6364,7 +6420,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-goodnight",
@@ -6378,7 +6435,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-google-snake",
@@ -6392,7 +6450,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-gopher",
@@ -6406,7 +6465,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-gravity-soccer",
@@ -6420,7 +6480,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-grindcraft",
@@ -6434,7 +6495,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-grow-in-the-hole",
@@ -6448,12 +6510,13 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-gun-mayhem",
     "title": "Gun Mayhem",
-    "category": "action",
+    "category": "shooter",
     "description": "A platform brawler shooter where you knock opponents off the stage to win.",
     "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
     "source": "gun-mayhem/index.html",
@@ -6462,12 +6525,13 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "medium",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-gun-mayhem-2",
     "title": "Gun Mayhem 2",
-    "category": "action",
+    "category": "shooter",
     "description": "The sequel platform-shooter brawler with new stages, weapons, and modes.",
     "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
     "source": "gun-mayhem-2/index.html",
@@ -6476,12 +6540,13 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "medium",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-gun-mayhem-redux",
     "title": "Gun Mayhem Redux",
-    "category": "action",
+    "category": "shooter",
     "description": "A remastered version of the frantic platform-shooter brawler.",
     "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
     "source": "gun-mayhem-redux/index.html",
@@ -6490,7 +6555,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "medium",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-gunspin",
@@ -6504,7 +6570,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-hackertype",
@@ -6518,7 +6585,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-happy-hop",
@@ -6532,7 +6600,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-happy-wheels",
@@ -6546,7 +6615,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "medium",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-helicopter",
@@ -6560,7 +6630,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-helios",
@@ -6574,7 +6645,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-hexempire",
@@ -6588,7 +6660,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-hextris",
@@ -6602,7 +6675,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-house-of-hazards",
@@ -6616,7 +6690,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "medium",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-icys-purple-head",
@@ -6630,7 +6705,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-idle-breakout",
@@ -6644,7 +6720,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-idle-shark",
@@ -6658,7 +6735,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-impossible-quiz-huge",
@@ -6672,7 +6750,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-interactivebuddy",
@@ -6686,12 +6765,13 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-iscribble-io",
     "title": "iScribble.io",
-    "category": "puzzle",
+    "category": "multiplayer",
     "description": "A multiplayer drawing-and-guessing party game where players sketch prompts.",
     "gradient": "linear-gradient(135deg, #f472b6, #831843)",
     "source": "iscribble-io/index.html",
@@ -6700,7 +6780,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-jelly-truck",
@@ -6714,7 +6795,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-jetpack",
@@ -6728,7 +6810,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-jimothy-piggerton",
@@ -6742,7 +6825,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-just-one-boss",
@@ -6756,7 +6840,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "medium",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-justfall",
@@ -6770,12 +6855,13 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-kart-fight-io",
     "title": "Kart Fight.io",
-    "category": "racing",
+    "category": "multiplayer",
     "description": "A multiplayer kart battle where you race and knock out opponents with weapons.",
     "gradient": "linear-gradient(135deg, #fb923c, #7c2d12)",
     "source": "kart-fight-io/index.html",
@@ -6784,12 +6870,13 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "medium",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-kitchen-gun-game",
     "title": "Kitchen Gun Game",
-    "category": "action",
+    "category": "shooter",
     "description": "A cartoon party game featuring gun-toting characters running amok in a kitchen setting.",
     "gradient": "linear-gradient(135deg, #f472b6, #831843)",
     "source": "kitchen-gun-game/index.html",
@@ -6798,7 +6885,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "medium",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-kittencannon",
@@ -6812,7 +6900,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-klocki",
@@ -6826,7 +6915,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-konnekt",
@@ -6840,12 +6930,13 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-krunker",
     "title": "Krunker.io",
-    "category": "action",
+    "category": "shooter",
     "description": "A fast, blocky multiplayer first-person shooter playable directly in the browser.",
     "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
     "source": "krunker/index.html",
@@ -6854,7 +6945,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "medium",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-learn-to-fly",
@@ -6868,7 +6960,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-learn-to-fly-2",
@@ -6882,7 +6975,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-line-rider",
@@ -6896,7 +6990,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-linquest",
@@ -6910,7 +7005,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-madalin-stunt-cars-2",
@@ -6924,7 +7020,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-madalin-stunt-cars-3",
@@ -6938,7 +7035,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-makeitmeme",
@@ -6952,7 +7050,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-mario",
@@ -6966,7 +7065,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-marvinspectrum",
@@ -6980,7 +7080,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-matrixrampage",
@@ -6994,7 +7095,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "medium",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-minecraft-1-5-2",
@@ -7008,7 +7110,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-minecraft-beta-0-30",
@@ -7022,7 +7125,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-minecraft-beta-1-3",
@@ -7036,7 +7140,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-meat-boy",
@@ -7050,7 +7155,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-meme2048",
@@ -7064,7 +7170,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-minecraft",
@@ -7078,7 +7185,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-minecraft-classic",
@@ -7092,7 +7200,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-minecraftbeta",
@@ -7106,7 +7215,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-minesweeper",
@@ -7120,7 +7230,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-mini-stilts",
@@ -7134,7 +7245,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-miniputt",
@@ -7148,7 +7260,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-missiles",
@@ -7162,7 +7275,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-moto-x3m-2",
@@ -7176,7 +7290,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-moto-x3m-pool-party",
@@ -7190,7 +7305,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-motox3m",
@@ -7204,7 +7320,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-motox3m-spooky",
@@ -7218,7 +7335,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-motox3m-winter",
@@ -7232,7 +7350,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-my-friend-pedro",
@@ -7246,7 +7365,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "medium",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-n-gon",
@@ -7260,7 +7380,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "medium",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-ninja",
@@ -7274,7 +7395,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "medium",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-ninja-vs-evil-corp",
@@ -7288,7 +7410,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "medium",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-ns-shaft",
@@ -7302,7 +7425,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-om-bounce",
@@ -7316,7 +7440,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-one-screen-run",
@@ -7330,7 +7455,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-one-screen-run-2",
@@ -7344,7 +7470,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-osu",
@@ -7358,7 +7485,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-ovo",
@@ -7372,7 +7500,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-packabunchas",
@@ -7386,7 +7515,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-pacman",
@@ -7400,12 +7530,13 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-pacman-fps",
     "title": "Pac-Man FPS",
-    "category": "action",
+    "category": "shooter",
     "description": "A first-person reimagining of Pac-Man's maze-chase gameplay.",
     "gradient": "linear-gradient(135deg, #facc15, #1e1b4b)",
     "source": "pacman-fps/index.html",
@@ -7414,7 +7545,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-pandemic-2",
@@ -7428,7 +7560,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-papa-louie",
@@ -7442,7 +7575,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-papas-burgeria",
@@ -7456,7 +7590,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-papas-freezeria",
@@ -7470,7 +7605,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-papas-hot-doggeria",
@@ -7484,7 +7620,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-papas-pancakeria",
@@ -7498,7 +7635,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-papas-pizzeria",
@@ -7512,7 +7650,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-papas-sushiria",
@@ -7526,7 +7665,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-papas-wingeria",
@@ -7540,12 +7680,13 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-paper-io-2",
     "title": "Paper.io 2",
-    "category": "arcade",
+    "category": "multiplayer",
     "description": "Claim territory by drawing loops on the map while avoiding rival trails.",
     "gradient": "linear-gradient(135deg, #4ade80, #14532d)",
     "source": "paperio2/index.html",
@@ -7554,7 +7695,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-papery-planes",
@@ -7568,7 +7710,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-particle-clicker",
@@ -7582,7 +7725,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-path-finder",
@@ -7596,7 +7740,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-pe-noire",
@@ -7610,7 +7755,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-pikwip",
@@ -7624,7 +7770,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-pixel-cave",
@@ -7638,7 +7785,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-pizzeria-simulator",
@@ -7652,7 +7800,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-polybranch",
@@ -7666,7 +7815,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-popcat-classic",
@@ -7680,7 +7830,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-portalflash",
@@ -7694,12 +7845,13 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-precision-client",
     "title": "Precision Client",
-    "category": "action",
+    "category": "shooter",
     "description": "A skill-focused first-person shooting range game emphasizing precise aim.",
     "gradient": "linear-gradient(135deg, #4b5320, #1a1a1a)",
     "source": "precision-client/index.html",
@@ -7708,7 +7860,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "medium",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-protektor",
@@ -7722,7 +7875,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-push-the-square",
@@ -7736,7 +7890,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-plants-vs-zombies-2",
@@ -7750,7 +7905,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-racer",
@@ -7764,7 +7920,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-retro-bowl-huge",
@@ -7778,7 +7935,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-rise-of-neon-square",
@@ -7792,7 +7950,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-rocking-sky-trip",
@@ -7806,7 +7965,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-rooftop-snipers",
@@ -7820,7 +7980,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "medium",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-run-3",
@@ -7834,7 +7995,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-scrambled-eggs",
@@ -7848,7 +8010,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-scrap-metal",
@@ -7862,7 +8025,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-senya-and-oscar-2",
@@ -7876,7 +8040,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-shadow-world-adventure",
@@ -7890,7 +8055,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-shards",
@@ -7904,7 +8070,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-shift-flash",
@@ -7918,7 +8085,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-shift-flash-2",
@@ -7932,7 +8100,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-short-life-2",
@@ -7946,7 +8115,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "medium",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-short-ride",
@@ -7960,7 +8130,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-slither-snake",
@@ -7974,7 +8145,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-slope",
@@ -7988,7 +8160,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-slope-2",
@@ -8002,7 +8175,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-sm63",
@@ -8016,7 +8190,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-sm64",
@@ -8030,7 +8205,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-smokingbarrels",
@@ -8044,7 +8220,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "medium",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-snowbattle",
@@ -8058,12 +8235,13 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-soldier-legend",
     "title": "Soldier Legend",
-    "category": "action",
+    "category": "shooter",
     "description": "A side-scrolling run-and-gun shooter through enemy-held territory.",
     "gradient": "linear-gradient(135deg, #4b5320, #1a1a1a)",
     "source": "soldier-legend/index.html",
@@ -8072,7 +8250,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "medium",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-solitaire",
@@ -8086,7 +8265,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-sonic-the-hedgehog",
@@ -8100,7 +8280,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-sort-the-court",
@@ -8114,7 +8295,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-soundboard",
@@ -8128,7 +8310,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-space-company",
@@ -8142,7 +8325,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-spacegarden",
@@ -8156,12 +8340,13 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-spacehuggers",
     "title": "Spacehuggers",
-    "category": "action",
+    "category": "shooter",
     "description": "A roguelike run-and-gun where you rescue crewmates from an alien planet.",
     "gradient": "linear-gradient(135deg, #16a34a, #052e16)",
     "source": "spacehuggers/index.html",
@@ -8170,7 +8355,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "medium",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-spelunky",
@@ -8184,7 +8370,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-stack",
@@ -8198,7 +8385,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-stack-bump-3d",
@@ -8212,7 +8400,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-station-141",
@@ -8226,7 +8415,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "medium",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-stealing-the-diamond",
@@ -8240,7 +8430,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-stick-archers-battle",
@@ -8254,7 +8445,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "medium",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-stickclimb",
@@ -8268,7 +8460,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-stickman",
@@ -8282,7 +8475,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "medium",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-stickman-boost",
@@ -8296,7 +8490,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-stickman-dismount",
@@ -8310,7 +8505,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "medium",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-stickman-epic-battle",
@@ -8324,7 +8520,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "medium",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-stickman-golf",
@@ -8338,7 +8535,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-stickwar",
@@ -8352,7 +8550,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "medium",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-storm-the-house-2",
@@ -8366,7 +8565,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "medium",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-subway-surfers",
@@ -8380,7 +8580,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-subway-surfers-bali",
@@ -8394,7 +8595,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-super-mario-maker-online",
@@ -8408,7 +8610,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-super-puffer-fish-3d",
@@ -8422,12 +8625,13 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-superhero-io",
     "title": "Superhero.io",
-    "category": "action",
+    "category": "multiplayer",
     "description": "A multiplayer .io brawler where you control a superhero battling other players.",
     "gradient": "linear-gradient(135deg, #ef4444, #1e3a8a)",
     "source": "superhero-io/index.html",
@@ -8436,7 +8640,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "medium",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-superhot",
@@ -8450,7 +8655,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "medium",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-super-mario-construct",
@@ -8464,7 +8670,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-swerve",
@@ -8478,7 +8685,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-synesthesia",
@@ -8492,7 +8700,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-tactical-weapon-pack-2",
@@ -8506,12 +8715,13 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "medium",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-tactical-assassin-2",
     "title": "Tactical Assassin 2",
-    "category": "action",
+    "category": "shooter",
     "description": "A stealth sniper game where you plan and execute precision assassination missions.",
     "gradient": "linear-gradient(135deg, #4b5320, #1a1a1a)",
     "source": "tacticalassasin2/index.html",
@@ -8520,7 +8730,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "medium",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-tail-of-the-dragon",
@@ -8534,7 +8745,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-tank-trouble-2",
@@ -8548,7 +8760,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "medium",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-tanuki-sunset",
@@ -8562,7 +8775,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-temple-run-2",
@@ -8576,7 +8790,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-tetris",
@@ -8590,7 +8805,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-the-final-earth",
@@ -8604,7 +8820,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-the-final-earth-2",
@@ -8618,7 +8835,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-the-impossible-quiz",
@@ -8632,7 +8850,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-the-impossible-quiz-2",
@@ -8646,7 +8865,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-the-little-giant",
@@ -8660,7 +8880,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-thebattle",
@@ -8674,7 +8895,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "medium",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-theheist",
@@ -8688,7 +8910,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-the-maze-of-space-goblins",
@@ -8702,7 +8925,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-there-is-no-game",
@@ -8716,7 +8940,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-this-is-the-only-level",
@@ -8730,7 +8955,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-time-shooter-3",
@@ -8744,7 +8970,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "medium",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-tiny-fishing",
@@ -8758,7 +8985,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-tiny-fragments",
@@ -8772,7 +9000,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-tiny-islands",
@@ -8786,7 +9015,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-topple-adventure",
@@ -8800,7 +9030,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-toss-the-turtle",
@@ -8814,7 +9045,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-tough-growth",
@@ -8828,7 +9060,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-towermaster",
@@ -8842,7 +9075,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-townscaper",
@@ -8856,7 +9090,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-trimps",
@@ -8870,7 +9105,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-tube-jumpers",
@@ -8884,7 +9120,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-tunnel-rush",
@@ -8898,7 +9135,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-tunnelz",
@@ -8912,7 +9150,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-tv-static",
@@ -8926,7 +9165,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-twitch-tetris",
@@ -8940,7 +9180,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-underrun",
@@ -8954,7 +9195,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "medium",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-unfold-2",
@@ -8968,7 +9210,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-up-left-out",
@@ -8982,7 +9225,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-veloce",
@@ -8996,7 +9240,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-vex-3",
@@ -9010,7 +9255,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-vex-4",
@@ -9024,7 +9270,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-vex-5",
@@ -9038,7 +9285,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-vex-6",
@@ -9052,7 +9300,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-vex-7",
@@ -9066,7 +9315,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-waterworks",
@@ -9080,7 +9330,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-winter-falling-price",
@@ -9094,7 +9345,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-wipo",
@@ -9108,12 +9360,13 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-wolf3d",
     "title": "Wolfenstein 3D",
-    "category": "action",
+    "category": "shooter",
     "description": "A browser port of the pioneering first-person shooter through Nazi-occupied levels.",
     "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
     "source": "wolf3d/index.html",
@@ -9122,7 +9375,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "medium",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-wordle",
@@ -9136,7 +9390,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-worlds-hardest-game",
@@ -9150,7 +9405,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-worlds-hardest-game-2",
@@ -9164,7 +9420,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-x-trial-racing",
@@ -9178,7 +9435,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-xx142-b2exe",
@@ -9192,7 +9450,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "medium",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-yoshifabrication",
@@ -9206,7 +9465,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-you-are-bezos",
@@ -9220,7 +9480,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-zig-zag",
@@ -9234,7 +9495,8 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "low",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-zombocalypse",
@@ -9248,12 +9510,13 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "medium",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
   },
   {
     "id": "huge-zombs-royale",
     "title": "ZombsRoyale.io",
-    "category": "action",
+    "category": "multiplayer",
     "description": "A 2D battle-royale shooter where the last player or team standing wins.",
     "gradient": "linear-gradient(135deg, #4b5320, #1a1a1a)",
     "source": "zombs-royale/index.html",
@@ -9262,6 +9525,8392 @@ window.GAME_CATALOG = [
     "embed": "allowed",
     "schoolRisk": "medium",
     "icon": "",
-    "host": "games-huge"
+    "host": "games-huge",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-1-on-1-soccer",
+    "title": "1 on 1 Soccer",
+    "category": "sports",
+    "description": "Play 1 on 1 Soccer — a sports game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4ade80, #14532d)",
+    "source": "1on1soccer.html",
+    "direct": "1on1soccer.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-10-bullets",
+    "title": "10 Bullets",
+    "category": "action",
+    "description": "Play 10 Bullets — a shooter game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "10bullets.html",
+    "direct": "10bullets.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-10-morebullets",
+    "title": "10 Morebullets",
+    "category": "action",
+    "description": "Play 10 Morebullets — a shooter game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "10morebullets.html",
+    "direct": "10morebullets.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-1v1-tennis",
+    "title": "1v1 Tennis",
+    "category": "sports",
+    "description": "Play 1v1 Tennis — a sports game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4ade80, #14532d)",
+    "source": "1v1tennis.html",
+    "direct": "1v1tennis.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-2-doom",
+    "title": "2 Doom",
+    "category": "action",
+    "description": "Play 2 Doom — a shooter game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "2doom.html",
+    "direct": "2doom.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-20-smallmazes",
+    "title": "20 Smallmazes",
+    "category": "puzzle",
+    "description": "Play 20 Smallmazes — a puzzle game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #06b6d4, #0e7490)",
+    "source": "20smallmazes.html",
+    "direct": "20smallmazes.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-2048-cupcakes",
+    "title": "2048 Cupcakes",
+    "category": "puzzle",
+    "description": "Play 2048 Cupcakes — a puzzle game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #06b6d4, #0e7490)",
+    "source": "2048cupcakes.html",
+    "direct": "2048cupcakes.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-3-dash",
+    "title": "3 Dash",
+    "category": "platformer",
+    "description": "Play 3 Dash — a platformer game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
+    "source": "3dash.html",
+    "direct": "3dash.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-3-dasheditor",
+    "title": "3 Dasheditor",
+    "category": "platformer",
+    "description": "Play 3 Dasheditor — a platformer game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
+    "source": "3dasheditor.html",
+    "direct": "3dasheditor.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-3-dpinballspacecadet",
+    "title": "3 Dpinballspacecadet",
+    "category": "sports",
+    "description": "Play 3 Dpinballspacecadet — a sports game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4ade80, #14532d)",
+    "source": "3dpinballspacecadet.html",
+    "direct": "3dpinballspacecadet.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-40-xescape",
+    "title": "40 Xescape",
+    "category": "puzzle",
+    "description": "Play 40 Xescape — a puzzle game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #06b6d4, #0e7490)",
+    "source": "40xescape.html",
+    "direct": "40xescape.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-8-ballpool",
+    "title": "8 Ballpool",
+    "category": "sports",
+    "description": "Play 8 Ballpool — a sports game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4ade80, #14532d)",
+    "source": "8ballpool.html",
+    "direct": "8ballpool.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-acko-s-mach-bike-challenge-v1-0",
+    "title": "Acko S Mach Bike Challenge V1 0",
+    "category": "racing",
+    "description": "Play Acko S Mach Bike Challenge V1 0 — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "acko-s-mach-bike-challenge-v1-0.html",
+    "direct": "acko-s-mach-bike-challenge-v1-0.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-adventure-capatalist",
+    "title": "Adventure Capatalist",
+    "category": "rpg",
+    "description": "Play Adventure Capatalist — a rpg game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #7c3aed, #1e1b4b)",
+    "source": "adventure-capatalist.html",
+    "direct": "adventure-capatalist.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-ageofwar-2",
+    "title": "Ageofwar 2",
+    "category": "strategy",
+    "description": "Play Ageofwar 2 — a strategy game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4b5320, #1a1a1a)",
+    "source": "ageofwar2.html",
+    "direct": "ageofwar2.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-agesofconflict",
+    "title": "Agesofconflict",
+    "category": "sports",
+    "description": "Play Agesofconflict — a sports game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4ade80, #14532d)",
+    "source": "agesofconflict.html",
+    "direct": "agesofconflict.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-agesofempire",
+    "title": "Agesofempire",
+    "category": "strategy",
+    "description": "Play Agesofempire — a strategy game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4b5320, #1a1a1a)",
+    "source": "agesofempire.html",
+    "direct": "agesofempire.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-airlinetycoonidle",
+    "title": "Airlinetycoonidle",
+    "category": "strategy",
+    "description": "Play Airlinetycoonidle — a strategy game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4b5320, #1a1a1a)",
+    "source": "airlinetycoonidle.html",
+    "direct": "airlinetycoonidle.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-amaze",
+    "title": "Amaze",
+    "category": "puzzle",
+    "description": "Play Amaze — a puzzle game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #06b6d4, #0e7490)",
+    "source": "amaze.html",
+    "direct": "amaze.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-antarttycoon",
+    "title": "Antarttycoon",
+    "category": "strategy",
+    "description": "Play Antarttycoon — a strategy game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4b5320, #1a1a1a)",
+    "source": "antarttycoon.html",
+    "direct": "antarttycoon.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-archesspelago",
+    "title": "Archesspelago",
+    "category": "puzzle",
+    "description": "Play Archesspelago — a puzzle game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #06b6d4, #0e7490)",
+    "source": "archesspelago.html",
+    "direct": "archesspelago.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-babeltower",
+    "title": "Babeltower",
+    "category": "platformer",
+    "description": "Play Babeltower — a platformer game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
+    "source": "babeltower.html",
+    "direct": "babeltower.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-babysniperinvietnam",
+    "title": "Babysniperinvietnam",
+    "category": "action",
+    "description": "Play Babysniperinvietnam — a shooter game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "babysniperinvietnam.html",
+    "direct": "babysniperinvietnam.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-backrooms-2d",
+    "title": "Backrooms 2d",
+    "category": "horror",
+    "description": "Play Backrooms 2d — a horror game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #450a0a, #0a0a0a)",
+    "source": "backrooms2d.html",
+    "direct": "backrooms2d.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-backyardbaseball",
+    "title": "Backyardbaseball",
+    "category": "sports",
+    "description": "Play Backyardbaseball — a sports game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4ade80, #14532d)",
+    "source": "backyardbaseball.html",
+    "direct": "backyardbaseball.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-backyardbaseball-09",
+    "title": "Backyardbaseball 09",
+    "category": "sports",
+    "description": "Play Backyardbaseball 09 — a sports game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4ade80, #14532d)",
+    "source": "backyardbaseball09.html",
+    "direct": "backyardbaseball09.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-backyardbaseball-10",
+    "title": "Backyardbaseball 10",
+    "category": "sports",
+    "description": "Play Backyardbaseball 10 — a sports game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4ade80, #14532d)",
+    "source": "backyardbaseball10.html",
+    "direct": "backyardbaseball10.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-backyardsoccer",
+    "title": "Backyardsoccer",
+    "category": "sports",
+    "description": "Play Backyardsoccer — a sports game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4ade80, #14532d)",
+    "source": "backyardsoccer.html",
+    "direct": "backyardsoccer.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-badmondaysimulator",
+    "title": "Badmondaysimulator",
+    "category": "simulation",
+    "description": "Play Badmondaysimulator — a simulation game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #a78bfa, #4c1d95)",
+    "source": "badmondaysimulator.html",
+    "direct": "badmondaysimulator.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-badtimesimulator",
+    "title": "Badtimesimulator",
+    "category": "simulation",
+    "description": "Play Badtimesimulator — a simulation game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #a78bfa, #4c1d95)",
+    "source": "badtimesimulator.html",
+    "direct": "badtimesimulator.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-baldicaseoh",
+    "title": "Baldicaseoh",
+    "category": "horror",
+    "description": "Play Baldicaseoh — a horror game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #450a0a, #0a0a0a)",
+    "source": "baldicaseoh.html",
+    "direct": "baldicaseoh.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-baldidecomp",
+    "title": "Baldidecomp",
+    "category": "horror",
+    "description": "Play Baldidecomp — a horror game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #450a0a, #0a0a0a)",
+    "source": "baldidecomp.html",
+    "direct": "baldidecomp.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-baldiepstein",
+    "title": "Baldiepstein",
+    "category": "horror",
+    "description": "Play Baldiepstein — a horror game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #450a0a, #0a0a0a)",
+    "source": "baldiepstein.html",
+    "direct": "baldiepstein.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-baldisbasicsremaster",
+    "title": "Baldisbasicsremaster",
+    "category": "horror",
+    "description": "Play Baldisbasicsremaster — a horror game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #450a0a, #0a0a0a)",
+    "source": "baldisbasicsremaster.html",
+    "direct": "baldisbasicsremaster.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-baldisfunnewschoolultimate",
+    "title": "Baldisfunnewschoolultimate",
+    "category": "horror",
+    "description": "Play Baldisfunnewschoolultimate — a horror game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #450a0a, #0a0a0a)",
+    "source": "baldisfunnewschoolultimate.html",
+    "direct": "baldisfunnewschoolultimate.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-bananasimulator",
+    "title": "Bananasimulator",
+    "category": "simulation",
+    "description": "Play Bananasimulator — a simulation game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #a78bfa, #4c1d95)",
+    "source": "bananasimulator.html",
+    "direct": "bananasimulator.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-baseballbros",
+    "title": "Baseballbros",
+    "category": "sports",
+    "description": "Play Baseballbros — a sports game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4ade80, #14532d)",
+    "source": "baseballbros.html",
+    "direct": "baseballbros.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-baseballnes",
+    "title": "Baseballnes",
+    "category": "sports",
+    "description": "Play Baseballnes — a sports game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4ade80, #14532d)",
+    "source": "baseballnes.html",
+    "direct": "baseballnes.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-basketballfrvr",
+    "title": "Basketballfrvr",
+    "category": "sports",
+    "description": "Play Basketballfrvr — a sports game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4ade80, #14532d)",
+    "source": "basketballfrvr.html",
+    "direct": "basketballfrvr.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-basketballlegends-v2",
+    "title": "Basketballlegends V2",
+    "category": "sports",
+    "description": "Play Basketballlegends V2 — a sports game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4ade80, #14532d)",
+    "source": "basketballlegends-v2.html",
+    "direct": "basketballlegends-v2.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-basketballsuperstars",
+    "title": "Basketballsuperstars",
+    "category": "sports",
+    "description": "Play Basketballsuperstars — a sports game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4ade80, #14532d)",
+    "source": "basketballsuperstars.html",
+    "direct": "basketballsuperstars.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-battlekarts",
+    "title": "Battlekarts",
+    "category": "racing",
+    "description": "Play Battlekarts — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "battlekarts.html",
+    "direct": "battlekarts.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-beachboxingsim",
+    "title": "Beachboxingsim",
+    "category": "action",
+    "description": "Play Beachboxingsim — a fighting game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "beachboxingsim.html",
+    "direct": "beachboxingsim.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-beamrider",
+    "title": "Beamrider",
+    "category": "racing",
+    "description": "Play Beamrider — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "beamrider.html",
+    "direct": "beamrider.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-bergentruck-201x",
+    "title": "Bergentruck 201x",
+    "category": "racing",
+    "description": "Play Bergentruck 201x — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "bergentruck201x.html",
+    "direct": "bergentruck201x.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-bigflappytowertinysquare",
+    "title": "Bigflappytowertinysquare",
+    "category": "platformer",
+    "description": "Play Bigflappytowertinysquare — a platformer game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
+    "source": "bigflappytowertinysquare.html",
+    "direct": "bigflappytowertinysquare.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-bigicetowertinysquare",
+    "title": "Bigicetowertinysquare",
+    "category": "platformer",
+    "description": "Play Bigicetowertinysquare — a platformer game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
+    "source": "bigicetowertinysquare.html",
+    "direct": "bigicetowertinysquare.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-bigneontowertinysquare",
+    "title": "Bigneontowertinysquare",
+    "category": "platformer",
+    "description": "Play Bigneontowertinysquare — a platformer game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
+    "source": "bigneontowertinysquare.html",
+    "direct": "bigneontowertinysquare.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-bigshotboxing-2",
+    "title": "Bigshotboxing 2",
+    "category": "action",
+    "description": "Play Bigshotboxing 2 — a fighting game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "bigshotboxing2.html",
+    "direct": "bigshotboxing2.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-bigtowertinysquare",
+    "title": "Bigtowertinysquare",
+    "category": "platformer",
+    "description": "Play Bigtowertinysquare — a platformer game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
+    "source": "bigtowertinysquare.html",
+    "direct": "bigtowertinysquare.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-bigtowertinysquare-2",
+    "title": "Bigtowertinysquare 2",
+    "category": "platformer",
+    "description": "Play Bigtowertinysquare 2 — a platformer game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
+    "source": "bigtowertinysquare2.html",
+    "direct": "bigtowertinysquare2.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-bigtowertinysquare-2-good",
+    "title": "Bigtowertinysquare 2 Good",
+    "category": "platformer",
+    "description": "Play Bigtowertinysquare 2 Good — a platformer game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
+    "source": "bigtowertinysquare2good.html",
+    "direct": "bigtowertinysquare2good.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-bioevil-4",
+    "title": "Bioevil 4",
+    "category": "horror",
+    "description": "Play Bioevil 4 — a horror game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #450a0a, #0a0a0a)",
+    "source": "bioevil4.html",
+    "direct": "bioevil4.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-bitlifeencrypted",
+    "title": "Bitlifeencrypted",
+    "category": "simulation",
+    "description": "Play Bitlifeencrypted — a simulation game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #a78bfa, #4c1d95)",
+    "source": "bitlifeencrypted.html",
+    "direct": "bitlifeencrypted.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-blazedrifter",
+    "title": "Blazedrifter",
+    "category": "racing",
+    "description": "Play Blazedrifter — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "blazedrifter.html",
+    "direct": "blazedrifter.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-blood",
+    "title": "Blood",
+    "category": "action",
+    "description": "Play Blood — a shooter game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "blood.html",
+    "direct": "blood.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-bloodmoney",
+    "title": "Bloodmoney",
+    "category": "action",
+    "description": "Play Bloodmoney — a shooter game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "bloodmoney.html",
+    "direct": "bloodmoney.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-bloodtournament",
+    "title": "Bloodtournament",
+    "category": "action",
+    "description": "Play Bloodtournament — a shooter game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "bloodtournament.html",
+    "direct": "bloodtournament.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-bloons",
+    "title": "Bloons",
+    "category": "strategy",
+    "description": "Play Bloons — a strategy game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4b5320, #1a1a1a)",
+    "source": "bloons.html",
+    "direct": "bloons.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-bloons-2",
+    "title": "Bloons 2",
+    "category": "strategy",
+    "description": "Play Bloons 2 — a strategy game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4b5320, #1a1a1a)",
+    "source": "bloons2.html",
+    "direct": "bloons2.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-bloons-td-1",
+    "title": "Bloons Td 1",
+    "category": "strategy",
+    "description": "Play Bloons Td 1 — a strategy game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4b5320, #1a1a1a)",
+    "source": "bloons-td1.html",
+    "direct": "bloons-td1.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-bloons-td-3",
+    "title": "Bloons Td 3",
+    "category": "strategy",
+    "description": "Play Bloons Td 3 — a strategy game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4b5320, #1a1a1a)",
+    "source": "bloons-td3.html",
+    "direct": "bloons-td3.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-bloons-td-5",
+    "title": "Bloons Td 5",
+    "category": "strategy",
+    "description": "Play Bloons Td 5 — a strategy game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4b5320, #1a1a1a)",
+    "source": "bloons-td5.html",
+    "direct": "bloons-td5.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-bloons-td-6-scratch",
+    "title": "Bloons Td 6 Scratch",
+    "category": "strategy",
+    "description": "Play Bloons Td 6 Scratch — a strategy game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4b5320, #1a1a1a)",
+    "source": "bloons-td6scratch.html",
+    "direct": "bloons-td6scratch.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-bloonspp-1",
+    "title": "Bloonspp 1",
+    "category": "strategy",
+    "description": "Play Bloonspp 1 — a strategy game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4b5320, #1a1a1a)",
+    "source": "bloonspp1.html",
+    "direct": "bloonspp1.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-bloonspp-2",
+    "title": "Bloonspp 2",
+    "category": "strategy",
+    "description": "Play Bloonspp 2 — a strategy game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4b5320, #1a1a1a)",
+    "source": "bloonspp2.html",
+    "direct": "bloonspp2.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-bloonspp-3",
+    "title": "Bloonspp 3",
+    "category": "strategy",
+    "description": "Play Bloonspp 3 — a strategy game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4b5320, #1a1a1a)",
+    "source": "bloonspp3.html",
+    "direct": "bloonspp3.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-bloonspp-4",
+    "title": "Bloonspp 4",
+    "category": "strategy",
+    "description": "Play Bloonspp 4 — a strategy game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4b5320, #1a1a1a)",
+    "source": "bloonspp4.html",
+    "direct": "bloonspp4.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-bloonspp-5",
+    "title": "Bloonspp 5",
+    "category": "strategy",
+    "description": "Play Bloonspp 5 — a strategy game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4b5320, #1a1a1a)",
+    "source": "bloonspp5.html",
+    "direct": "bloonspp5.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-bloxorz",
+    "title": "Bloxorz",
+    "category": "puzzle",
+    "description": "Play Bloxorz — a puzzle game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #06b6d4, #0e7490)",
+    "source": "bloxorz.html",
+    "direct": "bloxorz.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-blumgiracers",
+    "title": "Blumgiracers",
+    "category": "racing",
+    "description": "Play Blumgiracers — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "blumgiracers.html",
+    "direct": "blumgiracers.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-bobasimulator",
+    "title": "Bobasimulator",
+    "category": "simulation",
+    "description": "Play Bobasimulator — a simulation game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #a78bfa, #4c1d95)",
+    "source": "bobasimulator.html",
+    "direct": "bobasimulator.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-bouncemasters",
+    "title": "Bouncemasters",
+    "category": "platformer",
+    "description": "Play Bouncemasters — a platformer game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
+    "source": "bouncemasters.html",
+    "direct": "bouncemasters.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-bouncybasketball",
+    "title": "Bouncybasketball",
+    "category": "sports",
+    "description": "Play Bouncybasketball — a sports game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4ade80, #14532d)",
+    "source": "bouncybasketball.html",
+    "direct": "bouncybasketball.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-boxinglive-2",
+    "title": "Boxinglive 2",
+    "category": "action",
+    "description": "Play Boxinglive 2 — a fighting game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "boxinglive-2.html",
+    "direct": "boxinglive-2.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-boxinglive-2-boxing",
+    "title": "Boxinglive 2",
+    "category": "action",
+    "description": "Play Boxinglive 2 — a fighting game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "boxinglive2.html",
+    "direct": "boxinglive2.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-boxingrandom",
+    "title": "Boxingrandom",
+    "category": "action",
+    "description": "Play Boxingrandom — a fighting game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "boxingrandom.html",
+    "direct": "boxingrandom.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-brawlsimulator-3d",
+    "title": "Brawlsimulator 3d",
+    "category": "action",
+    "description": "Play Brawlsimulator 3d — a fighting game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "brawlsimulator3d.html",
+    "direct": "brawlsimulator3d.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-brawlstars",
+    "title": "Brawlstars",
+    "category": "action",
+    "description": "Play Brawlstars — a fighting game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "brawlstars.html",
+    "direct": "brawlstars.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-bridgerace",
+    "title": "Bridgerace",
+    "category": "racing",
+    "description": "Play Bridgerace — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "bridgerace.html",
+    "direct": "bridgerace.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-brotato",
+    "title": "Brotato",
+    "category": "action",
+    "description": "Play Brotato — a shooter game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "brotato.html",
+    "direct": "brotato.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-btd-1",
+    "title": "Btd 1",
+    "category": "strategy",
+    "description": "Play Btd 1 — a strategy game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4b5320, #1a1a1a)",
+    "source": "btd1.html",
+    "direct": "btd1.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-btd-5",
+    "title": "Btd 5",
+    "category": "strategy",
+    "description": "Play Btd 5 — a strategy game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4b5320, #1a1a1a)",
+    "source": "btd5.html",
+    "direct": "btd5.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-buckshotroulette",
+    "title": "Buckshotroulette",
+    "category": "horror",
+    "description": "Play Buckshotroulette — a horror game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #450a0a, #0a0a0a)",
+    "source": "buckshotroulette.html",
+    "direct": "buckshotroulette.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-bulletforce",
+    "title": "Bulletforce",
+    "category": "action",
+    "description": "Play Bulletforce — a shooter game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "bulletforce.html",
+    "direct": "bulletforce.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-cannonballs-3d",
+    "title": "Cannonballs 3d",
+    "category": "sports",
+    "description": "Play Cannonballs 3d — a sports game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4ade80, #14532d)",
+    "source": "cannonballs3d.html",
+    "direct": "cannonballs3d.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-captchaware",
+    "title": "Captchaware",
+    "category": "strategy",
+    "description": "Play Captchaware — a strategy game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4b5320, #1a1a1a)",
+    "source": "captchaware.html",
+    "direct": "captchaware.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-cartoon-network-table-tennis-ultimate-tournament",
+    "title": "Cartoon Network Table Tennis Ultimate Tournament",
+    "category": "sports",
+    "description": "Play Cartoon Network Table Tennis Ultimate Tournament — a sports game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4ade80, #14532d)",
+    "source": "cartoon-network-table-tennis-ultimate-tournament.html",
+    "direct": "cartoon-network-table-tennis-ultimate-tournament.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-castlebloodline",
+    "title": "Castlebloodline",
+    "category": "action",
+    "description": "Play Castlebloodline — a shooter game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "castlebloodline.html",
+    "direct": "castlebloodline.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-castlewarsmodern",
+    "title": "Castlewarsmodern",
+    "category": "strategy",
+    "description": "Play Castlewarsmodern — a strategy game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4b5320, #1a1a1a)",
+    "source": "castlewarsmodern.html",
+    "direct": "castlewarsmodern.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-celeste",
+    "title": "Celeste",
+    "category": "platformer",
+    "description": "Play Celeste — a platformer game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
+    "source": "celeste.html",
+    "direct": "celeste.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-celeste-2",
+    "title": "Celeste 2",
+    "category": "platformer",
+    "description": "Play Celeste 2 — a platformer game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
+    "source": "celeste2.html",
+    "direct": "celeste2.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-checkers",
+    "title": "Checkers",
+    "category": "puzzle",
+    "description": "Play Checkers — a puzzle game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #06b6d4, #0e7490)",
+    "source": "checkers.html",
+    "direct": "checkers.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-chessclassic",
+    "title": "Chessclassic",
+    "category": "puzzle",
+    "description": "Play Chessclassic — a puzzle game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #06b6d4, #0e7490)",
+    "source": "chessclassic.html",
+    "direct": "chessclassic.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-chickenwar",
+    "title": "Chickenwar",
+    "category": "strategy",
+    "description": "Play Chickenwar — a strategy game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4b5320, #1a1a1a)",
+    "source": "chickenwar.html",
+    "direct": "chickenwar.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-chronotrigger",
+    "title": "Chronotrigger",
+    "category": "rpg",
+    "description": "Play Chronotrigger — a rpg game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #7c3aed, #1e1b4b)",
+    "source": "chronotrigger.html",
+    "direct": "chronotrigger.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-cod-4",
+    "title": "Cod 4",
+    "category": "action",
+    "description": "Play Cod 4 — a shooter game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "cod4.html",
+    "direct": "cod4.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-codblackopp",
+    "title": "Codblackopp",
+    "category": "action",
+    "description": "Play Codblackopp — a shooter game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "codblackopp.html",
+    "direct": "codblackopp.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-coddefiance",
+    "title": "Coddefiance",
+    "category": "action",
+    "description": "Play Coddefiance — a shooter game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "coddefiance.html",
+    "direct": "coddefiance.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-codenamegordon",
+    "title": "Codenamegordon",
+    "category": "action",
+    "description": "Play Codenamegordon — a shooter game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "codenamegordon.html",
+    "direct": "codenamegordon.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-codeorg",
+    "title": "Codeorg",
+    "category": "action",
+    "description": "Play Codeorg — a shooter game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "codeorg.html",
+    "direct": "codeorg.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-codeorgbutoffline",
+    "title": "Codeorgbutoffline",
+    "category": "action",
+    "description": "Play Codeorgbutoffline — a shooter game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "codeorgbutoffline.html",
+    "direct": "codeorgbutoffline.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-codmodernwarfare",
+    "title": "Codmodernwarfare",
+    "category": "action",
+    "description": "Play Codmodernwarfare — a shooter game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "codmodernwarfare.html",
+    "direct": "codmodernwarfare.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-codworldatwar",
+    "title": "Codworldatwar",
+    "category": "action",
+    "description": "Play Codworldatwar — a shooter game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "codworldatwar.html",
+    "direct": "codworldatwar.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-colormatch",
+    "title": "Colormatch",
+    "category": "puzzle",
+    "description": "Play Colormatch — a puzzle game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #06b6d4, #0e7490)",
+    "source": "colormatch.html",
+    "direct": "colormatch.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-colorwatersort-3d",
+    "title": "Colorwatersort 3d",
+    "category": "puzzle",
+    "description": "Play Colorwatersort 3d — a puzzle game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #06b6d4, #0e7490)",
+    "source": "colorwatersort3d.html",
+    "direct": "colorwatersort3d.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-combopool",
+    "title": "Combopool",
+    "category": "sports",
+    "description": "Play Combopool — a sports game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4ade80, #14532d)",
+    "source": "combopool.html",
+    "direct": "combopool.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-commandandconquer",
+    "title": "Commandandconquer",
+    "category": "strategy",
+    "description": "Play Commandandconquer — a strategy game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4b5320, #1a1a1a)",
+    "source": "commandandconquer.html",
+    "direct": "commandandconquer.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-commanderkeen-4",
+    "title": "Commanderkeen 4",
+    "category": "strategy",
+    "description": "Play Commanderkeen 4 — a strategy game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4b5320, #1a1a1a)",
+    "source": "commanderkeen4.html",
+    "direct": "commanderkeen4.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-commanderkeen-5",
+    "title": "Commanderkeen 5",
+    "category": "strategy",
+    "description": "Play Commanderkeen 5 — a strategy game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4b5320, #1a1a1a)",
+    "source": "commanderkeen5.html",
+    "direct": "commanderkeen5.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-commanderkeen-6",
+    "title": "Commanderkeen 6",
+    "category": "strategy",
+    "description": "Play Commanderkeen 6 — a strategy game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4b5320, #1a1a1a)",
+    "source": "commanderkeen6.html",
+    "direct": "commanderkeen6.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-cookingmama",
+    "title": "Cookingmama",
+    "category": "simulation",
+    "description": "Play Cookingmama — a simulation game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #a78bfa, #4c1d95)",
+    "source": "cookingmama.html",
+    "direct": "cookingmama.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-cookingmama-2",
+    "title": "Cookingmama 2",
+    "category": "simulation",
+    "description": "Play Cookingmama 2 — a simulation game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #a78bfa, #4c1d95)",
+    "source": "cookingmama2.html",
+    "direct": "cookingmama2.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-cookingmama-3",
+    "title": "Cookingmama 3",
+    "category": "simulation",
+    "description": "Play Cookingmama 3 — a simulation game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #a78bfa, #4c1d95)",
+    "source": "cookingmama3.html",
+    "direct": "cookingmama3.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-crashteamracing",
+    "title": "Crashteamracing",
+    "category": "racing",
+    "description": "Play Crashteamracing — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "crashteamracing.html",
+    "direct": "crashteamracing.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-crazyclimber",
+    "title": "Crazyclimber",
+    "category": "platformer",
+    "description": "Play Crazyclimber — a platformer game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
+    "source": "crazyclimber.html",
+    "direct": "crazyclimber.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-crazyfrogracer",
+    "title": "Crazyfrogracer",
+    "category": "racing",
+    "description": "Play Crazyfrogracer — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "crazyfrogracer.html",
+    "direct": "crazyfrogracer.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-crazymotorcycle",
+    "title": "Crazymotorcycle",
+    "category": "racing",
+    "description": "Play Crazymotorcycle — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "crazymotorcycle.html",
+    "direct": "crazymotorcycle.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-creepyinternetstories",
+    "title": "Creepyinternetstories",
+    "category": "horror",
+    "description": "Play Creepyinternetstories — a horror game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #450a0a, #0a0a0a)",
+    "source": "creepyinternetstories.html",
+    "direct": "creepyinternetstories.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-creepynightfunkin",
+    "title": "Creepynightfunkin",
+    "category": "horror",
+    "description": "Play Creepynightfunkin — a horror game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #450a0a, #0a0a0a)",
+    "source": "creepynightfunkin.html",
+    "direct": "creepynightfunkin.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-cs-1-6",
+    "title": "Cs 1 6",
+    "category": "action",
+    "description": "Play Cs 1 6 — a shooter game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "cs1-6.html",
+    "direct": "cs1-6.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-cs-6",
+    "title": "Cs 6",
+    "category": "action",
+    "description": "Play Cs 6 — a shooter game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "cs6.html",
+    "direct": "cs6.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-csds",
+    "title": "Csds",
+    "category": "action",
+    "description": "Play Csds — a shooter game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "csds.html",
+    "direct": "csds.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-cyberbungracing",
+    "title": "Cyberbungracing",
+    "category": "racing",
+    "description": "Play Cyberbungracing — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "cyberbungracing.html",
+    "direct": "cyberbungracing.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-dasharena",
+    "title": "Dasharena",
+    "category": "platformer",
+    "description": "Play Dasharena — a platformer game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
+    "source": "dasharena.html",
+    "direct": "dasharena.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-dashio",
+    "title": "Dashio",
+    "category": "platformer",
+    "description": "Play Dashio — a platformer game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
+    "source": "dashio.html",
+    "direct": "dashio.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-dashmetry",
+    "title": "Dashmetry",
+    "category": "platformer",
+    "description": "Play Dashmetry — a platformer game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
+    "source": "dashmetry.html",
+    "direct": "dashmetry.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-dbsniper",
+    "title": "Dbsniper",
+    "category": "action",
+    "description": "Play Dbsniper — a shooter game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "dbsniper.html",
+    "direct": "dbsniper.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-deltarune",
+    "title": "Deltarune",
+    "category": "rpg",
+    "description": "Play Deltarune — a rpg game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #7c3aed, #1e1b4b)",
+    "source": "deltarune.html",
+    "direct": "deltarune.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-demolitionderbycrashracing",
+    "title": "Demolitionderbycrashracing",
+    "category": "racing",
+    "description": "Play Demolitionderbycrashracing — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "demolitionderbycrashracing.html",
+    "direct": "demolitionderbycrashracing.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-diablo",
+    "title": "Diablo",
+    "category": "rpg",
+    "description": "Play Diablo — a rpg game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #7c3aed, #1e1b4b)",
+    "source": "diablo.html",
+    "direct": "diablo.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-diddykong-racing",
+    "title": "Diddykong Racing",
+    "category": "racing",
+    "description": "Play Diddykong Racing — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "diddykong-racing.html",
+    "direct": "diddykong-racing.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-dinorunmarathonofdoom",
+    "title": "Dinorunmarathonofdoom",
+    "category": "action",
+    "description": "Play Dinorunmarathonofdoom — a shooter game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "dinorunmarathonofdoom.html",
+    "direct": "dinorunmarathonofdoom.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-dontescape",
+    "title": "Dontescape",
+    "category": "puzzle",
+    "description": "Play Dontescape — a puzzle game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #06b6d4, #0e7490)",
+    "source": "dontescape.html",
+    "direct": "dontescape.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-dontescape-2",
+    "title": "Dontescape 2",
+    "category": "puzzle",
+    "description": "Play Dontescape 2 — a puzzle game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #06b6d4, #0e7490)",
+    "source": "dontescape2.html",
+    "direct": "dontescape2.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-dontescape-3",
+    "title": "Dontescape 3",
+    "category": "puzzle",
+    "description": "Play Dontescape 3 — a puzzle game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #06b6d4, #0e7490)",
+    "source": "dontescape3.html",
+    "direct": "dontescape3.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-doodlejumpgoober",
+    "title": "Doodlejumpgoober",
+    "category": "platformer",
+    "description": "Play Doodlejumpgoober — a platformer game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
+    "source": "doodlejumpgoober.html",
+    "direct": "doodlejumpgoober.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-doom",
+    "title": "Doom",
+    "category": "action",
+    "description": "Play Doom — a shooter game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "doom.html",
+    "direct": "doom.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-doom-2",
+    "title": "Doom 2",
+    "category": "action",
+    "description": "Play Doom 2 — a shooter game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "doom2.html",
+    "direct": "doom2.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-doom-2-dos",
+    "title": "Doom 2 Dos",
+    "category": "action",
+    "description": "Play Doom 2 Dos — a shooter game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "doom2dos.html",
+    "direct": "doom2dos.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-doom-2d",
+    "title": "Doom 2d",
+    "category": "action",
+    "description": "Play Doom 2d — a shooter game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "doom2d.html",
+    "direct": "doom2d.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-doom-2d-dos",
+    "title": "Doom 2d Dos",
+    "category": "action",
+    "description": "Play Doom 2d Dos — a shooter game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "doom2d-dos.html",
+    "direct": "doom2d-dos.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-doom-3-pack",
+    "title": "Doom 3 Pack",
+    "category": "action",
+    "description": "Play Doom 3 Pack — a shooter game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "doom3pack.html",
+    "direct": "doom3pack.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-doom-64",
+    "title": "Doom 64",
+    "category": "action",
+    "description": "Play Doom 64 — a shooter game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "doom64.html",
+    "direct": "doom64.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-doomdos",
+    "title": "Doomdos",
+    "category": "action",
+    "description": "Play Doomdos — a shooter game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "doomdos.html",
+    "direct": "doomdos.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-doomemscripten",
+    "title": "Doomemscripten",
+    "category": "action",
+    "description": "Play Doomemscripten — a shooter game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "doomemscripten.html",
+    "direct": "doomemscripten.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-doomps",
+    "title": "Doomps",
+    "category": "action",
+    "description": "Play Doomps — a shooter game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "doomps.html",
+    "direct": "doomps.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-doompsalt",
+    "title": "Doompsalt",
+    "category": "action",
+    "description": "Play Doompsalt — a shooter game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "doompsalt.html",
+    "direct": "doompsalt.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-doomzio",
+    "title": "Doomzio",
+    "category": "action",
+    "description": "Play Doomzio — a shooter game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "doomzio.html",
+    "direct": "doomzio.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-douchebaglife",
+    "title": "Douchebaglife",
+    "category": "simulation",
+    "description": "Play Douchebaglife — a simulation game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #a78bfa, #4c1d95)",
+    "source": "douchebaglife.html",
+    "direct": "douchebaglife.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-dragonwarriormonsters",
+    "title": "Dragonwarriormonsters",
+    "category": "strategy",
+    "description": "Play Dragonwarriormonsters — a strategy game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4b5320, #1a1a1a)",
+    "source": "dragonwarriormonsters.html",
+    "direct": "dragonwarriormonsters.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-drawclimber",
+    "title": "Drawclimber",
+    "category": "platformer",
+    "description": "Play Drawclimber — a platformer game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
+    "source": "drawclimber.html",
+    "direct": "drawclimber.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-drawntolife",
+    "title": "Drawntolife",
+    "category": "simulation",
+    "description": "Play Drawntolife — a simulation game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #a78bfa, #4c1d95)",
+    "source": "drawntolife.html",
+    "direct": "drawntolife.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-drawntolife-2",
+    "title": "Drawntolife 2",
+    "category": "simulation",
+    "description": "Play Drawntolife 2 — a simulation game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #a78bfa, #4c1d95)",
+    "source": "drawntolife2.html",
+    "direct": "drawntolife2.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-driftboss",
+    "title": "Driftboss",
+    "category": "racing",
+    "description": "Play Driftboss — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "driftboss.html",
+    "direct": "driftboss.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-drifthuntersmerge",
+    "title": "Drifthuntersmerge",
+    "category": "racing",
+    "description": "Play Drifthuntersmerge — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "drifthuntersmerge.html",
+    "direct": "drifthuntersmerge.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-driftsimulator",
+    "title": "Driftsimulator",
+    "category": "racing",
+    "description": "Play Driftsimulator — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "driftsimulator.html",
+    "direct": "driftsimulator.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-drivemady",
+    "title": "Drivemady",
+    "category": "racing",
+    "description": "Play Drivemady — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "drivemady.html",
+    "direct": "drivemady.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-drivenwild",
+    "title": "Drivenwild",
+    "category": "racing",
+    "description": "Play Drivenwild — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "drivenwild.html",
+    "direct": "drivenwild.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-driverussia",
+    "title": "Driverussia",
+    "category": "racing",
+    "description": "Play Driverussia — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "driverussia.html",
+    "direct": "driverussia.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-ducklifebattle",
+    "title": "Ducklifebattle",
+    "category": "simulation",
+    "description": "Play Ducklifebattle — a simulation game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #a78bfa, #4c1d95)",
+    "source": "ducklifebattle.html",
+    "direct": "ducklifebattle.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-ducklifespace",
+    "title": "Ducklifespace",
+    "category": "simulation",
+    "description": "Play Ducklifespace — a simulation game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #a78bfa, #4c1d95)",
+    "source": "ducklifespace.html",
+    "direct": "ducklifespace.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-earthbound",
+    "title": "Earthbound",
+    "category": "rpg",
+    "description": "Play Earthbound — a rpg game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #7c3aed, #1e1b4b)",
+    "source": "earthbound.html",
+    "direct": "earthbound.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-earthbound-3",
+    "title": "Earthbound 3",
+    "category": "rpg",
+    "description": "Play Earthbound 3 — a rpg game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #7c3aed, #1e1b4b)",
+    "source": "earthbound3.html",
+    "direct": "earthbound3.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-earthboundsnes",
+    "title": "Earthboundsnes",
+    "category": "rpg",
+    "description": "Play Earthboundsnes — a rpg game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #7c3aed, #1e1b4b)",
+    "source": "earthboundsnes.html",
+    "direct": "earthboundsnes.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-earthwormgg",
+    "title": "Earthwormgg",
+    "category": "platformer",
+    "description": "Play Earthwormgg — a platformer game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
+    "source": "earthwormgg.html",
+    "direct": "earthwormgg.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-earthwormjim",
+    "title": "Earthwormjim",
+    "category": "platformer",
+    "description": "Play Earthwormjim — a platformer game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
+    "source": "earthwormjim.html",
+    "direct": "earthwormjim.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-earthwormjim-2",
+    "title": "Earthwormjim 2",
+    "category": "platformer",
+    "description": "Play Earthwormjim 2 — a platformer game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
+    "source": "earthwormjim2.html",
+    "direct": "earthwormjim2.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-earthwormjim-2-v2",
+    "title": "Earthwormjim 2 V2",
+    "category": "platformer",
+    "description": "Play Earthwormjim 2 V2 — a platformer game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
+    "source": "earthwormjim2-v2.html",
+    "direct": "earthwormjim2-v2.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-earthwormjim-v2",
+    "title": "Earthwormjim V2",
+    "category": "platformer",
+    "description": "Play Earthwormjim V2 — a platformer game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
+    "source": "earthwormjim-v2.html",
+    "direct": "earthwormjim-v2.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-edyscarsimulator",
+    "title": "Edyscarsimulator",
+    "category": "simulation",
+    "description": "Play Edyscarsimulator — a simulation game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #a78bfa, #4c1d95)",
+    "source": "edyscarsimulator.html",
+    "direct": "edyscarsimulator.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-effingzombies",
+    "title": "Effingzombies",
+    "category": "horror",
+    "description": "Play Effingzombies — a horror game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #450a0a, #0a0a0a)",
+    "source": "effingzombies.html",
+    "direct": "effingzombies.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-endlesswar-4",
+    "title": "Endlesswar 4",
+    "category": "strategy",
+    "description": "Play Endlesswar 4 — a strategy game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4b5320, #1a1a1a)",
+    "source": "endlesswar4.html",
+    "direct": "endlesswar4.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-endlesswar-5",
+    "title": "Endlesswar 5",
+    "category": "strategy",
+    "description": "Play Endlesswar 5 — a strategy game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4b5320, #1a1a1a)",
+    "source": "endlesswar5.html",
+    "direct": "endlesswar5.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-endlesswar-5-wow",
+    "title": "Endlesswar 5 Wow",
+    "category": "strategy",
+    "description": "Play Endlesswar 5 Wow — a strategy game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4b5320, #1a1a1a)",
+    "source": "endlesswar5wow.html",
+    "direct": "endlesswar5wow.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-endlesswar-7",
+    "title": "Endlesswar 7",
+    "category": "strategy",
+    "description": "Play Endlesswar 7 — a strategy game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4b5320, #1a1a1a)",
+    "source": "endlesswar7.html",
+    "direct": "endlesswar7.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-escalatingduel",
+    "title": "Escalatingduel",
+    "category": "action",
+    "description": "Play Escalatingduel — a fighting game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "escalatingduel.html",
+    "direct": "escalatingduel.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-escaperoad",
+    "title": "Escaperoad",
+    "category": "puzzle",
+    "description": "Play Escaperoad — a puzzle game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #06b6d4, #0e7490)",
+    "source": "escaperoad.html",
+    "direct": "escaperoad.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-escaperoad-2",
+    "title": "Escaperoad 2",
+    "category": "racing",
+    "description": "Play Escaperoad 2 — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "escaperoad-2.html",
+    "direct": "escaperoad-2.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-escaperoad-3",
+    "title": "Escaperoad 3",
+    "category": "puzzle",
+    "description": "Play Escaperoad 3 — a puzzle game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #06b6d4, #0e7490)",
+    "source": "escaperoad3.html",
+    "direct": "escaperoad3.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-escaperoadcity-2",
+    "title": "Escaperoadcity 2",
+    "category": "puzzle",
+    "description": "Play Escaperoadcity 2 — a puzzle game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #06b6d4, #0e7490)",
+    "source": "escaperoadcity2.html",
+    "direct": "escaperoadcity2.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-escapeschoolduel",
+    "title": "Escapeschoolduel",
+    "category": "action",
+    "description": "Play Escapeschoolduel — a fighting game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "escapeschoolduel.html",
+    "direct": "escapeschoolduel.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-eugeneslife",
+    "title": "Eugeneslife",
+    "category": "simulation",
+    "description": "Play Eugeneslife — a simulation game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #a78bfa, #4c1d95)",
+    "source": "eugeneslife.html",
+    "direct": "eugeneslife.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-excitebike",
+    "title": "Excitebike",
+    "category": "racing",
+    "description": "Play Excitebike — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "excitebike.html",
+    "direct": "excitebike.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-excitebike-64",
+    "title": "Excitebike 64",
+    "category": "racing",
+    "description": "Play Excitebike 64 — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "excitebike64.html",
+    "direct": "excitebike64.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-extremerun-3d",
+    "title": "Extremerun 3d",
+    "category": "platformer",
+    "description": "Play Extremerun 3d — a platformer game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
+    "source": "extremerun3d.html",
+    "direct": "extremerun3d.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-famidash",
+    "title": "Famidash",
+    "category": "platformer",
+    "description": "Play Famidash — a platformer game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
+    "source": "famidash.html",
+    "direct": "famidash.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-famidash-1-2-8",
+    "title": "Famidash 1 2 8",
+    "category": "platformer",
+    "description": "Play Famidash 1 2 8 — a platformer game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
+    "source": "famidash1-2-8.html",
+    "direct": "famidash1-2-8.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-famidash-album-1-2-8",
+    "title": "Famidash Album 1 2 8",
+    "category": "platformer",
+    "description": "Play Famidash Album 1 2 8 — a platformer game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
+    "source": "famidash-album1-2-8.html",
+    "direct": "famidash-album1-2-8.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-famidash-b-sides-1-2-8",
+    "title": "Famidash B Sides 1 2 8",
+    "category": "platformer",
+    "description": "Play Famidash B Sides 1 2 8 — a platformer game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
+    "source": "famidash-b-sides1-2-8.html",
+    "direct": "famidash-b-sides1-2-8.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-famidash-c-sides-1-2-8",
+    "title": "Famidash C Sides 1 2 8",
+    "category": "platformer",
+    "description": "Play Famidash C Sides 1 2 8 — a platformer game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
+    "source": "famidash-c-sides1-2-8.html",
+    "direct": "famidash-c-sides1-2-8.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-famidash-d-sides-1-2-8",
+    "title": "Famidash D Sides 1 2 8",
+    "category": "platformer",
+    "description": "Play Famidash D Sides 1 2 8 — a platformer game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
+    "source": "famidash-d-sides1-2-8.html",
+    "direct": "famidash-d-sides1-2-8.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-fashionbattle",
+    "title": "Fashionbattle",
+    "category": "sports",
+    "description": "Play Fashionbattle — a sports game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4ade80, #14532d)",
+    "source": "fashionbattle.html",
+    "direct": "fashionbattle.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-ff-3",
+    "title": "Ff 3",
+    "category": "rpg",
+    "description": "Play Ff 3 — a rpg game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #7c3aed, #1e1b4b)",
+    "source": "ff3.html",
+    "direct": "ff3.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-ffmysticquest",
+    "title": "Ffmysticquest",
+    "category": "rpg",
+    "description": "Play Ffmysticquest — a rpg game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #7c3aed, #1e1b4b)",
+    "source": "ffmysticquest.html",
+    "direct": "ffmysticquest.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-fif-ainternationalsoccer",
+    "title": "Fif Ainternationalsoccer",
+    "category": "sports",
+    "description": "Play Fif Ainternationalsoccer — a sports game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4ade80, #14532d)",
+    "source": "fif-ainternationalsoccer.html",
+    "direct": "fif-ainternationalsoccer.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-fif-asoccer-06",
+    "title": "Fif Asoccer 06",
+    "category": "sports",
+    "description": "Play Fif Asoccer 06 — a sports game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4ade80, #14532d)",
+    "source": "fif-asoccer06.html",
+    "direct": "fif-asoccer06.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-fif-asoccer-95",
+    "title": "Fif Asoccer 95",
+    "category": "sports",
+    "description": "Play Fif Asoccer 95 — a sports game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4ade80, #14532d)",
+    "source": "fif-asoccer95.html",
+    "direct": "fif-asoccer95.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-fif-asoccer-96",
+    "title": "Fif Asoccer 96",
+    "category": "sports",
+    "description": "Play Fif Asoccer 96 — a sports game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4ade80, #14532d)",
+    "source": "fif-asoccer96.html",
+    "direct": "fif-asoccer96.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-fif-asoccer-97",
+    "title": "Fif Asoccer 97",
+    "category": "sports",
+    "description": "Play Fif Asoccer 97 — a sports game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4ade80, #14532d)",
+    "source": "fif-asoccer97.html",
+    "direct": "fif-asoccer97.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-fifa-07",
+    "title": "Fifa 07",
+    "category": "sports",
+    "description": "Play Fifa 07 — a sports game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4ade80, #14532d)",
+    "source": "fifa07.html",
+    "direct": "fifa07.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-fifa-10",
+    "title": "Fifa 10",
+    "category": "sports",
+    "description": "Play Fifa 10 — a sports game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4ade80, #14532d)",
+    "source": "fifa10.html",
+    "direct": "fifa10.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-fifa-11",
+    "title": "Fifa 11",
+    "category": "sports",
+    "description": "Play Fifa 11 — a sports game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4ade80, #14532d)",
+    "source": "fifa11.html",
+    "direct": "fifa11.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-fifa-2000",
+    "title": "Fifa 2000",
+    "category": "sports",
+    "description": "Play Fifa 2000 — a sports game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4ade80, #14532d)",
+    "source": "fifa2000.html",
+    "direct": "fifa2000.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-fifa-2000-v2",
+    "title": "Fifa 2000 V2",
+    "category": "sports",
+    "description": "Play Fifa 2000 V2 — a sports game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4ade80, #14532d)",
+    "source": "fifa2000-v2.html",
+    "direct": "fifa2000-v2.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-fifa-2000-v3",
+    "title": "Fifa 2000 V3",
+    "category": "sports",
+    "description": "Play Fifa 2000 V3 — a sports game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4ade80, #14532d)",
+    "source": "fifa2000-v3.html",
+    "direct": "fifa2000-v3.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-fifa-99",
+    "title": "Fifa 99",
+    "category": "sports",
+    "description": "Play Fifa 99 — a sports game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4ade80, #14532d)",
+    "source": "fifa99.html",
+    "direct": "fifa99.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-fivenightsatbaldisredone",
+    "title": "Fivenightsatbaldisredone",
+    "category": "horror",
+    "description": "Play Fivenightsatbaldisredone — a horror game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #450a0a, #0a0a0a)",
+    "source": "fivenightsatbaldisredone.html",
+    "direct": "fivenightsatbaldisredone.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-fnfhorkglorpgloop",
+    "title": "Fnfhorkglorpgloop",
+    "category": "rpg",
+    "description": "Play Fnfhorkglorpgloop — a rpg game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #7c3aed, #1e1b4b)",
+    "source": "fnfhorkglorpgloop.html",
+    "direct": "fnfhorkglorpgloop.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-fnfjapcreepypasta",
+    "title": "Fnfjapcreepypasta",
+    "category": "horror",
+    "description": "Play Fnfjapcreepypasta — a horror game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #450a0a, #0a0a0a)",
+    "source": "fnfjapcreepypasta.html",
+    "direct": "fnfjapcreepypasta.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-fnfmaginagematches",
+    "title": "Fnfmaginagematches",
+    "category": "puzzle",
+    "description": "Play Fnfmaginagematches — a puzzle game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #06b6d4, #0e7490)",
+    "source": "fnfmaginagematches.html",
+    "direct": "fnfmaginagematches.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-freerider",
+    "title": "Freerider",
+    "category": "racing",
+    "description": "Play Freerider — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "freerider.html",
+    "direct": "freerider.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-freerider-2",
+    "title": "Freerider 2",
+    "category": "racing",
+    "description": "Play Freerider 2 — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "freerider2.html",
+    "direct": "freerider2.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-freerider-3",
+    "title": "Freerider 3",
+    "category": "racing",
+    "description": "Play Freerider 3 — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "freerider3.html",
+    "direct": "freerider3.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-funnymadracing",
+    "title": "Funnymadracing",
+    "category": "racing",
+    "description": "Play Funnymadracing — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "funnymadracing.html",
+    "direct": "funnymadracing.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-genericfightermaybe",
+    "title": "Genericfightermaybe",
+    "category": "action",
+    "description": "Play Genericfightermaybe — a fighting game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "genericfightermaybe.html",
+    "direct": "genericfightermaybe.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-geometrydashscratch",
+    "title": "Geometrydashscratch",
+    "category": "platformer",
+    "description": "Play Geometrydashscratch — a platformer game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
+    "source": "geometrydashscratch.html",
+    "direct": "geometrydashscratch.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-glfighters",
+    "title": "Glfighters",
+    "category": "action",
+    "description": "Play Glfighters — a fighting game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "glfighters.html",
+    "direct": "glfighters.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-golden-sun-the-lost-age",
+    "title": "Golden Sun the Lost Age",
+    "category": "rpg",
+    "description": "Play Golden Sun the Lost Age — a rpg game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #7c3aed, #1e1b4b)",
+    "source": "golden-sun-the-lost-age.html",
+    "direct": "golden-sun-the-lost-age.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-golfbattle",
+    "title": "Golfbattle",
+    "category": "sports",
+    "description": "Play Golfbattle — a sports game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4ade80, #14532d)",
+    "source": "golfbattle.html",
+    "direct": "golfbattle.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-golforbit",
+    "title": "Golforbit",
+    "category": "sports",
+    "description": "Play Golforbit — a sports game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4ade80, #14532d)",
+    "source": "golforbit.html",
+    "direct": "golforbit.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-golfsunday",
+    "title": "Golfsunday",
+    "category": "sports",
+    "description": "Play Golfsunday — a sports game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4ade80, #14532d)",
+    "source": "golfsunday.html",
+    "direct": "golfsunday.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-goodbigtowertinysquare",
+    "title": "Goodbigtowertinysquare",
+    "category": "platformer",
+    "description": "Play Goodbigtowertinysquare — a platformer game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
+    "source": "goodbigtowertinysquare.html",
+    "direct": "goodbigtowertinysquare.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-goodbigtowertinysquare-2",
+    "title": "Goodbigtowertinysquare 2",
+    "category": "platformer",
+    "description": "Play Goodbigtowertinysquare 2 — a platformer game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
+    "source": "goodbigtowertinysquare2.html",
+    "direct": "goodbigtowertinysquare2.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-googlebaseball",
+    "title": "Googlebaseball",
+    "category": "sports",
+    "description": "Play Googlebaseball — a sports game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4ade80, #14532d)",
+    "source": "googlebaseball.html",
+    "direct": "googlebaseball.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-grandactionsimulator-ny",
+    "title": "Grandactionsimulator Ny",
+    "category": "simulation",
+    "description": "Play Grandactionsimulator Ny — a simulation game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #a78bfa, #4c1d95)",
+    "source": "grandactionsimulator-ny.html",
+    "direct": "grandactionsimulator-ny.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-grandescapeprison",
+    "title": "Grandescapeprison",
+    "category": "puzzle",
+    "description": "Play Grandescapeprison — a puzzle game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #06b6d4, #0e7490)",
+    "source": "grandescapeprison.html",
+    "direct": "grandescapeprison.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-grannycreepy",
+    "title": "Grannycreepy",
+    "category": "horror",
+    "description": "Play Grannycreepy — a horror game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #450a0a, #0a0a0a)",
+    "source": "grannycreepy.html",
+    "direct": "grannycreepy.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-gunblood",
+    "title": "Gunblood",
+    "category": "action",
+    "description": "Play Gunblood — a shooter game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "gunblood.html",
+    "direct": "gunblood.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-gunfighterjessejames",
+    "title": "Gunfighterjessejames",
+    "category": "action",
+    "description": "Play Gunfighterjessejames — a fighting game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "gunfighterjessejames.html",
+    "direct": "gunfighterjessejames.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-halflife",
+    "title": "Halflife",
+    "category": "simulation",
+    "description": "Play Halflife — a simulation game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #a78bfa, #4c1d95)",
+    "source": "halflife.html",
+    "direct": "halflife.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-halocombatdevolved",
+    "title": "Halocombatdevolved",
+    "category": "action",
+    "description": "Play Halocombatdevolved — a shooter game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "halocombatdevolved.html",
+    "direct": "halocombatdevolved.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-handsofwar",
+    "title": "Handsofwar",
+    "category": "strategy",
+    "description": "Play Handsofwar — a strategy game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4b5320, #1a1a1a)",
+    "source": "handsofwar.html",
+    "direct": "handsofwar.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-handsofwar-v2",
+    "title": "Handsofwar V2",
+    "category": "strategy",
+    "description": "Play Handsofwar V2 — a strategy game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4b5320, #1a1a1a)",
+    "source": "handsofwar-v2.html",
+    "direct": "handsofwar-v2.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-handsofwar-v3",
+    "title": "Handsofwar V3",
+    "category": "strategy",
+    "description": "Play Handsofwar V3 — a strategy game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4b5320, #1a1a1a)",
+    "source": "handsofwar-v3.html",
+    "direct": "handsofwar-v3.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-handsofwar-v4",
+    "title": "Handsofwar V4",
+    "category": "strategy",
+    "description": "Play Handsofwar V4 — a strategy game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4b5320, #1a1a1a)",
+    "source": "handsofwar-v4.html",
+    "direct": "handsofwar-v4.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-hardwaretycoon",
+    "title": "Hardwaretycoon",
+    "category": "strategy",
+    "description": "Play Hardwaretycoon — a strategy game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4b5320, #1a1a1a)",
+    "source": "hardwaretycoon.html",
+    "direct": "hardwaretycoon.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-helixjump",
+    "title": "Helixjump",
+    "category": "platformer",
+    "description": "Play Helixjump — a platformer game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
+    "source": "helixjump.html",
+    "direct": "helixjump.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-highwayracer-2",
+    "title": "Highwayracer 2",
+    "category": "racing",
+    "description": "Play Highwayracer 2 — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "highwayracer2.html",
+    "direct": "highwayracer2.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-hil-climb-racing-2",
+    "title": "Hil Climb Racing 2",
+    "category": "racing",
+    "description": "Play Hil Climb Racing 2 — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "hil-climb-racing2.html",
+    "direct": "hil-climb-racing2.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-hillclimbracinglite",
+    "title": "Hillclimbracinglite",
+    "category": "racing",
+    "description": "Play Hillclimbracinglite — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "hillclimbracinglite.html",
+    "direct": "hillclimbracinglite.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-hitstunfly",
+    "title": "Hitstunfly",
+    "category": "sports",
+    "description": "Play Hitstunfly — a sports game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4ade80, #14532d)",
+    "source": "hitstunfly.html",
+    "direct": "hitstunfly.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-hl-2-doom",
+    "title": "Hl 2 Doom",
+    "category": "action",
+    "description": "Play Hl 2 Doom — a shooter game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "hl2doom.html",
+    "direct": "hl2doom.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-hobovszombies",
+    "title": "Hobovszombies",
+    "category": "horror",
+    "description": "Play Hobovszombies — a horror game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #450a0a, #0a0a0a)",
+    "source": "hobovszombies.html",
+    "direct": "hobovszombies.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-horrormickeymouse",
+    "title": "Horrormickeymouse",
+    "category": "horror",
+    "description": "Play Horrormickeymouse — a horror game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #450a0a, #0a0a0a)",
+    "source": "horrormickeymouse.html",
+    "direct": "horrormickeymouse.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-hoverracerdrive",
+    "title": "Hoverracerdrive",
+    "category": "racing",
+    "description": "Play Hoverracerdrive — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "hoverracerdrive.html",
+    "direct": "hoverracerdrive.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-iceclimber",
+    "title": "Iceclimber",
+    "category": "platformer",
+    "description": "Play Iceclimber — a platformer game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
+    "source": "iceclimber.html",
+    "direct": "iceclimber.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-idleminertycoon",
+    "title": "Idleminertycoon",
+    "category": "strategy",
+    "description": "Play Idleminertycoon — a strategy game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4b5320, #1a1a1a)",
+    "source": "idleminertycoon.html",
+    "direct": "idleminertycoon.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-impossiblequiz-v2",
+    "title": "Impossiblequiz V2",
+    "category": "puzzle",
+    "description": "Play Impossiblequiz V2 — a puzzle game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #06b6d4, #0e7490)",
+    "source": "impossiblequiz-v2.html",
+    "direct": "impossiblequiz-v2.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-indiantrucksimiulator",
+    "title": "Indiantrucksimiulator",
+    "category": "racing",
+    "description": "Play Indiantrucksimiulator — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "indiantrucksimiulator.html",
+    "direct": "indiantrucksimiulator.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-jellydrift",
+    "title": "Jellydrift",
+    "category": "racing",
+    "description": "Play Jellydrift — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "jellydrift.html",
+    "direct": "jellydrift.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-jellytruckgood",
+    "title": "Jellytruckgood",
+    "category": "racing",
+    "description": "Play Jellytruckgood — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "jellytruckgood.html",
+    "direct": "jellytruckgood.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-jetskiracing",
+    "title": "Jetskiracing",
+    "category": "racing",
+    "description": "Play Jetskiracing — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "jetskiracing.html",
+    "direct": "jetskiracing.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-jump",
+    "title": "Jump",
+    "category": "platformer",
+    "description": "Play Jump — a platformer game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
+    "source": "jump.html",
+    "direct": "jump.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-jumpingshell",
+    "title": "Jumpingshell",
+    "category": "platformer",
+    "description": "Play Jumpingshell — a platformer game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
+    "source": "jumpingshell.html",
+    "direct": "jumpingshell.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-kartbros",
+    "title": "Kartbros",
+    "category": "racing",
+    "description": "Play Kartbros — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "kartbros.html",
+    "direct": "kartbros.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-ken-griffey-jr-presents-major-league-baseball",
+    "title": "Ken Griffey Jr Presents Major League Baseball",
+    "category": "sports",
+    "description": "Play Ken Griffey Jr Presents Major League Baseball — a sports game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4ade80, #14532d)",
+    "source": "ken-griffey-jr-presents-major-league-baseball.html",
+    "direct": "ken-griffey-jr-presents-major-league-baseball.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-kimjonguntilepuzzle",
+    "title": "Kimjonguntilepuzzle",
+    "category": "puzzle",
+    "description": "Play Kimjonguntilepuzzle — a puzzle game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #06b6d4, #0e7490)",
+    "source": "kimjonguntilepuzzle.html",
+    "direct": "kimjonguntilepuzzle.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-knightmaretower",
+    "title": "Knightmaretower",
+    "category": "platformer",
+    "description": "Play Knightmaretower — a platformer game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
+    "source": "knightmaretower.html",
+    "direct": "knightmaretower.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-leveldevil",
+    "title": "Leveldevil",
+    "category": "horror",
+    "description": "Play Leveldevil — a horror game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #450a0a, #0a0a0a)",
+    "source": "leveldevil.html",
+    "direct": "leveldevil.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-leverwarriors",
+    "title": "Leverwarriors",
+    "category": "strategy",
+    "description": "Play Leverwarriors — a strategy game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4b5320, #1a1a1a)",
+    "source": "leverwarriors.html",
+    "direct": "leverwarriors.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-machrider",
+    "title": "Machrider",
+    "category": "racing",
+    "description": "Play Machrider — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "machrider.html",
+    "direct": "machrider.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-maddennfl",
+    "title": "Maddennfl",
+    "category": "sports",
+    "description": "Play Maddennfl — a sports game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4ade80, #14532d)",
+    "source": "maddennfl.html",
+    "direct": "maddennfl.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-maddennfl-2000",
+    "title": "Maddennfl 2000",
+    "category": "sports",
+    "description": "Play Maddennfl 2000 — a sports game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4ade80, #14532d)",
+    "source": "maddennfl2000.html",
+    "direct": "maddennfl2000.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-maddennfl-2001",
+    "title": "Maddennfl 2001",
+    "category": "sports",
+    "description": "Play Maddennfl 2001 — a sports game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4ade80, #14532d)",
+    "source": "maddennfl2001.html",
+    "direct": "maddennfl2001.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-maddennfl-2002",
+    "title": "Maddennfl 2002",
+    "category": "sports",
+    "description": "Play Maddennfl 2002 — a sports game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4ade80, #14532d)",
+    "source": "maddennfl2002.html",
+    "direct": "maddennfl2002.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-madnesscombatdefense",
+    "title": "Madnesscombatdefense",
+    "category": "strategy",
+    "description": "Play Madnesscombatdefense — a strategy game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4b5320, #1a1a1a)",
+    "source": "madnesscombatdefense.html",
+    "direct": "madnesscombatdefense.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-madskillsmotocross-2",
+    "title": "Madskillsmotocross 2",
+    "category": "racing",
+    "description": "Play Madskillsmotocross 2 — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "madskillsmotocross2.html",
+    "direct": "madskillsmotocross2.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-magetoweridle",
+    "title": "Magetoweridle",
+    "category": "platformer",
+    "description": "Play Magetoweridle — a platformer game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
+    "source": "magetoweridle.html",
+    "direct": "magetoweridle.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-marbleracer",
+    "title": "Marbleracer",
+    "category": "racing",
+    "description": "Play Marbleracer — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "marbleracer.html",
+    "direct": "marbleracer.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-marbleracer-v2",
+    "title": "Marbleracer V2",
+    "category": "racing",
+    "description": "Play Marbleracer V2 — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "marbleracer-v2.html",
+    "direct": "marbleracer-v2.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-marvel-vs-capcom-ps-1",
+    "title": "Marvel vs Capcom Ps 1",
+    "category": "action",
+    "description": "Play Marvel vs Capcom Ps 1 — a fighting game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "marvel-vs-capcom-ps1.html",
+    "direct": "marvel-vs-capcom-ps1.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-medievil",
+    "title": "Medievil",
+    "category": "horror",
+    "description": "Play Medievil — a horror game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #450a0a, #0a0a0a)",
+    "source": "medievil.html",
+    "direct": "medievil.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-megachess",
+    "title": "Megachess",
+    "category": "puzzle",
+    "description": "Play Megachess — a puzzle game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #06b6d4, #0e7490)",
+    "source": "megachess.html",
+    "direct": "megachess.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-mergeroundracers",
+    "title": "Mergeroundracers",
+    "category": "racing",
+    "description": "Play Mergeroundracers — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "mergeroundracers.html",
+    "direct": "mergeroundracers.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-microlife",
+    "title": "Microlife",
+    "category": "simulation",
+    "description": "Play Microlife — a simulation game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #a78bfa, #4c1d95)",
+    "source": "microlife.html",
+    "direct": "microlife.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-misslecommand",
+    "title": "Misslecommand",
+    "category": "strategy",
+    "description": "Play Misslecommand — a strategy game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4b5320, #1a1a1a)",
+    "source": "misslecommand.html",
+    "direct": "misslecommand.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-mmwilywars",
+    "title": "Mmwilywars",
+    "category": "strategy",
+    "description": "Play Mmwilywars — a strategy game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4b5320, #1a1a1a)",
+    "source": "mmwilywars.html",
+    "direct": "mmwilywars.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-monstertruckcurfew",
+    "title": "Monstertruckcurfew",
+    "category": "racing",
+    "description": "Play Monstertruckcurfew — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "monstertruckcurfew.html",
+    "direct": "monstertruckcurfew.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-monstertruckportstunt",
+    "title": "Monstertruckportstunt",
+    "category": "racing",
+    "description": "Play Monstertruckportstunt — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "monstertruckportstunt.html",
+    "direct": "monstertruckportstunt.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-mountainbikeracer",
+    "title": "Mountainbikeracer",
+    "category": "racing",
+    "description": "Play Mountainbikeracer — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "mountainbikeracer.html",
+    "direct": "mountainbikeracer.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-mrracer",
+    "title": "Mrracer",
+    "category": "racing",
+    "description": "Play Mrracer — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "mrracer.html",
+    "direct": "mrracer.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-mvpbaseball",
+    "title": "Mvpbaseball",
+    "category": "sports",
+    "description": "Play Mvpbaseball — a sports game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4ade80, #14532d)",
+    "source": "mvpbaseball.html",
+    "direct": "mvpbaseball.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-nbajam-te",
+    "title": "Nbajam Te",
+    "category": "sports",
+    "description": "Play Nbajam Te — a sports game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4ade80, #14532d)",
+    "source": "nbajam-te.html",
+    "direct": "nbajam-te.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-nbalive-2000",
+    "title": "Nbalive 2000",
+    "category": "sports",
+    "description": "Play Nbalive 2000 — a sports game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4ade80, #14532d)",
+    "source": "nbalive2000.html",
+    "direct": "nbalive2000.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-nbalive-2003",
+    "title": "Nbalive 2003",
+    "category": "sports",
+    "description": "Play Nbalive 2003 — a sports game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4ade80, #14532d)",
+    "source": "nbalive2003.html",
+    "direct": "nbalive2003.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-neonrider",
+    "title": "Neonrider",
+    "category": "racing",
+    "description": "Play Neonrider — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "neonrider.html",
+    "direct": "neonrider.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-nflblitz",
+    "title": "Nflblitz",
+    "category": "sports",
+    "description": "Play Nflblitz — a sports game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4ade80, #14532d)",
+    "source": "nflblitz.html",
+    "direct": "nflblitz.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-nickelodeonsuperbrawl-2",
+    "title": "Nickelodeonsuperbrawl 2",
+    "category": "action",
+    "description": "Play Nickelodeonsuperbrawl 2 — a fighting game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "nickelodeonsuperbrawl2.html",
+    "direct": "nickelodeonsuperbrawl2.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-ninjabrawl",
+    "title": "Ninjabrawl",
+    "category": "action",
+    "description": "Play Ninjabrawl — a fighting game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "ninjabrawl.html",
+    "direct": "ninjabrawl.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-nutsand-bolts-screwing-puzzle",
+    "title": "Nutsand Bolts Screwing Puzzle",
+    "category": "puzzle",
+    "description": "Play Nutsand Bolts Screwing Puzzle — a puzzle game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #06b6d4, #0e7490)",
+    "source": "nutsand-bolts-screwing-puzzle.html",
+    "direct": "nutsand-bolts-screwing-puzzle.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-obby-1-jumpperclick",
+    "title": "Obby 1 Jumpperclick",
+    "category": "platformer",
+    "description": "Play Obby 1 Jumpperclick — a platformer game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
+    "source": "obby1jumpperclick.html",
+    "direct": "obby1jumpperclick.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-obbybike",
+    "title": "Obbybike",
+    "category": "racing",
+    "description": "Play Obbybike — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "obbybike.html",
+    "direct": "obbybike.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-obbyrainbowtower",
+    "title": "Obbyrainbowtower",
+    "category": "platformer",
+    "description": "Play Obbyrainbowtower — a platformer game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
+    "source": "obbyrainbowtower.html",
+    "direct": "obbyrainbowtower.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-outrun-arcade",
+    "title": "Outrun Arcade",
+    "category": "racing",
+    "description": "Play Outrun Arcade — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "outrun-arcade.html",
+    "direct": "outrun-arcade.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-outrun-genesis",
+    "title": "Outrun Genesis",
+    "category": "racing",
+    "description": "Play Outrun Genesis — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "outrun-genesis.html",
+    "direct": "outrun-genesis.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-ovo-2",
+    "title": "Ovo 2",
+    "category": "platformer",
+    "description": "Play Ovo 2 — a platformer game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
+    "source": "ovo2.html",
+    "direct": "ovo2.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-ovodimensions",
+    "title": "Ovodimensions",
+    "category": "platformer",
+    "description": "Play Ovodimensions — a platformer game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
+    "source": "ovodimensions.html",
+    "direct": "ovodimensions.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-pacmansuperfast",
+    "title": "Pacmansuperfast",
+    "category": "platformer",
+    "description": "Play Pacmansuperfast — a platformer game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
+    "source": "pacmansuperfast.html",
+    "direct": "pacmansuperfast.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-picodriller",
+    "title": "Picodriller",
+    "category": "action",
+    "description": "Play Picodriller — a shooter game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "picodriller.html",
+    "direct": "picodriller.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-picolife",
+    "title": "Picolife",
+    "category": "simulation",
+    "description": "Play Picolife — a simulation game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #a78bfa, #4c1d95)",
+    "source": "picolife.html",
+    "direct": "picolife.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-pinballnes",
+    "title": "Pinballnes",
+    "category": "sports",
+    "description": "Play Pinballnes — a sports game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4ade80, #14532d)",
+    "source": "pinballnes.html",
+    "direct": "pinballnes.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-pinkbike",
+    "title": "Pinkbike",
+    "category": "racing",
+    "description": "Play Pinkbike — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "pinkbike.html",
+    "direct": "pinkbike.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-pixelquestlostidols",
+    "title": "Pixelquestlostidols",
+    "category": "rpg",
+    "description": "Play Pixelquestlostidols — a rpg game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #7c3aed, #1e1b4b)",
+    "source": "pixelquestlostidols.html",
+    "direct": "pixelquestlostidols.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-pixelwarfare",
+    "title": "Pixelwarfare",
+    "category": "strategy",
+    "description": "Play Pixelwarfare — a strategy game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4b5320, #1a1a1a)",
+    "source": "pixelwarfare.html",
+    "direct": "pixelwarfare.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-pizzatower",
+    "title": "Pizzatower",
+    "category": "platformer",
+    "description": "Play Pizzatower — a platformer game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
+    "source": "pizzatower.html",
+    "direct": "pizzatower.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-planetlife",
+    "title": "Planetlife",
+    "category": "simulation",
+    "description": "Play Planetlife — a simulation game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #a78bfa, #4c1d95)",
+    "source": "planetlife.html",
+    "direct": "planetlife.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-plantsvszombies",
+    "title": "Plantsvszombies",
+    "category": "horror",
+    "description": "Play Plantsvszombies — a horror game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #450a0a, #0a0a0a)",
+    "source": "plantsvszombies.html",
+    "direct": "plantsvszombies.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-plantsvszombiesnds",
+    "title": "Plantsvszombiesnds",
+    "category": "horror",
+    "description": "Play Plantsvszombiesnds — a horror game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #450a0a, #0a0a0a)",
+    "source": "plantsvszombiesnds.html",
+    "direct": "plantsvszombiesnds.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-possessquest",
+    "title": "Possessquest",
+    "category": "rpg",
+    "description": "Play Possessquest — a rpg game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #7c3aed, #1e1b4b)",
+    "source": "possessquest.html",
+    "direct": "possessquest.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-praxisfighterx",
+    "title": "Praxisfighterx",
+    "category": "action",
+    "description": "Play Praxisfighterx — a fighting game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "praxisfighterx.html",
+    "direct": "praxisfighterx.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-processortycoon",
+    "title": "Processortycoon",
+    "category": "puzzle",
+    "description": "Play Processortycoon — a puzzle game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #06b6d4, #0e7490)",
+    "source": "processortycoon.html",
+    "direct": "processortycoon.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-prowrestling",
+    "title": "Prowrestling",
+    "category": "action",
+    "description": "Play Prowrestling — a fighting game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "prowrestling.html",
+    "direct": "prowrestling.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-puppethockey",
+    "title": "Puppethockey",
+    "category": "sports",
+    "description": "Play Puppethockey — a sports game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4ade80, #14532d)",
+    "source": "puppethockey.html",
+    "direct": "puppethockey.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-quake",
+    "title": "Quake",
+    "category": "action",
+    "description": "Play Quake — a shooter game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "quake.html",
+    "direct": "quake.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-quake-2",
+    "title": "Quake 2",
+    "category": "action",
+    "description": "Play Quake 2 — a shooter game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "quake2.html",
+    "direct": "quake2.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-quake-3",
+    "title": "Quake 3",
+    "category": "action",
+    "description": "Play Quake 3 — a shooter game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "quake3.html",
+    "direct": "quake3.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-quake-64",
+    "title": "Quake 64",
+    "category": "action",
+    "description": "Play Quake 64 — a shooter game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "quake64.html",
+    "direct": "quake64.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-racemaster-3d",
+    "title": "Racemaster 3d",
+    "category": "racing",
+    "description": "Play Racemaster 3d — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "racemaster3d.html",
+    "direct": "racemaster3d.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-racingarena",
+    "title": "Racingarena",
+    "category": "racing",
+    "description": "Play Racingarena — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "racingarena.html",
+    "direct": "racingarena.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-radracer",
+    "title": "Radracer",
+    "category": "racing",
+    "description": "Play Radracer — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "radracer.html",
+    "direct": "radracer.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-raftwars",
+    "title": "Raftwars",
+    "category": "strategy",
+    "description": "Play Raftwars — a strategy game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4b5320, #1a1a1a)",
+    "source": "raftwars.html",
+    "direct": "raftwars.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-raftwars-2",
+    "title": "Raftwars 2",
+    "category": "strategy",
+    "description": "Play Raftwars 2 — a strategy game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4b5320, #1a1a1a)",
+    "source": "raftwars2.html",
+    "direct": "raftwars2.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-ragdollsoccer",
+    "title": "Ragdollsoccer",
+    "category": "sports",
+    "description": "Play Ragdollsoccer — a sports game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4ade80, #14532d)",
+    "source": "ragdollsoccer.html",
+    "direct": "ragdollsoccer.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-ravenbase",
+    "title": "Ravenbase",
+    "category": "sports",
+    "description": "Play Ravenbase — a sports game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4ade80, #14532d)",
+    "source": "ravenbase.html",
+    "direct": "ravenbase.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-redvsbluewar",
+    "title": "Redvsbluewar",
+    "category": "strategy",
+    "description": "Play Redvsbluewar — a strategy game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4b5320, #1a1a1a)",
+    "source": "redvsbluewar.html",
+    "direct": "redvsbluewar.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-resortempire",
+    "title": "Resortempire",
+    "category": "puzzle",
+    "description": "Play Resortempire — a puzzle game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #06b6d4, #0e7490)",
+    "source": "resortempire.html",
+    "direct": "resortempire.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-returntoriddleschool",
+    "title": "Returntoriddleschool",
+    "category": "puzzle",
+    "description": "Play Returntoriddleschool — a puzzle game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #06b6d4, #0e7490)",
+    "source": "returntoriddleschool.html",
+    "direct": "returntoriddleschool.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-riddle",
+    "title": "Riddle",
+    "category": "puzzle",
+    "description": "Play Riddle — a puzzle game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #06b6d4, #0e7490)",
+    "source": "riddle.html",
+    "direct": "riddle.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-riddlemiddleschool",
+    "title": "Riddlemiddleschool",
+    "category": "puzzle",
+    "description": "Play Riddlemiddleschool — a puzzle game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #06b6d4, #0e7490)",
+    "source": "riddlemiddleschool.html",
+    "direct": "riddlemiddleschool.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-riddleschool-2",
+    "title": "Riddleschool 2",
+    "category": "puzzle",
+    "description": "Play Riddleschool 2 — a puzzle game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #06b6d4, #0e7490)",
+    "source": "riddleschool2.html",
+    "direct": "riddleschool2.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-riddleschool-3-v2",
+    "title": "Riddleschool 3 V2",
+    "category": "puzzle",
+    "description": "Play Riddleschool 3 V2 — a puzzle game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #06b6d4, #0e7490)",
+    "source": "riddleschool3-v2.html",
+    "direct": "riddleschool3-v2.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-riddleschool-445544444-444-444",
+    "title": "Riddleschool 445544444 444 444",
+    "category": "puzzle",
+    "description": "Play Riddleschool 445544444 444 444 — a puzzle game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #06b6d4, #0e7490)",
+    "source": "riddleschool445544444-444-444.html",
+    "direct": "riddleschool445544444-444-444.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-riddleschool-v2",
+    "title": "Riddleschool V2",
+    "category": "puzzle",
+    "description": "Play Riddleschool V2 — a puzzle game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #06b6d4, #0e7490)",
+    "source": "riddleschool-v2.html",
+    "direct": "riddleschool-v2.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-riddletransfer",
+    "title": "Riddletransfer",
+    "category": "puzzle",
+    "description": "Play Riddletransfer — a puzzle game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #06b6d4, #0e7490)",
+    "source": "riddletransfer.html",
+    "direct": "riddletransfer.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-riddletransfer-2",
+    "title": "Riddletransfer 2",
+    "category": "puzzle",
+    "description": "Play Riddletransfer 2 — a puzzle game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #06b6d4, #0e7490)",
+    "source": "riddletransfer2.html",
+    "direct": "riddletransfer2.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-riddleuneversityfix",
+    "title": "Riddleuneversityfix",
+    "category": "puzzle",
+    "description": "Play Riddleuneversityfix — a puzzle game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #06b6d4, #0e7490)",
+    "source": "riddleuneversityfix.html",
+    "direct": "riddleuneversityfix.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-ridgeracer",
+    "title": "Ridgeracer",
+    "category": "racing",
+    "description": "Play Ridgeracer — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "ridgeracer.html",
+    "direct": "ridgeracer.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-roadfighter",
+    "title": "Roadfighter",
+    "category": "action",
+    "description": "Play Roadfighter — a fighting game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "roadfighter.html",
+    "direct": "roadfighter.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-rocketjump",
+    "title": "Rocketjump",
+    "category": "platformer",
+    "description": "Play Rocketjump — a platformer game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
+    "source": "rocketjump.html",
+    "direct": "rocketjump.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-rocketsoccerderby",
+    "title": "Rocketsoccerderby",
+    "category": "sports",
+    "description": "Play Rocketsoccerderby — a sports game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4ade80, #14532d)",
+    "source": "rocketsoccerderby.html",
+    "direct": "rocketsoccerderby.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-rooftopsnipers-2",
+    "title": "Rooftopsnipers 2",
+    "category": "action",
+    "description": "Play Rooftopsnipers 2 — a shooter game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "rooftopsnipers2.html",
+    "direct": "rooftopsnipers2.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-russianbuckshot",
+    "title": "Russianbuckshot",
+    "category": "horror",
+    "description": "Play Russianbuckshot — a horror game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #450a0a, #0a0a0a)",
+    "source": "russianbuckshot.html",
+    "direct": "russianbuckshot.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-russiancardriver",
+    "title": "Russiancardriver",
+    "category": "racing",
+    "description": "Play Russiancardriver — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "russiancardriver.html",
+    "direct": "russiancardriver.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-saszombieassault-2",
+    "title": "Saszombieassault 2",
+    "category": "horror",
+    "description": "Play Saszombieassault 2 — a horror game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #450a0a, #0a0a0a)",
+    "source": "saszombieassault2.html",
+    "direct": "saszombieassault2.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-scarymazegame",
+    "title": "Scarymazegame",
+    "category": "puzzle",
+    "description": "Play Scarymazegame — a puzzle game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #06b6d4, #0e7490)",
+    "source": "scarymazegame.html",
+    "direct": "scarymazegame.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-scaryshawarma",
+    "title": "Scaryshawarma",
+    "category": "strategy",
+    "description": "Play Scaryshawarma — a strategy game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4b5320, #1a1a1a)",
+    "source": "scaryshawarma.html",
+    "direct": "scaryshawarma.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-scaryteacher-3d",
+    "title": "Scaryteacher 3d",
+    "category": "horror",
+    "description": "Play Scaryteacher 3d — a horror game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #450a0a, #0a0a0a)",
+    "source": "scaryteacher3d.html",
+    "direct": "scaryteacher3d.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-sd-thewar",
+    "title": "Sd Thewar",
+    "category": "strategy",
+    "description": "Play Sd Thewar — a strategy game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4b5320, #1a1a1a)",
+    "source": "sd-thewar.html",
+    "direct": "sd-thewar.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-shinmegamitenseidevilsurvivor",
+    "title": "Shinmegamitenseidevilsurvivor",
+    "category": "horror",
+    "description": "Play Shinmegamitenseidevilsurvivor — a horror game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #450a0a, #0a0a0a)",
+    "source": "shinmegamitenseidevilsurvivor.html",
+    "direct": "shinmegamitenseidevilsurvivor.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-shortlife-v2",
+    "title": "Shortlife V2",
+    "category": "simulation",
+    "description": "Play Shortlife V2 — a simulation game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #a78bfa, #4c1d95)",
+    "source": "shortlife-v2.html",
+    "direct": "shortlife-v2.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-skibidiinthebackrooms",
+    "title": "Skibidiinthebackrooms",
+    "category": "horror",
+    "description": "Play Skibidiinthebackrooms — a horror game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #450a0a, #0a0a0a)",
+    "source": "skibidiinthebackrooms.html",
+    "direct": "skibidiinthebackrooms.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-sky-riders",
+    "title": "Sky Riders",
+    "category": "racing",
+    "description": "Play Sky Riders — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "sky-riders.html",
+    "direct": "sky-riders.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-skyrace-3d",
+    "title": "Skyrace 3d",
+    "category": "racing",
+    "description": "Play Skyrace 3d — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "skyrace-3d.html",
+    "direct": "skyrace-3d.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-smash-hit-ripoff",
+    "title": "Smash Hit Ripoff",
+    "category": "action",
+    "description": "Play Smash Hit Ripoff — a fighting game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "smash-hit-ripoff.html",
+    "direct": "smash-hit-ripoff.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-smashkartsworking",
+    "title": "Smashkartsworking",
+    "category": "action",
+    "description": "Play Smashkartsworking — a fighting game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "smashkartsworking.html",
+    "direct": "smashkartsworking.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-smashremix",
+    "title": "Smashremix",
+    "category": "action",
+    "description": "Play Smashremix — a fighting game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "smashremix.html",
+    "direct": "smashremix.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-smashremix-2-0-1",
+    "title": "Smashremix 2 0 1",
+    "category": "action",
+    "description": "Play Smashremix 2 0 1 — a fighting game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "smashremix2-0-1.html",
+    "direct": "smashremix2-0-1.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-snipershot",
+    "title": "Snipershot",
+    "category": "action",
+    "description": "Play Snipershot — a shooter game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "snipershot.html",
+    "direct": "snipershot.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-sniperv-2",
+    "title": "Sniperv 2",
+    "category": "action",
+    "description": "Play Sniperv 2 — a shooter game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "sniperv2.html",
+    "direct": "sniperv2.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-snowdrift",
+    "title": "Snowdrift",
+    "category": "racing",
+    "description": "Play Snowdrift — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "snowdrift.html",
+    "direct": "snowdrift.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-snowrider",
+    "title": "Snowrider",
+    "category": "racing",
+    "description": "Play Snowrider — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "snowrider.html",
+    "direct": "snowrider.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-snowridergoodygumdrops",
+    "title": "Snowridergoodygumdrops",
+    "category": "racing",
+    "description": "Play Snowridergoodygumdrops — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "snowridergoodygumdrops.html",
+    "direct": "snowridergoodygumdrops.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-snowriderrrr",
+    "title": "Snowriderrrr",
+    "category": "racing",
+    "description": "Play Snowriderrrr — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "snowriderrrr.html",
+    "direct": "snowriderrrr.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-soccerbros",
+    "title": "Soccerbros",
+    "category": "sports",
+    "description": "Play Soccerbros — a sports game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4ade80, #14532d)",
+    "source": "soccerbros.html",
+    "direct": "soccerbros.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-soccernes",
+    "title": "Soccernes",
+    "category": "sports",
+    "description": "Play Soccernes — a sports game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4ade80, #14532d)",
+    "source": "soccernes.html",
+    "direct": "soccernes.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-soccerrandom",
+    "title": "Soccerrandom",
+    "category": "sports",
+    "description": "Play Soccerrandom — a sports game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4ade80, #14532d)",
+    "source": "soccerrandom.html",
+    "direct": "soccerrandom.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-soccerrandomgood",
+    "title": "Soccerrandomgood",
+    "category": "sports",
+    "description": "Play Soccerrandomgood — a sports game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4ade80, #14532d)",
+    "source": "soccerrandomgood.html",
+    "direct": "soccerrandomgood.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-sodasimulator",
+    "title": "Sodasimulator",
+    "category": "simulation",
+    "description": "Play Sodasimulator — a simulation game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #a78bfa, #4c1d95)",
+    "source": "sodasimulator.html",
+    "direct": "sodasimulator.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-solarsmash",
+    "title": "Solarsmash",
+    "category": "action",
+    "description": "Play Solarsmash — a fighting game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "solarsmash.html",
+    "direct": "solarsmash.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-souljumper",
+    "title": "Souljumper",
+    "category": "platformer",
+    "description": "Play Souljumper — a platformer game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
+    "source": "souljumper.html",
+    "direct": "souljumper.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-spacewarsbattleground",
+    "title": "Spacewarsbattleground",
+    "category": "strategy",
+    "description": "Play Spacewarsbattleground — a strategy game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4b5320, #1a1a1a)",
+    "source": "spacewarsbattleground.html",
+    "direct": "spacewarsbattleground.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-sports-heads-ice-hockey",
+    "title": "Sports Heads Ice Hockey",
+    "category": "sports",
+    "description": "Play Sports Heads Ice Hockey — a sports game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4ade80, #14532d)",
+    "source": "sports-heads-ice-hockey.html",
+    "direct": "sports-heads-ice-hockey.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-ssf-2-arcade",
+    "title": "Ssf 2 Arcade",
+    "category": "action",
+    "description": "Play Ssf 2 Arcade — a fighting game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "ssf2arcade.html",
+    "direct": "ssf2arcade.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-ssf-2t-arcade",
+    "title": "Ssf 2t Arcade",
+    "category": "action",
+    "description": "Play Ssf 2t Arcade — a fighting game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "ssf2t-arcade.html",
+    "direct": "ssf2t-arcade.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-stackydash",
+    "title": "Stackydash",
+    "category": "platformer",
+    "description": "Play Stackydash — a platformer game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
+    "source": "stackydash.html",
+    "direct": "stackydash.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-steelempire",
+    "title": "Steelempire",
+    "category": "strategy",
+    "description": "Play Steelempire — a strategy game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4b5320, #1a1a1a)",
+    "source": "steelempire.html",
+    "direct": "steelempire.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-stickfighter",
+    "title": "Stickfighter",
+    "category": "action",
+    "description": "Play Stickfighter — a fighting game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "stickfighter.html",
+    "direct": "stickfighter.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-stickman-kingdomclash",
+    "title": "Stickman Kingdomclash",
+    "category": "strategy",
+    "description": "Play Stickman Kingdomclash — a strategy game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4b5320, #1a1a1a)",
+    "source": "stickman-kingdomclash.html",
+    "direct": "stickman-kingdomclash.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-stickmanclash",
+    "title": "Stickmanclash",
+    "category": "strategy",
+    "description": "Play Stickmanclash — a strategy game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4b5320, #1a1a1a)",
+    "source": "stickmanclash.html",
+    "direct": "stickmanclash.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-stickmanduel",
+    "title": "Stickmanduel",
+    "category": "action",
+    "description": "Play Stickmanduel — a fighting game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "stickmanduel.html",
+    "direct": "stickmanduel.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-stickminfleecomplex",
+    "title": "Stickminfleecomplex",
+    "category": "sports",
+    "description": "Play Stickminfleecomplex — a sports game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4ade80, #14532d)",
+    "source": "stickminfleecomplex.html",
+    "direct": "stickminfleecomplex.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-stickrpgcomplete",
+    "title": "Stickrpgcomplete",
+    "category": "rpg",
+    "description": "Play Stickrpgcomplete — a rpg game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #7c3aed, #1e1b4b)",
+    "source": "stickrpgcomplete.html",
+    "direct": "stickrpgcomplete.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-summerrider",
+    "title": "Summerrider",
+    "category": "racing",
+    "description": "Play Summerrider — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "summerrider.html",
+    "direct": "summerrider.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-super-punch-out-en",
+    "title": "Super Punch Out En",
+    "category": "action",
+    "description": "Play Super Punch Out En — a fighting game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "super-punch-out-en.html",
+    "direct": "super-punch-out-en.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-superliquidsoccer",
+    "title": "Superliquidsoccer",
+    "category": "sports",
+    "description": "Play Superliquidsoccer — a sports game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4ade80, #14532d)",
+    "source": "superliquidsoccer.html",
+    "direct": "superliquidsoccer.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-superpuzzlefighter-2-turbo",
+    "title": "Superpuzzlefighter 2 Turbo",
+    "category": "action",
+    "description": "Play Superpuzzlefighter 2 Turbo — a fighting game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "superpuzzlefighter2turbo.html",
+    "direct": "superpuzzlefighter2turbo.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-superpuzzlefighter-2-turboalt",
+    "title": "Superpuzzlefighter 2 Turboalt",
+    "category": "action",
+    "description": "Play Superpuzzlefighter 2 Turboalt — a fighting game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "superpuzzlefighter2turboalt.html",
+    "direct": "superpuzzlefighter2turboalt.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-supersmashbros",
+    "title": "Supersmashbros",
+    "category": "action",
+    "description": "Play Supersmashbros — a fighting game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "supersmashbros.html",
+    "direct": "supersmashbros.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-supersmashflash-0-8",
+    "title": "Supersmashflash 0 8",
+    "category": "action",
+    "description": "Play Supersmashflash 0 8 — a fighting game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "supersmashflash0-8.html",
+    "direct": "supersmashflash0-8.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-supersmashflash-2",
+    "title": "Supersmashflash 2",
+    "category": "action",
+    "description": "Play Supersmashflash 2 — a fighting game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "supersmashflash2.html",
+    "direct": "supersmashflash2.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-supersmashflash-2-butdifversion",
+    "title": "Supersmashflash 2 Butdifversion",
+    "category": "action",
+    "description": "Play Supersmashflash 2 Butdifversion — a fighting game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "supersmashflash2butdifversion.html",
+    "direct": "supersmashflash2butdifversion.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-supreme-duelist-2019",
+    "title": "Supreme Duelist 2019",
+    "category": "action",
+    "description": "Play Supreme Duelist 2019 — a fighting game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "supreme-duelist2019.html",
+    "direct": "supreme-duelist2019.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-supremeduelist",
+    "title": "Supremeduelist",
+    "category": "action",
+    "description": "Play Supremeduelist — a fighting game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "supremeduelist.html",
+    "direct": "supremeduelist.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-survivalracev-2",
+    "title": "Survivalracev 2",
+    "category": "racing",
+    "description": "Play Survivalracev 2 — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "survivalracev2.html",
+    "direct": "survivalracev2.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-tabletennisworldtour",
+    "title": "Tabletennisworldtour",
+    "category": "sports",
+    "description": "Play Tabletennisworldtour — a sports game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4ade80, #14532d)",
+    "source": "tabletennisworldtour.html",
+    "direct": "tabletennisworldtour.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-tekken-2-ps-1",
+    "title": "Tekken 2 Ps 1",
+    "category": "action",
+    "description": "Play Tekken 2 Ps 1 — a fighting game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "tekken2ps1.html",
+    "direct": "tekken2ps1.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-tekken-3-ps-1",
+    "title": "Tekken 3 Ps 1",
+    "category": "action",
+    "description": "Play Tekken 3 Ps 1 — a fighting game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "tekken3ps1.html",
+    "direct": "tekken3ps1.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-tennisnes",
+    "title": "Tennisnes",
+    "category": "sports",
+    "description": "Play Tennisnes — a sports game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4ade80, #14532d)",
+    "source": "tennisnes.html",
+    "direct": "tennisnes.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-territorywar-2",
+    "title": "Territorywar 2",
+    "category": "strategy",
+    "description": "Play Territorywar 2 — a strategy game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4b5320, #1a1a1a)",
+    "source": "territorywar2.html",
+    "direct": "territorywar2.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-territorywar-3",
+    "title": "Territorywar 3",
+    "category": "strategy",
+    "description": "Play Territorywar 3 — a strategy game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4b5320, #1a1a1a)",
+    "source": "territorywar3.html",
+    "direct": "territorywar3.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-tetrisattack",
+    "title": "Tetrisattack",
+    "category": "puzzle",
+    "description": "Play Tetrisattack — a puzzle game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #06b6d4, #0e7490)",
+    "source": "tetrisattack.html",
+    "direct": "tetrisattack.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-tetrisgba",
+    "title": "Tetrisgba",
+    "category": "puzzle",
+    "description": "Play Tetrisgba — a puzzle game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #06b6d4, #0e7490)",
+    "source": "tetrisgba.html",
+    "direct": "tetrisgba.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-tetrisgrandmaster-2",
+    "title": "Tetrisgrandmaster 2",
+    "category": "puzzle",
+    "description": "Play Tetrisgrandmaster 2 — a puzzle game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #06b6d4, #0e7490)",
+    "source": "tetrisgrandmaster2.html",
+    "direct": "tetrisgrandmaster2.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-thesodorrace",
+    "title": "Thesodorrace",
+    "category": "racing",
+    "description": "Play Thesodorrace — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "thesodorrace.html",
+    "direct": "thesodorrace.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-timewarriors",
+    "title": "Timewarriors",
+    "category": "strategy",
+    "description": "Play Timewarriors — a strategy game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4b5320, #1a1a1a)",
+    "source": "timewarriors.html",
+    "direct": "timewarriors.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-topspeedracing-3d",
+    "title": "Topspeedracing 3d",
+    "category": "racing",
+    "description": "Play Topspeedracing 3d — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "topspeedracing3d.html",
+    "direct": "topspeedracing3d.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-towerblocks",
+    "title": "Towerblocks",
+    "category": "platformer",
+    "description": "Play Towerblocks — a platformer game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
+    "source": "towerblocks.html",
+    "direct": "towerblocks.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-towercrash-3d",
+    "title": "Towercrash 3d",
+    "category": "platformer",
+    "description": "Play Towercrash 3d — a platformer game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
+    "source": "towercrash3d.html",
+    "direct": "towercrash3d.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-towerwizard",
+    "title": "Towerwizard",
+    "category": "platformer",
+    "description": "Play Towerwizard — a platformer game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
+    "source": "towerwizard.html",
+    "direct": "towerwizard.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-trace",
+    "title": "Trace",
+    "category": "racing",
+    "description": "Play Trace — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "trace.html",
+    "direct": "trace.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-tralalerotralalaescapetungtungtungsahur",
+    "title": "Tralalerotralalaescapetungtungtungsahur",
+    "category": "puzzle",
+    "description": "Play Tralalerotralalaescapetungtungtungsahur — a puzzle game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #06b6d4, #0e7490)",
+    "source": "tralalerotralalaescapetungtungtungsahur.html",
+    "direct": "tralalerotralalaescapetungtungtungsahur.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-trucksim",
+    "title": "Trucksim",
+    "category": "racing",
+    "description": "Play Trucksim — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "trucksim.html",
+    "direct": "trucksim.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-tsuzukimaze",
+    "title": "Tsuzukimaze",
+    "category": "puzzle",
+    "description": "Play Tsuzukimaze — a puzzle game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #06b6d4, #0e7490)",
+    "source": "tsuzukimaze.html",
+    "direct": "tsuzukimaze.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-tungtunghorror",
+    "title": "Tungtunghorror",
+    "category": "horror",
+    "description": "Play Tungtunghorror — a horror game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #450a0a, #0a0a0a)",
+    "source": "tungtunghorror.html",
+    "direct": "tungtunghorror.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-ultimatecardrivingsimulator",
+    "title": "Ultimatecardrivingsimulator",
+    "category": "simulation",
+    "description": "Play Ultimatecardrivingsimulator — a simulation game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #a78bfa, #4c1d95)",
+    "source": "ultimatecardrivingsimulator.html",
+    "direct": "ultimatecardrivingsimulator.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-uncannycatgolf",
+    "title": "Uncannycatgolf",
+    "category": "sports",
+    "description": "Play Uncannycatgolf — a sports game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4ade80, #14532d)",
+    "source": "uncannycatgolf.html",
+    "direct": "uncannycatgolf.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-volleyball",
+    "title": "Volleyball",
+    "category": "sports",
+    "description": "Play Volleyball — a sports game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4ade80, #14532d)",
+    "source": "volleyball.html",
+    "direct": "volleyball.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-warfare-1917",
+    "title": "Warfare 1917",
+    "category": "strategy",
+    "description": "Play Warfare 1917 — a strategy game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4b5320, #1a1a1a)",
+    "source": "warfare1917.html",
+    "direct": "warfare1917.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-warfare-1944",
+    "title": "Warfare 1944",
+    "category": "strategy",
+    "description": "Play Warfare 1944 — a strategy game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4b5320, #1a1a1a)",
+    "source": "warfare1944.html",
+    "direct": "warfare1944.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-wartheknight",
+    "title": "Wartheknight",
+    "category": "strategy",
+    "description": "Play Wartheknight — a strategy game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4b5320, #1a1a1a)",
+    "source": "wartheknight.html",
+    "direct": "wartheknight.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-waterpoolio",
+    "title": "Waterpoolio",
+    "category": "sports",
+    "description": "Play Waterpoolio — a sports game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4ade80, #14532d)",
+    "source": "waterpoolio.html",
+    "direct": "waterpoolio.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-wavedash",
+    "title": "Wavedash",
+    "category": "platformer",
+    "description": "Play Wavedash — a platformer game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
+    "source": "wavedash.html",
+    "direct": "wavedash.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-waverace-64",
+    "title": "Waverace 64",
+    "category": "racing",
+    "description": "Play Waverace 64 — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "waverace64.html",
+    "direct": "waverace64.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-webdashers",
+    "title": "Webdashers",
+    "category": "platformer",
+    "description": "Play Webdashers — a platformer game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #f97316, #7c2d12)",
+    "source": "webdashers.html",
+    "direct": "webdashers.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-wheeliebike",
+    "title": "Wheeliebike",
+    "category": "racing",
+    "description": "Play Wheeliebike — a racing game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #ef4444, #1c1917)",
+    "source": "wheeliebike.html",
+    "direct": "wheeliebike.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-wilywars",
+    "title": "Wilywars",
+    "category": "strategy",
+    "description": "Play Wilywars — a strategy game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4b5320, #1a1a1a)",
+    "source": "wilywars.html",
+    "direct": "wilywars.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-wilywars-v2",
+    "title": "Wilywars V2",
+    "category": "strategy",
+    "description": "Play Wilywars V2 — a strategy game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4b5320, #1a1a1a)",
+    "source": "wilywars-v2.html",
+    "direct": "wilywars-v2.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-wilywars-v3",
+    "title": "Wilywars V3",
+    "category": "strategy",
+    "description": "Play Wilywars V3 — a strategy game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4b5320, #1a1a1a)",
+    "source": "wilywars-v3.html",
+    "direct": "wilywars-v3.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-wilywars-v4",
+    "title": "Wilywars V4",
+    "category": "strategy",
+    "description": "Play Wilywars V4 — a strategy game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #4b5320, #1a1a1a)",
+    "source": "wilywars-v4.html",
+    "direct": "wilywars-v4.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-wolfenstein",
+    "title": "Wolfenstein",
+    "category": "action",
+    "description": "Play Wolfenstein — a shooter game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "wolfenstein.html",
+    "direct": "wolfenstein.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-wrestlebros",
+    "title": "Wrestlebros",
+    "category": "action",
+    "description": "Play Wrestlebros — a fighting game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "wrestlebros.html",
+    "direct": "wrestlebros.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-x-men-children-of-the-atom-arcade",
+    "title": "X Men Children of the Atom Arcade",
+    "category": "action",
+    "description": "Play X Men Children of the Atom Arcade — a fighting game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "x-men-children-of-the-atom-arcade.html",
+    "direct": "x-men-children-of-the-atom-arcade.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-yanderesimulator",
+    "title": "Yanderesimulator",
+    "category": "simulation",
+    "description": "Play Yanderesimulator — a simulation game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #a78bfa, #4c1d95)",
+    "source": "yanderesimulator.html",
+    "direct": "yanderesimulator.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-zdoom",
+    "title": "Zdoom",
+    "category": "action",
+    "description": "Play Zdoom — a shooter game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #b91c1c, #1c1917)",
+    "source": "zdoom.html",
+    "direct": "zdoom.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-zombieexploder",
+    "title": "Zombieexploder",
+    "category": "horror",
+    "description": "Play Zombieexploder — a horror game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #450a0a, #0a0a0a)",
+    "source": "zombieexploder.html",
+    "direct": "zombieexploder.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-zombieroad",
+    "title": "Zombieroad",
+    "category": "horror",
+    "description": "Play Zombieroad — a horror game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #450a0a, #0a0a0a)",
+    "source": "zombieroad.html",
+    "direct": "zombieroad.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-zombierush",
+    "title": "Zombierush",
+    "category": "horror",
+    "description": "Play Zombierush — a horror game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #450a0a, #0a0a0a)",
+    "source": "zombierush.html",
+    "direct": "zombierush.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-zombiesatemyneighboors",
+    "title": "Zombiesatemyneighboors",
+    "category": "horror",
+    "description": "Play Zombiesatemyneighboors — a horror game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #450a0a, #0a0a0a)",
+    "source": "zombiesatemyneighboors.html",
+    "direct": "zombiesatemyneighboors.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "medium",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-demonblade",
+    "title": "Demonblade",
+    "category": "arcade",
+    "description": "Play Demonblade — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "demonblade.html",
+    "direct": "demonblade.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-mightyknight",
+    "title": "Mightyknight",
+    "category": "arcade",
+    "description": "Play Mightyknight — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "mightyknight.html",
+    "direct": "mightyknight.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-supermonkeyballjr",
+    "title": "Supermonkeyballjr",
+    "category": "arcade",
+    "description": "Play Supermonkeyballjr — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "supermonkeyballjr.html",
+    "direct": "supermonkeyballjr.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-snowroad",
+    "title": "Snowroad",
+    "category": "arcade",
+    "description": "Play Snowroad — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "snowroad.html",
+    "direct": "snowroad.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-geometryvibes",
+    "title": "Geometryvibes",
+    "category": "arcade",
+    "description": "Play Geometryvibes — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "geometryvibes.html",
+    "direct": "geometryvibes.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-ormmimastickwithclsoitcanberememberedoyeahclalienhominid",
+    "title": "Ormmimastickwithclsoitcanberememberedoyeahclalienhominid",
+    "category": "arcade",
+    "description": "Play Ormmimastickwithclsoitcanberememberedoyeahclalienhominid — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "ormmimastickwithclsoitcanberememberedoyeahclalienhominid.html",
+    "direct": "ormmimastickwithclsoitcanberememberedoyeahclalienhominid.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-ff-6",
+    "title": "Ff 6",
+    "category": "arcade",
+    "description": "Play Ff 6 — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "ff6.html",
+    "direct": "ff6.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-xmenarcade",
+    "title": "Xmenarcade",
+    "category": "arcade",
+    "description": "Play Xmenarcade — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "xmenarcade.html",
+    "direct": "xmenarcade.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-onlyup",
+    "title": "Onlyup",
+    "category": "arcade",
+    "description": "Play Onlyup — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "onlyup.html",
+    "direct": "onlyup.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-pitfall",
+    "title": "Pitfall",
+    "category": "arcade",
+    "description": "Play Pitfall — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "pitfall.html",
+    "direct": "pitfall.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-dud",
+    "title": "Dud",
+    "category": "arcade",
+    "description": "Play Dud — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "dud.html",
+    "direct": "dud.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-phantasystar-4",
+    "title": "Phantasystar 4",
+    "category": "arcade",
+    "description": "Play Phantasystar 4 — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "phantasystar4.html",
+    "direct": "phantasystar4.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-powerslave",
+    "title": "Powerslave",
+    "category": "arcade",
+    "description": "Play Powerslave — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "powerslave.html",
+    "direct": "powerslave.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-fnfcory",
+    "title": "Fnfcory",
+    "category": "arcade",
+    "description": "Play Fnfcory — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "fnfcory.html",
+    "direct": "fnfcory.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-worldshardestgame-4",
+    "title": "Worldshardestgame 4",
+    "category": "arcade",
+    "description": "Play Worldshardestgame 4 — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "worldshardestgame4.html",
+    "direct": "worldshardestgame4.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-1942-nes",
+    "title": "1942 Nes",
+    "category": "arcade",
+    "description": "Play 1942 Nes — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "1942nes.html",
+    "direct": "1942nes.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-achievmentunlocked-2",
+    "title": "Achievmentunlocked 2",
+    "category": "arcade",
+    "description": "Play Achievmentunlocked 2 — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "achievmentunlocked2.html",
+    "direct": "achievmentunlocked2.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-laceysflashgames",
+    "title": "Laceysflashgames",
+    "category": "arcade",
+    "description": "Play Laceysflashgames — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "laceysflashgames.html",
+    "direct": "laceysflashgames.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-saulgoodmanrun",
+    "title": "Saulgoodmanrun",
+    "category": "arcade",
+    "description": "Play Saulgoodmanrun — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "saulgoodmanrun.html",
+    "direct": "saulgoodmanrun.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-mmsf-2-zxs",
+    "title": "Mmsf 2 Zxs",
+    "category": "arcade",
+    "description": "Play Mmsf 2 Zxs — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "mmsf2zxs.html",
+    "direct": "mmsf2zxs.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-batterup",
+    "title": "Batterup",
+    "category": "arcade",
+    "description": "Play Batterup — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "batterup.html",
+    "direct": "batterup.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-curveball",
+    "title": "Curveball",
+    "category": "arcade",
+    "description": "Play Curveball — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "curveball.html",
+    "direct": "curveball.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-yarsrevenge",
+    "title": "Yarsrevenge",
+    "category": "arcade",
+    "description": "Play Yarsrevenge — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "yarsrevenge.html",
+    "direct": "yarsrevenge.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-ucds",
+    "title": "Ucds",
+    "category": "arcade",
+    "description": "Play Ucds — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "ucds.html",
+    "direct": "ucds.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-fnfblackbetrayal",
+    "title": "Fnfblackbetrayal",
+    "category": "arcade",
+    "description": "Play Fnfblackbetrayal — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "fnfblackbetrayal.html",
+    "direct": "fnfblackbetrayal.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-fnfbside",
+    "title": "Fnfbside",
+    "category": "arcade",
+    "description": "Play Fnfbside — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "fnfbside.html",
+    "direct": "fnfbside.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-supertiltbros",
+    "title": "Supertiltbros",
+    "category": "arcade",
+    "description": "Play Supertiltbros — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "supertiltbros.html",
+    "direct": "supertiltbros.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-asdutydemands",
+    "title": "Asdutydemands",
+    "category": "arcade",
+    "description": "Play Asdutydemands — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "asdutydemands.html",
+    "direct": "asdutydemands.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-moonemeraldextremerandomizer",
+    "title": "Moonemeraldextremerandomizer",
+    "category": "arcade",
+    "description": "Play Moonemeraldextremerandomizer — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "moonemeraldextremerandomizer.html",
+    "direct": "moonemeraldextremerandomizer.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-touhou",
+    "title": "Touhou",
+    "category": "arcade",
+    "description": "Play Touhou — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "touhou.html",
+    "direct": "touhou.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-vollyballchallenge",
+    "title": "Vollyballchallenge",
+    "category": "arcade",
+    "description": "Play Vollyballchallenge — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "vollyballchallenge.html",
+    "direct": "vollyballchallenge.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-mcfpsfbhd",
+    "title": "Mcfpsfbhd",
+    "category": "arcade",
+    "description": "Play Mcfpsfbhd — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "mcfpsfbhd.html",
+    "direct": "mcfpsfbhd.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-skong",
+    "title": "Skong",
+    "category": "arcade",
+    "description": "Play Skong — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "skong.html",
+    "direct": "skong.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-mspacman-v4",
+    "title": "Mspacman V4",
+    "category": "arcade",
+    "description": "Play Mspacman V4 — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "mspacman-v4.html",
+    "direct": "mspacman-v4.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-angrybirdsshowdown",
+    "title": "Angrybirdsshowdown",
+    "category": "arcade",
+    "description": "Play Angrybirdsshowdown — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "angrybirdsshowdown.html",
+    "direct": "angrybirdsshowdown.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-hobo-6",
+    "title": "Hobo 6",
+    "category": "arcade",
+    "description": "Play Hobo 6 — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "hobo6.html",
+    "direct": "hobo6.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-radicalred",
+    "title": "Radicalred",
+    "category": "arcade",
+    "description": "Play Radicalred — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "radicalred.html",
+    "direct": "radicalred.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-peach",
+    "title": "Peach",
+    "category": "arcade",
+    "description": "Play Peach — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "peach.html",
+    "direct": "peach.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-celias-stupid-rom-hack",
+    "title": "Celias Stupid Rom Hack",
+    "category": "arcade",
+    "description": "Play Celias Stupid Rom Hack — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "celias-stupid-rom-hack.html",
+    "direct": "celias-stupid-rom-hack.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-sprunkiclicker",
+    "title": "Sprunkiclicker",
+    "category": "arcade",
+    "description": "Play Sprunkiclicker — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "sprunkiclicker.html",
+    "direct": "sprunkiclicker.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-knockknock",
+    "title": "Knockknock",
+    "category": "arcade",
+    "description": "Play Knockknock — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "knockknock.html",
+    "direct": "knockknock.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-alexkiddinmiracleworld",
+    "title": "Alexkiddinmiracleworld",
+    "category": "arcade",
+    "description": "Play Alexkiddinmiracleworld — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "alexkiddinmiracleworld.html",
+    "direct": "alexkiddinmiracleworld.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-deadlydescent",
+    "title": "Deadlydescent",
+    "category": "arcade",
+    "description": "Play Deadlydescent — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "deadlydescent.html",
+    "direct": "deadlydescent.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-townscraper",
+    "title": "Townscraper",
+    "category": "arcade",
+    "description": "Play Townscraper — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "townscraper.html",
+    "direct": "townscraper.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-bonanza-bros",
+    "title": "Bonanza Bros",
+    "category": "arcade",
+    "description": "Play Bonanza Bros — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "bonanza-bros.html",
+    "direct": "bonanza-bros.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-civiballs-2",
+    "title": "Civiballs 2",
+    "category": "arcade",
+    "description": "Play Civiballs 2 — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "civiballs2.html",
+    "direct": "civiballs2.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-agariolite",
+    "title": "Agariolite",
+    "category": "arcade",
+    "description": "Play Agariolite — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "agariolite.html",
+    "direct": "agariolite.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-nfsunderground",
+    "title": "Nfsunderground",
+    "category": "arcade",
+    "description": "Play Nfsunderground — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "nfsunderground.html",
+    "direct": "nfsunderground.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-deepestsword",
+    "title": "Deepestsword",
+    "category": "arcade",
+    "description": "Play Deepestsword — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "deepestsword.html",
+    "direct": "deepestsword.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-redalert",
+    "title": "Redalert",
+    "category": "arcade",
+    "description": "Play Redalert — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "redalert.html",
+    "direct": "redalert.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-throwapotato",
+    "title": "Throwapotato",
+    "category": "arcade",
+    "description": "Play Throwapotato — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "throwapotato.html",
+    "direct": "throwapotato.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-insomniary",
+    "title": "Insomniary",
+    "category": "arcade",
+    "description": "Play Insomniary — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "insomniary.html",
+    "direct": "insomniary.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-magictiles-3",
+    "title": "Magictiles 3",
+    "category": "arcade",
+    "description": "Play Magictiles 3 — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "magictiles3.html",
+    "direct": "magictiles3.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-pandameic-2",
+    "title": "Pandameic 2",
+    "category": "arcade",
+    "description": "Play Pandameic 2 — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "pandameic2.html",
+    "direct": "pandameic2.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-datewithiraq",
+    "title": "Datewithiraq",
+    "category": "arcade",
+    "description": "Play Datewithiraq — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "datewithiraq.html",
+    "direct": "datewithiraq.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-dungeonraid",
+    "title": "Dungeonraid",
+    "category": "arcade",
+    "description": "Play Dungeonraid — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "dungeonraid.html",
+    "direct": "dungeonraid.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-stormthehouse-3",
+    "title": "Stormthehouse 3",
+    "category": "arcade",
+    "description": "Play Stormthehouse 3 — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "stormthehouse3.html",
+    "direct": "stormthehouse3.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-appleworm",
+    "title": "Appleworm",
+    "category": "arcade",
+    "description": "Play Appleworm — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "appleworm.html",
+    "direct": "appleworm.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-ocarinaoftime",
+    "title": "Ocarinaoftime",
+    "category": "arcade",
+    "description": "Play Ocarinaoftime — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "ocarinaoftime.html",
+    "direct": "ocarinaoftime.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-fnfclassified",
+    "title": "Fnfclassified",
+    "category": "arcade",
+    "description": "Play Fnfclassified — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "fnfclassified.html",
+    "direct": "fnfclassified.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-bfdi-branches",
+    "title": "Bfdi Branches",
+    "category": "arcade",
+    "description": "Play Bfdi Branches — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "bfdi-branches.html",
+    "direct": "bfdi-branches.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-wheely-4",
+    "title": "Wheely 4",
+    "category": "arcade",
+    "description": "Play Wheely 4 — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "wheely4.html",
+    "direct": "wheely4.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-egg",
+    "title": "Egg",
+    "category": "arcade",
+    "description": "Play Egg — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "egg.html",
+    "direct": "egg.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-familyguycorrupted",
+    "title": "Familyguycorrupted",
+    "category": "arcade",
+    "description": "Play Familyguycorrupted — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "familyguycorrupted.html",
+    "direct": "familyguycorrupted.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-subwaysurferslondon",
+    "title": "Subwaysurferslondon",
+    "category": "arcade",
+    "description": "Play Subwaysurferslondon — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "subwaysurferslondon.html",
+    "direct": "subwaysurferslondon.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-steepdescent",
+    "title": "Steepdescent",
+    "category": "arcade",
+    "description": "Play Steepdescent — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "steepdescent.html",
+    "direct": "steepdescent.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-ultrakill",
+    "title": "Ultrakill",
+    "category": "arcade",
+    "description": "Play Ultrakill — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "ultrakill.html",
+    "direct": "ultrakill.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-uwuclient",
+    "title": "Uwuclient",
+    "category": "arcade",
+    "description": "Play Uwuclient — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "uwuclient.html",
+    "direct": "uwuclient.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-saihatestation",
+    "title": "Saihatestation",
+    "category": "arcade",
+    "description": "Play Saihatestation — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "saihatestation.html",
+    "direct": "saihatestation.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-tiberiandawn",
+    "title": "Tiberiandawn",
+    "category": "arcade",
+    "description": "Play Tiberiandawn — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "tiberiandawn.html",
+    "direct": "tiberiandawn.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-bazookaboy",
+    "title": "Bazookaboy",
+    "category": "arcade",
+    "description": "Play Bazookaboy — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "bazookaboy.html",
+    "direct": "bazookaboy.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-choppyorc",
+    "title": "Choppyorc",
+    "category": "arcade",
+    "description": "Play Choppyorc — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "choppyorc.html",
+    "direct": "choppyorc.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-retrohighway",
+    "title": "Retrohighway",
+    "category": "arcade",
+    "description": "Play Retrohighway — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "retrohighway.html",
+    "direct": "retrohighway.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-oppositeday",
+    "title": "Oppositeday",
+    "category": "arcade",
+    "description": "Play Oppositeday — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "oppositeday.html",
+    "direct": "oppositeday.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-resentclient",
+    "title": "Resentclient",
+    "category": "arcade",
+    "description": "Play Resentclient — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "resentclient.html",
+    "direct": "resentclient.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-lucid",
+    "title": "Lucid",
+    "category": "arcade",
+    "description": "Play Lucid — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "lucid.html",
+    "direct": "lucid.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-enchain",
+    "title": "Enchain",
+    "category": "arcade",
+    "description": "Play Enchain — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "enchain.html",
+    "direct": "enchain.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-inkgame",
+    "title": "Inkgame",
+    "category": "arcade",
+    "description": "Play Inkgame — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "inkgame.html",
+    "direct": "inkgame.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-cuttherope",
+    "title": "Cuttherope",
+    "category": "arcade",
+    "description": "Play Cuttherope — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "cuttherope.html",
+    "direct": "cuttherope.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-pvz-2",
+    "title": "Pvz 2",
+    "category": "arcade",
+    "description": "Play Pvz 2 — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "pvz2.html",
+    "direct": "pvz2.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-medievalshark",
+    "title": "Medievalshark",
+    "category": "arcade",
+    "description": "Play Medievalshark — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "medievalshark.html",
+    "direct": "medievalshark.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-goodmonkeymart",
+    "title": "Goodmonkeymart",
+    "category": "arcade",
+    "description": "Play Goodmonkeymart — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "goodmonkeymart.html",
+    "direct": "goodmonkeymart.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-karlson",
+    "title": "Karlson",
+    "category": "arcade",
+    "description": "Play Karlson — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "karlson.html",
+    "direct": "karlson.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-nextdoor",
+    "title": "Nextdoor",
+    "category": "arcade",
+    "description": "Play Nextdoor — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "nextdoor.html",
+    "direct": "nextdoor.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-perfectdark",
+    "title": "Perfectdark",
+    "category": "arcade",
+    "description": "Play Perfectdark — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "perfectdark.html",
+    "direct": "perfectdark.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-lozoracleofseasons",
+    "title": "Lozoracleofseasons",
+    "category": "arcade",
+    "description": "Play Lozoracleofseasons — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "lozoracleofseasons.html",
+    "direct": "lozoracleofseasons.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-hauntthehouse",
+    "title": "Hauntthehouse",
+    "category": "arcade",
+    "description": "Play Hauntthehouse — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "hauntthehouse.html",
+    "direct": "hauntthehouse.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-lozphantomhourglass",
+    "title": "Lozphantomhourglass",
+    "category": "arcade",
+    "description": "Play Lozphantomhourglass — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "lozphantomhourglass.html",
+    "direct": "lozphantomhourglass.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-fnfwhitty",
+    "title": "Fnfwhitty",
+    "category": "arcade",
+    "description": "Play Fnfwhitty — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "fnfwhitty.html",
+    "direct": "fnfwhitty.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-altered-beast",
+    "title": "Altered Beast",
+    "category": "arcade",
+    "description": "Play Altered Beast — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "altered-beast.html",
+    "direct": "altered-beast.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-boxheadnightmare",
+    "title": "Boxheadnightmare",
+    "category": "arcade",
+    "description": "Play Boxheadnightmare — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "boxheadnightmare.html",
+    "direct": "boxheadnightmare.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-decision-2",
+    "title": "Decision 2",
+    "category": "arcade",
+    "description": "Play Decision 2 — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "decision2.html",
+    "direct": "decision2.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-theclassroom-2",
+    "title": "Theclassroom 2",
+    "category": "arcade",
+    "description": "Play Theclassroom 2 — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "theclassroom2.html",
+    "direct": "theclassroom2.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-thanksforremindingmeihadtofixthis",
+    "title": "Thanksforremindingmeihadtofixthis",
+    "category": "arcade",
+    "description": "Play Thanksforremindingmeihadtofixthis — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "thanksforremindingmeihadtofixthis.html",
+    "direct": "thanksforremindingmeihadtofixthis.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-parkingrush",
+    "title": "Parkingrush",
+    "category": "arcade",
+    "description": "Play Parkingrush — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "parkingrush.html",
+    "direct": "parkingrush.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-13-bones",
+    "title": "13 Bones",
+    "category": "arcade",
+    "description": "Play 13 Bones — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "13bones.html",
+    "direct": "13bones.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-papastacomia",
+    "title": "Papastacomia",
+    "category": "arcade",
+    "description": "Play Papastacomia — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "papastacomia.html",
+    "direct": "papastacomia.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-battlesim",
+    "title": "Battlesim",
+    "category": "arcade",
+    "description": "Play Battlesim — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "battlesim.html",
+    "direct": "battlesim.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-rebuild-2",
+    "title": "Rebuild 2",
+    "category": "arcade",
+    "description": "Play Rebuild 2 — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "rebuild2.html",
+    "direct": "rebuild2.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-shadowdancersecret",
+    "title": "Shadowdancersecret",
+    "category": "arcade",
+    "description": "Play Shadowdancersecret — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "shadowdancersecret.html",
+    "direct": "shadowdancersecret.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-twinshot-v2",
+    "title": "Twinshot V2",
+    "category": "arcade",
+    "description": "Play Twinshot V2 — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "twinshot-v2.html",
+    "direct": "twinshot-v2.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-porklike",
+    "title": "Porklike",
+    "category": "arcade",
+    "description": "Play Porklike — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "porklike.html",
+    "direct": "porklike.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-fisheatgettingbig",
+    "title": "Fisheatgettingbig",
+    "category": "arcade",
+    "description": "Play Fisheatgettingbig — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "fisheatgettingbig.html",
+    "direct": "fisheatgettingbig.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-rocketpult",
+    "title": "Rocketpult",
+    "category": "arcade",
+    "description": "Play Rocketpult — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "rocketpult.html",
+    "direct": "rocketpult.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-sidepocket",
+    "title": "Sidepocket",
+    "category": "arcade",
+    "description": "Play Sidepocket — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "sidepocket.html",
+    "direct": "sidepocket.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-heartandsoul",
+    "title": "Heartandsoul",
+    "category": "arcade",
+    "description": "Play Heartandsoul — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "heartandsoul.html",
+    "direct": "heartandsoul.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-redvbluefix",
+    "title": "Redvbluefix",
+    "category": "arcade",
+    "description": "Play Redvbluefix — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "redvbluefix.html",
+    "direct": "redvbluefix.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-slopeplus",
+    "title": "Slopeplus",
+    "category": "arcade",
+    "description": "Play Slopeplus — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "slopeplus.html",
+    "direct": "slopeplus.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-carrampvspolicechase",
+    "title": "Carrampvspolicechase",
+    "category": "arcade",
+    "description": "Play Carrampvspolicechase — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "carrampvspolicechase.html",
+    "direct": "carrampvspolicechase.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-duckhunt",
+    "title": "Duckhunt",
+    "category": "arcade",
+    "description": "Play Duckhunt — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "duckhunt.html",
+    "direct": "duckhunt.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-stylesavvy",
+    "title": "Stylesavvy",
+    "category": "arcade",
+    "description": "Play Stylesavvy — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "stylesavvy.html",
+    "direct": "stylesavvy.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-dinodudes",
+    "title": "Dinodudes",
+    "category": "arcade",
+    "description": "Play Dinodudes — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "dinodudes.html",
+    "direct": "dinodudes.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-snailbob",
+    "title": "Snailbob",
+    "category": "arcade",
+    "description": "Play Snailbob — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "snailbob.html",
+    "direct": "snailbob.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-irori",
+    "title": "Irori",
+    "category": "arcade",
+    "description": "Play Irori — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "irori.html",
+    "direct": "irori.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-hotdogbush",
+    "title": "Hotdogbush",
+    "category": "arcade",
+    "description": "Play Hotdogbush — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "hotdogbush.html",
+    "direct": "hotdogbush.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-intrusion",
+    "title": "Intrusion",
+    "category": "arcade",
+    "description": "Play Intrusion — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "intrusion.html",
+    "direct": "intrusion.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-urbanchampion",
+    "title": "Urbanchampion",
+    "category": "arcade",
+    "description": "Play Urbanchampion — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "urbanchampion.html",
+    "direct": "urbanchampion.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-sfklaststand",
+    "title": "Sfklaststand",
+    "category": "arcade",
+    "description": "Play Sfklaststand — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "sfklaststand.html",
+    "direct": "sfklaststand.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-guncho",
+    "title": "Guncho",
+    "category": "arcade",
+    "description": "Play Guncho — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "guncho.html",
+    "direct": "guncho.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
+  },
+  {
+    "id": "nebula-fnfhex",
+    "title": "Fnfhex",
+    "category": "arcade",
+    "description": "Play Fnfhex — a other game playable directly in your browser.",
+    "gradient": "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    "source": "fnfhex.html",
+    "direct": "fnfhex.html",
+    "platform": "local",
+    "embed": "allowed",
+    "schoolRisk": "low",
+    "icon": "",
+    "host": "nebula-cdn",
+    "dateAdded": "2026-09-10"
   }
 ];

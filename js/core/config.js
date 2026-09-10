@@ -26,7 +26,8 @@
       "eaglercraft": "https://arcadecampushub.github.io/eaglercraft",
       "retrobowl":  "https://arcadecampushub.github.io/RetroBow",
       "waterboy-firegirl": "https://arcadecampushub.github.io/Waterboy-Firegirl",
-      "extgames": "https://arcadecampushub.github.io/extgames"
+      "extgames": "https://arcadecampushub.github.io/extgames",
+      "nebula-cdn": "https://cdn.jsdelivr.net/gh/GoatTech-42/NEBULA-CDN@main/games"
     },
 
     /* Fallback for any entry without a `host`, and for legacy catalogs whose
@@ -91,6 +92,7 @@
     categories: {
       arcade:     { label: "Arcade",     icon: "◈" },
       action:     { label: "Action",     icon: "✷" },
+      shooter:    { label: "Shooter",    icon: "◘" },
       puzzle:     { label: "Puzzle",     icon: "◱" },
       strategy:   { label: "Strategy",   icon: "⬢" },
       horror:     { label: "Horror",     icon: "☾" },
@@ -107,6 +109,8 @@
       board:      { label: "Board",      icon: "⛃" },
       trivia:     { label: "Trivia",     icon: "?" },
       music:      { label: "Music",      icon: "♪" },
+      multiplayer:{ label: "Multiplayer",icon: "⚭" },
+      retro:      { label: "Retro",      icon: "▤" },
       other:      { label: "Other",      icon: "◇" }
     },
 

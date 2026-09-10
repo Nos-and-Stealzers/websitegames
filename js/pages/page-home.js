@@ -71,6 +71,12 @@
       UI.render(document.getElementById("s-pinned"), pinned, { desc: false });
     }
 
+    var arrivals = Catalog.newArrivals(12);
+    if (arrivals.length) {
+      document.getElementById("b-new").hidden = false;
+      UI.render(document.getElementById("s-new"), arrivals, { desc: false });
+    }
+
     document.getElementById("sug-why").textContent = Store.totalPlays()
       ? "based on what you play"
       : "based on the whole index";

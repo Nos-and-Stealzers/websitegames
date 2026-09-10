@@ -1396,11 +1396,19 @@
 
       /* ------------------------------------------------- catalogue (owner) */
 
-      var CATEGORIES = [
-        "arcade", "action", "puzzle", "strategy", "horror", "platformer", "sports",
-        "racing", "adventure", "simulation", "rpg", "sandbox", "idle", "clicker",
-        "cards", "board", "trivia", "music", "other"
-      ];
+      /* Was a hand-maintained list that drifted from SITE.categories every
+         time a new category was added elsewhere — new games could only ever
+         be filed under whatever existed when this array was last edited.
+         Deriving it from config means adding a category in one place is
+         enough. */
+      var CATEGORIES = Object.keys((window.SITE && window.SITE.categories) || {});
+      if (!CATEGORIES.length) {
+        CATEGORIES = [
+          "arcade", "action", "shooter", "puzzle", "strategy", "horror", "platformer",
+          "sports", "racing", "adventure", "simulation", "rpg", "sandbox", "idle",
+          "clicker", "cards", "board", "trivia", "music", "multiplayer", "retro", "other"
+        ];
+      }
 
       function catField(id) { return document.getElementById(id); }
 

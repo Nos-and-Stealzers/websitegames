@@ -165,6 +165,9 @@
     recent: function (a, b) {
       return window.Store.statFor(b.id).last - window.Store.statFor(a.id).last || a.title.localeCompare(b.title);
     },
+    "new": function (a, b) {
+      return (b.dateAdded || "").localeCompare(a.dateAdded || "") || a.title.localeCompare(b.title);
+    },
     random: null
   };
 
@@ -256,6 +259,15 @@
     return count ? list.slice(0, count) : list;
   }
 
+  /* New arrivals — anything carrying a dateAdded, newest first. Games from
+     before this field existed have none and simply never show up here,
+     rather than all appearing to have been "added" on the same day. */
+  function newArrivals(count) {
+    var list = all.filter(function (g) { return !!g.dateAdded; })
+      .sort(function (a, b) { return (b.dateAdded || "").localeCompare(a.dateAdded || ""); });
+    return count ? list.slice(0, count) : list;
+  }
+
   window.Catalog = {
     all: all,
     playable: playable,
@@ -271,6 +283,7 @@
     forYou: forYou,
     recentGames: recentGames,
     favoriteGames: favoriteGames,
+    newArrivals: newArrivals,
     randomGame: randomGame,
     resolveUrl: resolveUrl
   };
