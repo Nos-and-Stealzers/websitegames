@@ -213,8 +213,57 @@
         }).catch(function () { /* non-critical */ });
       }
 
+      function loadAnnouncement() {
+        var host = document.getElementById("ann-current");
+        if (!host) return;
+        API.currentAnnouncement().then(function (a) {
+          host.innerHTML = "";
+          if (!a) {
+            host.appendChild(UI.el("p", "tiny dimmer", "Nothing live right now."));
+            return;
+          }
+          var row = UI.el("div", "row");
+          row.style.display = "block";
+          row.style.padding = "0.5rem 0.6rem";
+          var tag = UI.el("span", "tiny dimmer",
+            a.severity.toUpperCase() + " · " + UI.formatWhen(new Date(a.createdAt).getTime()));
+          row.appendChild(tag);
+          var text = UI.el("p");
+          text.style.margin = "0.2rem 0 0";
+          text.textContent = a.body;
+          row.appendChild(text);
+          host.appendChild(row);
+        }).catch(function () { host.innerHTML = ""; });
+      }
+
+      var annPost = document.getElementById("ann-post");
+      if (annPost) {
+        annPost.addEventListener("click", function () {
+          var body = document.getElementById("ann-body").value.trim();
+          if (!body) { UI.toast("Write something first"); return; }
+          var severity = document.getElementById("ann-severity").value;
+          var ttl = document.getElementById("ann-ttl").value;
+          busy(annPost, API.adminSetAnnouncement(body, severity, ttl ? Number(ttl) : null)
+            .then(function () {
+              UI.toast("Announcement posted");
+              document.getElementById("ann-body").value = "";
+              loadAnnouncement();
+            }));
+        });
+      }
+      var annClear = document.getElementById("ann-clear");
+      if (annClear) {
+        annClear.addEventListener("click", function () {
+          busy(annClear, API.adminClearAnnouncement().then(function () {
+            UI.toast("Banner cleared");
+            loadAnnouncement();
+          }));
+        });
+      }
+
       function loadOverview() {
         loadRecentActivity();
+        if (isAdmin) loadAnnouncement();
         return API.adminOverview().then(function (d) {
           var q = d.queues || {
             reports: (d.reports && d.reports.open) || 0, tickets: 0, feedback: 0, calls: 0
@@ -504,6 +553,125 @@
             }));
         });
         body.appendChild(toggle);
+
+        body.appendChild(UI.el("hr", "sheet-rule"));
+
+        /* Mute — refused at the database (a trigger on messages), same way
+           `suspended` already blocks the whole account. Lets staff quiet
+           someone mid-incident without the heavier step of suspending them
+           entirely. */
+        var muted = !!(u.mutedUntil && new Date(u.mutedUntil).getTime() > Date.now());
+        var muteNote = UI.el("p", "tiny dimmer");
+        muteNote.style.margin = "0 0 0.5rem";
+        muteNote.textContent = muted
+          ? "Muted until " + UI.formatWhen(new Date(u.mutedUntil).getTime()) + ". " +
+            "Messages are refused by the database, not just hidden."
+          : "Stops them sending messages for a set time, without suspending the whole account.";
+        body.appendChild(muteNote);
+
+        if (muted) {
+          var unmute = UI.el("button", "btn btn-sm", "Clear mute");
+          unmute.type = "button";
+          unmute.addEventListener("click", function () {
+            busy(unmute, API.adminSetMute(u.id, 0).then(function () {
+              UI.toast("Mute cleared for @" + u.username);
+              clearDetail();
+              loadUsers();
+            }));
+          });
+          body.appendChild(unmute);
+        } else {
+          var muteRow = UI.el("div", "btn-row");
+          muteRow.style.gap = "0.4rem";
+          muteRow.style.marginBottom = "0.6rem";
+          [["10 min", 10], ["1 hr", 60], ["1 day", 1440], ["1 week", 10080]].forEach(function (pair) {
+            var btn = UI.el("button", "btn btn-sm", pair[0]);
+            btn.type = "button";
+            btn.addEventListener("click", function () {
+              busy(btn, API.adminSetMute(u.id, pair[1]).then(function () {
+                UI.toast("@" + u.username + " muted for " + pair[0]);
+                clearDetail();
+                loadUsers();
+              }));
+            });
+            muteRow.appendChild(btn);
+          });
+          body.appendChild(muteRow);
+        }
+
+        body.appendChild(UI.el("hr", "sheet-rule"));
+
+        /* Staff notes — never visible to the account holder. Gives reports
+           and tickets a paper trail ("already warned 3/1") that survives
+           staff turnover instead of living in someone's memory. */
+        var notesWrap = UI.el("div", "field");
+        notesWrap.style.marginBottom = "0.6rem";
+        var notesLabel = UI.el("label", null, "Staff notes");
+        notesWrap.appendChild(notesLabel);
+        var notesNote = UI.el("p", "tiny dimmer");
+        notesNote.style.margin = "0 0 0.5rem";
+        notesNote.textContent = "Only staff can see these. Never shown to the account holder.";
+        notesWrap.appendChild(notesNote);
+
+        var notesList = UI.el("div", "rows");
+        notesList.style.marginBottom = "0.5rem";
+        notesWrap.appendChild(notesList);
+
+        function drawNotes() {
+          API.adminListNotes(u.id).then(function (notes) {
+            notesList.innerHTML = "";
+            if (!notes || !notes.length) {
+              notesList.appendChild(UI.el("p", "tiny dimmer", "No notes yet."));
+              return;
+            }
+            notes.forEach(function (n) {
+              var row = UI.el("div", "row");
+              row.style.display = "block";
+              row.style.padding = "0.5rem 0.6rem";
+              var head = UI.el("div", "tiny dimmer");
+              head.textContent = "@" + (n.authorUsername || "unknown") + " · " +
+                UI.formatWhen(new Date(n.createdAt).getTime());
+              row.appendChild(head);
+              var bodyText = UI.el("p");
+              bodyText.style.margin = "0.2rem 0 0.3rem";
+              bodyText.textContent = n.body;
+              row.appendChild(bodyText);
+              var del = UI.el("button", "btn btn-sm btn-flat", "Delete");
+              del.type = "button";
+              del.addEventListener("click", function () {
+                if (!window.confirm("Delete this note?")) return;
+                API.adminDeleteNote(n.id).then(drawNotes);
+              });
+              row.appendChild(del);
+              notesList.appendChild(row);
+            });
+          }).catch(function (err) {
+            notesList.innerHTML = "";
+            notesList.appendChild(UI.el("p", "tiny dimmer", err.message));
+          });
+        }
+        drawNotes();
+
+        var noteRow = UI.el("div", "btn-row");
+        noteRow.style.gap = "0.4rem";
+        var noteInput = UI.el("input");
+        noteInput.type = "text";
+        noteInput.placeholder = "Add a note staff will see on this account…";
+        noteInput.style.flex = "1";
+        noteRow.appendChild(noteInput);
+        var noteBtn = UI.el("button", "btn btn-sm", "Add");
+        noteBtn.type = "button";
+        noteBtn.addEventListener("click", function () {
+          var text = noteInput.value.trim();
+          if (!text) return;
+          busy(noteBtn, API.adminAddNote(u.id, text).then(function () {
+            noteInput.value = "";
+            drawNotes();
+          }));
+        });
+        noteRow.appendChild(noteBtn);
+        notesWrap.appendChild(noteRow);
+        body.appendChild(notesWrap);
 
         body.appendChild(UI.el("hr", "sheet-rule"));
 

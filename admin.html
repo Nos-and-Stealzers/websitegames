@@ -78,6 +78,35 @@
       <!-- overview -->
       <section class="tab-panel" data-panel="overview">
 
+        <div class="block-head" data-owner-or-admin hidden><h2>Site announcement</h2><span class="fill"></span></div>
+        <div class="panel" data-owner-or-admin hidden style="margin-bottom:1.4rem">
+          <p class="tiny dimmer" style="margin:0 0 0.6rem">
+            Shows as a banner to every signed-in user until cleared or it expires. Posting a
+            new one replaces whatever is live.
+          </p>
+          <div class="rows" id="ann-current" style="border:0;margin-bottom:0.6rem"></div>
+          <div class="field" style="margin-bottom:0.5rem">
+            <textarea id="ann-body" rows="2" maxlength="500"
+              placeholder="e.g. Scheduled maintenance tonight 10pm–11pm CT."></textarea>
+          </div>
+          <div class="btn-row" style="gap:0.4rem;margin-bottom:0.4rem">
+            <select id="ann-severity">
+              <option value="info">Info</option>
+              <option value="warning">Warning</option>
+              <option value="critical">Critical</option>
+            </select>
+            <select id="ann-ttl">
+              <option value="">No expiry</option>
+              <option value="1">1 hour</option>
+              <option value="6">6 hours</option>
+              <option value="24">1 day</option>
+              <option value="168">1 week</option>
+            </select>
+            <button class="btn btn-sm btn-cta" type="button" id="ann-post">Post</button>
+            <button class="btn btn-sm btn-flat" type="button" id="ann-clear">Clear live banner</button>
+          </div>
+        </div>
+
         <div class="block-head"><h2>Waiting on staff</h2><span class="fill"></span></div>
         <div class="metrics queue-metrics" style="margin-bottom:1.4rem">
           <button class="metric" type="button" data-goto="reports">

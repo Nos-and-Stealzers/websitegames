@@ -233,6 +233,19 @@
     adminSetPassword: function (id, newPassword) {
       return request("POST", "/admin/users/" + id + "/password", { password: newPassword });
     },
+    adminAddNote: function (id, body) {
+      return request("POST", "/admin/users/" + id + "/notes", { body: body });
+    },
+    adminListNotes: function (id) { return request("GET", "/admin/users/" + id + "/notes"); },
+    adminDeleteNote: function (noteId) { return request("DELETE", "/admin/notes/" + noteId); },
+    adminSetAnnouncement: function (body, severity, ttlHours) {
+      return request("POST", "/admin/announcement", { body: body, severity: severity, ttlHours: ttlHours });
+    },
+    adminClearAnnouncement: function () { return request("DELETE", "/admin/announcement"); },
+    currentAnnouncement: function () { return request("GET", "/announcement"); },
+    adminSetMute: function (id, minutes) {
+      return request("POST", "/admin/users/" + id + "/mute", { minutes: minutes });
+    },
     adminReports: function (state) { return request("GET", "/admin/reports?state=" + (state || "open")); },
     adminCloseReport: function (id, state) {
       return request("PATCH", "/admin/reports/" + id, { state: state || "closed" });

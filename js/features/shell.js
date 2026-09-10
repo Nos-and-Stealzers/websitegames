@@ -749,11 +749,35 @@
     });
   }
 
+  /* ----------------------------------------------------------- site banner */
+
+  /* One global banner an admin/owner can post from the admin panel. Checked
+     once per page load; not polled, so it can lag behind a same-session
+     post until the next navigation — acceptable for something meant to be
+     read, not real-time. */
+  function buildAnnouncementBanner() {
+    if (!window.API || !window.API.currentAnnouncement) return;
+    window.API.currentAnnouncement().then(function (a) {
+      if (!a) return;
+      var bar = el("div", "site-announce site-announce-" + (a.severity || "info"));
+      var text = el("span", null, a.body);
+      bar.appendChild(text);
+      var close = el("button", "site-announce-close", "×");
+      close.type = "button";
+      close.setAttribute("aria-label", "Dismiss");
+      close.addEventListener("click", function () { bar.remove(); });
+      bar.appendChild(close);
+      document.body.insertBefore(bar, document.body.firstChild);
+    }).catch(function () { /* not signed in, or nothing live — fine either way */ });
+  }
+
   /* ------------------------------------------------------------------ boot */
 
   function boot() {
     var mount = document.querySelector('[data-shell="chrome"]');
     var here = page();
+
+    buildAnnouncementBanner();
 
     if (mount) {
       var frag = document.createDocumentFragment();

@@ -1245,7 +1245,8 @@
               messages: Number(r.messages) || 0,
               reports: Number(r.reports) || 0,
               playing: r.current_game || "",
-              lastLogin: ms(r.last_login)
+              lastLogin: ms(r.last_login),
+              mutedUntil: r.muted_until || null
             });
           })
         };
@@ -1279,6 +1280,39 @@
     adminDeleteUser: function (id) {
       return rpc("admin_delete_user", { target: id })
         .then(function () { return { ok: true }; });
+    },
+
+    /* Staff-only notes on an account — never visible to the user themselves.
+       Lets a report or ticket carry context ("already warned 3/1") without
+       leaking it to the person it's about. */
+    adminAddNote: function (id, body) {
+      return rpc("admin_add_note", { target: id, note_body: body });
+    },
+    adminListNotes: function (id) {
+      return rpc("admin_list_notes", { target: id });
+    },
+    adminDeleteNote: function (noteId) {
+      return rpc("admin_delete_note", { note_id: noteId })
+        .then(function () { return { ok: true }; });
+    },
+
+    /* Site-wide banner, admin+ only. One row is live at a time. */
+    adminSetAnnouncement: function (body, severity, ttlHours) {
+      return rpc("admin_set_announcement", {
+        body_text: body, severity_level: severity || "info",
+        ttl_hours: ttlHours || null
+      });
+    },
+    adminClearAnnouncement: function () {
+      return rpc("admin_clear_announcement", {}).then(function () { return { ok: true }; });
+    },
+    currentAnnouncement: function () {
+      return rpc("current_announcement", {});
+    },
+
+    /* Chat mute — refused at the database, same as `suspended` already is. */
+    adminSetMute: function (id, minutes) {
+      return rpc("admin_set_mute", { target: id, minutes: minutes });
     },
 
     adminReports: function (state) {
