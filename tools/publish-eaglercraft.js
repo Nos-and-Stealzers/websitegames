@@ -129,7 +129,7 @@ function ensureIndex(dir) {
 
   fs.writeFileSync(path.join(work, "README.md"),
     "# Eaglercraft builds\n\n" +
-    "Served for [Arcade Campus Hub](https://github.com/Nos-and-Stealzers/websitegames).\n\n" +
+    "Served for Arcade Campus Hub.\n\n" +
     "| Version | Path |\n| --- | --- |\n" +
     BUILDS.map(([, v]) => `| ${v} | \`/${v}/index.html\` |`).join("\n") +
     "\n\nWorlds are stored per version in the browser's IndexedDB and do **not**\n" +
@@ -138,8 +138,8 @@ function ensureIndex(dir) {
 
   const git = (...a) => execFileSync("git", a, { cwd: work, stdio: "pipe", encoding: "utf8" });
   git("init", "-q", "-b", "main");
-  git("config", "user.name", "Nos-and-Stealzers");
-  git("config", "user.email", "stealzers.com@gmail.com");
+  git("config", "user.name", "arcade-hub");
+  git("config", "user.email", "noreply@arcadecampushub.online");
   git("add", "-A");
   git("commit", "-q", "-m",
       "Add Eaglercraft 1.8.8, 1.12.2 and 26.1.2\n\n" +

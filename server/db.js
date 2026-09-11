@@ -187,7 +187,7 @@ CREATE INDEX IF NOT EXISTS idx_logins_user ON logins(user_id, id DESC);
 /* The owner rank sits above admin and is deliberately untouchable: it exists
    so there is always one account that cannot be locked out by a compromised
    or careless admin. Set ARCADE_OWNER to claim it on signup. */
-const OWNER_USERNAME = String(process.env.ARCADE_OWNER || "Stealzers").toLowerCase();
+const OWNER_USERNAME = String(process.env.ARCADE_OWNER || "owner").toLowerCase();
 
 /* If that account already exists as something else, promote it once. */
 (function claimOwner() {

@@ -198,18 +198,18 @@ The games live in four separate repos. Every catalog entry names which one serve
 [`tools/rehost-catalog.js`](tools/rehost-catalog.js) against the real git trees — the site
 does no guessing at runtime.
 
-| host | repo | titles |
-| --- | --- | --- |
-| `swfgalaxy` | [Nos-and-Stealzers/swfgalaxy](https://github.com/Nos-and-Stealzers/swfgalaxy) | 96 |
-| `games-huge` | [arcadecampushub/games-huge](https://github.com/arcadecampushub/games-huge) | 89 |
-| `flashgames` | [arcadecampushub/flashgames](https://github.com/arcadecampushub/flashgames) | 11 |
-| `hd_fnaf` | [arcadecampushub/hd_fnaf](https://github.com/arcadecampushub/hd_fnaf) | 8 |
-| `eaglercraft` | [arcadecampushub/eaglercraft](https://github.com/arcadecampushub/eaglercraft) | 3 |
+| host | titles |
+| --- | --- |
+| `swfgalaxy` | 96 |
+| `games-huge` | 89 |
+| `flashgames` | 11 |
+| `hd_fnaf` | 8 |
+| `eaglercraft` | 3 |
 
-Most of the org's repos serve games this way — see the full list at
-[github.com/orgs/arcadecampushub/repositories](https://github.com/orgs/arcadecampushub/repositories).
-Two more (`RetroBow`, `Waterboy-Firegirl`) are deployed straight to Vercel/Render rather
-than GitHub Pages and aren't in the catalog yet.
+Each host is a static site serving its games; the mapping from host name to
+URL lives in `js/core/config.js`. Two more (`RetroBow`, `Waterboy-Firegirl`)
+are deployed straight to Vercel/Render rather than GitHub Pages and aren't in
+the catalog yet.
 
 **204 of 216 playable. 1 external. 11 unavailable** — those eleven point at paths no repo
 carries (`/games/websie/…`, `/games/retro-bowl/…`, four `swf-*` aliases). They stay in the
