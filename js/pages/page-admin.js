@@ -559,6 +559,42 @@
         });
         body.appendChild(toggle);
 
+        /* Ban — the hard version of suspend: blocks sign-in entirely (they
+           can't get a session at all), not just social features. Needs a
+           reason and a confirm. Admin+ only, enforced server-side too. */
+        var banned = !!u.banned;
+        var banNote = UI.el("p", "tiny dimmer");
+        banNote.style.margin = "0.8rem 0 0.5rem";
+        banNote.textContent = banned
+          ? "BANNED" + (u.banReason ? " \u2014 \u201c" + u.banReason + "\u201d" : "") +
+            ". They cannot sign in at all."
+          : "Banning blocks sign-in completely (harder than suspend). Use for " +
+            "serious or repeat offenders.";
+        body.appendChild(banNote);
+
+        var banBtn = UI.el("button", "btn" + (banned ? "" : " is-danger"),
+          banned ? "Unban account" : "Ban account");
+        banBtn.type = "button";
+        banBtn.addEventListener("click", function () {
+          if (banned) {
+            if (!window.confirm("Unban @" + u.username + "? They'll be able to sign in again.")) return;
+            busy(banBtn, API.adminSetBanned(u.id, false).then(function () {
+              UI.toast("@" + u.username + " unbanned");
+              clearDetail(); loadUsers();
+            }).catch(function (err) { UI.toast(err.message); }));
+          } else {
+            var reason = window.prompt(
+              "Ban @" + u.username + "? They will not be able to sign in.\n\n" +
+              "Reason (shown to them on the login screen):", "");
+            if (reason === null) return;   // cancelled
+            busy(banBtn, API.adminSetBanned(u.id, true, reason).then(function () {
+              UI.toast("@" + u.username + " banned");
+              clearDetail(); loadUsers();
+            }).catch(function (err) { UI.toast(err.message); }));
+          }
+        });
+        body.appendChild(banBtn);
+
         body.appendChild(UI.el("hr", "sheet-rule"));
 
         /* Mute — refused at the database (a trigger on messages), same way

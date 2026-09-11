@@ -160,6 +160,8 @@
       online: !!seen && Date.now() - seen < ONLINE_MS,
       lastSeen: seen,
       isPlus: !!row.is_plus,
+      banned: !!row.banned,
+      banReason: row.ban_reason || "",
       createdAt: row.created_at ? Date.parse(row.created_at) : 0
     }, extra || {});
   }
@@ -354,8 +356,19 @@
           .catch(function () {});
         return me().then(function (row) { return { user: shapeSelf(row) }; });
       }).catch(function (err) {
-        /* Never leak whether the account exists. */
-        if (err.status === 400 || err.status === 401) throw fail("Wrong username/email or password.", 401);
+        /* A banned account gets a clear message (with the staff-set reason)
+           instead of the generic wrong-password error. */
+        var bannedSignal = err && (err.code === "user_banned" ||
+          /banned/i.test(err.message || ""));
+        if (bannedSignal || err.status === 400 || err.status === 401 || err.status === 403) {
+          return rpc("login_ban_reason", { identifier: identifier })
+            .then(function (reason) {
+              if (reason) throw fail("Banned: " + reason, 403);
+              throw fail("Wrong username/email or password.", 401);
+            }, function () {
+              throw fail("Wrong username/email or password.", 401);
+            });
+        }
         throw err;
       });
     },
@@ -1368,6 +1381,9 @@
     },
     adminSetPlus: function (id, grant) {
       return rpc("admin_set_plus", { target: id, grant_it: !!grant });
+    },
+    adminSetBanned: function (id, ban, reason) {
+      return rpc("admin_set_banned", { target: id, ban: !!ban, reason: reason || null });
     },
 
     adminReports: function (state) {
