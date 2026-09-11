@@ -357,7 +357,7 @@
         setText("user-count", rows.length + " of " + userCache.length);
 
         var cols = "1fr 12rem 5.5rem 6rem 7rem 6rem";
-        var head = UI.el("div", "rows-head");
+        var head = UI.el("div", "rows-head user-head");
         head.style.gridTemplateColumns = cols;
         ["Account", "Email", "Rank", "State", "Activity", ""].forEach(function (h) {
           head.appendChild(UI.el("span", null, h));
@@ -370,7 +370,7 @@
         }
 
         rows.forEach(function (u) {
-          var row = UI.el("div", "row");
+          var row = UI.el("div", "row user-row-grid");
           row.style.gridTemplateColumns = cols;
 
           var who = UI.el("a", "admin-who");
@@ -379,7 +379,8 @@
           who.appendChild(window.SocialUI.nameBlock(u, { presence: true }));
           row.appendChild(who);
 
-          var emailCell = UI.el("span", "tiny dimmer");
+          var emailCell = UI.el("span", "tiny dimmer u-cell");
+          emailCell.dataset.label = "Email";
           emailCell.textContent = u.email || "—";
           emailCell.style.overflow = "hidden";
           emailCell.style.textOverflow = "ellipsis";
@@ -387,13 +388,18 @@
           emailCell.title = u.email || "";
           row.appendChild(emailCell);
 
-          row.appendChild(UI.el("span", "cat", u.role));
+          var roleCell = UI.el("span", "cat u-cell");
+          roleCell.dataset.label = "Rank";
+          roleCell.textContent = u.role;
+          row.appendChild(roleCell);
 
-          var state = UI.el("span", "flag " + (u.state === "active" ? "flag-good" : "flag-bad"));
+          var state = UI.el("span", "flag u-cell " + (u.state === "active" ? "flag-good" : "flag-bad"));
+          state.dataset.label = "State";
           state.textContent = u.state;
           row.appendChild(state);
 
-          var stats = UI.el("span", "plays");
+          var stats = UI.el("span", "plays u-cell");
+          stats.dataset.label = "Activity";
           stats.textContent = u.friends + "f · " + u.messages + "m" +
             (u.reports ? " · " + u.reports + "⚑" : "");
           stats.title = u.friends + " friends, " + u.messages + " messages" +

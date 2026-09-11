@@ -245,6 +245,20 @@ body {
 
 ::selection { background: var(--accent); color: var(--accent-ink); }
 
+/* Page-in transition: fade + a hair of upward drift on each navigation, so
+   moving between pages feels composed instead of flashing content in. Driven
+   by data-loading on <html> (set in theme-boot before first paint, cleared on
+   DOMContentLoaded). Respects reduced-motion / lite mode, which never set it. */
+html[data-loading] body { opacity: 0; }
+body {
+  opacity: 1;
+  transition: opacity 0.22s ease, transform 0.22s ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  html[data-loading] body { opacity: 1; }
+  body { transition: none; }
+}
+
 h1, h2, h3, h4 { margin: 0; font-weight: 700; letter-spacing: -0.025em; line-height: 1.08; }
 h1 { font-size: clamp(1.75rem, 3.4vw, 2.6rem); }
 h2 { font-size: clamp(1.15rem, 2vw, 1.4rem); }
@@ -1541,12 +1555,46 @@ kbd {
 .admin-acts { display: flex; gap: 0.35rem; align-items: center; flex-wrap: wrap; }
 .admin-acts select { width: auto; padding: 0.25rem 0.35rem; font-size: 0.76rem; }
 
-/* The users tab list has five real columns (account, email, rank, state,
-   activity) — squashing that onto a phone/narrow pane just overlapped
-   everything, so it scrolls horizontally instead below a fixed floor
-   width, same trick as a spreadsheet, rather than fighting for space. */
+/* The users list adapts to the device instead of forcing a spreadsheet.
+   Wide: real columns. Narrow: each row becomes a stacked card with labels,
+   so nothing overlaps and there's no sideways scrolling. */
 #user-rows { min-width: 0; }
-#user-rows .rows-head, #user-rows .row { min-width: 46rem; }
+.rows-scroll { overflow: visible; }
+
+@media (max-width: 760px) {
+  /* Hide the column header; cards carry their own labels. */
+  #user-rows .user-head { display: none; }
+
+  #user-rows .user-row-grid {
+    display: block;
+    grid-template-columns: none !important;   /* override the inline grid */
+    border: 1px solid var(--line);
+    border-radius: var(--r);
+    background: var(--surface);
+    padding: 0.75rem 0.85rem;
+    margin-bottom: 0.6rem;
+  }
+  #user-rows .user-row-grid.is-on { background: var(--sel); border-color: var(--accent); }
+
+  /* The account (avatar + name) sits on top as the card title. */
+  #user-rows .user-row-grid .admin-who { margin-bottom: 0.55rem; }
+
+  /* Each data cell becomes a labelled line. */
+  #user-rows .user-row-grid .u-cell {
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 1rem; padding: 0.22rem 0;
+    font-size: 0.82rem; white-space: normal;
+    border-top: 1px solid var(--line);
+  }
+  #user-rows .user-row-grid .u-cell::before {
+    content: attr(data-label);
+    color: var(--ink-3); font-weight: 600; font-size: 0.72rem;
+    text-transform: uppercase; letter-spacing: 0.03em;
+    flex: none;
+  }
+  #user-rows .user-row-grid .u-cell.flag { align-self: flex-start; }
+  #user-rows .user-row-grid .admin-acts { justify-content: flex-end; margin-top: 0.35rem; }
+}
 
 .report {
   border: 1px solid var(--line); background: var(--surface);
