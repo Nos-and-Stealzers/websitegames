@@ -145,6 +145,16 @@
     });
   }
 
+  /* postMessage's targetOrigin must be a pure web origin (scheme://host[:port])
+     — never a path. Several hosts here are path-based (jsDelivr:
+     https://cdn.jsdelivr.net/gh/<user>/<repo>@main/games, and GitHub Pages
+     project sites), and passing the full base URL as targetOrigin makes the
+     browser SILENTLY DROP the message, so those games' saves never reached
+     their bridge. Reduce any base URL to its real origin for targeting. */
+  function targetOriginOf(base) {
+    try { return new URL(base).origin; } catch (e) { return base; }
+  }
+
   function ask(origin, payload) {
     return frameFor(origin).then(function (entry) {
       return new Promise(function (resolve, reject) {
@@ -158,7 +168,7 @@
           }, TIMEOUT)
         };
         entry.iframe.contentWindow.postMessage(
-          Object.assign({ channel: CHANNEL, id: id }, payload), origin
+          Object.assign({ channel: CHANNEL, id: id }, payload), targetOriginOf(origin)
         );
       });
     });
