@@ -37,7 +37,7 @@
     window.UI.render($("g-related"), window.Catalog.related(game, 12), { desc: false });
 
     if (game.unavailable) unavailable();
-    else if (game.embeddable && !game.preferDirect) embed();
+    else if (game.embeddable && !game.preferDirect) restoreThenEmbed();
     else prompt();
 
     document.addEventListener("visibilitychange", function () {
@@ -133,10 +133,50 @@
 
   /* ----------------------------------------------------------------- stage */
 
+  /* Auto-restore, then play. Before the game frame ever loads, pull this
+     account's cloud save for this host down into the host's storage (merge,
+     never overwrite newer local progress). That way a game started on another
+     device already has its progress present the moment it reads storage — the
+     user never presses a "load" button. If there's no save, nothing to do; if
+     the bridge is slow or absent, we don't block play — a short timeout falls
+     through to embedding regardless. */
+  var didRestore = false;
+  function restoreThenEmbed() {
+    if (didRestore || !canBackup()) { embed(); return; }
+    didRestore = true;
+
+    var origin = (window.SITE.gameHosts || {})[game.host];
+    if (!origin) { embed(); return; }
+
+    showLoading(true);
+    markSaved("checking your save…", "");
+
+    var settled = false;
+    function go(restored) {
+      if (settled) return;
+      settled = true;
+      embed();
+      if (restored) markSaved("cloud save loaded", "ok");
+    }
+
+    /* Never let a stuck bridge hold the game hostage. */
+    var guard = window.setTimeout(function () { go(false); }, 4000);
+
+    window.GameSaves.restore(false).then(function (results) {
+      window.clearTimeout(guard);
+      var mine = (results || []).filter(function (r) {
+        return r.host === window.GameSaves.hostKey(origin);
+      })[0];
+      go(!!(mine && mine.written));
+    }).catch(function () {
+      window.clearTimeout(guard);
+      go(false);
+    });
+  }
+
   function embed() {
     var url = game.sourceUrl || game.directUrl;
     if (!url) { prompt("This entry has no playable URL on file."); return; }
-
     if (frame) frame.remove();
     frame = document.createElement("iframe");
     frame.src = url;
@@ -268,7 +308,7 @@
      Settings is how saves get lost, so it happens here instead: once the
      session has been long enough to be worth keeping, and again on the way
      out. Silent — it is not something to interrupt play over. */
-  var MIN_SESSION = 45;          // seconds before a backup is worth doing
+  var MIN_SESSION = 15;          // seconds before a backup is worth doing
   var backupTimer = null;
   var lastBackup = 0;
 
@@ -327,7 +367,7 @@
 
   function backupProgress(reason) {
     if (!canBackup()) return Promise.resolve();
-    if (Date.now() - lastBackup < 20000) return Promise.resolve();
+    if (Date.now() - lastBackup < 10000) return Promise.resolve();
     lastBackup = Date.now();
 
     var origin = (window.SITE.gameHosts || {})[game.host];
@@ -370,12 +410,15 @@
 
   function watchProgress() {
     if (!canBackup()) return;
-    markSaved("progress syncs to your account", "");
+    markSaved("progress saves automatically", "");
     takeBaseline();
     window.clearInterval(backupTimer);
+    /* Save every 45s while the game is in front, plus on tab-hide and on the
+       way out (below). Frequent enough that a crash or an accidental close
+       loses very little, cheap enough not to matter. */
     backupTimer = window.setInterval(function () {
       if (!document.hidden && frame) backupProgress("interval");
-    }, 120000);
+    }, 45000);
   }
 
   /* --------------------------------------------------------------- actions */
@@ -424,56 +467,6 @@
       stage().classList.toggle("tall", tall);
       aspect.textContent = tall ? "16:9" : "4:3";
     });
-
-    /* Manual Save / Load — the automatic backup still runs, but these give a
-       visible, on-demand way to push this game's progress to the account and
-       pull it back on another device, with clear feedback. Shown only when
-       signed in and the game can actually be backed up. */
-    var saveBtn = $("a-save");
-    var loadBtn = $("a-load");
-    if (saveBtn && loadBtn && canBackup()) {
-      saveBtn.hidden = false;
-      loadBtn.hidden = false;
-
-      saveBtn.addEventListener("click", function () {
-        saveBtn.disabled = true;
-        markSaved("saving…", "");
-        /* Force an immediate backup regardless of the session-length gate. */
-        lastBackup = 0;
-        backupProgress("manual").then(function (n) {
-          if (n) { markSaved("saved ✓", "ok"); window.UI.toast("Progress saved to your account"); }
-          else { markSaved("nothing to save yet", "warn"); window.UI.toast("No progress found to save yet — play a bit first."); }
-        }).catch(function () {
-          markSaved("couldn't save", "warn");
-          window.UI.toast("Couldn't save — this game may not store progress, or storage is blocked.");
-        }).then(function () { saveBtn.disabled = false; });
-      });
-
-      loadBtn.addEventListener("click", function () {
-        loadBtn.disabled = true;
-        markSaved("loading…", "");
-        var origin = (window.SITE.gameHosts || {})[game.host];
-        window.GameSaves.restore(false).then(function (results) {
-          var mine = (results || []).filter(function (r) {
-            return r.host === window.GameSaves.hostKey(origin);
-          })[0];
-          if (mine && mine.written) {
-            markSaved("loaded ✓", "ok");
-            window.UI.toast("Progress restored. Reloading the game…");
-            if (frame) window.setTimeout(function () { embed(); }, 700);
-          } else if (mine && mine.empty) {
-            markSaved("no cloud save", "warn");
-            window.UI.toast("No saved progress for this game on your account yet.");
-          } else {
-            markSaved("nothing to load", "warn");
-            window.UI.toast("No newer cloud save to load for this game.");
-          }
-        }).catch(function () {
-          markSaved("couldn't load", "warn");
-          window.UI.toast("Couldn't load — the game's save bridge didn't respond.");
-        }).then(function () { loadBtn.disabled = false; });
-      });
-    }
 
     $("a-share").addEventListener("click", function () {
       var url = window.location.href;
