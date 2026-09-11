@@ -425,6 +425,56 @@
       aspect.textContent = tall ? "16:9" : "4:3";
     });
 
+    /* Manual Save / Load — the automatic backup still runs, but these give a
+       visible, on-demand way to push this game's progress to the account and
+       pull it back on another device, with clear feedback. Shown only when
+       signed in and the game can actually be backed up. */
+    var saveBtn = $("a-save");
+    var loadBtn = $("a-load");
+    if (saveBtn && loadBtn && canBackup()) {
+      saveBtn.hidden = false;
+      loadBtn.hidden = false;
+
+      saveBtn.addEventListener("click", function () {
+        saveBtn.disabled = true;
+        markSaved("saving…", "");
+        /* Force an immediate backup regardless of the session-length gate. */
+        lastBackup = 0;
+        backupProgress("manual").then(function (n) {
+          if (n) { markSaved("saved ✓", "ok"); window.UI.toast("Progress saved to your account"); }
+          else { markSaved("nothing to save yet", "warn"); window.UI.toast("No progress found to save yet — play a bit first."); }
+        }).catch(function () {
+          markSaved("couldn't save", "warn");
+          window.UI.toast("Couldn't save — this game may not store progress, or storage is blocked.");
+        }).then(function () { saveBtn.disabled = false; });
+      });
+
+      loadBtn.addEventListener("click", function () {
+        loadBtn.disabled = true;
+        markSaved("loading…", "");
+        var origin = (window.SITE.gameHosts || {})[game.host];
+        window.GameSaves.restore(false).then(function (results) {
+          var mine = (results || []).filter(function (r) {
+            return r.host === window.GameSaves.hostKey(origin);
+          })[0];
+          if (mine && mine.written) {
+            markSaved("loaded ✓", "ok");
+            window.UI.toast("Progress restored. Reloading the game…");
+            if (frame) window.setTimeout(function () { embed(); }, 700);
+          } else if (mine && mine.empty) {
+            markSaved("no cloud save", "warn");
+            window.UI.toast("No saved progress for this game on your account yet.");
+          } else {
+            markSaved("nothing to load", "warn");
+            window.UI.toast("No newer cloud save to load for this game.");
+          }
+        }).catch(function () {
+          markSaved("couldn't load", "warn");
+          window.UI.toast("Couldn't load — the game's save bridge didn't respond.");
+        }).then(function () { loadBtn.disabled = false; });
+      });
+    }
+
     $("a-share").addEventListener("click", function () {
       var url = window.location.href;
       if (navigator.clipboard && navigator.clipboard.writeText) {
