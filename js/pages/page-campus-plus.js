@@ -262,31 +262,58 @@
 
     /* ------------------------------------------------------------- boot */
 
-    /* Show the current membership tier + limits in the header. Campus+ is free
-       for everyone; members (staff-granted) get much higher limits and a badge. */
+    /* Campus+ is a members-only feature that staff grant per-account. Staff
+       themselves always have access. Everyone else sees a locked panel telling
+       them to ask staff; signed-out visitors are asked to sign in first. */
+    function applyGate(user) {
+      var tools = document.getElementById("cp-tools");
+      var locked = document.getElementById("cp-locked");
+      var lockedMsg = document.getElementById("cp-locked-msg");
+      var isStaff = window.Session && window.Session.isStaff && window.Session.isStaff();
+      var member = !!(user && (user.isPlus || isStaff));
+
+      if (member) {
+        if (tools) tools.hidden = false;
+        if (locked) locked.hidden = true;
+        return true;
+      }
+
+      if (tools) tools.hidden = true;
+      if (locked) {
+        locked.hidden = false;
+        if (lockedMsg) {
+          lockedMsg.innerHTML = user
+            ? "Campus+ lets you watch YouTube videos and build playlists right " +
+              "here. It's a members feature \u2014 ask a staff member to turn it " +
+              "on for your account."
+            : 'Campus+ lets you watch YouTube videos and build playlists right ' +
+              'here. It\u2019s a members feature. ' +
+              '<a href="login.html?next=campus-plus.html">Sign in</a> \u2014 then ' +
+              'ask a staff member to turn it on for your account.';
+        }
+      }
+      return false;
+    }
+
+    /* Show the current membership tier + limits in the header (for members). */
     function showMembership(user) {
       var el = document.getElementById("cp-membership");
       if (!el) return;
-      if (!user) { el.hidden = true; return; }
+      if (!user || !user.isPlus) { el.hidden = true; return; }
       el.hidden = false;
-      if (user.isPlus) {
-        el.innerHTML = '<b style="color:var(--accent,#ff5c33)">Campus+ member</b> ' +
-          '\u2726 \u2014 up to 50 playlists, 500 videos each.';
-      } else {
-        el.textContent = "Free tier: up to 5 playlists, 100 videos each. " +
-          "Ask staff about Campus+ for more.";
-      }
+      el.innerHTML = '<b style="color:var(--accent,#ff5c33)">Campus+ member</b> ' +
+        '\u2726 \u2014 up to 50 playlists, 500 videos each.';
     }
 
-    Session.ready.then(function () {
-      loadMine();
-      showMembership(Session.user);
-    });
-    document.addEventListener("session:change", function () {
-      loadMine();
-      showMembership(Session.user);
-    });
-    loadPublic("");
+    function refresh() {
+      var user = Session.user;
+      var allowed = applyGate(user);
+      showMembership(user);
+      if (allowed) { loadMine(); loadPublic(""); }
+    }
+
+    Session.ready.then(refresh);
+    document.addEventListener("session:change", refresh);
   }
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);

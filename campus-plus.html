@@ -27,6 +27,21 @@
       <p class="tiny dimmer" id="cp-membership" style="margin:0.4rem 0 0" hidden></p>
     </header>
 
+    <!-- members-only gate: shown when the signed-in user isn't a Campus+ member -->
+    <section class="block" id="cp-locked" hidden aria-labelledby="locked-h">
+      <div class="panel" style="text-align:center;padding:2rem 1.4rem">
+        <div style="font-size:2.4rem;line-height:1;margin-bottom:0.6rem">🔒</div>
+        <h2 id="locked-h" style="margin:0 0 0.5rem">Campus+ is members-only</h2>
+        <p class="dimmer" id="cp-locked-msg" style="margin:0 auto;max-width:32rem">
+          Campus+ lets you watch YouTube videos and build playlists right here.
+          It's a members feature — ask a staff member to turn it on for your
+          account.
+        </p>
+      </div>
+    </section>
+
+    <div id="cp-tools">
+
     <section class="block" aria-labelledby="add-h">
       <div class="block-head"><h2 id="add-h">Play something</h2><span class="fill"></span></div>
       <div class="panel">
@@ -85,6 +100,8 @@
       </div>
       <div class="panel" id="cp-detail-content"></div>
     </section>
+
+    </div><!-- /#cp-tools -->
 
     <div data-shell="foot"></div>
   </main>
