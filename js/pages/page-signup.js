@@ -101,7 +101,7 @@
             return;
           }
           window.UI.toast(res.firstAccount ? "Admin account created" : "Welcome, " + username);
-          window.location.href = res.firstAccount ? "admin.html" : "index.html";
+          window.location.href = res.firstAccount ? "admin.html" : "verify-email.html";
         })
         .catch(function (err) { fail(err.message || "Could not create the account."); });
     });

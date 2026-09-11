@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" data-skin="noir" data-lite="off">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Verify your email — Arcade Campus Hub</title>
+  <meta name="description" content="Enter the code we emailed you to verify your account.">
+  <meta name="theme-color" content="#0c0d10">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="icon" type="image/svg+xml" href="assets/icon.svg">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/core/theme-boot.js"></script>
+  <script src="js/core/consent-gate.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div data-shell="chrome"></div>
+
+  <main class="main" id="main">
+    <div class="gate">
+      <header class="page-head" style="border:0;margin-bottom:1rem">
+        <span class="label">Account</span>
+        <h1>Verify your email</h1>
+        <p>We emailed a 6-digit code to <b id="ve-email">your email</b>. Enter it
+           below to unlock chat, friends and calls. You can browse and play games
+           without verifying.</p>
+      </header>
+
+      <div class="panel" id="ve-signedout" hidden>
+        <p class="dim" style="margin:0">
+          <a href="login.html?next=verify-email.html">Sign in</a> first to verify your email.
+        </p>
+      </div>
+
+      <div class="panel" id="ve-done" hidden>
+        <p style="margin:0">✅ Your email is verified. <a href="index.html">Go to the arcade</a>.</p>
+      </div>
+
+      <form class="panel form" id="ve-form" hidden>
+        <div class="field">
+          <label for="ve-code">Verification code</label>
+          <input type="text" id="ve-code" inputmode="numeric" autocomplete="one-time-code"
+                 maxlength="6" pattern="[0-9]{6}" placeholder="000000"
+                 style="font-size:1.6rem;letter-spacing:0.5rem;text-align:center" required>
+        </div>
+
+        <p class="form-error" id="ve-error" hidden></p>
+        <p class="tiny dimmer" id="ve-note" hidden></p>
+
+        <button class="btn btn-cta" type="submit" id="ve-submit" style="width:100%">Verify</button>
+
+        <p class="tiny dimmer" style="margin:1rem 0 0">
+          Didn't get it? <a href="#" id="ve-resend">Send a new code</a>.
+          Check your spam folder too.
+        </p>
+        <p class="tiny dimmer" style="margin:0.35rem 0 0">
+          <a href="index.html">Skip for now</a> — you can verify later from Settings.
+        </p>
+      </form>
+    </div>
+
+    <div data-shell="foot"></div>
+  </main>
+
+  <script src="js/core/config.js"></script>
+  <script src="data/games.js"></script>
+  <script src="js/core/store.js"></script>
+  <script src="js/features/catalog-overlay.js"></script>
+  <script src="js/features/catalog.js"></script>
+  <script src="js/features/art.js"></script>
+  <script src="js/core/ui.js"></script>
+  <script src="js/core/api.js"></script>
+  <script src="js/core/api-supabase.js"></script>
+  <script src="js/core/session.js"></script>
+  <script src="js/features/capture.js"></script>
+  <script src="js/features/chat-dock.js"></script>
+  <script src="js/features/call.js"></script>
+  <script src="js/features/game-saves.js"></script>
+  <script src="js/features/shell.js"></script>
+  <script src="js/features/context-menu.js"></script>
+  <script src="js/pages/page-verify-email.js"></script>
+</body>
+</html>

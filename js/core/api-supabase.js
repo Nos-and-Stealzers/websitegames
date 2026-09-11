@@ -170,6 +170,8 @@
     return Object.assign(shapeUser(row), {
       acceptsDms: !!row.accepts_dms,
       showActivity: !!row.show_activity,
+      emailVerified: !!row.email_verified,
+      email: row.email || "",
       friendCode: row.friend_code || ""
     });
   }
@@ -198,7 +200,7 @@
   }
 
   var PROFILE_COLS = "id,username,display_name,bio,role,state,accepts_dms,show_activity," +
-                     "friend_code,created_at,last_seen,is_plus";
+                     "friend_code,created_at,last_seen,is_plus,banned,ban_reason,email_verified";
 
   /* The signed-in account's own profile row.
      `session.user.user_metadata` is NOT a substitute: it is whatever was set
@@ -212,7 +214,13 @@
     if (selfProfile && !force) return Promise.resolve(selfProfile);
     return rest("/profiles?select=" + PROFILE_COLS + "&id=eq." + session.user.id)
       .then(one)
-      .then(function (row) { selfProfile = row; return row; });
+      .then(function (row) {
+        /* The email lives on the auth session, not the profiles row — attach
+           it so callers (verify-email, settings) can show it. */
+        if (row && session && session.user) row.email = session.user.email || "";
+        selfProfile = row;
+        return row;
+      });
   }
 
   /* Cached so relation lookups don't refetch the whole graph per row. */
@@ -1372,6 +1380,15 @@
     },
     myLogins: function () {
       return rpc("my_logins");
+    },
+    requestEmailCode: function () {
+      return rpc("request_email_code");
+    },
+    verifyEmailCode: function (code) {
+      return rpc("verify_email_code", { code: String(code || "") });
+    },
+    myEmailVerified: function () {
+      return rpc("my_email_verified");
     },
     adminListPlaylists: function (q) {
       return rpc("admin_list_playlists", { q: q || null });

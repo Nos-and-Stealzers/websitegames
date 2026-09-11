@@ -348,6 +348,56 @@
     }
     loadLoginHistory();
 
+    /* ---- email verification ---- */
+    (function emailVerify() {
+      var statusEl = document.getElementById("ev-status");
+      var actions = document.getElementById("ev-actions");
+      var codeInput = document.getElementById("ev-code");
+      var sendBtn = document.getElementById("ev-send");
+      var checkBtn = document.getElementById("ev-check");
+      var msg = document.getElementById("ev-msg");
+      if (!statusEl || !API.myEmailVerified) return;
+
+      function say(t) { if (msg) { msg.textContent = t; msg.hidden = false; } }
+
+      API.myEmailVerified().then(function (ok) {
+        if (ok) {
+          statusEl.textContent = "✅ Your email is verified.";
+          if (actions) actions.hidden = true;
+        } else {
+          statusEl.textContent = "Your email is not verified yet.";
+          if (actions) actions.hidden = false;
+        }
+      }).catch(function () { statusEl.textContent = ""; });
+
+      if (sendBtn) sendBtn.addEventListener("click", function () {
+        sendBtn.disabled = true; sendBtn.textContent = "Sending…";
+        API.requestEmailCode().then(function (res) {
+          say("Code sent to " + ((res && res.sentTo) || "your email") + ". Enter it below.");
+          codeInput.hidden = false; checkBtn.hidden = false;
+          sendBtn.textContent = "Resend"; sendBtn.disabled = false;
+          codeInput.focus();
+        }).catch(function (err) {
+          say(err.message || "Couldn't send a code.");
+          sendBtn.textContent = "Send code"; sendBtn.disabled = false;
+        });
+      });
+
+      if (checkBtn) checkBtn.addEventListener("click", function () {
+        var code = (codeInput.value || "").trim();
+        if (!/^[0-9]{6}$/.test(code)) { say("Enter the 6-digit code."); return; }
+        checkBtn.disabled = true;
+        API.verifyEmailCode(code).then(function () {
+          UI.toast("Email verified 🎉");
+          statusEl.textContent = "✅ Your email is verified.";
+          actions.hidden = true;
+        }).catch(function (err) {
+          say(err.message || "That code didn't work.");
+          checkBtn.disabled = false;
+        });
+      });
+    })();
+
     document.getElementById("signout-all").addEventListener("click", function () {
       if (!window.confirm("Sign out of every other device?")) return;
       API.signOutEverywhere()
