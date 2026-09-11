@@ -550,6 +550,7 @@
     state.call = call;
     state.ice = ice;
     state.startedAt = 0;
+    markActiveCall(call.id);   // sticky across in-site navigation
 
     stopRinging();
     state.ringing = null;
@@ -613,6 +614,7 @@
 
   function hangUp() {
     var id = state.call && state.call.id;
+    clearActiveCall();     // explicit hang-up: don't auto-rejoin after this
     teardown("");
     if (id) window.API.leaveCall(id).catch(function () {});
   }
@@ -713,9 +715,29 @@
      has to run everywhere or a call only reaches you on the messages page. */
   function watch() {
     window.API.pendingCalls().then(function (res) {
+      var calls = res.calls || [];
+
+      /* Auto-rejoin: if I'm already a *joined* peer in a live call but this
+         page isn't in it (because I navigated here and the previous page's
+         WebRTC died with it), quietly rejoin so the call survives moving
+         around the site instead of ending on every click. */
+      if (!state.call) {
+        var ongoing = calls.filter(function (c) {
+          if (c.state === "ended") return false;
+          return (c.peers || []).some(function (p) {
+            return p.id === state.self && p.state === "joined";
+          });
+        })[0];
+        if (ongoing && sessionRejoinWanted(ongoing.id)) {
+          var wantsVideo = (ongoing.kind === "video");
+          answer(ongoing.id, wantsVideo);
+          return;
+        }
+      }
+
       /* Only a call where *my* row is still "invited" is ringing at me. A
          group call I've already joined comes back here too. */
-      var mine = (res.calls || []).filter(function (c) {
+      var mine = calls.filter(function (c) {
         if (state.call && c.id === state.call.id) return false;
         if (c.state !== "ringing" || c.startedBy === state.self) return false;
         return (c.peers || []).some(function (p) {
@@ -735,6 +757,22 @@
     }).catch(function () { /* offline; try again next tick */ });
   }
 
+  /* A call is "sticky" across navigation only if the user didn't explicitly
+     hang up. We remember the active call id in sessionStorage; leaving via the
+     hang-up button clears it, so we don't silently rejoin a call the user
+     meant to end. */
+  var REJOIN_KEY = "ach:activeCall";
+  function markActiveCall(id) {
+    try { window.sessionStorage.setItem(REJOIN_KEY, String(id)); } catch (e) {}
+  }
+  function clearActiveCall() {
+    try { window.sessionStorage.removeItem(REJOIN_KEY); } catch (e) {}
+  }
+  function sessionRejoinWanted(id) {
+    try { return window.sessionStorage.getItem(REJOIN_KEY) === String(id); }
+    catch (e) { return false; }
+  }
+
   /* ---------------------------------------------------------------- boot */
 
   function mount() {
@@ -748,21 +786,38 @@
       state.ringTimer = window.setInterval(watch, RING_POLL);
       watch();
 
-      /* Closing the tab mid-call should free the other side immediately
-         rather than leaving them staring at a frozen tile.
+      /* Leaving mid-call should free the other side quickly — BUT only when
+         you're actually leaving the site, not when you click a link to another
+         page within it. pagehide fires for both. We watch for same-origin
+         navigation (a link click or a form submit that stays on this site) and
+         treat that as "keep the call, rejoin on the next page" rather than
+         "hang up". A real tab/window close, or navigating away to another site,
+         falls through to the leave path. */
+      var internalNav = false;
+      document.addEventListener("click", function (e) {
+        var a = e.target && e.target.closest && e.target.closest("a[href]");
+        if (!a) return;
+        var href = a.getAttribute("href") || "";
+        if (/^(#|javascript:)/i.test(href)) return;
+        if (a.target && a.target !== "_self") return;   // opens elsewhere
+        try {
+          var dest = new URL(a.href, location.href);
+          if (dest.origin === location.origin) internalNav = true;
+        } catch (err) { /* ignore */ }
+      }, true);
+      window.addEventListener("pageshow", function () { internalNav = false; });
 
-         This used to POST a beacon at a hardcoded /api/calls/…/leave, which
-         only exists on the Node backend — on Supabase it hit the static host
-         and 404'd, so nobody ever left a call by closing the tab. The beacon
-         is now used only where that route is real, and every other backend
-         gets the ordinary call, which browsers still allow to fly on
-         pagehide. */
       window.addEventListener("pagehide", function () {
+        /* Internal navigation: keep our seat in the call. The next page's
+           watch() sees we're still a joined peer and rejoins automatically. */
+        if (internalNav && state.call) return;
+
         if (state.ringing) {
           window.API.leaveCall(state.ringing.id).catch(function () {});
         }
         if (!state.call) return;
 
+        clearActiveCall();
         var id = state.call.id;
         var node = (window.API.backend || "node") === "node";
         if (node && navigator.sendBeacon) {
