@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>Simon</title>
+<style>
+  :root{--bg:#0c0d10;--panel:#15171c;--line:#2a2c33;--ink:#e8eaed;--mut:#8a8f99;--acc:#f2b705;}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;height:100%;}
+  body{background:var(--bg);color:var(--ink);font-family:ui-monospace,Menlo,Consolas,monospace;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100dvh;
+    gap:12px;padding:12px;user-select:none;}
+  .top{display:flex;gap:16px;width:min(360px,90vw);align-items:baseline;}
+  h1{font-size:24px;margin:0;letter-spacing:-1px;}
+  .sc{margin-left:auto;font-size:15px;color:var(--mut);}
+  .sc b{color:var(--acc);}
+  .pad{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:min(360px,90vw);}
+  .btn{aspect-ratio:1;border:1px solid var(--line);cursor:pointer;opacity:.42;
+    transition:opacity .12s,transform .08s;border-radius:6px;}
+  .btn:active{transform:scale(.97);}
+  .btn.lit{opacity:1;}
+  .g{background:#3fb950;}.r{background:#ff5d73;}.b{background:#4f8cff;}.y{background:#f2b705;}
+  .over{color:var(--acc);font-weight:700;min-height:16px;text-align:center;}
+  .rowc{display:flex;gap:8px;width:min(360px,90vw);}
+  button.ctl{flex:1;background:#25272e;color:var(--ink);border:1px solid #35373f;padding:10px;font:inherit;cursor:pointer;}
+  button.ctl:hover{border-color:var(--acc);color:var(--acc);}
+  .hint{font-size:12px;color:var(--mut);text-align:center;}
+</style>
+</head>
+<body>
+  <div class="top"><h1>Simon</h1><div class="sc">round <b id="r">0</b> &middot; best <b id="best">0</b></div></div>
+  <div class="pad">
+    <div class="btn g" data-k="0"></div>
+    <div class="btn r" data-k="1"></div>
+    <div class="btn b" data-k="2"></div>
+    <div class="btn y" data-k="3"></div>
+  </div>
+  <div class="over" id="over">Press Start and watch the pattern</div>
+  <div class="rowc"><button class="ctl" id="start">Start</button><button class="ctl" id="strict">Strict: Off</button></div>
+  <div class="hint">Repeat the light sequence. One miss ends the run.</div>
+<script>
+(function(){
+  "use strict";
+  var seq=[],step=0,playing=false,accepting=false,strict=false;
+  var best=+(localStorage.getItem("osimon.best")||0);
+  document.getElementById("best").textContent=best;
+  var pads=[].slice.call(document.querySelectorAll(".btn"));
+  var freqs=[329.6,261.6,220,164.8];
+  var actx=null;
+  function tone(i,ms){
+    try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();
+      var o=actx.createOscillator(),g=actx.createGain();
+      o.frequency.value=freqs[i];o.type="sine";o.connect(g);g.connect(actx.destination);
+      g.gain.setValueAtTime(0.0001,actx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.25,actx.currentTime+0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001,actx.currentTime+ms/1000);
+      o.start();o.stop(actx.currentTime+ms/1000);}catch(e){}
+  }
+  function flash(i,ms){pads[i].classList.add("lit");tone(i,ms);
+    setTimeout(function(){pads[i].classList.remove("lit");},ms);}
+  function next(){
+    seq.push((Math.random()*4)|0);
+    document.getElementById("r").textContent=seq.length;
+    playback();
+  }
+  function playback(){
+    accepting=false;var i=0;
+    var speed=Math.max(320,700-seq.length*24);
+    var t=setInterval(function(){
+      if(i>=seq.length){clearInterval(t);accepting=true;step=0;
+        document.getElementById("over").textContent="Your turn";return;}
+      flash(seq[i],speed*0.6);i++;
+    },speed);
+    document.getElementById("over").textContent="Watch…";
+  }
+  function guess(k){
+    if(!accepting)return;
+    flash(k,180);
+    if(k===seq[step]){
+      step++;
+      if(step===seq.length){accepting=false;
+        document.getElementById("over").textContent="Nice — next round";
+        setTimeout(next,700);}
+    } else {
+      // wrong
+      if(seq.length-1>best){best=seq.length-1;localStorage.setItem("osimon.best",best);
+        document.getElementById("best").textContent=best;}
+      if(strict){document.getElementById("over").textContent="Wrong! Run over ("+(seq.length-1)+")";playing=false;accepting=false;}
+      else{document.getElementById("over").textContent="Wrong — watch again";accepting=false;setTimeout(playback,700);}
+    }
+  }
+  pads.forEach(function(p){p.addEventListener("click",function(){guess(+this.dataset.k);});});
+  document.getElementById("start").addEventListener("click",function(){
+    seq=[];step=0;playing=true;document.getElementById("r").textContent=0;
+    setTimeout(next,400);
+  });
+  document.getElementById("strict").addEventListener("click",function(){
+    strict=!strict;this.textContent="Strict: "+(strict?"On":"Off");
+  });
+})();
+</script>
+</body>
+</html>

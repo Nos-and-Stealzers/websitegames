@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>Tic-Tac-Toe</title>
+<style>
+  :root{--bg:#0c0d10;--panel:#15171c;--line:#2a2c33;--ink:#e8eaed;--mut:#8a8f99;--acc:#f2b705;--blue:#4f8cff;--red:#ff5d73;}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;height:100%;}
+  body{background:var(--bg);color:var(--ink);font-family:ui-monospace,Menlo,Consolas,monospace;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100dvh;
+    gap:12px;padding:12px;user-select:none;}
+  .top{display:flex;gap:16px;width:min(340px,90vw);align-items:baseline;}
+  h1{font-size:24px;margin:0;letter-spacing:-1px;}
+  .sc{margin-left:auto;font-size:13px;color:var(--mut);}
+  .sc b{color:var(--acc);}
+  .board{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;width:min(340px,90vw);
+    background:var(--line);border:1px solid var(--line);}
+  .cell{aspect-ratio:1;background:var(--panel);display:grid;place-items:center;
+    font-size:56px;font-weight:700;cursor:pointer;transition:background .12s;}
+  .cell:hover{background:#1c1f26;}
+  .cell.x{color:var(--blue);}.cell.o{color:var(--red);}
+  .cell.win{background:rgba(242,183,5,.16);}
+  .over{color:var(--acc);font-weight:700;min-height:16px;text-align:center;}
+  .rowc{display:flex;gap:8px;width:min(340px,90vw);}
+  button{flex:1;background:#25272e;color:var(--ink);border:1px solid #35373f;padding:10px;font:inherit;cursor:pointer;}
+  button:hover{border-color:var(--acc);color:var(--acc);}
+  .hint{font-size:12px;color:var(--mut);text-align:center;}
+</style>
+</head>
+<body>
+  <div class="top"><h1>Tic-Tac-Toe</h1><div class="sc">you <b id="w1">0</b> &middot; cpu <b id="w2">0</b> &middot; draw <b id="wd">0</b></div></div>
+  <div class="board" id="b"></div>
+  <div class="over" id="over">Your move — you are X</div>
+  <div class="rowc"><button id="start">New game</button><button id="diff">Difficulty: Hard</button></div>
+  <div class="hint">Three in a row wins. CPU on Hard never loses.</div>
+<script>
+(function(){
+  "use strict";
+  var g,turn,over,w1=0,w2=0,wd=0,hard=true;
+  var bEl=document.getElementById("b");
+  var WINS=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+  document.getElementById("diff").textContent="Difficulty: Hard";
+
+  function build(){bEl.innerHTML="";for(var i=0;i<9;i++){var d=document.createElement("div");
+    d.className="cell";d.dataset.i=i;d.addEventListener("click",function(){play(+this.dataset.i);});bEl.appendChild(d);}}
+  function newGame(){g=[0,0,0,0,0,0,0,0,0];turn=1;over=false;build();
+    document.getElementById("over").textContent="Your move — you are X";}
+  function render(win){for(var i=0;i<9;i++){var el=bEl.children[i];
+    el.className="cell"+(g[i]===1?" x":g[i]===2?" o":"");el.textContent=g[i]===1?"X":g[i]===2?"O":"";}
+    if(win)win.forEach(function(i){bEl.children[i].classList.add("win");});}
+  function winner(b){for(var i=0;i<WINS.length;i++){var w=WINS[i];
+    if(b[w[0]]&&b[w[0]]===b[w[1]]&&b[w[1]]===b[w[2]])return{p:b[w[0]],line:w};}return null;}
+  function full(b){return b.every(function(v){return v;});}
+
+  function play(i){
+    if(over||g[i])return;
+    g[i]=1;var res=winner(g);render(res&&res.line);
+    if(res){finish(1,res.line);return;}
+    if(full(g)){finish(0);return;}
+    document.getElementById("over").textContent="CPU…";
+    setTimeout(function(){
+      var m=hard?bestMove():randMove();
+      g[m]=2;var r2=winner(g);render(r2&&r2.line);
+      if(r2){finish(2,r2.line);return;}
+      if(full(g)){finish(0);return;}
+      document.getElementById("over").textContent="Your move";
+    },200);
+  }
+  function finish(p,line){over=true;render(line);
+    if(p===1){w1++;document.getElementById("w1").textContent=w1;document.getElementById("over").textContent="You win! New game to replay";}
+    else if(p===2){w2++;document.getElementById("w2").textContent=w2;document.getElementById("over").textContent="CPU wins — New game";}
+    else{wd++;document.getElementById("wd").textContent=wd;document.getElementById("over").textContent="Draw";}}
+  function randMove(){var a=[];for(var i=0;i<9;i++)if(!g[i])a.push(i);return a[(Math.random()*a.length)|0];}
+  function minimax(b,player){
+    var w=winner(b);if(w)return w.p===2?{score:10}:{score:-10};
+    if(full(b))return{score:0};
+    var moves=[];
+    for(var i=0;i<9;i++)if(!b[i]){b[i]=player;
+      var r=minimax(b,player===2?1:2);moves.push({i:i,score:r.score});b[i]=0;}
+    var best;
+    if(player===2){var bs=-1e9;moves.forEach(function(m){if(m.score>bs){bs=m.score;best=m;}});}
+    else{var ws=1e9;moves.forEach(function(m){if(m.score<ws){ws=m.score;best=m;}});}
+    return best;
+  }
+  function bestMove(){return minimax(g.slice(),2).i;}
+  document.getElementById("start").addEventListener("click",newGame);
+  document.getElementById("diff").addEventListener("click",function(){
+    hard=!hard;this.textContent="Difficulty: "+(hard?"Hard":"Easy");newGame();});
+  newGame();
+})();
+</script>
+</body>
+</html>

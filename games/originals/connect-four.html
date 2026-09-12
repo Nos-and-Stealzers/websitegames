@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>Connect Four</title>
+<style>
+  :root{--bg:#0c0d10;--panel:#15171c;--line:#2a2c33;--ink:#e8eaed;--mut:#8a8f99;--acc:#f2b705;--blue:#4f8cff;--red:#ff5d73;}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;height:100%;}
+  body{background:var(--bg);color:var(--ink);font-family:ui-monospace,Menlo,Consolas,monospace;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100dvh;
+    gap:12px;padding:12px;user-select:none;}
+  .top{display:flex;gap:16px;width:min(420px,94vw);align-items:baseline;}
+  h1{font-size:24px;margin:0;letter-spacing:-1px;}
+  .sc{margin-left:auto;font-size:14px;color:var(--mut);}
+  .board{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;background:var(--panel);
+    border:1px solid var(--line);padding:8px;width:min(420px,94vw);}
+  .cell{aspect-ratio:1;border-radius:50%;background:#0c0d10;border:1px solid #2a2c33;cursor:pointer;
+    transition:transform .12s,background .18s;}
+  .cell:hover{border-color:var(--acc);}
+  .cell.p1{background:var(--blue);border-color:var(--blue);animation:drop .25s ease;}
+  .cell.p2{background:var(--red);border-color:var(--red);animation:drop .25s ease;}
+  .cell.win{outline:2px solid var(--acc);outline-offset:-3px;}
+  @keyframes drop{from{transform:translateY(-320px);}to{transform:translateY(0);}}
+  .over{color:var(--acc);font-weight:700;min-height:16px;text-align:center;}
+  .row{display:flex;gap:8px;width:min(420px,94vw);}
+  button{flex:1;background:#25272e;color:var(--ink);border:1px solid #35373f;padding:10px;font:inherit;cursor:pointer;}
+  button:hover{border-color:var(--acc);color:var(--acc);}
+  .hint{font-size:12px;color:var(--mut);text-align:center;}
+</style>
+</head>
+<body>
+  <div class="top"><h1>Connect Four</h1><div class="sc">you <b id="w1">0</b> &middot; cpu <b id="w2">0</b></div></div>
+  <div class="board" id="b"></div>
+  <div class="over" id="over">Your move — drop a blue disc</div>
+  <div class="row"><button id="start">New game</button><button id="diff">Difficulty: Normal</button></div>
+  <div class="hint">Click a column to drop. You are blue, CPU is red.</div>
+<script>
+(function(){
+  "use strict";
+  var R=6,C=7,grid,turn,lock,over,w1=0,w2=0;
+  var depths=[["Easy",1],["Normal",3],["Hard",5]],di=1;
+  var bEl=document.getElementById("b");
+  document.getElementById("diff").textContent="Difficulty: "+depths[di][0];
+
+  function build(){
+    bEl.innerHTML="";grid=[];
+    for(var r=0;r<R;r++){grid[r]=[];for(var c=0;c<C;c++){
+      grid[r][c]=0;
+      var d=document.createElement("div");d.className="cell";d.dataset.c=c;
+      d.addEventListener("click",function(){play(+this.dataset.c);});
+      bEl.appendChild(d);grid[r][c]=0;
+    }}
+  }
+  function cellEl(r,c){return bEl.children[r*C+c];}
+  function render(winCells){
+    for(var r=0;r<R;r++)for(var c=0;c<C;c++){
+      var el=cellEl(r,c);el.className="cell"+(grid[r][c]===1?" p1":grid[r][c]===2?" p2":"");
+    }
+    if(winCells)winCells.forEach(function(p){cellEl(p[0],p[1]).classList.add("win");});
+  }
+  function newGame(){build();turn=1;lock=false;over=false;render();document.getElementById("over").textContent="Your move — drop a blue disc";}
+  function drop(g,c,player){for(var r=R-1;r>=0;r--)if(!g[r][c]){g[r][c]=player;return r;}return -1;}
+
+  function play(c){
+    if(lock||over||grid[0][c])return;
+    drop(grid,c,1);render();
+    var res=check(grid);
+    if(res){finish(res);return;}
+    if(full(grid)){draw();return;}
+    lock=true;document.getElementById("over").textContent="CPU thinking…";
+    setTimeout(cpu,220);
+  }
+  function cpu(){
+    var c=best(grid,depths[di][1]);
+    drop(grid,c,2);render();
+    var res=check(grid);
+    lock=false;
+    if(res){finish(res);return;}
+    if(full(grid)){draw();return;}
+    document.getElementById("over").textContent="Your move";
+  }
+  function finish(res){
+    over=true;render(res.cells);
+    if(res.player===1){w1++;document.getElementById("w1").textContent=w1;document.getElementById("over").textContent="You win! Press New game";}
+    else{w2++;document.getElementById("w2").textContent=w2;document.getElementById("over").textContent="CPU wins — press New game";}
+  }
+  function draw(){over=true;document.getElementById("over").textContent="Draw — board full";}
+  function full(g){for(var c=0;c<C;c++)if(!g[0][c])return false;return true;}
+
+  function lines(g){
+    var out=[];
+    for(var r=0;r<R;r++)for(var c=0;c<C;c++){
+      [[0,1],[1,0],[1,1],[1,-1]].forEach(function(d){
+        var cells=[];for(var k=0;k<4;k++){var rr=r+d[0]*k,cc=c+d[1]*k;
+          if(rr<0||rr>=R||cc<0||cc>=C)return;cells.push([rr,cc]);}
+        if(cells.length===4)out.push(cells);
+      });
+    }
+    return out;
+  }
+  var ALL=null;
+  function check(g){
+    if(!ALL)ALL=lines(g);
+    for(var i=0;i<ALL.length;i++){var l=ALL[i],v=g[l[0][0]][l[0][1]];
+      if(v&&g[l[1][0]][l[1][1]]===v&&g[l[2][0]][l[2][1]]===v&&g[l[3][0]][l[3][1]]===v)
+        return{player:v,cells:l};}
+    return null;
+  }
+  // minimax with alpha-beta
+  function score(g){
+    var s=0;if(!ALL)ALL=lines(g);
+    for(var i=0;i<ALL.length;i++){var l=ALL[i],me=0,you=0;
+      for(var k=0;k<4;k++){var v=g[l[k][0]][l[k][1]];if(v===2)me++;else if(v===1)you++;}
+      if(me&&you)continue;
+      if(me===4)s+=100000;else if(you===4)s-=100000;
+      else if(me===3)s+=100;else if(you===3)s-=120;
+      else if(me===2)s+=10;else if(you===2)s-=12;
+    }
+    for(var r=0;r<R;r++)if(g[r][3]===2)s+=6;else if(g[r][3]===1)s-=6;
+    return s;
+  }
+  function cols(g){var o=[];[3,2,4,1,5,0,6].forEach(function(c){if(!g[0][c])o.push(c);});return o;}
+  function mm(g,depth,a,b,maxing){
+    var res=check(g);
+    if(res)return res.player===2?100000+depth:-100000-depth;
+    if(depth===0||full(g))return score(g);
+    var av=cols(g),i,r;
+    if(maxing){var best=-1e9;for(i=0;i<av.length;i++){var g2=clone(g);r=drop(g2,av[i],2);
+      best=Math.max(best,mm(g2,depth-1,a,b,false));a=Math.max(a,best);if(a>=b)break;}return best;}
+    else{var wo=1e9;for(i=0;i<av.length;i++){var g3=clone(g);drop(g3,av[i],1);
+      wo=Math.min(wo,mm(g3,depth-1,a,b,true));b=Math.min(b,wo);if(a>=b)break;}return wo;}
+  }
+  function clone(g){return g.map(function(r){return r.slice();});}
+  function best(g,depth){
+    var av=cols(g),bv=-1e9,bc=av[0];
+    for(var i=0;i<av.length;i++){var g2=clone(g);drop(g2,av[i],2);
+      var v=mm(g2,depth-1,-1e9,1e9,false);if(v>bv){bv=v;bc=av[i];}}
+    return bc;
+  }
+  document.getElementById("start").addEventListener("click",newGame);
+  document.getElementById("diff").addEventListener("click",function(){
+    di=(di+1)%depths.length;this.textContent="Difficulty: "+depths[di][0];newGame();
+  });
+  newGame();
+})();
+</script>
+</body>
+</html>

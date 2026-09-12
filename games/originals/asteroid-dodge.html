@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>Asteroid Dodge</title>
+<style>
+  :root{--bg:#0c0d10;--panel:#15171c;--line:#2a2c33;--ink:#e8eaed;--mut:#8a8f99;--acc:#f2b705;}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;height:100%;}
+  body{background:var(--bg);color:var(--ink);font-family:ui-monospace,Menlo,Consolas,monospace;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100dvh;
+    gap:12px;padding:12px;user-select:none;}
+  .top{display:flex;gap:16px;width:min(440px,94vw);align-items:baseline;}
+  h1{font-size:22px;margin:0;letter-spacing:-1px;}
+  .sc{margin-left:auto;font-size:15px;color:var(--mut);}
+  .sc b{color:var(--acc);}
+  canvas{background:var(--panel);border:1px solid var(--line);width:min(440px,94vw);height:auto;touch-action:none;}
+  .over{color:var(--acc);font-weight:700;min-height:16px;text-align:center;}
+  .row{display:flex;gap:8px;width:min(440px,94vw);}
+  button{flex:1;background:#25272e;color:var(--ink);border:1px solid #35373f;padding:10px;font:inherit;cursor:pointer;}
+  button:hover{border-color:var(--acc);color:var(--acc);}
+  .hint{font-size:12px;color:var(--mut);text-align:center;}
+</style>
+</head>
+<body>
+  <div class="top"><h1>Asteroid Dodge</h1><div class="sc">score <b id="s">0</b> &middot; best <b id="b">0</b></div></div>
+  <canvas id="c" width="440" height="560"></canvas>
+  <div class="over" id="over">Move to survive</div>
+  <div class="row"><button id="start">New game</button><button id="pause">Pause</button></div>
+  <div class="hint">Move mouse / drag / arrows &middot; dodge the rocks &middot; grab gold for points</div>
+<script>
+(function(){
+  "use strict";
+  var cv=document.getElementById("c"),ctx=cv.getContext("2d");
+  var W=cv.width,H=cv.height;
+  var ship,rocks,gems,score,best=+(localStorage.getItem("ododge.best")||0);
+  var running=false,dead=false,raf=null,tSpawn=0,gSpawn=0,speed,frames;
+  var keys={};
+  document.getElementById("b").textContent=best;
+
+  function reset(){
+    ship={x:W/2,y:H-56,r:12,vx:0};rocks=[];gems=[];score=0;speed=2.4;frames=0;
+    tSpawn=0;gSpawn=0;dead=false;
+    document.getElementById("s").textContent=0;document.getElementById("over").textContent="";
+    run();
+  }
+  function run(){running=true;document.getElementById("pause").textContent="Pause";
+    cancelAnimationFrame(raf);loop();}
+  function stop(){running=false;document.getElementById("pause").textContent="Resume";cancelAnimationFrame(raf);}
+
+  function spawnRock(){
+    var r=8+Math.random()*20;
+    rocks.push({x:r+Math.random()*(W-2*r),y:-r,r:r,vy:speed+Math.random()*speed,vx:(Math.random()-.5)*1.2});
+  }
+  function spawnGem(){gems.push({x:14+Math.random()*(W-28),y:-8,r:7,vy:speed*0.9});}
+
+  function loop(){
+    frames++;
+    // difficulty ramp
+    speed=2.4+frames/900;
+    if(keys.left)ship.vx-=0.8;if(keys.right)ship.vx+=0.8;
+    ship.vx*=0.86;ship.x+=ship.vx;
+    ship.x=Math.max(ship.r,Math.min(W-ship.r,ship.x));
+
+    if(++tSpawn>Math.max(16,42-frames/60)){tSpawn=0;spawnRock();}
+    if(++gSpawn>150){gSpawn=0;if(Math.random()<0.7)spawnGem();}
+
+    rocks.forEach(function(o){o.y+=o.vy;o.x+=o.vx;});
+    gems.forEach(function(o){o.y+=o.vy;});
+    rocks=rocks.filter(function(o){return o.y<H+o.r;});
+    gems=gems.filter(function(o){return o.y<H+o.r;});
+
+    // collisions
+    for(var i=0;i<rocks.length;i++){var o=rocks[i];
+      if(hit(ship,o)){die();return;}}
+    for(var j=gems.length-1;j>=0;j--){if(hit(ship,gems[j])){gems.splice(j,1);score+=15;}}
+
+    score++;
+    if(score%2===0)document.getElementById("s").textContent=score;
+    draw();
+    if(running)raf=requestAnimationFrame(loop);
+  }
+  function hit(a,b){var dx=a.x-b.x,dy=a.y-b.y;return Math.hypot(dx,dy)<a.r+b.r-2;}
+  function die(){
+    dead=true;stop();
+    if(score>best){best=score;localStorage.setItem("ododge.best",best);document.getElementById("b").textContent=best;}
+    document.getElementById("s").textContent=score;
+    document.getElementById("over").textContent="Crashed at "+score+" — press New game";
+    draw();
+  }
+  function draw(){
+    ctx.fillStyle="#15171c";ctx.fillRect(0,0,W,H);
+    // stars
+    ctx.fillStyle="#23262d";
+    for(var s=0;s<30;s++){var y=(frames*2+s*67)%H;ctx.fillRect((s*53)%W,y,2,2);}
+    // gems
+    gems.forEach(function(o){ctx.fillStyle="#f2b705";ctx.beginPath();
+      ctx.arc(o.x,o.y,o.r,0,7);ctx.fill();});
+    // rocks
+    ctx.fillStyle="#8a8f99";
+    rocks.forEach(function(o){ctx.beginPath();ctx.arc(o.x,o.y,o.r,0,7);ctx.fill();});
+    // ship
+    ctx.fillStyle=dead?"#ff5d73":"#4f8cff";
+    ctx.beginPath();ctx.moveTo(ship.x,ship.y-ship.r);
+    ctx.lineTo(ship.x-ship.r,ship.y+ship.r);ctx.lineTo(ship.x+ship.r,ship.y+ship.r);
+    ctx.closePath();ctx.fill();
+  }
+  function moveTo(clientX){var r=cv.getBoundingClientRect();
+    ship.x=Math.max(ship.r,Math.min(W-ship.r,(clientX-r.left)*(W/r.width)));ship.vx=0;}
+  cv.addEventListener("mousemove",function(e){if(!dead&&running)moveTo(e.clientX);});
+  cv.addEventListener("touchmove",function(e){if(!dead&&running){moveTo(e.touches[0].clientX);e.preventDefault();}},{passive:false});
+  document.addEventListener("keydown",function(e){var k=e.key.toLowerCase();
+    if(k==="arrowleft"||k==="a"){keys.left=1;e.preventDefault();}
+    else if(k==="arrowright"||k==="d"){keys.right=1;e.preventDefault();}
+    else if(k===" "){e.preventDefault();if(!dead)running?stop():run();}});
+  document.addEventListener("keyup",function(e){var k=e.key.toLowerCase();
+    if(k==="arrowleft"||k==="a")keys.left=0;if(k==="arrowright"||k==="d")keys.right=0;});
+  document.getElementById("start").addEventListener("click",reset);
+  document.getElementById("pause").addEventListener("click",function(){if(!dead)running?stop():run();});
+  reset();
+})();
+</script>
+</body>
+</html>

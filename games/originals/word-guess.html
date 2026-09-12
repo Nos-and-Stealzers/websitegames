@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>Word Guess</title>
+<style>
+  :root{--bg:#0c0d10;--panel:#15171c;--line:#2a2c33;--ink:#e8eaed;--mut:#8a8f99;--acc:#f2b705;
+    --good:#3fb950;--warn:#c9a227;--bad:#33363d;}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;height:100%;}
+  body{background:var(--bg);color:var(--ink);font-family:ui-monospace,Menlo,Consolas,monospace;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100dvh;
+    gap:12px;padding:12px;user-select:none;}
+  .top{display:flex;gap:16px;width:min(340px,92vw);align-items:baseline;}
+  h1{font-size:24px;margin:0;letter-spacing:-1px;}
+  .sc{margin-left:auto;font-size:13px;color:var(--mut);}
+  .sc b{color:var(--acc);}
+  .grid{display:grid;grid-template-rows:repeat(6,1fr);gap:5px;width:min(300px,80vw);}
+  .rw{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;}
+  .tl{aspect-ratio:1;display:grid;place-items:center;font-size:26px;font-weight:700;
+    border:1px solid var(--line);background:var(--panel);text-transform:uppercase;transition:transform .1s;}
+  .tl.cur{border-color:var(--mut);}
+  .tl.g{background:var(--good);border-color:var(--good);color:#0c0d10;}
+  .tl.y{background:var(--warn);border-color:var(--warn);color:#0c0d10;}
+  .tl.b{background:var(--bad);border-color:var(--bad);color:var(--mut);}
+  .tl.pop{transform:scale(1.08);}
+  .over{color:var(--acc);font-weight:700;min-height:16px;text-align:center;}
+  .kb{display:flex;flex-direction:column;gap:5px;width:min(360px,94vw);}
+  .kr{display:flex;gap:4px;justify-content:center;}
+  .key{flex:1;min-width:0;padding:11px 0;background:#25272e;color:var(--ink);border:1px solid #35373f;
+    font:inherit;font-size:13px;cursor:pointer;text-transform:uppercase;border-radius:4px;}
+  .key.wide{flex:1.6;font-size:11px;}
+  .key:hover{border-color:var(--acc);}
+  .key.g{background:var(--good);color:#0c0d10;border-color:var(--good);}
+  .key.y{background:var(--warn);color:#0c0d10;border-color:var(--warn);}
+  .key.b{background:var(--bad);color:var(--mut);}
+  .rowc{display:flex;gap:8px;width:min(300px,80vw);}
+  button.ctl{flex:1;background:#25272e;color:var(--ink);border:1px solid #35373f;padding:9px;font:inherit;cursor:pointer;}
+  button.ctl:hover{border-color:var(--acc);color:var(--acc);}
+</style>
+</head>
+<body>
+  <div class="top"><h1>Word Guess</h1><div class="sc">streak <b id="streak">0</b> &middot; won <b id="won">0</b></div></div>
+  <div class="grid" id="grid"></div>
+  <div class="over" id="over">Guess the 5-letter word</div>
+  <div class="kb" id="kb"></div>
+  <div class="rowc"><button class="ctl" id="new">New word</button></div>
+<script>
+(function(){
+  "use strict";
+  // Curated 5-letter answer list + a wider allowed-guess set.
+  var ANSWERS=("crane slate audio house plant games music brick chair table light night flame stone water world early money storm quiet grape lemon mango peach beach train plane sound track shine cloud earth ocean field green amber ivory coral pearl river forge blaze charm pixel arena score level bonus power blast quest sword shield magic robot laser ninja tiger eagle whale otter panda koala zebra moose bison camel sheep goose raven finch heron").split(" ");
+  var ALLOWED={};ANSWERS.forEach(function(w){ALLOWED[w]=1;});
+  ("about other which their there would these thing world could hello there apple berry candy dance eager fable gamer happy igloo jolly knife lodge merry noble olive proud query rusty tasty unity vivid wafer xenon yield zesty crisp drink fancy giant humor input joker knock lunar melon nerdy optic press quick rally songs total under vocal windy youth alarm blend cabin diner elbow").split(" ").forEach(function(w){if(w.length===5)ALLOWED[w]=1;});
+
+  var answer,row,col,grid,done,streak=0,won=0;
+  var gridEl=document.getElementById("grid"),kbEl=document.getElementById("kb"),overEl=document.getElementById("over");
+  var keyState={};
+
+  function build(){
+    gridEl.innerHTML="";grid=[];
+    for(var r=0;r<6;r++){var rw=document.createElement("div");rw.className="rw";var cells=[];
+      for(var c=0;c<5;c++){var t=document.createElement("div");t.className="tl";rw.appendChild(t);cells.push(t);}
+      gridEl.appendChild(rw);grid.push(cells);}
+  }
+  var LAY=["qwertyuiop","asdfghjkl","zxcvbnm"];
+  function buildKb(){
+    kbEl.innerHTML="";keyState={};
+    LAY.forEach(function(line,li){
+      var kr=document.createElement("div");kr.className="kr";
+      if(li===2){kr.appendChild(mkKey("enter","Enter",true));}
+      line.split("").forEach(function(ch){kr.appendChild(mkKey(ch,ch));});
+      if(li===2){kr.appendChild(mkKey("back","Del",true));}
+      kbEl.appendChild(kr);
+    });
+  }
+  function mkKey(k,label,wide){var b=document.createElement("button");
+    b.className="key"+(wide?" wide":"");b.textContent=label;b.dataset.k=k;
+    b.addEventListener("click",function(){press(k);});return b;}
+
+  function newWord(){
+    answer=ANSWERS[(Math.random()*ANSWERS.length)|0];
+    row=0;col=0;done=false;build();buildKb();overEl.textContent="Guess the 5-letter word";
+  }
+  function press(k){
+    if(done)return;
+    if(k==="enter")return submit();
+    if(k==="back"){if(col>0){col--;grid[row][col].textContent="";grid[row][col].classList.remove("cur");}return;}
+    if(!/^[a-z]$/.test(k)||col>=5)return;
+    var t=grid[row][col];t.textContent=k;t.classList.add("cur","pop");
+    setTimeout(function(){t.classList.remove("pop");},100);col++;
+  }
+  function submit(){
+    if(col<5){flash("Not enough letters");return;}
+    var guess="";for(var c=0;c<5;c++)guess+=grid[row][c].textContent;
+    if(!ALLOWED[guess]){flash("Not in word list");return;}
+    // score
+    var res=new Array(5).fill("b"),ans=answer.split(""),used=new Array(5).fill(false);
+    for(var i=0;i<5;i++){if(guess[i]===ans[i]){res[i]="g";used[i]=true;}}
+    for(i=0;i<5;i++){if(res[i]==="g")continue;
+      for(var j=0;j<5;j++){if(!used[j]&&guess[i]===ans[j]){res[i]="y";used[j]=true;break;}}}
+    for(i=0;i<5;i++){grid[row][i].className="tl "+res[i];markKey(guess[i],res[i]);}
+    if(guess===answer){done=true;streak++;won++;
+      document.getElementById("streak").textContent=streak;document.getElementById("won").textContent=won;
+      overEl.textContent="Correct! Press New word";return;}
+    row++;col=0;
+    if(row>=6){done=true;streak=0;document.getElementById("streak").textContent=0;
+      overEl.textContent="Out of tries — it was "+answer.toUpperCase();}
+  }
+  function markKey(ch,r){
+    var pr=keyState[ch];
+    if(pr==="g")return;if(pr==="y"&&r==="b")return;
+    keyState[ch]=r;
+    var b=kbEl.querySelector('[data-k="'+ch+'"]');if(b){b.classList.remove("g","y","b");b.classList.add(r);}
+  }
+  function flash(msg){overEl.textContent=msg;setTimeout(function(){if(!done)overEl.textContent="Guess the 5-letter word";},1200);}
+  document.addEventListener("keydown",function(e){
+    if(e.key==="Enter")press("enter");
+    else if(e.key==="Backspace")press("back");
+    else{var k=e.key.toLowerCase();if(/^[a-z]$/.test(k))press(k);}
+  });
+  document.getElementById("new").addEventListener("click",newWord);
+  newWord();
+})();
+</script>
+</body>
+</html>
