@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>Whack-a-Mole</title>
+<style>
+  html,body{margin:0;height:100%;background:#0c0d10;color:#e8eaed;
+    font-family:ui-monospace,Menlo,Consolas,monospace;}
+  body{display:flex;flex-direction:column;align-items:center;justify-content:center;
+    min-height:100dvh;gap:12px;padding:12px;user-select:none;-webkit-tap-highlight-color:transparent;}
+  .top{display:flex;gap:16px;width:min(440px,92vw);align-items:baseline;}
+  h1{font-size:26px;margin:0;letter-spacing:-1px;}
+  .sc{margin-left:auto;font-size:15px;color:#8a8f99;}
+  .sc b{color:#f2b705;}
+  .board{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;width:min(440px,92vw);aspect-ratio:1;}
+  .hole{background:#15171c;border:1px solid #2a2c33;border-radius:6px;position:relative;overflow:hidden;cursor:pointer;}
+  .mole{position:absolute;left:12%;right:12%;bottom:-100%;top:28%;background:#4f8cff;border-radius:40% 40% 30% 30%;
+    transition:bottom .12s ease,top .12s ease;display:grid;place-items:center;}
+  .mole.up{bottom:8%;}
+  .mole.bomb{background:#c02a3f;}
+  .mole::before,.mole::after{content:"";position:absolute;top:26%;width:14%;height:14%;background:#0c0d10;border-radius:50%;}
+  .mole::before{left:24%;} .mole::after{right:24%;}
+  .hole.hit .mole{transform:scale(.85);opacity:.6;}
+  .msg{min-height:16px;font-weight:700;}
+  .row{display:flex;gap:8px;width:min(440px,92vw);}
+  button{flex:1;background:#25272e;color:#e8eaed;border:1px solid #35373f;padding:10px;font:inherit;cursor:pointer;}
+  button:hover{border-color:#f2b705;color:#f2b705;}
+  .hint{font-size:12px;color:#8a8f99;text-align:center;}
+  .big{color:#f2b705;font-size:18px;}
+</style>
+</head>
+<body>
+  <div class="top"><h1>Whack-a-Mole</h1><div class="sc">score <b id="s">0</b> &middot; best <b id="b">0</b> &middot; <b id="time" class="big">30</b>s</div></div>
+  <div class="board" id="board"></div>
+  <div class="msg" id="msg">Hit the blue moles. Avoid the red bombs.</div>
+  <div class="row"><button id="start">Start</button></div>
+  <div class="hint">Click or tap the moles as they pop up. 30 seconds. Bombs cost you 3 points.</div>
+<script>
+(function(){
+  "use strict";
+  var boardEl=document.getElementById("board"),msg=document.getElementById("msg");
+  var holes=[],score=0,time=30,running=false,spawnT=null,tickT=null;
+  var best=+(localStorage.getItem("owhack.best")||0);
+  document.getElementById("b").textContent=best;
+
+  for(var i=0;i<9;i++){
+    var h=document.createElement("div");h.className="hole";
+    var m=document.createElement("div");m.className="mole";
+    h.appendChild(m);
+    (function(hole,mole){hole.addEventListener("click",function(){hit(hole,mole);});})(h,m);
+    boardEl.appendChild(h);holes.push({hole:h,mole:m,active:false,bomb:false});
+  }
+  function hit(hole,mole){
+    if(!running)return;
+    var o=holes[[].indexOf.call(boardEl.children,hole)];
+    if(!o.active)return;
+    if(o.bomb){score=Math.max(0,score-3);flash(hole,"#c02a3f");}
+    else{score++;hole.classList.add("hit");flash(hole,"#3fb950");}
+    document.getElementById("s").textContent=score;
+    o.active=false;o.mole.className="mole";
+    setTimeout(function(){hole.classList.remove("hit");},120);
+  }
+  function flash(hole,c){var old=hole.style.background;hole.style.background=c;
+    setTimeout(function(){hole.style.background=old;},110);}
+  function spawn(){
+    if(!running)return;
+    // pick a free hole
+    var free=holes.filter(function(o){return !o.active;});
+    if(free.length){
+      var o=free[(Math.random()*free.length)|0];
+      o.active=true;o.bomb=Math.random()<0.22;
+      o.mole.className="mole up"+(o.bomb?" bomb":"");
+      var life=Math.max(550,1100-(30-time)*22);
+      (function(oo){setTimeout(function(){if(oo.active){oo.active=false;oo.mole.className="mole";}},life);})(o);
+    }
+    var gap=Math.max(320,780-(30-time)*16);
+    spawnT=setTimeout(spawn,gap);
+  }
+  function start(){
+    if(running)return;
+    score=0;time=30;running=true;
+    document.getElementById("s").textContent=0;document.getElementById("time").textContent=30;
+    msg.textContent="Go!";holes.forEach(function(o){o.active=false;o.mole.className="mole";});
+    spawn();
+    tickT=setInterval(function(){
+      time--;document.getElementById("time").textContent=time;
+      if(time<=0)end();
+    },1000);
+  }
+  function end(){
+    running=false;clearInterval(tickT);clearTimeout(spawnT);
+    holes.forEach(function(o){o.active=false;o.mole.className="mole";});
+    if(score>best){best=score;localStorage.setItem("owhack.best",best);document.getElementById("b").textContent=best;
+      msg.textContent="New best: "+score+"!";}
+    else msg.textContent="Time! You scored "+score+".";
+  }
+  document.getElementById("start").addEventListener("click",start);
+})();
+</script>
+</body>
+</html>

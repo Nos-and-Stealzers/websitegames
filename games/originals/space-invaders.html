@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>Space Invaders</title>
+<style>
+  html,body{margin:0;height:100%;background:#0c0d10;color:#e8eaed;
+    font-family:ui-monospace,Menlo,Consolas,monospace;}
+  body{display:flex;flex-direction:column;align-items:center;justify-content:center;
+    min-height:100dvh;gap:12px;padding:12px;user-select:none;-webkit-tap-highlight-color:transparent;}
+  .top{display:flex;gap:16px;width:min(460px,94vw);align-items:baseline;}
+  h1{font-size:26px;margin:0;letter-spacing:-1px;}
+  .sc{margin-left:auto;font-size:15px;color:#8a8f99;}
+  .sc b{color:#f2b705;}
+  canvas{background:#15171c;border:1px solid #2a2c33;width:min(460px,94vw);height:auto;touch-action:none;}
+  .row{display:flex;gap:8px;width:min(460px,94vw);}
+  button{flex:1;background:#25272e;color:#e8eaed;border:1px solid #35373f;padding:10px;font:inherit;cursor:pointer;}
+  button:hover{border-color:#f2b705;color:#f2b705;}
+  .hint{font-size:12px;color:#8a8f99;text-align:center;}
+  .over{color:#c02a3f;font-weight:700;min-height:16px;}
+</style>
+</head>
+<body>
+  <div class="top"><h1>Space Invaders</h1><div class="sc">score <b id="s">0</b> &middot; best <b id="b">0</b> &middot; wave <b id="w">1</b></div></div>
+  <canvas id="c" width="440" height="520"></canvas>
+  <div class="over" id="over"></div>
+  <div class="row"><button id="start">New game</button><button id="pause">Pause</button></div>
+  <div class="hint">Arrows / A D to move &middot; Space to fire &middot; drag &amp; tap on touch</div>
+<script>
+(function(){
+  "use strict";
+  var cv=document.getElementById("c"),ctx=cv.getContext("2d");
+  var W=cv.width,H=cv.height;
+  var best=+(localStorage.getItem("oinvaders.best")||0);
+  document.getElementById("b").textContent=best;
+  var ship,bullets,enemies,ebullets,dir,score,wave,running,dead,timer,tick=0,shootCd=0;
+  var keys={};
+
+  function makeWave(){
+    enemies=[];
+    var cols=8,rows=4;
+    for(var r=0;r<rows;r++)for(var col=0;col<cols;col++){
+      enemies.push({x:40+col*46,y:50+r*38,w:28,h:20,alive:true,row:r});
+    }
+    dir=1;
+  }
+  function reset(){
+    ship={x:W/2-18,y:H-34,w:36,h:16,cd:0};
+    bullets=[];ebullets=[];score=0;wave=1;dead=false;shootCd=0;
+    document.getElementById("s").textContent=0;
+    document.getElementById("w").textContent=1;
+    document.getElementById("over").textContent="";
+    makeWave();run();
+  }
+  function run(){running=true;document.getElementById("pause").textContent="Pause";
+    clearInterval(timer);timer=setInterval(step,1000/60);}
+  function stop(){running=false;document.getElementById("pause").textContent="Resume";clearInterval(timer);}
+
+  function fire(){
+    if(shootCd>0||dead)return;
+    bullets.push({x:ship.x+ship.w/2-2,y:ship.y-8,w:4,h:10});
+    shootCd=16;
+  }
+  function step(){
+    tick++;if(shootCd>0)shootCd--;
+    // ship move
+    var sp=4;
+    if(keys.left)ship.x-=sp;if(keys.right)ship.x+=sp;
+    if(ship.x<0)ship.x=0;if(ship.x>W-ship.w)ship.x=W-ship.w;
+    // enemy move
+    var speed=0.4+wave*0.12+(1-aliveFrac())*1.6;
+    var edge=false,minX=1e9,maxX=-1e9,maxY=0;
+    enemies.forEach(function(e){if(!e.alive)return;e.x+=dir*speed;
+      if(e.x<minX)minX=e.x;if(e.x+e.w>maxX)maxX=e.x+e.w;if(e.y+e.h>maxY)maxY=e.y+e.h;});
+    if(minX<=6||maxX>=W-6){dir*=-1;enemies.forEach(function(e){e.y+=16;});}
+    if(maxY>=ship.y){endGame();return;}
+    // enemy fire
+    if(tick%Math.max(18,55-wave*4)===0){
+      var shooters=enemies.filter(function(e){return e.alive;});
+      if(shooters.length){var sh=shooters[(Math.random()*shooters.length)|0];
+        ebullets.push({x:sh.x+sh.w/2-2,y:sh.y+sh.h,w:4,h:10});}
+    }
+    // bullets up
+    bullets.forEach(function(b){b.y-=8;});
+    bullets=bullets.filter(function(b){return b.y>-12;});
+    ebullets.forEach(function(b){b.y+=5;});
+    ebullets=ebullets.filter(function(b){return b.y<H+12;});
+    // collisions bullet vs enemy
+    bullets.forEach(function(b){
+      enemies.forEach(function(e){
+        if(e.alive&&hit(b,e)){e.alive=false;b.y=-99;
+          score+=(4-e.row)*10;document.getElementById("s").textContent=score;}
+      });
+    });
+    bullets=bullets.filter(function(b){return b.y>-12;});
+    // ebullet vs ship
+    for(var i=0;i<ebullets.length;i++){if(hit(ebullets[i],ship)){endGame();return;}}
+    // wave clear
+    if(aliveFrac()===0){wave++;document.getElementById("w").textContent=wave;
+      makeWave();bullets=[];ebullets=[];score+=50;document.getElementById("s").textContent=score;}
+    draw();
+  }
+  function aliveFrac(){var a=0,t=0;enemies.forEach(function(e){t++;if(e.alive)a++;});return t?a/t:0;}
+  function hit(a,b){return a.x<b.x+b.w&&a.x+a.w>b.x&&a.y<b.y+b.h&&a.y+a.h>b.y;}
+  function endGame(){dead=true;stop();
+    if(score>best){best=score;localStorage.setItem("oinvaders.best",best);document.getElementById("b").textContent=best;}
+    document.getElementById("over").textContent="Game over \u2014 press New game";draw();}
+  function draw(){
+    ctx.fillStyle="#15171c";ctx.fillRect(0,0,W,H);
+    // enemies
+    enemies.forEach(function(e){if(!e.alive)return;
+      ctx.fillStyle=e.row===0?"#c02a3f":e.row===1?"#f2b705":"#4f8cff";
+      ctx.fillRect(e.x,e.y,e.w,e.h);
+      ctx.fillStyle="#15171c";ctx.fillRect(e.x+6,e.y+6,4,4);ctx.fillRect(e.x+e.w-10,e.y+6,4,4);});
+    // ship
+    ctx.fillStyle="#3fb950";ctx.fillRect(ship.x,ship.y,ship.w,ship.h);
+    ctx.fillRect(ship.x+ship.w/2-3,ship.y-6,6,6);
+    // bullets
+    ctx.fillStyle="#e8eaed";bullets.forEach(function(b){ctx.fillRect(b.x,b.y,b.w,b.h);});
+    ctx.fillStyle="#f78166";ebullets.forEach(function(b){ctx.fillRect(b.x,b.y,b.w,b.h);});
+  }
+  document.addEventListener("keydown",function(e){
+    var k=e.key.toLowerCase();
+    if(k==="arrowleft"||k==="a"){keys.left=true;e.preventDefault();}
+    else if(k==="arrowright"||k==="d"){keys.right=true;e.preventDefault();}
+    else if(k===" "){fire();e.preventDefault();}
+    else if(k==="p"){if(!dead)running?stop():run();}
+  });
+  document.addEventListener("keyup",function(e){
+    var k=e.key.toLowerCase();
+    if(k==="arrowleft"||k==="a")keys.left=false;
+    else if(k==="arrowright"||k==="d")keys.right=false;
+  });
+  // touch: drag to move, tap to fire
+  var dragging=false;
+  cv.addEventListener("touchstart",function(e){dragging=true;moveTo(e.touches[0]);fire();e.preventDefault();},{passive:false});
+  cv.addEventListener("touchmove",function(e){if(dragging)moveTo(e.touches[0]);e.preventDefault();},{passive:false});
+  cv.addEventListener("touchend",function(){dragging=false;});
+  function moveTo(t){var r=cv.getBoundingClientRect();var x=(t.clientX-r.left)*(W/r.width);ship.x=x-ship.w/2;
+    if(ship.x<0)ship.x=0;if(ship.x>W-ship.w)ship.x=W-ship.w;}
+  document.getElementById("start").addEventListener("click",reset);
+  document.getElementById("pause").addEventListener("click",function(){if(!dead)running?stop():run();});
+  reset();
+})();
+</script>
+</body>
+</html>

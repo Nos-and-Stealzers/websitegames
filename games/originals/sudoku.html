@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>Sudoku</title>
+<style>
+  html,body{margin:0;height:100%;background:#0c0d10;color:#e8eaed;
+    font-family:ui-monospace,Menlo,Consolas,monospace;}
+  body{display:flex;flex-direction:column;align-items:center;justify-content:center;
+    min-height:100dvh;gap:12px;padding:12px;user-select:none;-webkit-tap-highlight-color:transparent;}
+  .top{display:flex;gap:16px;width:min(460px,94vw);align-items:baseline;}
+  h1{font-size:26px;margin:0;letter-spacing:-1px;}
+  .sc{margin-left:auto;font-size:14px;color:#8a8f99;}
+  .sc b{color:#f2b705;}
+  .board{display:grid;grid-template-columns:repeat(9,1fr);width:min(460px,94vw);aspect-ratio:1;
+    border:2px solid #4a4d57;background:#2a2c33;gap:1px;}
+  .cell{background:#15171c;display:grid;place-items:center;font-size:min(5vw,22px);cursor:pointer;
+    aspect-ratio:1;color:#4f8cff;}
+  .cell.fixed{color:#e8eaed;cursor:default;}
+  .cell.sel{background:#2b3550;}
+  .cell.peer{background:#1c1f27;}
+  .cell.bad{color:#c02a3f;}
+  .cell.br{border-right:2px solid #4a4d57;}
+  .cell.bb{border-bottom:2px solid #4a4d57;}
+  .pad{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;width:min(460px,94vw);}
+  .pad button{background:#25272e;color:#e8eaed;border:1px solid #35373f;padding:12px 0;font:inherit;cursor:pointer;font-size:18px;}
+  .pad button:hover{border-color:#f2b705;color:#f2b705;}
+  .row{display:flex;gap:8px;width:min(460px,94vw);}
+  .row button{flex:1;background:#25272e;color:#e8eaed;border:1px solid #35373f;padding:10px;font:inherit;cursor:pointer;}
+  .row button:hover{border-color:#f2b705;color:#f2b705;}
+  .msg{min-height:16px;font-weight:700;}
+  .msg.win{color:#3fb950;} .msg.err{color:#c02a3f;}
+  .hint{font-size:12px;color:#8a8f99;}
+</style>
+</head>
+<body>
+  <div class="top"><h1>Sudoku</h1><div class="sc"><span id="diff">easy</span> &middot; mistakes <b id="mist">0</b></div></div>
+  <div class="board" id="board"></div>
+  <div class="msg" id="msg"></div>
+  <div class="pad" id="pad"></div>
+  <div class="row"><button id="new">New puzzle</button><button id="diffbtn">Difficulty: easy</button><button id="erase">Erase</button></div>
+  <div class="hint">Tap a cell, then a number. Arrow keys move &middot; 1-9 to fill &middot; 0/Backspace clears</div>
+<script>
+(function(){
+  "use strict";
+  var boardEl=document.getElementById("board"),padEl=document.getElementById("pad"),msg=document.getElementById("msg");
+  var solution,puzzle,given,sel=-1,mistakes=0;
+  var diffs=["easy","medium","hard"],di=0,holes={easy:40,medium:50,hard:56};
+
+  function shuffle(a){for(var i=a.length-1;i>0;i--){var j=(Math.random()*(i+1))|0;var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+  function genSolved(){
+    var g=new Array(81).fill(0);
+    function ok(p,v){var r=(p/9)|0,c=p%9,br=r-r%3,bc=c-c%3;
+      for(var i=0;i<9;i++){if(g[r*9+i]===v||g[i*9+c]===v)return false;}
+      for(var y=0;y<3;y++)for(var x=0;x<3;x++)if(g[(br+y)*9+(bc+x)]===v)return false;
+      return true;}
+    function solve(p){
+      if(p===81)return true;
+      if(g[p]!==0)return solve(p+1);
+      var nums=shuffle([1,2,3,4,5,6,7,8,9]);
+      for(var i=0;i<9;i++){if(ok(p,nums[i])){g[p]=nums[i];if(solve(p+1))return true;g[p]=0;}}
+      return false;
+    }
+    solve(0);return g;
+  }
+  function newGame(){
+    solution=genSolved();
+    puzzle=solution.slice();given=new Array(81).fill(true);
+    var order=shuffle([...Array(81).keys()]);var removed=0,target=holes[diffs[di]];
+    for(var i=0;i<order.length&&removed<target;i++){puzzle[order[i]]=0;given[order[i]]=false;removed++;}
+    mistakes=0;sel=-1;document.getElementById("mist").textContent=0;
+    msg.textContent="";msg.className="msg";
+    render();
+  }
+  function render(){
+    boardEl.innerHTML="";
+    for(var p=0;p<81;p++){
+      var d=document.createElement("div");d.className="cell";
+      var r=(p/9)|0,c=p%9;
+      if(c===2||c===5)d.className+=" br";
+      if(r===2||r===5)d.className+=" bb";
+      if(given[p])d.className+=" fixed";
+      if(p===sel)d.className+=" sel";
+      else if(sel>=0&&isPeer(p,sel))d.className+=" peer";
+      if(puzzle[p]!==0){d.textContent=puzzle[p];
+        if(!given[p]&&puzzle[p]!==solution[p])d.className+=" bad";}
+      (function(pp){d.addEventListener("click",function(){if(!given[pp]){sel=pp;render();}});})(p);
+      boardEl.appendChild(d);
+    }
+  }
+  function isPeer(a,b){var ra=(a/9)|0,ca=a%9,rb=(b/9)|0,cb=b%9;
+    return ra===rb||ca===cb||((ra/3|0)===(rb/3|0)&&(ca/3|0)===(cb/3|0));}
+  function place(v){
+    if(sel<0||given[sel])return;
+    if(v!==0&&v!==solution[sel]){mistakes++;document.getElementById("mist").textContent=mistakes;}
+    puzzle[sel]=v;render();checkWin();
+  }
+  function checkWin(){
+    for(var i=0;i<81;i++)if(puzzle[i]!==solution[i])return;
+    msg.textContent="Solved! "+mistakes+" mistake"+(mistakes===1?"":"s")+".";msg.className="msg win";
+  }
+  // number pad
+  for(var n=1;n<=9;n++){(function(v){var b=document.createElement("button");b.textContent=v;
+    b.addEventListener("click",function(){place(v);});padEl.appendChild(b);})(n);}
+  document.getElementById("erase").addEventListener("click",function(){place(0);});
+  document.getElementById("new").addEventListener("click",newGame);
+  document.getElementById("diffbtn").addEventListener("click",function(){
+    di=(di+1)%3;this.textContent="Difficulty: "+diffs[di];document.getElementById("diff").textContent=diffs[di];newGame();});
+  document.addEventListener("keydown",function(e){
+    if(e.key>="1"&&e.key<="9"){place(+e.key);e.preventDefault();}
+    else if(e.key==="0"||e.key==="Backspace"||e.key==="Delete"){place(0);e.preventDefault();}
+    else if(sel>=0){var r=(sel/9)|0,c=sel%9;
+      if(e.key==="ArrowUp"&&r>0){sel-=9;render();e.preventDefault();}
+      else if(e.key==="ArrowDown"&&r<8){sel+=9;render();e.preventDefault();}
+      else if(e.key==="ArrowLeft"&&c>0){sel-=1;render();e.preventDefault();}
+      else if(e.key==="ArrowRight"&&c<8){sel+=1;render();e.preventDefault();}}
+  });
+  newGame();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>Typing Sprint</title>
+<style>
+  html,body{margin:0;height:100%;background:#0c0d10;color:#e8eaed;
+    font-family:ui-monospace,Menlo,Consolas,monospace;}
+  body{display:flex;flex-direction:column;align-items:center;justify-content:center;
+    min-height:100dvh;gap:14px;padding:12px;-webkit-tap-highlight-color:transparent;}
+  .top{display:flex;gap:16px;width:min(560px,94vw);align-items:baseline;}
+  h1{font-size:26px;margin:0;letter-spacing:-1px;}
+  .sc{margin-left:auto;font-size:15px;color:#8a8f99;}
+  .sc b{color:#f2b705;}
+  .quote{width:min(560px,94vw);font-size:20px;line-height:1.7;background:#15171c;border:1px solid #2a2c33;padding:18px;
+    min-height:96px;letter-spacing:.3px;}
+  .quote span.done{color:#3fb950;}
+  .quote span.cur{background:#4f8cff;color:#0c0d10;border-radius:2px;}
+  .quote span.bad{background:#c02a3f;color:#fff;border-radius:2px;}
+  input{width:min(560px,94vw);background:#15171c;border:1px solid #35373f;color:#e8eaed;padding:12px;font:inherit;font-size:18px;box-sizing:border-box;}
+  input:focus{outline:none;border-color:#f2b705;}
+  .row{display:flex;gap:8px;width:min(560px,94vw);}
+  button{flex:1;background:#25272e;color:#e8eaed;border:1px solid #35373f;padding:10px;font:inherit;cursor:pointer;}
+  button:hover{border-color:#f2b705;color:#f2b705;}
+  .hint{font-size:12px;color:#8a8f99;text-align:center;}
+  .big{font-size:15px;}
+</style>
+</head>
+<body>
+  <div class="top"><h1>Typing Sprint</h1><div class="sc big">wpm <b id="wpm">0</b> &middot; acc <b id="acc">100%</b> &middot; best <b id="best">0</b></div></div>
+  <div class="quote" id="quote">Click Start and type the text as fast and accurately as you can.</div>
+  <input id="inp" placeholder="Start typing here..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" disabled>
+  <div class="row"><button id="start">Start</button><button id="next">New text</button></div>
+  <div class="hint">Timer starts on your first keystroke. Backspace to fix mistakes.</div>
+<script>
+(function(){
+  "use strict";
+  var quotes=[
+    "The quick brown fox jumps over the lazy dog while the sun sets slowly.",
+    "Practice does not make perfect, only perfect practice makes perfect.",
+    "A journey of a thousand miles begins with a single careful step forward.",
+    "Code is read far more often than it is written, so keep it clear.",
+    "Every great arcade run starts with one more try and a steady hand.",
+    "Simple is better than clever when someone else has to read it later.",
+    "The best time to plant a tree was twenty years ago, the second best is now.",
+    "Type without looking down and let your fingers learn the whole board.",
+    "Small daily improvements are the key to staggering long term results.",
+    "Focus on the word in front of you, not the whole wall of text ahead."
+  ];
+  var qEl=document.getElementById("quote"),inp=document.getElementById("inp");
+  var text="",started=false,t0=0,timer=null;
+  var best=+(localStorage.getItem("otype.best")||0);
+  document.getElementById("best").textContent=best;
+
+  function load(){
+    text=quotes[(Math.random()*quotes.length)|0];
+    render(0,-1);inp.value="";started=false;clearInterval(timer);
+    document.getElementById("wpm").textContent=0;document.getElementById("acc").textContent="100%";
+  }
+  function render(pos,badAt){
+    var h="";
+    for(var i=0;i<text.length;i++){
+      var ch=text[i]===" "?"\u00a0":escape(text[i]);
+      if(i<pos)h+='<span class="done">'+ch+'</span>';
+      else if(i===pos)h+='<span class="'+(badAt===i?"bad":"cur")+'">'+ch+'</span>';
+      else h+='<span>'+ch+'</span>';
+    }
+    qEl.innerHTML=h;
+  }
+  function escape(c){return c==="<"?"&lt;":c===">"?"&gt;":c==="&"?"&amp;":c;}
+  function begin(){
+    load();inp.disabled=false;inp.focus();
+  }
+  inp.addEventListener("input",function(){
+    var v=inp.value;
+    if(!started&&v.length>0){started=true;t0=performance.now();
+      timer=setInterval(updateWpm,300);}
+    var pos=v.length,bad=-1;
+    for(var i=0;i<v.length;i++){if(v[i]!==text[i]){bad=i;pos=i;break;}}
+    render(bad>=0?bad:v.length,bad);
+    updateAcc(v);
+    if(v===text){finish();}
+  });
+  function updateWpm(){
+    var mins=(performance.now()-t0)/60000;
+    var chars=inp.value.length;
+    var wpm=mins>0?Math.round((chars/5)/mins):0;
+    document.getElementById("wpm").textContent=wpm;
+  }
+  var totalKeys=0,errKeys=0,lastLen=0;
+  function updateAcc(v){
+    if(v.length>lastLen){totalKeys++;var i=v.length-1;if(v[i]!==text[i])errKeys++;}
+    lastLen=v.length;
+    var acc=totalKeys?Math.round((totalKeys-errKeys)/totalKeys*100):100;
+    document.getElementById("acc").textContent=acc+"%";
+  }
+  function finish(){
+    clearInterval(timer);updateWpm();inp.disabled=true;
+    var wpm=+document.getElementById("wpm").textContent;
+    if(wpm>best){best=wpm;localStorage.setItem("otype.best",best);document.getElementById("best").textContent=best;}
+    qEl.innerHTML='<span class="done">Done! '+wpm+' wpm at '+document.getElementById("acc").textContent+' accuracy. Press New text.</span>';
+    totalKeys=0;errKeys=0;lastLen=0;
+  }
+  document.getElementById("start").addEventListener("click",begin);
+  document.getElementById("next").addEventListener("click",function(){totalKeys=0;errKeys=0;lastLen=0;begin();});
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>Lights Out</title>
+<style>
+  html,body{margin:0;height:100%;background:#0c0d10;color:#e8eaed;
+    font-family:ui-monospace,Menlo,Consolas,monospace;}
+  body{display:flex;flex-direction:column;align-items:center;justify-content:center;
+    min-height:100dvh;gap:12px;padding:12px;user-select:none;-webkit-tap-highlight-color:transparent;}
+  .top{display:flex;gap:16px;width:min(400px,90vw);align-items:baseline;}
+  h1{font-size:26px;margin:0;letter-spacing:-1px;}
+  .sc{margin-left:auto;font-size:15px;color:#8a8f99;}
+  .sc b{color:#f2b705;}
+  .board{display:grid;gap:8px;width:min(400px,90vw);aspect-ratio:1;}
+  .cell{background:#1c1f27;border:1px solid #2a2c33;cursor:pointer;border-radius:2px;transition:background .1s,box-shadow .1s;}
+  .cell.on{background:#f2b705;border-color:#f2b705;box-shadow:0 0 14px rgba(242,183,5,.45);}
+  .msg{min-height:16px;font-weight:700;}
+  .msg.win{color:#3fb950;}
+  .row{display:flex;gap:8px;width:min(400px,90vw);}
+  button{flex:1;background:#25272e;color:#e8eaed;border:1px solid #35373f;padding:10px;font:inherit;cursor:pointer;}
+  button:hover{border-color:#f2b705;color:#f2b705;}
+  .hint{font-size:12px;color:#8a8f99;text-align:center;}
+</style>
+</head>
+<body>
+  <div class="top"><h1>Lights Out</h1><div class="sc">moves <b id="moves">0</b> &middot; best <b id="best">—</b></div></div>
+  <div class="board" id="board"></div>
+  <div class="msg" id="msg"></div>
+  <div class="row"><button id="new">New board</button><button id="size">Size: 5×5</button></div>
+  <div class="hint">Click a light to toggle it and its neighbours. Turn them all off.</div>
+<script>
+(function(){
+  "use strict";
+  var boardEl=document.getElementById("board"),msg=document.getElementById("msg");
+  var N=5,grid,moves,solved;
+  var best=JSON.parse(localStorage.getItem("olights.best")||"{}");
+
+  function idx(r,c){return r*N+c;}
+  function toggle(r,c){if(r<0||c<0||r>=N||c>=N)return;grid[idx(r,c)]=!grid[idx(r,c)];}
+  function press(r,c){
+    if(solved)return;
+    toggle(r,c);toggle(r-1,c);toggle(r+1,c);toggle(r,c-1);toggle(r,c+1);
+    moves++;document.getElementById("moves").textContent=moves;render();check();
+  }
+  function scramble(){
+    grid=new Array(N*N).fill(false);
+    // apply random presses so the board is always solvable
+    var k=N*N;
+    for(var i=0;i<k;i++){var r=(Math.random()*N)|0,c=(Math.random()*N)|0;
+      toggle(r,c);toggle(r-1,c);toggle(r+1,c);toggle(r,c-1);toggle(r,c+1);}
+    if(grid.every(function(v){return !v;}))return scramble(); // avoid pre-solved
+    moves=0;solved=false;document.getElementById("moves").textContent=0;msg.textContent="";msg.className="msg";
+    var b=best[N];document.getElementById("best").textContent=b?b+" moves":"—";
+    render();
+  }
+  function render(){
+    boardEl.style.gridTemplateColumns="repeat("+N+",1fr)";
+    boardEl.innerHTML="";
+    for(var r=0;r<N;r++)for(var c=0;c<N;c++){
+      var d=document.createElement("div");d.className="cell"+(grid[idx(r,c)]?" on":"");
+      (function(rr,cc){d.addEventListener("click",function(){press(rr,cc);});})(r,c);
+      boardEl.appendChild(d);
+    }
+  }
+  function check(){
+    if(grid.every(function(v){return !v;})){
+      solved=true;msg.textContent="Cleared in "+moves+" moves!";msg.className="msg win";
+      if(!best[N]||moves<best[N]){best[N]=moves;localStorage.setItem("olights.best",JSON.stringify(best));
+        document.getElementById("best").textContent=moves+" moves";}
+    }
+  }
+  document.getElementById("new").addEventListener("click",scramble);
+  document.getElementById("size").addEventListener("click",function(){
+    N=N===5?4:N===4?6:5;this.textContent="Size: "+N+"×"+N;scramble();});
+  scramble();
+})();
+</script>
+</body>
+</html>

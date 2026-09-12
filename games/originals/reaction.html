@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>Reaction Test</title>
+<style>
+  html,body{margin:0;height:100%;background:#0c0d10;color:#e8eaed;
+    font-family:ui-monospace,Menlo,Consolas,monospace;}
+  body{display:flex;flex-direction:column;align-items:center;justify-content:center;
+    min-height:100dvh;gap:12px;padding:12px;user-select:none;-webkit-tap-highlight-color:transparent;}
+  .top{display:flex;gap:16px;width:min(460px,94vw);align-items:baseline;}
+  h1{font-size:26px;margin:0;letter-spacing:-1px;}
+  .sc{margin-left:auto;font-size:15px;color:#8a8f99;}
+  .sc b{color:#f2b705;}
+  .pad{width:min(460px,94vw);height:min(340px,55vh);border:1px solid #2a2c33;display:grid;place-items:center;
+    text-align:center;cursor:pointer;background:#15171c;font-size:20px;transition:background .05s;}
+  .pad.wait{background:#7c2d12;}
+  .pad.go{background:#0b3d1e;}
+  .pad.early{background:#3a1a1e;}
+  .big{font-size:44px;font-weight:700;letter-spacing:-1px;}
+  .sub{font-size:14px;color:#c9ccd4;margin-top:6px;}
+  .row{display:flex;gap:8px;width:min(460px,94vw);}
+  button{flex:1;background:#25272e;color:#e8eaed;border:1px solid #35373f;padding:10px;font:inherit;cursor:pointer;}
+  button:hover{border-color:#f2b705;color:#f2b705;}
+  .hint{font-size:12px;color:#8a8f99;text-align:center;}
+</style>
+</head>
+<body>
+  <div class="top"><h1>Reaction</h1><div class="sc">best <b id="best">—</b> &middot; avg <b id="avg">—</b></div></div>
+  <div class="pad" id="pad"><div><div class="big" id="big">Click to start</div><div class="sub" id="sub">Wait for green, then click as fast as you can</div></div></div>
+  <div class="row"><button id="reset">Reset stats</button></div>
+  <div class="hint">Space or click / tap &middot; five tries make an average</div>
+<script>
+(function(){
+  "use strict";
+  var pad=document.getElementById("pad"),big=document.getElementById("big"),sub=document.getElementById("sub");
+  var state="idle",t0=0,to=null,times=[];
+  var best=+(localStorage.getItem("oreact.best")||0);
+  if(best)document.getElementById("best").textContent=best+" ms";
+
+  function arm(){
+    state="wait";pad.className="pad wait";big.textContent="Wait...";sub.textContent="Green means go";
+    var delay=900+Math.random()*2600;
+    to=setTimeout(function(){state="go";pad.className="pad go";big.textContent="CLICK!";sub.textContent="";t0=performance.now();},delay);
+  }
+  function press(){
+    if(state==="idle"||state==="done"){times.length&&times.length>=5&&(times=[]);arm();return;}
+    if(state==="wait"){clearTimeout(to);state="early";pad.className="pad early";
+      big.textContent="Too early!";sub.textContent="Click to try again";state="done";return;}
+    if(state==="go"){
+      var ms=Math.round(performance.now()-t0);
+      times.push(ms);state="done";pad.className="pad";
+      big.textContent=ms+" ms";
+      if(!best||ms<best){best=ms;localStorage.setItem("oreact.best",best);document.getElementById("best").textContent=best+" ms";}
+      var avg=Math.round(times.reduce(function(a,b){return a+b;},0)/times.length);
+      document.getElementById("avg").textContent=avg+" ms ("+times.length+")";
+      sub.textContent=rate(ms)+" \u2014 click to go again"+(times.length>=5?" (avg reset)":"");
+    }
+  }
+  function rate(ms){return ms<180?"Superhuman":ms<230?"Excellent":ms<300?"Good":ms<380?"Average":"Keep trying";}
+  pad.addEventListener("click",press);
+  document.addEventListener("keydown",function(e){if(e.key===" "){press();e.preventDefault();}});
+  document.getElementById("reset").addEventListener("click",function(){
+    times=[];best=0;localStorage.removeItem("oreact.best");
+    document.getElementById("best").textContent="—";document.getElementById("avg").textContent="—";
+    state="idle";pad.className="pad";big.textContent="Click to start";sub.textContent="Wait for green, then click as fast as you can";});
+})();
+</script>
+</body>
+</html>
