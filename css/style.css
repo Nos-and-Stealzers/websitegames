@@ -597,6 +597,16 @@ select { cursor: pointer; }
   background: var(--surface);
   isolation: isolate;
 }
+/* Cards settle in with a short fade + upward drift, staggered by their grid
+   position (--i, set at render time). fill-mode backwards holds the start
+   frame during the delay so there is no flash of finished cards first. Under
+   lite mode animation is force-disabled and cards simply appear — the final
+   frame is the natural style, so nothing is ever left invisible. */
+@keyframes tile-in { from { opacity: 0; transform: translateY(9px); } }
+.grid .tile, .grid-sm .tile, .strip .tile {
+  animation: tile-in 0.34s ease backwards;
+  animation-delay: calc(min(var(--i, 0), 24) * 22ms);
+}
 .tile::after {
   content: ""; position: absolute; inset: 0; z-index: 3;
   border: 1px solid transparent;
@@ -619,6 +629,14 @@ select { cursor: pointer; }
   object-fit: contain;
   filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.45));
 }
+/* A slow push-in on the art when a card is hovered or keyboard-focused. No
+   colour change and no shadow bloom — it reads as "this one is live" without
+   turning into the glossy card treatment the rest of the site avoids. */
+.tile-art > svg, .tile-art > img.badge { transition: transform 0.35s ease; }
+.tile:hover .tile-art > svg,
+.tile:focus-within .tile-art > svg { transform: scale(1.06); }
+.tile:hover .tile-art > img.badge,
+.tile:focus-within .tile-art > img.badge { transform: scale(1.09); }
 
 .tile-no {
   position: absolute; top: 0; left: 0; z-index: 2;
@@ -640,6 +658,17 @@ select { cursor: pointer; }
 }
 .tile-star:hover { color: var(--accent); }
 .tile-star[aria-pressed="true"] { color: var(--accent); }
+
+/* Marks a self-hosted original — sits bottom-left of the art, flat and
+   square like tile-no, so it reads as a plain label and not a glossy badge. */
+.tile-tag {
+  position: absolute; left: 0; bottom: 0; z-index: 2;
+  font-family: var(--mono); font-size: 0.6rem; font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  padding: 0.2rem 0.42rem;
+  background: var(--paper); color: var(--accent);
+  border-right: 1px solid var(--line); border-top: 1px solid var(--line);
+}
 
 .tile-body {
   padding: 0.65rem 0.75rem 0.75rem;

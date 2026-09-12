@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>Flap</title>
+<style>
+  :root{--bg:#0c0d10;--panel:#15171c;--line:#2a2c33;--ink:#e8eaed;--mut:#8a8f99;--acc:#f2b705;}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;height:100%;}
+  body{background:var(--bg);color:var(--ink);font-family:ui-monospace,Menlo,Consolas,monospace;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100dvh;
+    gap:12px;padding:12px;user-select:none;}
+  .top{display:flex;gap:16px;width:min(420px,94vw);align-items:baseline;}
+  h1{font-size:24px;margin:0;letter-spacing:-1px;}
+  .sc{margin-left:auto;font-size:15px;color:var(--mut);}
+  .sc b{color:var(--acc);}
+  canvas{background:var(--panel);border:1px solid var(--line);width:min(420px,94vw);height:auto;cursor:pointer;touch-action:none;}
+  .hint{font-size:12px;color:var(--mut);}
+</style>
+</head>
+<body>
+  <div class="top"><h1>Flap</h1><div class="sc">score <b id="s">0</b> &middot; best <b id="b">0</b></div></div>
+  <canvas id="c" width="420" height="560"></canvas>
+  <div class="hint">Click / tap / Space to flap</div>
+<script>
+(function(){
+  "use strict";
+  var cv=document.getElementById("c"),ctx=cv.getContext("2d");
+  var W=cv.width,H=cv.height;
+  var GRAV=0.42,FLAP=-7.2,GAP=150,PIPE_W=58,SPEED=2.4;
+  var bird,pipes,score,best=+(localStorage.getItem("oflap.best")||0),state,raf,frame;
+  document.getElementById("b").textContent=best;
+  function reset(){
+    bird={x:120,y:H/2,v:0,r:12};pipes=[];score=0;state="ready";frame=0;
+    document.getElementById("s").textContent=0;
+    cancelAnimationFrame(raf);loop();
+  }
+  function flap(){
+    if(state==="dead"){reset();return;}
+    if(state==="ready")state="play";
+    bird.v=FLAP;
+  }
+  function addPipe(){
+    var top=40+Math.random()*(H-GAP-120);
+    pipes.push({x:W,top:top,scored:false});
+  }
+  function update(){
+    if(state!=="play")return;
+    frame++;
+    bird.v+=GRAV;bird.y+=bird.v;
+    if(frame%95===0)addPipe();
+    for(var i=pipes.length-1;i>=0;i--){
+      var p=pipes[i];p.x-=SPEED;
+      if(!p.scored&&p.x+PIPE_W<bird.x){p.scored=true;score++;
+        document.getElementById("s").textContent=score;}
+      if(p.x+PIPE_W<-10)pipes.splice(i,1);
+      if(bird.x+bird.r>p.x&&bird.x-bird.r<p.x+PIPE_W&&
+         (bird.y-bird.r<p.top||bird.y+bird.r>p.top+GAP))die();
+    }
+    if(bird.y+bird.r>H||bird.y-bird.r<0)die();
+  }
+  function die(){
+    if(state==="dead")return;state="dead";
+    if(score>best){best=score;localStorage.setItem("oflap.best",best);
+      document.getElementById("b").textContent=best;}
+  }
+  function draw(){
+    ctx.fillStyle="#15171c";ctx.fillRect(0,0,W,H);
+    // pipes
+    for(var i=0;i<pipes.length;i++){var p=pipes[i];
+      ctx.fillStyle="#3fb950";
+      ctx.fillRect(p.x,0,PIPE_W,p.top);
+      ctx.fillRect(p.x,p.top+GAP,PIPE_W,H-p.top-GAP);
+      ctx.fillStyle="#2ea043";
+      ctx.fillRect(p.x-3,p.top-16,PIPE_W+6,16);
+      ctx.fillRect(p.x-3,p.top+GAP,PIPE_W+6,16);
+    }
+    // bird
+    ctx.save();ctx.translate(bird.x,bird.y);
+    ctx.rotate(Math.max(-0.5,Math.min(1.2,bird.v*0.06)));
+    ctx.fillStyle="#f2b705";ctx.beginPath();ctx.arc(0,0,bird.r,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle="#0c0d10";ctx.beginPath();ctx.arc(5,-4,2.5,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle="#f78166";ctx.beginPath();ctx.moveTo(bird.r-2,0);ctx.lineTo(bird.r+7,-3);ctx.lineTo(bird.r+7,3);ctx.fill();
+    ctx.restore();
+    ctx.fillStyle="#e8eaed";ctx.textAlign="center";
+    if(state==="ready"){ctx.font="16px ui-monospace,monospace";ctx.fillText("Click / Space to start",W/2,H/2-40);}
+    if(state==="dead"){ctx.font="700 30px ui-monospace,monospace";ctx.fillText(score,W/2,H/2-30);
+      ctx.font="15px ui-monospace,monospace";ctx.fillStyle="#8a8f99";
+      ctx.fillText("Click to play again",W/2,H/2+4);}
+  }
+  function loop(){raf=requestAnimationFrame(loop);update();draw();}
+  cv.addEventListener("mousedown",function(e){flap();e.preventDefault();});
+  cv.addEventListener("touchstart",function(e){flap();e.preventDefault();},{passive:false});
+  document.addEventListener("keydown",function(e){if(e.key===" "||e.key==="ArrowUp"){flap();e.preventDefault();}});
+  reset();
+})();
+</script>
+</body>
+</html>

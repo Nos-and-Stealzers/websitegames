@@ -102,6 +102,12 @@
     var art = el("div", "tile-art");
     coverInto(art, game);
     if (opts.no) art.appendChild(el("span", "tile-no", pad(opts.no)));
+    /* Self-hosted originals (served from this origin, no external repo) are the
+       ones guaranteed to load — mark them so they stand apart from the CDN
+       catalog. Flat corner label, not a chip, per the site's plain look. */
+    if (game.platform === "local" && !game.host) {
+      art.appendChild(el("span", "tile-tag", "Hosted here"));
+    }
     art.appendChild(starButton(game, "tile-star", opts.onFavorite));
     root.appendChild(art);
 
@@ -188,13 +194,22 @@
     }
 
     var frag = document.createDocumentFragment();
+    /* Entrance stagger plays on a container's first fill only. Re-renders
+       (search-as-you-type, "load more", filter changes) mark the container
+       done so cards swap in instantly instead of re-animating on every
+       keystroke. */
+    var animate = !container.dataset.rendered;
     games.forEach(function (game, i) {
-      frag.appendChild(tile(game, {
+      var node = tile(game, {
         no: opts.numbered ? i + 1 : 0,
         desc: opts.desc,
         onFavorite: opts.onFavorite
-      }));
+      });
+      if (animate) node.style.setProperty("--i", i);
+      else node.style.animation = "none";
+      frag.appendChild(node);
     });
+    container.dataset.rendered = "1";
     container.appendChild(frag);
     return games.length;
   }

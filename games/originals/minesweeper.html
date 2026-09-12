@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>Minesweeper</title>
+<style>
+  :root{--bg:#0c0d10;--panel:#15171c;--line:#2a2c33;--ink:#e8eaed;--mut:#8a8f99;--acc:#f2b705;}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;height:100%;}
+  body{background:var(--bg);color:var(--ink);font-family:ui-monospace,Menlo,Consolas,monospace;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100dvh;
+    gap:12px;padding:12px;user-select:none;}
+  .top{display:flex;gap:16px;width:min(460px,96vw);align-items:baseline;}
+  h1{font-size:24px;margin:0;letter-spacing:-1px;}
+  .sc{margin-left:auto;font-size:15px;color:var(--mut);}
+  .sc b{color:var(--acc);}
+  #board{display:grid;gap:2px;background:var(--line);border:1px solid var(--line);}
+  .cell{width:26px;height:26px;background:#25272e;display:grid;place-items:center;font-size:14px;
+    font-weight:700;cursor:pointer;}
+  .cell:hover{background:#2f323b;}
+  .cell.open{background:#15171c;cursor:default;}
+  .cell.mine{background:#c02a3f;}
+  .cell.flag{color:var(--acc);}
+  .c1{color:#4f8cff;}.c2{color:#3fb950;}.c3{color:#f78166;}.c4{color:#a371f7;}
+  .c5{color:#f2b705;}.c6{color:#39c5cf;}.c7{color:#e8eaed;}.c8{color:#8a8f99;}
+  .over{color:var(--acc);font-weight:700;min-height:16px;text-align:center;}
+  .row{display:flex;gap:8px;width:min(460px,96vw);}
+  button,select{background:#25272e;color:var(--ink);border:1px solid #35373f;padding:10px;font:inherit;cursor:pointer;}
+  button{flex:1;}
+  button:hover{border-color:var(--acc);color:var(--acc);}
+  .hint{font-size:12px;color:var(--mut);}
+</style>
+</head>
+<body>
+  <div class="top"><h1>Minesweeper</h1><div class="sc">mines <b id="m">0</b> &middot; time <b id="t">0</b></div></div>
+  <div id="board"></div>
+  <div class="over" id="over"></div>
+  <div class="row">
+    <select id="diff">
+      <option value="9,10">Easy 9&times;9</option>
+      <option value="14,30" selected>Medium 14&times;14</option>
+      <option value="18,60">Hard 18&times;18</option>
+    </select>
+    <button id="start">New game</button>
+    <button id="flagmode" title="Toggle tap-to-flag on touch">Flag: off</button>
+  </div>
+  <div class="hint">Left-click reveal &middot; right-click flag &middot; on touch use the Flag button</div>
+<script>
+(function(){
+  "use strict";
+  var board=document.getElementById("board"),over=document.getElementById("over");
+  var N,MINES,grid,revealed,started,dead,won,timer,secs,flags,flagMode=false;
+  function idx(x,y){return y*N+x;}
+  function reset(){
+    var parts=document.getElementById("diff").value.split(",");
+    N=+parts[0];MINES=+parts[1];
+    grid=[];revealed=[];started=false;dead=false;won=false;secs=0;flags=0;
+    clearInterval(timer);document.getElementById("t").textContent=0;
+    document.getElementById("m").textContent=MINES;over.textContent="";
+    for(var i=0;i<N*N;i++){grid.push({mine:false,n:0,open:false,flag:false});}
+    board.style.gridTemplateColumns="repeat("+N+",26px)";board.innerHTML="";
+    for(var y=0;y<N;y++)for(var x=0;x<N;x++){
+      (function(cx,cy){
+        var el=document.createElement("div");el.className="cell";
+        el.addEventListener("click",function(){onOpen(cx,cy);});
+        el.addEventListener("contextmenu",function(e){e.preventDefault();onFlag(cx,cy);});
+        grid[idx(cx,cy)].el=el;board.appendChild(el);
+      })(x,y);
+    }
+  }
+  function place(sx,sy){
+    var spots=[];
+    for(var y=0;y<N;y++)for(var x=0;x<N;x++){
+      if(Math.abs(x-sx)<=1&&Math.abs(y-sy)<=1)continue;spots.push([x,y]);
+    }
+    for(var i=spots.length-1;i>0;i--){var j=(Math.random()*(i+1))|0;var t=spots[i];spots[i]=spots[j];spots[j]=t;}
+    for(var k=0;k<MINES;k++){grid[idx(spots[k][0],spots[k][1])].mine=true;}
+    for(var yy=0;yy<N;yy++)for(var xx=0;xx<N;xx++){
+      var c=0;for(var dy=-1;dy<=1;dy++)for(var dx=-1;dx<=1;dx++){
+        var nx=xx+dx,ny=yy+dy;if(nx<0||ny<0||nx>=N||ny>=N)continue;
+        if(grid[idx(nx,ny)].mine)c++;}
+      grid[idx(xx,yy)].n=c;
+    }
+    started=true;timer=setInterval(function(){secs++;document.getElementById("t").textContent=secs;},1000);
+  }
+  function onFlag(x,y){
+    var c=grid[idx(x,y)];if(dead||won||c.open)return;
+    c.flag=!c.flag;flags+=c.flag?1:-1;
+    c.el.classList.toggle("flag",c.flag);c.el.textContent=c.flag?"\u2691":"";
+    document.getElementById("m").textContent=MINES-flags;
+  }
+  function onOpen(x,y){
+    if(dead||won)return;
+    if(flagMode){onFlag(x,y);return;}
+    if(!started)place(x,y);
+    var c=grid[idx(x,y)];if(c.open||c.flag)return;
+    if(c.mine){boom();return;}
+    flood(x,y);checkWin();
+  }
+  function flood(x,y){
+    var stack=[[x,y]];
+    while(stack.length){
+      var p=stack.pop(),cx=p[0],cy=p[1],c=grid[idx(cx,cy)];
+      if(c.open||c.flag)continue;c.open=true;c.el.classList.add("open");
+      if(c.n>0){c.el.textContent=c.n;c.el.classList.add("c"+c.n);}
+      else{for(var dy=-1;dy<=1;dy++)for(var dx=-1;dx<=1;dx++){
+        var nx=cx+dx,ny=cy+dy;if(nx<0||ny<0||nx>=N||ny>=N)continue;
+        if(!grid[idx(nx,ny)].open)stack.push([nx,ny]);}}
+    }
+  }
+  function boom(){
+    dead=true;clearInterval(timer);
+    for(var i=0;i<grid.length;i++){var c=grid[i];
+      if(c.mine){c.el.classList.add("open","mine");c.el.textContent="\uD83D\uDCA3";}}
+    over.textContent="Boom \u2014 press New game";
+  }
+  function checkWin(){
+    var open=0;for(var i=0;i<grid.length;i++)if(grid[i].open)open++;
+    if(open===N*N-MINES){won=true;clearInterval(timer);
+      over.textContent="Cleared in "+secs+"s \uD83C\uDF89";
+      var key="omines.best."+N;var prev=+(localStorage.getItem(key)||0);
+      if(!prev||secs<prev){localStorage.setItem(key,secs);over.textContent+=" \u2014 new best!";}}
+  }
+  document.getElementById("start").addEventListener("click",reset);
+  document.getElementById("diff").addEventListener("change",reset);
+  document.getElementById("flagmode").addEventListener("click",function(){
+    flagMode=!flagMode;this.textContent="Flag: "+(flagMode?"on":"off");
+    this.style.color=flagMode?"var(--acc)":"";
+  });
+  reset();
+})();
+</script>
+</body>
+</html>

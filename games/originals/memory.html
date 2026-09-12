@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>Memory Match</title>
+<style>
+  :root{--bg:#0c0d10;--panel:#15171c;--line:#2a2c33;--ink:#e8eaed;--mut:#8a8f99;--acc:#f2b705;}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;height:100%;}
+  body{background:var(--bg);color:var(--ink);font-family:ui-monospace,Menlo,Consolas,monospace;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100dvh;
+    gap:14px;padding:14px;user-select:none;}
+  .top{display:flex;gap:16px;width:min(440px,94vw);align-items:baseline;}
+  h1{font-size:24px;margin:0;letter-spacing:-1px;}
+  .sc{margin-left:auto;font-size:15px;color:var(--mut);}
+  .sc b{color:var(--acc);}
+  #board{display:grid;gap:10px;width:min(440px,94vw);}
+  .card{aspect-ratio:1;background:#25272e;border:1px solid #35373f;display:grid;place-items:center;
+    font-size:30px;cursor:pointer;position:relative;transition:transform .18s ease,background .18s ease;}
+  .card:hover{border-color:var(--acc);}
+  .card .face{opacity:0;transition:opacity .12s ease;}
+  .card.up .face,.card.done .face{opacity:1;}
+  .card.up{background:#1b2130;border-color:#4f8cff;}
+  .card.done{background:#132b18;border-color:#3fb950;cursor:default;}
+  .over{color:var(--acc);font-weight:700;min-height:16px;text-align:center;}
+  .row{display:flex;gap:8px;width:min(440px,94vw);align-items:center;}
+  button,select{background:#25272e;color:var(--ink);border:1px solid #35373f;padding:10px;font:inherit;cursor:pointer;}
+  button{flex:1;}
+  button:hover{border-color:var(--acc);color:var(--acc);}
+</style>
+</head>
+<body>
+  <div class="top"><h1>Memory Match</h1><div class="sc">moves <b id="m">0</b> &middot; pairs <b id="p">0</b> &middot; best <b id="b">&ndash;</b></div></div>
+  <div id="board"></div>
+  <div class="over" id="over"></div>
+  <div class="row">
+    <select id="size"><option value="4">4 &times; 4</option><option value="6" selected>6 &times; 6</option><option value="8">8 &times; 8</option></select>
+    <button id="start">New game</button>
+  </div>
+<script>
+(function(){
+  "use strict";
+  var EMOJI=["\uD83C\uDF4E","\uD83D\uDE80","\uD83C\uDFB8","\uD83D\uDC31","\uD83C\uDF55","\uD83C\uDFAF","\uD83C\uDF08","\uD83D\uDC19","\uD83C\uDF53","\uD83D\uDC38","\uD83C\uDF81","\uD83C\uDFB2","\uD83C\uDF4C","\uD83D\uDD11","\uD83C\uDF3B","\uD83D\uDC1D","\uD83C\uDF4D","\uD83D\uDC22","\uD83C\uDF52","\uD83D\uDD2E","\uD83C\uDF6D","\uD83D\uDC2C","\uD83C\uDF39","\uD83C\uDFA9","\uD83C\uDF66","\uD83D\uDC20","\uD83C\uDF49","\uD83E\uDD84","\uD83C\uDF6A","\uD83D\uDC27","\uD83C\uDF4A","\uD83D\uDC0C"];
+  var board=document.getElementById("board"),over=document.getElementById("over");
+  var N,cards,first,busy,moves,pairs,total;
+  function shuffle(a){for(var i=a.length-1;i>0;i--){var j=(Math.random()*(i+1))|0;var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+  function bestKey(){return "omemory.best."+N;}
+  function showBest(){var b=localStorage.getItem(bestKey());document.getElementById("b").textContent=b||"\u2013";}
+  function reset(){
+    N=+document.getElementById("size").value;total=N*N/2;
+    moves=0;pairs=0;first=null;busy=false;over.textContent="";
+    document.getElementById("m").textContent=0;document.getElementById("p").textContent=0;showBest();
+    var pool=shuffle(EMOJI.slice()).slice(0,total);
+    var deck=shuffle(pool.concat(pool));
+    board.style.gridTemplateColumns="repeat("+N+",1fr)";board.innerHTML="";cards=[];
+    deck.forEach(function(sym,i){
+      var el=document.createElement("div");el.className="card";
+      el.innerHTML='<span class="face">'+sym+'</span>';el.dataset.sym=sym;
+      el.addEventListener("click",function(){flip(el);});
+      board.appendChild(el);cards.push(el);
+    });
+    if(N>=8)board.querySelectorAll(".card").forEach(function(c){c.style.fontSize="20px";});
+  }
+  function flip(el){
+    if(busy||el.classList.contains("up")||el.classList.contains("done"))return;
+    el.classList.add("up");
+    if(!first){first=el;return;}
+    moves++;document.getElementById("m").textContent=moves;
+    if(first.dataset.sym===el.dataset.sym){
+      first.classList.add("done");el.classList.add("done");
+      first.classList.remove("up");el.classList.remove("up");first=null;
+      pairs++;document.getElementById("p").textContent=pairs;
+      if(pairs===total)win();
+    }else{
+      busy=true;var a=first,b=el;first=null;
+      setTimeout(function(){a.classList.remove("up");b.classList.remove("up");busy=false;},700);
+    }
+  }
+  function win(){
+    over.textContent="Solved in "+moves+" moves \uD83C\uDF89";
+    var prev=+(localStorage.getItem(bestKey())||0);
+    if(!prev||moves<prev){localStorage.setItem(bestKey(),moves);showBest();over.textContent+=" \u2014 new best!";}
+  }
+  document.getElementById("start").addEventListener("click",reset);
+  document.getElementById("size").addEventListener("change",reset);
+  reset();
+})();
+</script>
+</body>
+</html>

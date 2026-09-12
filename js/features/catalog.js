@@ -71,6 +71,10 @@
       preferDirect: preferDirect,
       sandbox: entry.sandbox || "",
       risk: entry.schoolRisk || "unknown",
+      /* Carried through so "New arrivals" and the `new` sort actually have a
+         field to read — without this the raw dateAdded on ~1,100 titles was
+         silently dropped in normalisation and both surfaces stayed empty. */
+      dateAdded: entry.dateAdded || "",
       initials: initialsOf(title),
       index: index
     };
